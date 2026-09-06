@@ -2,18 +2,18 @@
   'use strict';
 
   // Prime Communes · Carte 1.2 / MapLibre.
-  // Carte actuelle 1.1 conservée en parallèle pour comparaison A/B.
+  // MapLibre is now the single visible map engine. swisstopo and Prime data stay unchanged.
   const MAPLIBRE_VERSION = '6.7.0';
   const MAPLIBRE_MODULE = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.mjs`;
   const MAPLIBRE_CSS = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.css`;
   const ACTIVE_TERRITORIES = new Set(['JU', 'BE', 'VD', 'FR']);
+  const mobileMq = window.matchMedia('(max-width:680px)');
 
   const panel = document.getElementById('mapPanel');
   const currentStage = document.getElementById('mapStage');
   const query = document.getElementById('mapQuery');
   if (!panel || !currentStage || !query) return;
 
-  let engine = 'current';
   let stage = null;
   let metrics = null;
   let map = null;
@@ -25,12 +25,16 @@
   let pointGeoJSON = null;
   let loadingPromise = null;
   let selectedId = '';
+  let suggestionIndex = -1;
+  let currentSuggestions = [];
+  const labelMarkers = new Map();
+  const layerState = { prime: true, innosolvPrime: true, innosolvEco: true, eadmin: true };
 
   function injectStyles() {
     if (!document.querySelector('link[href*="prime-communes-maplibre-poc.css"]')) {
       const local = document.createElement('link');
       local.rel = 'stylesheet';
-      local.href = 'app/prime-communes-maplibre-poc.css?v=2';
+      local.href = 'app/prime-communes-maplibre-poc.css?v=3';
       document.head.append(local);
     }
     if (!document.querySelector(`link[href="${MAPLIBRE_CSS}"]`)) {
@@ -41,22 +45,6 @@
     }
   }
 
-  function injectEngineSwitch() {
-    if (document.getElementById('mapEngineCompare')) return;
-    const compare = document.createElement('div');
-    compare.className = 'map-engine-compare';
-    compare.id = 'mapEngineCompare';
-    compare.innerHTML = `
-      <div class="map-engine-copy"><strong>Comparer le moteur</strong><span>Même swisstopo, deux comportements.</span></div>
-      <div class="map-engine-switch" role="group" aria-label="Moteur cartographique">
-        <button type="button" class="active" id="mapEngineCurrent">Carte actuelle · 1.1</button>
-        <button type="button" id="mapEngineMapLibre">Carte 1.2 · MapLibre</button>
-      </div>`;
-    panel.insertAdjacentElement('beforebegin', compare);
-    document.getElementById('mapEngineCurrent').onclick = () => activateEngine('current');
-    document.getElementById('mapEngineMapLibre').onclick = () => activateEngine('maplibre');
-  }
-
   function ensureMetrics() {
     if (metrics) return metrics;
     metrics = document.createElement('div');
@@ -64,16 +52,16 @@
     metrics.id = 'mapLibreMetrics';
     metrics.hidden = true;
     metrics.innerHTML = `
-      <article class="maplibre-metric">
-        <p>Romandie · empreinte Prime</p>
+      <article class="stats-kpi maplibre-metric">
+        <span>Romandie · empreinte Prime</span>
         <strong id="mapLibreRomandieRatio">—</strong>
-        <span id="mapLibreRomandiePopulation">—</span>
+        <small id="mapLibreRomandiePopulation">—</small>
       </article>
-      <article class="maplibre-metric">
-        <p>Territoires innosolvcity Prime</p>
+      <article class="stats-kpi maplibre-metric">
+        <span>Territoires innosolvcity Prime</span>
         <strong id="mapLibreActiveRatio">—</strong>
-        <span id="mapLibreActivePopulation">—</span>
-        <small>JU · BE romand · VD · FR romand</small>
+        <small id="mapLibreActivePopulation">—</small>
+        <em>Jura · Jura bernois · Vaud · Fribourg francophone</em>
       </article>`;
     currentStage.insertAdjacentElement('beforebegin', metrics);
     return metrics;
@@ -88,19 +76,29 @@
     stage.innerHTML = `
       <div id="primeMapLibre" aria-label="Carte MapLibre de la Suisse romande"></div>
       <div class="maplibre-badge">Carte 1.2 · MapLibre + swisstopo</div>
-      <div class="maplibre-loading" id="mapLibreLoading"><span></span>Chargement du moteur MapLibre…</div>`;
+      <div class="maplibre-loading" id="mapLibreLoading"><span></span>Chargement de la carte…</div>`;
     currentStage.insertAdjacentElement('afterend', stage);
     return stage;
+  }
+
+  function arrangeProfessionalLayout() {
+    ensureMetrics();
+    ensureStage();
+    const toolbar = panel.querySelector('.map-toolbar');
+    if (toolbar) {
+      toolbar.classList.add('maplibre-toolbar');
+      metrics.insertAdjacentElement('afterend', toolbar);
+      toolbar.insertAdjacentElement('afterend', stage);
+    }
+    currentStage.hidden = true;
+    const frOption = document.querySelector('#statsScope option[value="FR-welsch"]');
+    if (frOption) frOption.textContent = 'Fribourg francophone';
   }
 
   function coverage(rows) {
     const total = rows.reduce((sum, row) => sum + Number(row.expectedPopulation || 0), 0);
     const covered = rows.filter(row => row.isPrime).reduce((sum, row) => sum + Number(row.expectedPopulation || 0), 0);
-    return {
-      covered,
-      share: total ? covered / total * 100 : 0,
-      ratio: covered ? Math.max(1, Math.round(total / covered)) : 0
-    };
+    return { covered, share: total ? covered / total * 100 : 0, ratio: covered ? Math.max(1, Math.round(total / covered)) : 0 };
   }
 
   function syncMetrics() {
@@ -109,14 +107,12 @@
     const active = all.filter(row => row.market === 'Welsch' && ACTIVE_TERRITORIES.has(row.canton));
     const r = coverage(romandie);
     const a = coverage(active);
-    const set = (id, value) => {
-      const node = document.getElementById(id);
-      if (node) node.textContent = value;
-    };
+    const set = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = value; };
     set('mapLibreRomandieRatio', r.ratio ? `1 Romand sur ${r.ratio}` : '—');
-    set('mapLibreRomandiePopulation', `${fmt.format(r.covered)} hab. · ${pct.format(r.share)}%`);
+    set('mapLibreRomandiePopulation', `${fmt.format(r.covered)} habitants · ${pct.format(r.share)}%`);
     set('mapLibreActiveRatio', a.ratio ? `1 habitant sur ${a.ratio}` : '—');
-    set('mapLibreActivePopulation', `${fmt.format(a.covered)} hab. · ${pct.format(a.share)}%`);
+    set('mapLibreActivePopulation', `${fmt.format(a.covered)} habitants · ${pct.format(a.share)}%`);
+    renderLayerLegend();
   }
 
   function lv95ToWgs84(easting, northing) {
@@ -161,9 +157,7 @@
 
   function geometryFromRings(rings) {
     if (!rings.length) return null;
-    return rings.length === 1
-      ? { type: 'Polygon', coordinates: [rings[0]] }
-      : { type: 'MultiPolygon', coordinates: rings.map(ring => [ring]) };
+    return rings.length === 1 ? { type: 'Polygon', coordinates: [rings[0]] } : { type: 'MultiPolygon', coordinates: rings.map(ring => [ring]) };
   }
 
   function municipalityFeature(shape, lookup) {
@@ -171,21 +165,12 @@
     const geometry = geometryFromRings(parsePathRings(shape.d));
     if (!geometry) return null;
     return {
-      type: 'Feature',
-      id: String(shape.id),
+      type: 'Feature', id: String(shape.id),
       properties: {
-        id: String(shape.id),
-        name: commune?.name || '',
-        canton: commune?.canton || '',
-        market: commune?.market || '',
-        population: Number(commune?.expectedPopulation || 0),
-        isPrime: Boolean(commune?.isPrime),
-        integrator: commune?.integrator || '',
-        software: commune?.software || '',
-        erp: commune?.erp || '',
-        products: (commune?.products || []).join(' · '),
-        isInnosolv: commune?.software === 'innosolvcity',
-        hasEadmin: Boolean(commune?.products?.includes('eAdmin')),
+        id: String(shape.id), name: commune?.name || '', canton: commune?.canton || '', market: commune?.market || '',
+        population: Number(commune?.expectedPopulation || 0), isPrime: Boolean(commune?.isPrime), integrator: commune?.integrator || '',
+        software: commune?.software || '', erp: commune?.erp || '', products: (commune?.products || []).join(' · '),
+        isInnosolv: commune?.software === 'innosolvcity', hasEadmin: Boolean(commune?.products?.includes('eAdmin')),
         productMatch: Boolean(commune?.products?.includes(mapProduct))
       },
       geometry
@@ -202,9 +187,8 @@
     const result = [];
     const walk = value => {
       if (!Array.isArray(value)) return;
-      if (value.length >= 2 && Number.isFinite(Number(value[0])) && Number.isFinite(Number(value[1]))) {
-        result.push([Number(value[0]), Number(value[1])]);
-      } else value.forEach(walk);
+      if (value.length >= 2 && Number.isFinite(Number(value[0])) && Number.isFinite(Number(value[1]))) result.push([Number(value[0]), Number(value[1])]);
+      else value.forEach(walk);
     };
     walk(geometry?.coordinates);
     return result;
@@ -217,15 +201,8 @@
     const lngs = points.map(point => point[0]);
     const lats = points.map(point => point[1]);
     return {
-      type: 'Feature',
-      id: String(commune.id),
-      properties: {
-        id: String(commune.id),
-        population: Number(commune.expectedPopulation || 0),
-        isPrime: Boolean(commune.isPrime),
-        isInnosolv: commune.software === 'innosolvcity',
-        hasEadmin: Boolean(commune.products?.includes('eAdmin'))
-      },
+      type: 'Feature', id: String(commune.id),
+      properties: { id: String(commune.id), name: commune.name, canton: commune.canton, population: Number(commune.expectedPopulation || 0), isPrime: Boolean(commune.isPrime), isInnosolv: commune.software === 'innosolvcity', hasEadmin: Boolean(commune.products?.includes('eAdmin')) },
       geometry: { type: 'Point', coordinates: [(Math.min(...lngs) + Math.max(...lngs)) / 2, (Math.min(...lats) + Math.max(...lats)) / 2] }
     };
   }
@@ -252,14 +229,32 @@
   }
 
   function fillColorExpression() {
-    if (mapPerspective === 'impact') return ['case', ['==', ['get', 'isPrime'], true], '#1596e6', '#d8e1e6'];
+    if (mapPerspective === 'impact') return layerState.prime ? ['case', ['==', ['get', 'isPrime'], true], '#1596e6', '#d8e1e6'] : '#d8e1e6';
     if (mapMode === 'product') return ['case', ['==', ['get', 'productMatch'], true], '#36d494', '#50616e'];
     return paletteExpression(mapMode === 'software' ? 'software' : 'integrator', mapPalettes[mapMode]);
   }
 
   function fillOpacityExpression() {
-    if (mapPerspective === 'impact') return ['case', ['==', ['get', 'isPrime'], true], 0.54, 0.09];
+    if (mapPerspective === 'impact') return layerState.prime ? ['case', ['==', ['get', 'isPrime'], true], 0.54, 0.09] : 0.09;
     return 0.72;
+  }
+
+  function innosolvFilter() {
+    if (layerState.innosolvPrime && layerState.innosolvEco) return ['==', ['get', 'isInnosolv'], true];
+    if (layerState.innosolvPrime) return ['all', ['==', ['get', 'isInnosolv'], true], ['==', ['get', 'isPrime'], true]];
+    if (layerState.innosolvEco) return ['all', ['==', ['get', 'isInnosolv'], true], ['==', ['get', 'isPrime'], false]];
+    return ['==', ['get', 'isInnosolv'], '__hidden__'];
+  }
+
+  function applyLayerState() {
+    if (!map || !map.isStyleLoaded()) return;
+    const impact = mapPerspective === 'impact';
+    for (const id of ['prime-halo', 'prime-core']) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', impact && layerState.prime ? 'visible' : 'none');
+    if (map.getLayer('innosolv-dots')) {
+      map.setFilter('innosolv-dots', innosolvFilter());
+      map.setLayoutProperty('innosolv-dots', 'visibility', impact && (layerState.innosolvPrime || layerState.innosolvEco) ? 'visible' : 'none');
+    }
+    if (map.getLayer('eadmin-dots')) map.setLayoutProperty('eadmin-dots', 'visibility', impact && layerState.eadmin ? 'visible' : 'none');
   }
 
   function syncMapData() {
@@ -277,10 +272,9 @@
       map.setPaintProperty('municipalities-fill', 'fill-color', fillColorExpression());
       map.setPaintProperty('municipalities-fill', 'fill-opacity', fillOpacityExpression());
     }
-    for (const id of ['prime-halo', 'prime-core', 'innosolv-dots', 'eadmin-dots']) {
-      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', mapPerspective === 'impact' ? 'visible' : 'none');
-    }
+    applyLayerState();
     syncMetrics();
+    syncMunicipalityLabels();
     if (fit) fitCurrentPerspective();
   }
 
@@ -296,17 +290,30 @@
     return [[Math.min(...points.map(p => p[0])), Math.min(...points.map(p => p[1]))], [Math.max(...points.map(p => p[0])), Math.max(...points.map(p => p[1]))]];
   }
 
-  function romandieBounds() {
-    const features = municipalityGeoJSON?.features?.filter(feature => feature.properties.market === 'Welsch') || [];
-    return boundsFromFeatures(features) || [[5.75, 45.78], [7.75, 47.55]];
+  function territoryFeatures(key) {
+    const features = municipalityGeoJSON?.features || [];
+    if (key === 'romandie') return features.filter(feature => feature.properties.market === 'Welsch');
+    if (key === 'JU') return features.filter(feature => feature.properties.canton === 'JU');
+    if (key === 'BE-welsch') return features.filter(feature => feature.properties.canton === 'BE' && feature.properties.market === 'Welsch');
+    if (key === 'VD') return features.filter(feature => feature.properties.canton === 'VD');
+    if (key === 'FR-welsch') return features.filter(feature => feature.properties.canton === 'FR' && feature.properties.market === 'Welsch');
+    if (key === 'GE') return features.filter(feature => feature.properties.canton === 'GE');
+    if (key === 'VS-welsch') return features.filter(feature => feature.properties.canton === 'VS' && feature.properties.market === 'Welsch');
+    return [];
+  }
+
+  function fitTerritory(key = 'romandie') {
+    if (!map) return;
+    const bounds = boundsFromFeatures(territoryFeatures(key));
+    if (!bounds) return;
+    document.querySelectorAll('[data-map-territory]').forEach(button => button.classList.toggle('active', button.dataset.mapTerritory === key));
+    map.fitBounds(bounds, { padding: mobileMq.matches ? 12 : 26, duration: 420, maxZoom: 10.4 });
   }
 
   function fitCurrentPerspective() {
     if (!map || !mapGeometry) return;
-    // Impact opens on ALL of Suisse romande: Geneva must be visible at the far left.
-    // We deliberately do not waste the initial viewport on Glarus/eastern Switzerland.
-    const bounds = mapPerspective === 'impact' ? romandieBounds() : boundsFromBox(mapGeometry.meta.viewBox);
-    map.fitBounds(bounds, { padding: window.matchMedia('(max-width:680px)').matches ? 8 : 18, duration: 380 });
+    if (mapPerspective === 'impact') return fitTerritory('romandie');
+    map.fitBounds(boundsFromBox(mapGeometry.meta.viewBox), { padding: mobileMq.matches ? 8 : 18, duration: 380 });
   }
 
   function addLayers() {
@@ -314,23 +321,12 @@
     const imageCoordinates = [lv95ToWgs84(x, -y), lv95ToWgs84(x + w, -y), lv95ToWgs84(x + w, -(y + h)), lv95ToWgs84(x, -(y + h))];
 
     map.addSource('swisstopo-base', { type: 'image', url: 'public/swiss-base.webp', coordinates: imageCoordinates });
-    map.addLayer({
-      id: 'swisstopo-base', type: 'raster', source: 'swisstopo-base',
-      paint: { 'raster-opacity': 1, 'raster-brightness-min': 0.24, 'raster-brightness-max': 0.98, 'raster-contrast': -0.15, 'raster-saturation': -0.08 }
-    });
+    map.addLayer({ id: 'swisstopo-base', type: 'raster', source: 'swisstopo-base', paint: { 'raster-opacity': 1, 'raster-brightness-min': 0.24, 'raster-brightness-max': 0.98, 'raster-contrast': -0.15, 'raster-saturation': -0.08 } });
 
     map.addSource('municipalities', { type: 'geojson', data: municipalityGeoJSON, promoteId: 'id' });
     map.addLayer({ id: 'municipalities-fill', type: 'fill', source: 'municipalities', paint: { 'fill-color': fillColorExpression(), 'fill-opacity': fillOpacityExpression() } });
-    map.addLayer({
-      id: 'municipalities-line', type: 'line', source: 'municipalities',
-      paint: {
-        'line-color': 'rgba(236,247,252,.98)',
-        'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.08, 8, 0.25, 10, 0.68, 12, 0.94],
-        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.22, 8, 0.42, 10, 0.9, 12, 1.5]
-      }
-    });
+    map.addLayer({ id: 'municipalities-line', type: 'line', source: 'municipalities', paint: { 'line-color': 'rgba(236,247,252,.98)', 'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.08, 8, 0.25, 10, 0.68, 12, 0.94], 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.22, 8, 0.42, 10, 0.9, 12, 1.5] } });
 
-    // True canton boundaries from all canton shapes contained in swissBOUNDARIES3D.
     map.addSource('cantons', { type: 'geojson', data: cantonGeoJSON });
     map.addLayer({ id: 'cantons-border-casing', type: 'line', source: 'cantons', paint: { 'line-color': 'rgba(13,28,39,.86)', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 2.8, 9, 3.5, 12, 4.6], 'line-opacity': 0.82 } });
     map.addLayer({ id: 'cantons-border', type: 'line', source: 'cantons', paint: { 'line-color': 'rgba(242,249,252,.96)', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.9, 9, 1.25, 12, 1.85], 'line-opacity': 0.92 } });
@@ -338,7 +334,7 @@
     map.addSource('municipality-points', { type: 'geojson', data: pointGeoJSON, promoteId: 'id' });
     map.addLayer({ id: 'prime-halo', type: 'circle', source: 'municipality-points', filter: ['==', ['get', 'isPrime'], true], paint: { 'circle-color': '#159cff', 'circle-opacity': 0.12, 'circle-blur': 0.68, 'circle-radius': ['interpolate', ['linear'], ['get', 'population'], 0, 11, 10000, 18, 100000, 29, 500000, 43] } });
     map.addLayer({ id: 'prime-core', type: 'circle', source: 'municipality-points', filter: ['==', ['get', 'isPrime'], true], paint: { 'circle-color': '#087bc4', 'circle-opacity': 0.92, 'circle-stroke-color': 'rgba(229,247,255,.85)', 'circle-stroke-width': 0.6, 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.4, 10, 4.2, 13, 6.5] } });
-    map.addLayer({ id: 'innosolv-dots', type: 'circle', source: 'municipality-points', filter: ['==', ['get', 'isInnosolv'], true], paint: { 'circle-color': ['case', ['==', ['get', 'isPrime'], true], '#44dc98', 'rgba(247,250,252,.92)'], 'circle-stroke-color': '#31be7f', 'circle-stroke-width': ['case', ['==', ['get', 'isPrime'], true], 1.1, 2.1], 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.8, 10, 4.2, 13, 6] } });
+    map.addLayer({ id: 'innosolv-dots', type: 'circle', source: 'municipality-points', filter: innosolvFilter(), paint: { 'circle-color': ['case', ['==', ['get', 'isPrime'], true], '#44dc98', 'rgba(247,250,252,.92)'], 'circle-stroke-color': '#31be7f', 'circle-stroke-width': ['case', ['==', ['get', 'isPrime'], true], 1.1, 2.1], 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.8, 10, 4.2, 13, 6] } });
     map.addLayer({ id: 'eadmin-dots', type: 'circle', source: 'municipality-points', filter: ['all', ['==', ['get', 'hasEadmin'], true], ['==', ['get', 'isPrime'], true]], paint: { 'circle-color': '#e52332', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1, 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.4, 10, 4, 13, 5.8] } });
     map.addLayer({ id: 'municipality-selected', type: 'line', source: 'municipalities', filter: ['==', ['get', 'id'], '__none__'], paint: { 'line-color': '#ff7047', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 2, 10, 3.2, 13, 4.2], 'line-opacity': 0.96 } });
 
@@ -377,7 +373,7 @@
     map.on('mouseenter', 'municipalities-fill', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'municipalities-fill', () => { map.getCanvas().style.cursor = ''; });
     map.on('mousemove', 'municipalities-fill', event => {
-      if (window.matchMedia('(max-width:680px)').matches || clickPopup?.isOpen()) return;
+      if (mobileMq.matches || clickPopup?.isOpen()) return;
       const id = event.features?.[0]?.properties?.id;
       const commune = all.find(row => String(row.id) === String(id));
       if (!commune) return;
@@ -394,15 +390,167 @@
       const features = map.queryRenderedFeatures(event.point, { layers: ['municipalities-fill'] });
       if (!features.length) { selectMunicipality(''); clickPopup?.remove(); }
     });
+    map.on('moveend', syncMunicipalityLabels);
+    map.on('zoomend', syncMunicipalityLabels);
+  }
+
+  function clearLabels() {
+    labelMarkers.forEach(marker => marker.remove());
+    labelMarkers.clear();
+  }
+
+  function syncMunicipalityLabels() {
+    if (!map || !maplibregl || !pointGeoJSON) return;
+    if (map.getZoom() < 10.1) return clearLabels();
+    const bounds = map.getBounds();
+    const visible = pointGeoJSON.features.filter(feature => bounds.contains(feature.geometry.coordinates)).slice(0, 90);
+    const ids = new Set(visible.map(feature => String(feature.properties.id)));
+    labelMarkers.forEach((marker, id) => { if (!ids.has(id)) { marker.remove(); labelMarkers.delete(id); } });
+    visible.forEach(feature => {
+      const id = String(feature.properties.id);
+      if (labelMarkers.has(id)) return;
+      const el = document.createElement('span');
+      el.className = 'maplibre-commune-label';
+      el.textContent = feature.properties.name;
+      const marker = new maplibregl.Marker({ element: el, anchor: 'center', offset: [0, -12] }).setLngLat(feature.geometry.coordinates).addTo(map);
+      labelMarkers.set(id, marker);
+    });
+  }
+
+  function normalise(value) {
+    return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('fr-CH').trim();
+  }
+
+  function candidates(value) {
+    const q = normalise(value);
+    if (q.length < 3) return [];
+    return all.filter(row => row.market === 'Welsch' && normalise(row.name).includes(q)).sort((a, b) => {
+      const as = normalise(a.name).startsWith(q) ? 0 : 1;
+      const bs = normalise(b.name).startsWith(q) ? 0 : 1;
+      return as - bs || a.name.localeCompare(b.name, 'fr-CH', { sensitivity: 'base' });
+    }).slice(0, 8);
+  }
+
+  function focusCommune(commune) {
+    if (!map || !commune || !pointGeoJSON) return;
+    const point = pointGeoJSON.features.find(feature => String(feature.properties.id) === String(commune.id));
+    if (!point) return;
+    map.easeTo({ center: point.geometry.coordinates, zoom: Math.max(map.getZoom(), 11), duration: 550 });
+    showClickPopup(commune, point.geometry.coordinates);
+  }
+
+  function ensureSearchUi() {
+    const label = query.closest('.map-search');
+    if (!label || document.getElementById('mapSuggestions')) return;
+    label.classList.add('map-search-smart');
+    const ghost = document.createElement('div');
+    ghost.className = 'map-search-ghost';
+    ghost.id = 'mapSearchGhost';
+    const suggestions = document.createElement('div');
+    suggestions.className = 'map-suggestions';
+    suggestions.id = 'mapSuggestions';
+    suggestions.hidden = true;
+    label.append(ghost, suggestions);
+
+    const render = () => {
+      currentSuggestions = candidates(query.value);
+      suggestionIndex = currentSuggestions.length ? 0 : -1;
+      suggestions.hidden = !currentSuggestions.length;
+      suggestions.innerHTML = currentSuggestions.map((row, index) => `<button type="button" data-map-suggestion="${esc(String(row.id))}" class="${index === suggestionIndex ? 'active' : ''}"><strong>${esc(row.name)}</strong><span>${esc(row.canton)} · ${fmt.format(row.expectedPopulation)} hab.</span></button>`).join('');
+      const best = currentSuggestions[0];
+      if (best && normalise(best.name).startsWith(normalise(query.value))) {
+        const typed = query.value;
+        ghost.innerHTML = `<i>${esc(typed)}</i>${esc(best.name.slice(typed.length))}`;
+      } else ghost.textContent = '';
+    };
+
+    query.addEventListener('input', render);
+    query.addEventListener('keydown', event => {
+      if (!currentSuggestions.length) return;
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        suggestionIndex = (suggestionIndex + (event.key === 'ArrowDown' ? 1 : -1) + currentSuggestions.length) % currentSuggestions.length;
+        [...suggestions.querySelectorAll('button')].forEach((button, index) => button.classList.toggle('active', index === suggestionIndex));
+        return;
+      }
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const commune = currentSuggestions[Math.max(0, suggestionIndex)];
+        if (!commune) return;
+        query.value = commune.name;
+        suggestions.hidden = true;
+        ghost.textContent = '';
+        query.blur();
+        focusCommune(commune);
+      }
+      if (event.key === 'Escape') { suggestions.hidden = true; ghost.textContent = ''; }
+    }, true);
+    suggestions.addEventListener('click', event => {
+      const button = event.target.closest('[data-map-suggestion]');
+      if (!button) return;
+      const commune = all.find(row => String(row.id) === button.dataset.mapSuggestion);
+      if (!commune) return;
+      query.value = commune.name;
+      suggestions.hidden = true;
+      ghost.textContent = '';
+      focusCommune(commune);
+    });
+    document.addEventListener('pointerdown', event => { if (!label.contains(event.target)) suggestions.hidden = true; });
+  }
+
+  function ensureTerritoryControls() {
+    const toolbar = panel.querySelector('.map-toolbar');
+    if (!toolbar || document.getElementById('mapTerritories')) return;
+    const row = document.createElement('div');
+    row.className = 'map-utility-row map-territories';
+    row.id = 'mapTerritories';
+    row.innerHTML = `<span>Territoire</span><div>
+      <button class="active" data-map-territory="romandie">Romandie</button><button data-map-territory="JU">Jura</button><button data-map-territory="BE-welsch">Jura bernois</button><button data-map-territory="VD">Vaud</button><button data-map-territory="FR-welsch">Fribourg francophone</button><button data-map-territory="GE">Genève</button><button data-map-territory="VS-welsch">Valais</button>
+    </div>`;
+    toolbar.append(row);
+    row.addEventListener('click', event => { const button = event.target.closest('[data-map-territory]'); if (button) fitTerritory(button.dataset.mapTerritory); });
+  }
+
+  function renderLayerLegend() {
+    const legend = document.getElementById('mapLegend');
+    if (!legend || !all.length) return;
+    const rows = all.filter(row => row.market === 'Welsch');
+    const counts = {
+      prime: rows.filter(row => row.isPrime).length,
+      innosolvPrime: rows.filter(row => row.isPrime && row.software === 'innosolvcity').length,
+      innosolvEco: rows.filter(row => !row.isPrime && row.software === 'innosolvcity').length,
+      eadmin: rows.filter(row => row.isPrime && row.products?.includes('eAdmin')).length
+    };
+    legend.classList.add('maplibre-layer-legend');
+    legend.innerHTML = [
+      ['prime', 'prime', 'Communes Prime', counts.prime],
+      ['innosolvPrime', 'innosolv-prime', 'innosolvcity · Prime', counts.innosolvPrime],
+      ['innosolvEco', 'innosolv-eco', 'innosolvcity · écosystème', counts.innosolvEco],
+      ['eadmin', 'eadmin', 'eAdmin · Prime', counts.eadmin]
+    ].map(([key, dot, label, count]) => `<button type="button" data-map-layer="${key}" class="${layerState[key] ? 'active' : ''}"><i class="${dot}"></i><span>${label}</span><b>${count}</b></button>`).join('');
+    if (!legend.dataset.bound12) {
+      legend.dataset.bound12 = '1';
+      legend.addEventListener('click', event => {
+        const button = event.target.closest('[data-map-layer]');
+        if (!button) return;
+        const key = button.dataset.mapLayer;
+        layerState[key] = !layerState[key];
+        renderLayerLegend();
+        if (map?.getLayer('municipalities-fill')) {
+          map.setPaintProperty('municipalities-fill', 'fill-color', fillColorExpression());
+          map.setPaintProperty('municipalities-fill', 'fill-opacity', fillOpacityExpression());
+        }
+        applyLayerState();
+      });
+    }
   }
 
   async function waitForData() {
     if (all.length) return;
     await new Promise(resolve => {
       const started = Date.now();
-      const timer = setInterval(() => {
-        if (all.length || Date.now() - started > 5000) { clearInterval(timer); resolve(); }
-      }, 80);
+      const timer = setInterval(() => { if (all.length || Date.now() - started > 5000) { clearInterval(timer); resolve(); } }, 80);
     });
   }
 
@@ -410,8 +558,6 @@
     if (map) { setTimeout(() => map.resize(), 0); return map; }
     if (loadingPromise) return loadingPromise;
     loadingPromise = (async () => {
-      ensureMetrics();
-      ensureStage();
       await waitForData();
       if (!mapGeometry) await loadMap();
       if (!mapGeometry || !all.length) throw new Error('Données cartographiques indisponibles.');
@@ -430,6 +576,8 @@
         addLayers();
         bindInteractions();
         syncMetrics();
+        ensureSearchUi();
+        ensureTerritoryControls();
         const loading = document.getElementById('mapLibreLoading');
         if (loading) loading.hidden = true;
       });
@@ -437,79 +585,46 @@
       return map;
     })().catch(error => {
       const loading = document.getElementById('mapLibreLoading');
-      if (loading) loading.innerHTML = `<div class="maplibre-error">MapLibre n’a pas pu démarrer sur cet appareil.<br>${esc(error?.message || error)}</div>`;
+      if (loading) loading.innerHTML = `<div class="maplibre-error">La carte n’a pas pu démarrer sur cet appareil.<br>${esc(error?.message || error)}</div>`;
       loadingPromise = null;
       throw error;
     });
     return loadingPromise;
   }
 
-  async function activateEngine(next) {
-    engine = next === 'maplibre' ? 'maplibre' : 'current';
-    document.getElementById('mapEngineCurrent')?.classList.toggle('active', engine === 'current');
-    document.getElementById('mapEngineMapLibre')?.classList.toggle('active', engine === 'maplibre');
-    ensureMetrics();
-    ensureStage();
-    currentStage.hidden = engine !== 'current';
-    stage.hidden = engine !== 'maplibre';
-    metrics.hidden = engine !== 'maplibre';
-    if (engine === 'maplibre') {
-      try {
-        await ensureMapLibre();
-        syncStyle();
-        setTimeout(() => { map?.resize(); fitCurrentPerspective(); }, 0);
-      } catch (_) {}
-    }
+  async function activateMapLibre() {
+    arrangeProfessionalLayout();
+    currentStage.hidden = true;
+    stage.hidden = false;
+    metrics.hidden = false;
+    try {
+      await ensureMapLibre();
+      syncStyle();
+      setTimeout(() => { map?.resize(); fitCurrentPerspective(); }, 0);
+    } catch (_) {}
   }
-
-  function findCommune(value) {
-    const q = String(value || '').trim().toLocaleLowerCase('fr-CH');
-    if (!q) return null;
-    return all.find(row => row.market === 'Welsch' && row.name.toLocaleLowerCase('fr-CH') === q)
-      || all.find(row => row.market === 'Welsch' && row.name.toLocaleLowerCase('fr-CH').includes(q));
-  }
-
-  function focusCommune(commune) {
-    if (!map || !commune || !pointGeoJSON) return;
-    const point = pointGeoJSON.features.find(feature => String(feature.properties.id) === String(commune.id));
-    if (!point) return;
-    map.easeTo({ center: point.geometry.coordinates, zoom: Math.max(map.getZoom(), 11), duration: 550 });
-    showClickPopup(commune, point.geometry.coordinates);
-  }
-
-  query.addEventListener('keydown', event => {
-    if (engine !== 'maplibre' || event.key !== 'Enter') return;
-    const commune = findCommune(event.currentTarget.value);
-    if (!commune) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    query.blur();
-    focusCommune(commune);
-  }, true);
 
   document.querySelectorAll('[data-map-perspective],[data-map-mode]').forEach(button => {
-    button.addEventListener('click', () => setTimeout(() => {
-      if (engine === 'maplibre') syncStyle({ fit: button.hasAttribute('data-map-perspective') });
-    }, 0));
+    button.addEventListener('click', () => setTimeout(() => { if (map) syncStyle({ fit: button.hasAttribute('data-map-perspective') }); }, 0));
   });
-  document.getElementById('mapProduct')?.addEventListener('change', () => setTimeout(() => { if (engine === 'maplibre') syncStyle(); }, 0));
-  document.getElementById('syncReload')?.addEventListener('click', () => setTimeout(() => { if (engine === 'maplibre') syncStyle(); }, 700));
-  document.querySelector('[data-view="map"]')?.addEventListener('click', () => {
-    if (engine === 'maplibre') setTimeout(() => { map?.resize(); fitCurrentPerspective(); }, 120);
-  });
+  document.getElementById('mapProduct')?.addEventListener('change', () => setTimeout(() => { if (map) syncStyle(); }, 0));
+  document.getElementById('syncReload')?.addEventListener('click', () => setTimeout(() => { if (map) syncStyle(); }, 700));
+  document.querySelector('[data-view="map"]')?.addEventListener('click', () => setTimeout(activateMapLibre, 80));
 
   function recordRoadmap() {
     const stage15 = [...document.querySelectorAll('.roadmap-stage')].find(node => node.querySelector('.roadmap-version')?.textContent.trim() === '1.5');
     const items = stage15?.querySelector('.roadmap-items');
     if (!items) return;
-    const existing = [...items.querySelectorAll('div')].find(node => /MapLibre/i.test(node.textContent));
-    const html = '<strong>Carte 1.2 · MapLibre</strong><span>Évolution avant la 1.5 : swisstopo conservé, navigation native, frontières communales/cantonales, statistiques hors carte et infobulles légères.</span><small>Comparaison A/B active · ancienne carte 1.1 conservée</small>';
+    const existing = [...items.querySelectorAll('div')].find(node => /MapLibre|Carte 1\.2/i.test(node.textContent));
+    const html = '<strong>Carte 1.2 · MapLibre</strong><span>Carte professionnelle unique : swisstopo, navigation native, recherche assistée, cadrages territoriaux, couches interactives, frontières et libellés au zoom.</span><small>Étape réalisée avant la 1.5 · ancien moteur retiré de l’interface</small>';
     if (existing) existing.innerHTML = html;
     else { const item = document.createElement('div'); item.innerHTML = html; items.prepend(item); }
   }
 
   injectStyles();
-  injectEngineSwitch();
-  ensureMetrics();
+  arrangeProfessionalLayout();
+  ensureSearchUi();
+  ensureTerritoryControls();
   recordRoadmap();
+  setTimeout(() => { if (!document.getElementById('mapView')?.hidden) activateMapLibre(); }, 120);
 })();
