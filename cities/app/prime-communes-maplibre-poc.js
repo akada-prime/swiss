@@ -2,7 +2,8 @@
   'use strict';
 
   // Prime Communes · Carte 1.2 / MapLibre.
-  // Carte actuelle 1.1 conservée en parallèle pour comparaison A/B.
+  // MapLibre is now the single map shown in the UI; the historical SVG bridge
+  // remains loaded only because it provides the shared swisstopo geometry.
   const MAPLIBRE_VERSION = '6.7.0';
   const MAPLIBRE_MODULE = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.mjs`;
   const MAPLIBRE_CSS = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.css`;
@@ -10,10 +11,9 @@
 
   const panel = document.getElementById('mapPanel');
   const currentStage = document.getElementById('mapStage');
-  const query = document.getElementById('mapQuery');
+  let query = document.getElementById('mapQuery');
   if (!panel || !currentStage || !query) return;
 
-  let engine = 'current';
   let stage = null;
   let metrics = null;
   let map = null;
@@ -25,12 +25,25 @@
   let pointGeoJSON = null;
   let loadingPromise = null;
   let selectedId = '';
+  let cantonFilter = '';
+  let cantonSelect = null;
+  let viewSelect = null;
+  let productSelect = null;
+  let suggestionsBox = null;
+  let suggestions = [];
+  let suggestionIndex = -1;
+
+  const normalizeText = value => String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('fr-CH')
+    .trim();
 
   function injectStyles() {
     if (!document.querySelector('link[href*="prime-communes-maplibre-poc.css"]')) {
       const local = document.createElement('link');
       local.rel = 'stylesheet';
-      local.href = 'app/prime-communes-maplibre-poc.css?v=3';
+      local.href = 'app/prime-communes-maplibre-poc.css?v=4';
       document.head.append(local);
     }
     if (!document.querySelector(`link[href="${MAPLIBRE_CSS}"]`)) {
@@ -41,41 +54,25 @@
     }
   }
 
-  function injectEngineSwitch() {
-    if (document.getElementById('mapEngineCompare')) return;
-    const compare = document.createElement('div');
-    compare.className = 'map-engine-compare';
-    compare.id = 'mapEngineCompare';
-    compare.innerHTML = `
-      <div class="map-engine-copy"><strong>Comparer le moteur</strong><span>Même swisstopo, deux comportements.</span></div>
-      <div class="map-engine-switch" role="group" aria-label="Moteur cartographique">
-        <button type="button" class="active" id="mapEngineCurrent">Carte actuelle · 1.1</button>
-        <button type="button" id="mapEngineMapLibre">Carte 1.2 · MapLibre</button>
-      </div>`;
-    panel.insertAdjacentElement('beforebegin', compare);
-    document.getElementById('mapEngineCurrent').onclick = () => activateEngine('current');
-    document.getElementById('mapEngineMapLibre').onclick = () => activateEngine('maplibre');
-  }
-
   function ensureMetrics() {
     if (metrics) return metrics;
     metrics = document.createElement('div');
     metrics.className = 'maplibre-metrics';
     metrics.id = 'mapLibreMetrics';
-    metrics.hidden = true;
     metrics.innerHTML = `
-      <article class="maplibre-metric">
-        <p>Romandie · empreinte Prime</p>
+      <article class="maplibre-metric maplibre-metric-primary">
+        <p>Suisse romande · empreinte Prime</p>
         <strong id="mapLibreRomandieRatio">—</strong>
         <span id="mapLibreRomandiePopulation">—</span>
+        <small>Part des habitants vivant dans une commune cliente Prime.</small>
       </article>
       <article class="maplibre-metric">
-        <p>Territoires innosolvcity Prime</p>
+        <p>Territoire innosolvcity Prime</p>
         <strong id="mapLibreActiveRatio">—</strong>
         <span id="mapLibreActivePopulation">—</span>
-        <small>JU · BE romand · VD · FR romand</small>
+        <small>Jura · Jura bernois · Vaud · Fribourg francophone</small>
       </article>`;
-    currentStage.insertAdjacentElement('beforebegin', metrics);
+    panel.insertAdjacentElement('beforebegin', metrics);
     return metrics;
   }
 
@@ -84,13 +81,100 @@
     stage = document.createElement('div');
     stage.className = 'maplibre-stage';
     stage.id = 'mapLibreStage';
-    stage.hidden = true;
     stage.innerHTML = `
-      <div id="primeMapLibre" aria-label="Carte MapLibre de la Suisse romande"></div>
+      <div id="primeMapLibre" aria-label="Carte interactive des communes suisses"></div>
       <div class="maplibre-badge">Carte 1.2 · MapLibre + swisstopo</div>
-      <div class="maplibre-loading" id="mapLibreLoading"><span></span>Chargement du moteur MapLibre…</div>`;
+      <div class="maplibre-loading" id="mapLibreLoading"><span></span>Chargement de la carte…</div>`;
     currentStage.insertAdjacentElement('afterend', stage);
+    currentStage.hidden = true;
     return stage;
+  }
+
+  function configureToolbar() {
+    const toolbar = panel.querySelector('.map-toolbar');
+    const search = toolbar?.querySelector('.map-search');
+    if (!toolbar || !search) return;
+
+    const freshQuery = query.cloneNode(true);
+    query.replaceWith(freshQuery);
+    query = freshQuery;
+    query.setAttribute('autocomplete', 'off');
+    query.setAttribute('aria-autocomplete', 'list');
+    query.setAttribute('aria-expanded', 'false');
+    query.placeholder = 'Rechercher une commune…';
+
+    toolbar.querySelector('.map-controls')?.remove();
+    toolbar.classList.add('maplibre-toolbar');
+    search.classList.add('maplibre-search');
+
+    suggestionsBox = document.createElement('div');
+    suggestionsBox.id = 'mapAutocomplete';
+    suggestionsBox.className = 'map-autocomplete';
+    suggestionsBox.hidden = true;
+    suggestionsBox.setAttribute('role', 'listbox');
+    search.append(suggestionsBox);
+
+    const cantonLabel = document.createElement('label');
+    cantonLabel.className = 'maplibre-filter';
+    cantonLabel.innerHTML = '<span>Canton</span><select id="mapCantonFilter" aria-label="Filtrer par canton"><option value="">Tous les cantons</option></select>';
+    toolbar.append(cantonLabel);
+    cantonSelect = cantonLabel.querySelector('select');
+
+    const viewLabel = document.createElement('label');
+    viewLabel.className = 'maplibre-filter';
+    viewLabel.innerHTML = `
+      <span>Affichage</span>
+      <select id="mapViewFilter" aria-label="Choisir la lecture cartographique">
+        <option value="impact">Empreinte Prime</option>
+        <option value="integrator">Intégrateur</option>
+        <option value="software">Logiciel</option>
+        <option value="product">Produit</option>
+      </select>`;
+    toolbar.append(viewLabel);
+    viewSelect = viewLabel.querySelector('select');
+
+    const productLabel = document.createElement('label');
+    productLabel.className = 'maplibre-filter maplibre-product-filter';
+    productLabel.hidden = true;
+    productLabel.innerHTML = '<span>Produit</span><select id="mapProductFilter" aria-label="Choisir un produit"></select>';
+    toolbar.append(productLabel);
+    productSelect = productLabel.querySelector('select');
+
+    bindSearch();
+    cantonSelect.addEventListener('change', () => {
+      cantonFilter = cantonSelect.value;
+      syncLayerFilters();
+      fitActiveScope();
+      closeSuggestions();
+    });
+    viewSelect.addEventListener('change', () => {
+      syncViewSelection();
+      closeSuggestions();
+    });
+    productSelect.addEventListener('change', () => {
+      mapProduct = productSelect.value;
+      syncStyle();
+    });
+  }
+
+  function populateToolbarOptions() {
+    if (!all.length) return;
+    if (cantonSelect) {
+      const selected = cantonSelect.value;
+      const cantons = [...new Set(all.map(row => row.canton).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'fr-CH'));
+      cantonSelect.innerHTML = '<option value="">Tous les cantons</option>' + cantons.map(canton => `<option value="${esc(canton)}">${esc(canton)}</option>`).join('');
+      cantonSelect.value = cantons.includes(selected) ? selected : '';
+      cantonFilter = cantonSelect.value;
+    }
+    if (productSelect) {
+      const selected = productSelect.value || mapProduct || '';
+      const products = [...new Set(all.flatMap(row => row.products || []).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'fr-CH'));
+      productSelect.innerHTML = products.map(product => `<option value="${esc(product)}">${esc(product)}</option>`).join('');
+      if (products.length) {
+        productSelect.value = products.includes(selected) ? selected : products[0];
+        mapProduct = productSelect.value;
+      }
+    }
   }
 
   function coverage(rows) {
@@ -114,9 +198,9 @@
       if (node) node.textContent = value;
     };
     set('mapLibreRomandieRatio', r.ratio ? `1 Romand sur ${r.ratio}` : '—');
-    set('mapLibreRomandiePopulation', `${fmt.format(r.covered)} hab. · ${pct.format(r.share)}%`);
+    set('mapLibreRomandiePopulation', `${fmt.format(r.covered)} habitants · ${pct.format(r.share)}% de la Romandie`);
     set('mapLibreActiveRatio', a.ratio ? `1 habitant sur ${a.ratio}` : '—');
-    set('mapLibreActivePopulation', `${fmt.format(a.covered)} hab. · ${pct.format(a.share)}%`);
+    set('mapLibreActivePopulation', `${fmt.format(a.covered)} habitants · ${pct.format(a.share)}% du territoire ciblé`);
   }
 
   function lv95ToWgs84(easting, northing) {
@@ -221,6 +305,7 @@
       id: String(commune.id),
       properties: {
         id: String(commune.id),
+        canton: commune.canton || '',
         population: Number(commune.expectedPopulation || 0),
         isPrime: Boolean(commune.isPrime),
         isInnosolv: commune.software === 'innosolvcity',
@@ -270,6 +355,26 @@
     map?.getSource('cantons')?.setData(cantonGeoJSON);
   }
 
+  function cantonExpression() {
+    return cantonFilter ? ['==', ['get', 'canton'], cantonFilter] : null;
+  }
+
+  function syncLayerFilters() {
+    if (!map || !map.isStyleLoaded()) return;
+    const canton = cantonExpression();
+    const combine = specific => canton ? ['all', canton, specific] : specific;
+    if (map.getLayer('municipalities-fill')) map.setFilter('municipalities-fill', canton);
+    if (map.getLayer('municipalities-line')) map.setFilter('municipalities-line', canton);
+    if (map.getLayer('prime-halo')) map.setFilter('prime-halo', combine(['==', ['get', 'isPrime'], true]));
+    if (map.getLayer('prime-core')) map.setFilter('prime-core', combine(['==', ['get', 'isPrime'], true]));
+    if (map.getLayer('innosolv-dots')) map.setFilter('innosolv-dots', combine(['==', ['get', 'isInnosolv'], true]));
+    if (map.getLayer('eadmin-dots')) map.setFilter('eadmin-dots', combine(['all', ['==', ['get', 'hasEadmin'], true], ['==', ['get', 'isPrime'], true]]));
+    if (map.getLayer('municipality-selected')) {
+      const selection = ['==', ['get', 'id'], selectedId || '__none__'];
+      map.setFilter('municipality-selected', canton ? ['all', canton, selection] : selection);
+    }
+  }
+
   function syncStyle({ fit = false } = {}) {
     if (!map || !map.isStyleLoaded()) return;
     syncMapData();
@@ -280,8 +385,9 @@
     for (const id of ['prime-halo', 'prime-core', 'innosolv-dots', 'eadmin-dots']) {
       if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', mapPerspective === 'impact' ? 'visible' : 'none');
     }
+    syncLayerFilters();
     syncMetrics();
-    if (fit) fitCurrentPerspective();
+    if (fit) fitActiveScope();
   }
 
   function boundsFromBox(box) {
@@ -301,22 +407,24 @@
     return boundsFromFeatures(features) || [[5.75, 45.78], [7.75, 47.55]];
   }
 
-  function fitCurrentPerspective() {
+  function fitActiveScope() {
     if (!map || !mapGeometry) return;
-    // Impact opens on ALL of Suisse romande: Geneva must be visible at the far left.
-    // We deliberately do not waste the initial viewport on Glarus/eastern Switzerland.
-    const bounds = mapPerspective === 'impact' ? romandieBounds() : boundsFromBox(mapGeometry.meta.viewBox);
-    map.fitBounds(bounds, { padding: window.matchMedia('(max-width:680px)').matches ? 8 : 18, duration: 380 });
+    let bounds = null;
+    if (cantonFilter) {
+      bounds = boundsFromFeatures(municipalityGeoJSON?.features?.filter(feature => feature.properties.canton === cantonFilter));
+    }
+    if (!bounds) bounds = mapPerspective === 'impact' ? romandieBounds() : boundsFromBox(mapGeometry.meta.viewBox);
+    map.fitBounds(bounds, { padding: window.matchMedia('(max-width:680px)').matches ? 10 : 22, duration: 380 });
   }
 
   function addLayers() {
     const [x, y, w, h] = mapGeometry.meta.viewBox;
     const imageCoordinates = [lv95ToWgs84(x, -y), lv95ToWgs84(x + w, -y), lv95ToWgs84(x + w, -(y + h)), lv95ToWgs84(x, -(y + h))];
 
-    map.addSource('swisstopo-base', { type: 'image', url: 'public/swiss-base-light.webp?v=1', coordinates: imageCoordinates });
+    map.addSource('swisstopo-base', { type: 'image', url: 'public/swiss-base.webp', coordinates: imageCoordinates });
     map.addLayer({
       id: 'swisstopo-base', type: 'raster', source: 'swisstopo-base',
-      paint: { 'raster-opacity': 1, 'raster-brightness-min': 0.04, 'raster-brightness-max': 1, 'raster-contrast': -0.06, 'raster-saturation': -0.10 }
+      paint: { 'raster-opacity': 1, 'raster-brightness-min': 0.24, 'raster-brightness-max': 0.98, 'raster-contrast': -0.15, 'raster-saturation': -0.08 }
     });
 
     map.addSource('municipalities', { type: 'geojson', data: municipalityGeoJSON, promoteId: 'id' });
@@ -324,13 +432,12 @@
     map.addLayer({
       id: 'municipalities-line', type: 'line', source: 'municipalities',
       paint: {
-        'line-color': 'rgba(34,62,80,.78)',
-        'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.06, 8, 0.20, 10, 0.52, 12, 0.80],
-        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.18, 8, 0.36, 10, 0.82, 12, 1.35]
+        'line-color': 'rgba(236,247,252,.98)',
+        'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.08, 8, 0.25, 10, 0.68, 12, 0.94],
+        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.22, 8, 0.42, 10, 0.9, 12, 1.5]
       }
     });
 
-    // True canton boundaries from all canton shapes contained in swissBOUNDARIES3D.
     map.addSource('cantons', { type: 'geojson', data: cantonGeoJSON });
     map.addLayer({ id: 'cantons-border-casing', type: 'line', source: 'cantons', paint: { 'line-color': 'rgba(13,28,39,.86)', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 2.8, 9, 3.5, 12, 4.6], 'line-opacity': 0.82 } });
     map.addLayer({ id: 'cantons-border', type: 'line', source: 'cantons', paint: { 'line-color': 'rgba(242,249,252,.96)', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.9, 9, 1.25, 12, 1.85], 'line-opacity': 0.92 } });
@@ -363,7 +470,7 @@
 
   function selectMunicipality(id) {
     selectedId = String(id || '');
-    if (map?.getLayer('municipality-selected')) map.setFilter('municipality-selected', ['==', ['get', 'id'], selectedId || '__none__']);
+    syncLayerFilters();
   }
 
   function showClickPopup(commune, lngLat) {
@@ -401,7 +508,7 @@
     await new Promise(resolve => {
       const started = Date.now();
       const timer = setInterval(() => {
-        if (all.length || Date.now() - started > 5000) { clearInterval(timer); resolve(); }
+        if (all.length || Date.now() - started > 7000) { clearInterval(timer); resolve(); }
       }, 80);
     });
   }
@@ -413,6 +520,8 @@
       ensureMetrics();
       ensureStage();
       await waitForData();
+      populateToolbarOptions();
+      syncMetrics();
       if (!mapGeometry) await loadMap();
       if (!mapGeometry || !all.length) throw new Error('Données cartographiques indisponibles.');
       buildGeoJSON();
@@ -437,79 +546,171 @@
       return map;
     })().catch(error => {
       const loading = document.getElementById('mapLibreLoading');
-      if (loading) loading.innerHTML = `<div class="maplibre-error">MapLibre n’a pas pu démarrer sur cet appareil.<br>${esc(error?.message || error)}</div>`;
+      if (loading) loading.innerHTML = `<div class="maplibre-error">La carte n’a pas pu démarrer sur cet appareil.<br>${esc(error?.message || error)}</div>`;
       loadingPromise = null;
       throw error;
     });
     return loadingPromise;
   }
 
-  async function activateEngine(next) {
-    engine = next === 'maplibre' ? 'maplibre' : 'current';
-    document.getElementById('mapEngineCurrent')?.classList.toggle('active', engine === 'current');
-    document.getElementById('mapEngineMapLibre')?.classList.toggle('active', engine === 'maplibre');
-    ensureMetrics();
-    ensureStage();
-    currentStage.hidden = engine !== 'current';
-    stage.hidden = engine !== 'maplibre';
-    metrics.hidden = engine !== 'maplibre';
-    if (engine === 'maplibre') {
-      try {
-        await ensureMapLibre();
-        syncStyle();
-        setTimeout(() => { map?.resize(); fitCurrentPerspective(); }, 0);
-      } catch (_) {}
+  function closeSuggestions() {
+    suggestions = [];
+    suggestionIndex = -1;
+    if (suggestionsBox) suggestionsBox.hidden = true;
+    query?.setAttribute('aria-expanded', 'false');
+  }
+
+  function suggestionMatches(value) {
+    const needle = normalizeText(value);
+    if (needle.length < 2) return [];
+    const filtered = all.filter(row => !cantonFilter || row.canton === cantonFilter);
+    const ranked = filtered
+      .map(row => {
+        const name = normalizeText(row.name);
+        const starts = name.startsWith(needle);
+        const contains = name.includes(needle);
+        return contains ? { row, rank: starts ? 0 : 1 } : null;
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.rank - b.rank || a.row.name.localeCompare(b.row.name, 'fr-CH'));
+    return ranked.slice(0, 8).map(item => item.row);
+  }
+
+  function renderSuggestions(value) {
+    if (!suggestionsBox) return;
+    suggestions = suggestionMatches(value);
+    suggestionIndex = -1;
+    if (!suggestions.length) {
+      closeSuggestions();
+      return;
     }
+    suggestionsBox.innerHTML = suggestions.map((commune, index) => `
+      <button type="button" role="option" data-index="${index}">
+        <strong>${esc(commune.name)}</strong>
+        <span>${esc(commune.canton)} · ${fmt.format(commune.expectedPopulation)} hab.${commune.isPrime ? ' · Prime' : ''}</span>
+      </button>`).join('');
+    suggestionsBox.hidden = false;
+    query.setAttribute('aria-expanded', 'true');
+    suggestionsBox.querySelectorAll('button').forEach(button => {
+      button.addEventListener('pointerdown', event => event.preventDefault());
+      button.addEventListener('click', () => chooseSuggestion(Number(button.dataset.index)));
+    });
+  }
+
+  function paintSuggestionIndex() {
+    suggestionsBox?.querySelectorAll('button').forEach((button, index) => button.classList.toggle('active', index === suggestionIndex));
   }
 
   function findCommune(value) {
-    const q = String(value || '').trim().toLocaleLowerCase('fr-CH');
-    if (!q) return null;
-    return all.find(row => row.market === 'Welsch' && row.name.toLocaleLowerCase('fr-CH') === q)
-      || all.find(row => row.market === 'Welsch' && row.name.toLocaleLowerCase('fr-CH').includes(q));
+    const needle = normalizeText(value);
+    if (!needle) return null;
+    const filtered = all.filter(row => !cantonFilter || row.canton === cantonFilter);
+    return filtered.find(row => normalizeText(row.name) === needle)
+      || filtered.find(row => normalizeText(row.name).startsWith(needle))
+      || filtered.find(row => normalizeText(row.name).includes(needle))
+      || null;
   }
 
   function focusCommune(commune) {
-    if (!map || !commune || !pointGeoJSON) return;
-    const point = pointGeoJSON.features.find(feature => String(feature.properties.id) === String(commune.id));
-    if (!point) return;
-    map.easeTo({ center: point.geometry.coordinates, zoom: Math.max(map.getZoom(), 11), duration: 550 });
-    showClickPopup(commune, point.geometry.coordinates);
+    if (!commune) return;
+    query.value = commune.name;
+    closeSuggestions();
+    ensureMapLibre().then(() => {
+      if (!pointGeoJSON) return;
+      const point = pointGeoJSON.features.find(feature => String(feature.properties.id) === String(commune.id));
+      if (!point) return;
+      if (cantonSelect && cantonFilter && commune.canton !== cantonFilter) {
+        cantonFilter = '';
+        cantonSelect.value = '';
+        syncLayerFilters();
+      }
+      map.easeTo({ center: point.geometry.coordinates, zoom: Math.max(map.getZoom(), 11), duration: 520 });
+      showClickPopup(commune, point.geometry.coordinates);
+    }).catch(() => {});
   }
 
-  query.addEventListener('keydown', event => {
-    if (engine !== 'maplibre' || event.key !== 'Enter') return;
-    const commune = findCommune(event.currentTarget.value);
-    if (!commune) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    query.blur();
-    focusCommune(commune);
-  }, true);
+  function chooseSuggestion(index) {
+    const commune = suggestions[index];
+    if (commune) focusCommune(commune);
+  }
 
-  document.querySelectorAll('[data-map-perspective],[data-map-mode]').forEach(button => {
-    button.addEventListener('click', () => setTimeout(() => {
-      if (engine === 'maplibre') syncStyle({ fit: button.hasAttribute('data-map-perspective') });
-    }, 0));
-  });
-  document.getElementById('mapProduct')?.addEventListener('change', () => setTimeout(() => { if (engine === 'maplibre') syncStyle(); }, 0));
-  document.getElementById('syncReload')?.addEventListener('click', () => setTimeout(() => { if (engine === 'maplibre') syncStyle(); }, 700));
-  document.querySelector('[data-view="map"]')?.addEventListener('click', () => {
-    if (engine === 'maplibre') setTimeout(() => { map?.resize(); fitCurrentPerspective(); }, 120);
-  });
+  function bindSearch() {
+    query.addEventListener('input', event => renderSuggestions(event.currentTarget.value));
+    query.addEventListener('focus', event => renderSuggestions(event.currentTarget.value));
+    query.addEventListener('blur', () => window.setTimeout(closeSuggestions, 120));
+    query.addEventListener('keydown', event => {
+      if (event.key === 'ArrowDown' && suggestions.length) {
+        event.preventDefault();
+        suggestionIndex = (suggestionIndex + 1) % suggestions.length;
+        paintSuggestionIndex();
+        return;
+      }
+      if (event.key === 'ArrowUp' && suggestions.length) {
+        event.preventDefault();
+        suggestionIndex = (suggestionIndex - 1 + suggestions.length) % suggestions.length;
+        paintSuggestionIndex();
+        return;
+      }
+      if (event.key === 'Escape') {
+        closeSuggestions();
+        return;
+      }
+      if (event.key !== 'Enter') return;
+      const commune = suggestionIndex >= 0 ? suggestions[suggestionIndex] : findCommune(event.currentTarget.value);
+      if (!commune) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      focusCommune(commune);
+      query.blur();
+    }, true);
+  }
+
+  function syncViewSelection() {
+    if (!viewSelect) return;
+    const value = viewSelect.value;
+    if (value === 'impact') {
+      mapPerspective = 'impact';
+      mapMode = 'integrator';
+    } else {
+      mapPerspective = 'factual';
+      mapMode = value;
+    }
+    const productLabel = productSelect?.closest('.maplibre-product-filter');
+    if (productLabel) productLabel.hidden = value !== 'product';
+    if (value === 'product' && productSelect?.value) mapProduct = productSelect.value;
+    syncStyle();
+    fitActiveScope();
+  }
 
   function recordRoadmap() {
-    const stage15 = [...document.querySelectorAll('.roadmap-stage')].find(node => node.querySelector('.roadmap-version')?.textContent.trim() === '1.5');
-    const items = stage15?.querySelector('.roadmap-items');
+    const stage11 = [...document.querySelectorAll('.roadmap-stage')].find(node => node.querySelector('.roadmap-version')?.textContent.trim() === '1.1');
+    const items = stage11?.querySelector('.roadmap-items');
     if (!items) return;
-    const existing = [...items.querySelectorAll('div')].find(node => /MapLibre/i.test(node.textContent));
-    const html = '<strong>Carte 1.2 · MapLibre</strong><span>Évolution avant la 1.5 : swisstopo conservé, navigation native, frontières communales/cantonales, statistiques hors carte et infobulles légères.</span><small>Comparaison A/B active · ancienne carte 1.1 conservée</small>';
+    const existing = [...items.querySelectorAll('div')].find(node => /MapLibre|Carte 1\.2/i.test(node.textContent));
+    const html = '<strong>Carte 1.2 · MapLibre</strong><span>Carte unique : navigation native, frontières communales au zoom, frontières cantonales officielles, stats hors carte, recherche commune avec autosuggestion et infobulles légères.</span><small>Ancienne carte et comparateur retirés de l’interface.</small>';
     if (existing) existing.innerHTML = html;
     else { const item = document.createElement('div'); item.innerHTML = html; items.prepend(item); }
   }
 
   injectStyles();
-  injectEngineSwitch();
   ensureMetrics();
+  ensureStage();
+  configureToolbar();
   recordRoadmap();
+  currentStage.hidden = true;
+
+  waitForData().then(() => {
+    populateToolbarOptions();
+    syncMetrics();
+  });
+
+  document.getElementById('syncReload')?.addEventListener('click', () => setTimeout(() => {
+    populateToolbarOptions();
+    syncMetrics();
+    if (map) syncStyle();
+  }, 700));
+
+  document.querySelector('[data-view="map"]')?.addEventListener('click', () => {
+    ensureMapLibre().then(() => setTimeout(() => { map?.resize(); fitActiveScope(); }, 120)).catch(() => {});
+  });
 })();
