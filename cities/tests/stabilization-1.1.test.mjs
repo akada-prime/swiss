@@ -42,19 +42,20 @@ test('production DB stabilization migration never writes business rows', async (
   assert.doesNotMatch(sql, /\bDELETE\s+FROM\s+public\."GemeindeProfil"/i);
 });
 
-test('current site keeps Communes stable while Carte 1.2 and Stats 1.2 are isolated UI modules', async () => {
+test('current site loads one canonical stylesheet per UI layer', async () => {
   const html = await read('index.html');
   const loader = await read('app/prime-communes-1.1.js');
   assert.match(html, /<script src="app\/prime-communes-1\.1\.js\?v=\d+"><\/script>/);
   assert.match(loader, /prime-communes-1\.1-base\.js/);
   assert.match(loader, /prime-communes-map-1\.1\.js/);
   assert.match(loader, /prime-communes-maplibre-1\.2\.js\?v=\d+/);
-  assert.match(loader, /prime-communes-map-1\.1\.css/);
+  assert.match(loader, /prime-communes-map-1\.1\.css\?v=\d+/);
   assert.match(loader, /prime-communes-stats-1\.2\.css\?v=\d+/);
   assert.match(loader, /prime-communes-maplibre-1\.2\.css\?v=\d+/);
-  assert.match(loader, /ensureLegacyMapProduct/);
   assert.doesNotMatch(loader, /stats-fix\.css/);
   assert.doesNotMatch(loader, /visual-fix\.css/);
+  assert.doesNotMatch(loader, /MutationObserver/);
+  assert.doesNotMatch(loader, /ensureLegacyMapProduct/);
   assert.match(html, /id="communesView"/);
   assert.match(html, /id="mapView"/);
   assert.match(html, /id="statsView"/);
@@ -70,16 +71,22 @@ test('legacy SVG bridge stays available only as the stable geometry/mobile fallb
   assert.match(css, /touch-action:none!important/);
 });
 
-test('Carte 1.2 exposes the validated professional map tools and compact Swiss metrics', async () => {
+test('Carte 1.2 cannot remove legacy controls needed by Communes data loading', async () => {
+  const js = await read('app/prime-communes-maplibre-1.2.js');
+  assert.match(js, /const legacyControls = toolbar\.querySelector\('\.map-controls'\)/);
+  assert.match(js, /legacyControls\.hidden = true/);
+  assert.doesNotMatch(js, /toolbar\.querySelector\('\.map-controls'\)\?\.remove\(\)/);
+});
+
+test('Carte 1.2 exposes the validated professional map tools and Swiss KPI silhouettes', async () => {
   const js = await read('app/prime-communes-maplibre-1.2.js');
   const css = await read('app/prime-communes-maplibre-1.2.css');
-  const loader = await read('app/prime-communes-1.1.js');
   assert.match(js, /MAPLIBRE_VERSION = '6\.7\.0'/);
   assert.match(js, /legacyStage\.hidden = true/);
   assert.match(js, /mapLibreRomandieRatio/);
   assert.match(js, /mapLibreActiveRatio/);
   assert.match(js, /renderMetricMaps/);
-  assert.match(loader, /Jura · Berne · Vaud · Fribourg \(romands\)/);
+  assert.match(js, /ACTIVE_TERRITORY_LABEL = 'Jura · Berne · Vaud · Fribourg \(romands\)'/);
   assert.match(js, /mapAutocomplete/);
   assert.match(js, /suggestionMatches/);
   assert.match(js, /nf\.format\(commune\.expectedPopulation\)/);
@@ -101,20 +108,21 @@ test('Carte 1.2 exposes the validated professional map tools and compact Swiss m
   assert.match(css, /maplibre-mini-map/);
   assert.match(css, /metric-swiss-base/);
   assert.match(css, /metric-swiss-active/);
-  assert.doesNotMatch(css, /stroke-width:230/);
-  assert.doesNotMatch(css, /stroke-width:120/);
   assert.match(css, /maplibre-progress/);
   assert.match(css, /map-autocomplete/);
-  assert.match(css, /grid-template-columns:minmax\(0,1fr\) auto!important/);
-  assert.match(css, /map-engine-compare\{display:none!important\}/);
+  assert.match(css, /grid-template-columns:minmax\(0,1fr\) auto/);
   assert.match(css, /maplibre-stage/);
+  assert.doesNotMatch(css, /!important/);
 });
 
-test('Stats 1.2 aligns peer KPI values and uses semantic Prime blue selectors', async () => {
+test('Stats 1.2 uses one KPI contract independent of label line count', async () => {
   const css = await read('app/prime-communes-stats-1.2.css');
-  assert.match(css, /#statsMunicipalities/);
-  assert.match(css, /#statsCompetitor/);
-  assert.match(css, /#6ec7ff/);
-  assert.match(css, /min-height:2\.7em/);
+  assert.match(css, /--pc-kpi-accent:#6ec7ff/);
+  assert.match(css, /--pc-kpi-label-lines:3/);
+  assert.match(css, /\.stats-kpi>span/);
+  assert.match(css, /\.stats-kpi>strong/);
+  assert.doesNotMatch(css, /#statsMunicipalities/);
+  assert.doesNotMatch(css, /#statsCompetitor/);
   assert.doesNotMatch(css, /nth-child/);
+  assert.doesNotMatch(css, /:has\(/);
 });
