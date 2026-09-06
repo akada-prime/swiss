@@ -2,12 +2,13 @@
   'use strict';
 
   // Prime Communes · Carte 1.2
-  // UI validated 06.09.2026: compact B stats, one MapLibre map, mobile-first search.
+  // Canonical map module: one MapLibre UI, mobile-first search, no business-data writes.
   const MAPLIBRE_VERSION = '6.7.0';
   const MAPLIBRE_MODULE = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.mjs`;
   const MAPLIBRE_CSS = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.css`;
   const GLYPHS_URL = 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf';
   const ACTIVE_TERRITORIES = new Set(['JU', 'BE', 'VD', 'FR']);
+  const ACTIVE_TERRITORY_LABEL = 'Jura · Berne · Vaud · Fribourg (romands)';
 
   const panel = document.getElementById('mapPanel');
   const legacyStage = document.getElementById('mapStage');
@@ -47,12 +48,8 @@
     .trim();
 
   function injectAssets() {
-    if (!document.querySelector('link[href*="prime-communes-maplibre-1.2.css"]')) {
-      const local = document.createElement('link');
-      local.rel = 'stylesheet';
-      local.href = 'app/prime-communes-maplibre-1.2.css?v=1';
-      document.head.append(local);
-    }
+    // The local Carte stylesheet is loaded once by the application loader.
+    // This module only owns the third-party MapLibre stylesheet.
     if (!document.querySelector(`link[href="${MAPLIBRE_CSS}"]`)) {
       const external = document.createElement('link');
       external.rel = 'stylesheet';
@@ -83,9 +80,9 @@
           <strong id="mapLibreActiveRatio">—</strong>
           <span id="mapLibreActivePopulation">—</span>
           <div class="maplibre-progress" aria-hidden="true"><i id="mapLibreActiveProgress"></i></div>
-          <small>Jura · Jura bernois · Vaud · Fribourg francophone</small>
+          <small>${ACTIVE_TERRITORY_LABEL}</small>
           <div class="maplibre-territory-chips" aria-hidden="true">
-            <i>JU</i><i>Jura bernois</i><i>VD</i><i>FR (francophone)</i>
+            <i>JU</i><i>BE</i><i>VD</i><i>FR</i>
           </div>
         </div>
         <div class="maplibre-mini-map" id="mapLibreActiveMap" aria-hidden="true"></div>
@@ -121,7 +118,14 @@
     query.setAttribute('aria-expanded', 'false');
     query.placeholder = 'Rechercher une commune…';
 
-    toolbar.querySelector('.map-controls')?.remove();
+    // Keep the historical controls in the DOM because the stable 1.1 data
+    // bridge still references #mapProduct. Carte 1.2 simply hides that UI.
+    const legacyControls = toolbar.querySelector('.map-controls');
+    if (legacyControls) {
+      legacyControls.hidden = true;
+      legacyControls.setAttribute('aria-hidden', 'true');
+    }
+
     toolbar.classList.add('maplibre-toolbar');
     search.classList.add('maplibre-search');
 
@@ -244,12 +248,13 @@
     const target = document.getElementById(targetId);
     if (!target || !mapGeometry?.meta?.viewBox) return;
     const [x, y, w, h] = mapGeometry.meta.viewBox.map(Number);
+    const lookup = new Map(all.map(row => [String(row.id), row]));
     const base = (mapGeometry.cantons || []).map(shape =>
       `<path class="metric-swiss-base" d="${html(shape.d)}"></path>`
     ).join('');
     const active = (mapGeometry.municipalities || [])
       .filter(shape => {
-        const commune = all.find(row => String(row.id) === String(shape.id));
+        const commune = lookup.get(String(shape.id));
         return commune && predicate(commune);
       })
       .map(shape => `<path class="metric-swiss-active" d="${html(shape.d)}"></path>`)
