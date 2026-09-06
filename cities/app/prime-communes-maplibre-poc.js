@@ -30,7 +30,7 @@
     if (!document.querySelector('link[href*="prime-communes-maplibre-poc.css"]')) {
       const local = document.createElement('link');
       local.rel = 'stylesheet';
-      local.href = 'app/prime-communes-maplibre-poc.css?v=2';
+      local.href = 'app/prime-communes-maplibre-poc.css?v=3';
       document.head.append(local);
     }
     if (!document.querySelector(`link[href="${MAPLIBRE_CSS}"]`)) {
@@ -313,10 +313,10 @@
     const [x, y, w, h] = mapGeometry.meta.viewBox;
     const imageCoordinates = [lv95ToWgs84(x, -y), lv95ToWgs84(x + w, -y), lv95ToWgs84(x + w, -(y + h)), lv95ToWgs84(x, -(y + h))];
 
-    map.addSource('swisstopo-base', { type: 'image', url: 'public/swiss-base.webp', coordinates: imageCoordinates });
+    map.addSource('swisstopo-base', { type: 'image', url: 'public/swiss-base-light.webp?v=1', coordinates: imageCoordinates });
     map.addLayer({
       id: 'swisstopo-base', type: 'raster', source: 'swisstopo-base',
-      paint: { 'raster-opacity': 1, 'raster-brightness-min': 0.24, 'raster-brightness-max': 0.98, 'raster-contrast': -0.15, 'raster-saturation': -0.08 }
+      paint: { 'raster-opacity': 1, 'raster-brightness-min': 0.04, 'raster-brightness-max': 1, 'raster-contrast': -0.06, 'raster-saturation': -0.10 }
     });
 
     map.addSource('municipalities', { type: 'geojson', data: municipalityGeoJSON, promoteId: 'id' });
@@ -324,9 +324,9 @@
     map.addLayer({
       id: 'municipalities-line', type: 'line', source: 'municipalities',
       paint: {
-        'line-color': 'rgba(236,247,252,.98)',
-        'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.08, 8, 0.25, 10, 0.68, 12, 0.94],
-        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.22, 8, 0.42, 10, 0.9, 12, 1.5]
+        'line-color': 'rgba(34,62,80,.78)',
+        'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.06, 8, 0.20, 10, 0.52, 12, 0.80],
+        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.18, 8, 0.36, 10, 0.82, 12, 1.35]
       }
     });
 

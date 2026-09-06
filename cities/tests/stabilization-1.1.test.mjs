@@ -45,7 +45,7 @@ test('production DB stabilization migration never writes business rows', async (
 test('current site still loads the stable 1.1 entry point', async () => {
   const html = await read('index.html');
   const loader = await read('app/prime-communes-1.1.js');
-  assert.match(html, /<script src="app\/prime-communes-1\.1\.js\?v=1"><\/script>/);
+  assert.match(html, /<script src="app\/prime-communes-1\.1\.js\?v=\d+"><\/script>/);
   assert.match(loader, /prime-communes-1\.1-base\.js/);
   assert.match(loader, /prime-communes-map-1\.1\.js/);
   assert.match(loader, /prime-communes-maplibre-poc\.js/);
@@ -77,7 +77,7 @@ test('MapLibre POC is parallel, pinned and keeps swisstopo', async () => {
   assert.match(js, /mapEngineCurrent/);
   assert.match(js, /mapEngineMapLibre/);
   assert.match(js, /Carte actuelle · 1\.1/);
-  assert.match(js, /public\/swiss-base\.webp/);
+  assert.match(js, /public\/swiss-base(?:-light)?\.webp/);
   assert.match(js, /lv95ToWgs84/);
   assert.match(js, /openDrawer\(commune\)/);
   assert.match(js, /engine = 'current'/);
