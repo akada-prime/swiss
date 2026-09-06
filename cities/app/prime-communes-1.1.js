@@ -12,7 +12,7 @@
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = href;
-    if (onload) link.onload = onload;
+    if (onload) link.onload = () => onload(link);
     document.head.append(link);
     return link;
   };
