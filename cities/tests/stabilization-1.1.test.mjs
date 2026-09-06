@@ -42,7 +42,7 @@ test('production DB stabilization migration never writes business rows', async (
   assert.doesNotMatch(sql, /\bDELETE\s+FROM\s+public\."GemeindeProfil"/i);
 });
 
-test('current site keeps the stable bridge while Carte 1.2 is the single visible map UI', async () => {
+test('current site keeps Communes stable while Carte 1.2 and Stats 1.2 are isolated UI modules', async () => {
   const html = await read('index.html');
   const loader = await read('app/prime-communes-1.1.js');
   assert.match(html, /<script src="app\/prime-communes-1\.1\.js\?v=\d+"><\/script>/);
@@ -50,7 +50,11 @@ test('current site keeps the stable bridge while Carte 1.2 is the single visible
   assert.match(loader, /prime-communes-map-1\.1\.js/);
   assert.match(loader, /prime-communes-maplibre-1\.2\.js\?v=\d+/);
   assert.match(loader, /prime-communes-map-1\.1\.css/);
-  assert.match(loader, /prime-communes-stats-fix\.css\?v=\d+/);
+  assert.match(loader, /prime-communes-stats-1\.2\.css\?v=\d+/);
+  assert.match(loader, /prime-communes-maplibre-1\.2\.css\?v=\d+/);
+  assert.match(loader, /ensureLegacyMapProduct/);
+  assert.doesNotMatch(loader, /stats-fix\.css/);
+  assert.doesNotMatch(loader, /visual-fix\.css/);
   assert.match(html, /id="communesView"/);
   assert.match(html, /id="mapView"/);
   assert.match(html, /id="statsView"/);
@@ -66,16 +70,16 @@ test('legacy SVG bridge stays available only as the stable geometry/mobile fallb
   assert.match(css, /touch-action:none!important/);
 });
 
-test('Carte 1.2 exposes the validated professional map tools', async () => {
+test('Carte 1.2 exposes the validated professional map tools and compact Swiss metrics', async () => {
   const js = await read('app/prime-communes-maplibre-1.2.js');
   const css = await read('app/prime-communes-maplibre-1.2.css');
+  const loader = await read('app/prime-communes-1.1.js');
   assert.match(js, /MAPLIBRE_VERSION = '6\.7\.0'/);
   assert.match(js, /legacyStage\.hidden = true/);
   assert.match(js, /mapLibreRomandieRatio/);
   assert.match(js, /mapLibreActiveRatio/);
   assert.match(js, /renderMetricMaps/);
-  assert.match(js, /Jura bernois/);
-  assert.match(js, /Fribourg francophone/);
+  assert.match(loader, /Jura · Berne · Vaud · Fribourg \(romands\)/);
   assert.match(js, /mapAutocomplete/);
   assert.match(js, /suggestionMatches/);
   assert.match(js, /nf\.format\(commune\.expectedPopulation\)/);
@@ -95,6 +99,10 @@ test('Carte 1.2 exposes the validated professional map tools', async () => {
   assert.doesNotMatch(js, /mapEngineMapLibre/);
   assert.match(css, /grid-template-columns:1fr;/);
   assert.match(css, /maplibre-mini-map/);
+  assert.match(css, /metric-swiss-base/);
+  assert.match(css, /metric-swiss-active/);
+  assert.doesNotMatch(css, /stroke-width:230/);
+  assert.doesNotMatch(css, /stroke-width:120/);
   assert.match(css, /maplibre-progress/);
   assert.match(css, /map-autocomplete/);
   assert.match(css, /grid-template-columns:minmax\(0,1fr\) auto!important/);
@@ -102,10 +110,11 @@ test('Carte 1.2 exposes the validated professional map tools', async () => {
   assert.match(css, /maplibre-stage/);
 });
 
-test('Stats keeps peer KPI values aligned and uses the Prime blue accent', async () => {
-  const css = await read('app/prime-communes-stats-fix.css');
-  assert.match(css, /nth-child\(2\) strong/);
-  assert.match(css, /nth-child\(3\) strong/);
+test('Stats 1.2 aligns peer KPI values and uses semantic Prime blue selectors', async () => {
+  const css = await read('app/prime-communes-stats-1.2.css');
+  assert.match(css, /#statsMunicipalities/);
+  assert.match(css, /#statsCompetitor/);
   assert.match(css, /#6ec7ff/);
   assert.match(css, /min-height:2\.7em/);
+  assert.doesNotMatch(css, /nth-child/);
 });
