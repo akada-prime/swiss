@@ -70,17 +70,27 @@ test('mobile map layer preserves swisstopo and adds bounded touch navigation', a
   assert.match(css, /touch-action:none!important/);
 });
 
-test('MapLibre POC is parallel, pinned and keeps swisstopo', async () => {
+test('Carte 1.2 is the single MapLibre UI with professional map tools', async () => {
   const js = await read('app/prime-communes-maplibre-poc.js');
   const css = await read('app/prime-communes-maplibre-poc.css');
   assert.match(js, /MAPLIBRE_VERSION = '6\.7\.0'/);
-  assert.match(js, /mapEngineCurrent/);
-  assert.match(js, /mapEngineMapLibre/);
-  assert.match(js, /Carte actuelle · 1\.1/);
+  assert.match(js, /currentStage\.hidden = true/);
+  assert.match(js, /mapLibreRomandieRatio/);
+  assert.match(js, /mapLibreActiveRatio/);
+  assert.match(js, /Jura bernois/);
+  assert.match(js, /Fribourg francophone/);
+  assert.match(js, /mapAutocomplete/);
+  assert.match(js, /suggestionMatches/);
+  assert.match(js, /mapCantonFilter/);
+  assert.match(js, /mapViewFilter/);
+  assert.match(js, /municipalities-line/);
+  assert.match(js, /cantons-border/);
+  assert.match(js, /closeButton: false/);
   assert.match(js, /public\/swiss-base(?:-light)?\.webp/);
   assert.match(js, /lv95ToWgs84/);
   assert.match(js, /openDrawer\(commune\)/);
-  assert.match(js, /engine = 'current'/);
-  assert.match(css, /map-engine-compare/);
+  assert.match(css, /maplibre-metrics/);
+  assert.match(css, /map-autocomplete/);
+  assert.match(css, /map-engine-compare\{display:none!important\}/);
   assert.match(css, /maplibre-stage/);
 });
