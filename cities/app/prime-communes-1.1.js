@@ -24,6 +24,9 @@
     document.body.append(script);
   };
 
+  // Stats-only visual polish. No data/business behaviour.
+  loadStyle('app/prime-communes-stats-fix.css?v=1');
+
   // The historical data loader still writes the legacy #mapProduct select when
   // Supabase data arrives. Carte 1.2 may hide/remove its old visual controls,
   // so keep a hidden compatibility select available without changing Communes.
