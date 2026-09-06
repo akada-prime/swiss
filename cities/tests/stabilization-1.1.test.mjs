@@ -48,8 +48,9 @@ test('current site keeps the stable bridge while Carte 1.2 is the single visible
   assert.match(html, /<script src="app\/prime-communes-1\.1\.js\?v=\d+"><\/script>/);
   assert.match(loader, /prime-communes-1\.1-base\.js/);
   assert.match(loader, /prime-communes-map-1\.1\.js/);
-  assert.match(loader, /prime-communes-maplibre-1\.2\.js\?v=1/);
+  assert.match(loader, /prime-communes-maplibre-1\.2\.js\?v=\d+/);
   assert.match(loader, /prime-communes-map-1\.1\.css/);
+  assert.match(loader, /prime-communes-stats-fix\.css\?v=\d+/);
   assert.match(html, /id="communesView"/);
   assert.match(html, /id="mapView"/);
   assert.match(html, /id="statsView"/);
@@ -99,4 +100,12 @@ test('Carte 1.2 exposes the validated professional map tools', async () => {
   assert.match(css, /grid-template-columns:minmax\(0,1fr\) auto!important/);
   assert.match(css, /map-engine-compare\{display:none!important\}/);
   assert.match(css, /maplibre-stage/);
+});
+
+test('Stats keeps peer KPI values aligned and uses the Prime blue accent', async () => {
+  const css = await read('app/prime-communes-stats-fix.css');
+  assert.match(css, /nth-child\(2\) strong/);
+  assert.match(css, /nth-child\(3\) strong/);
+  assert.match(css, /#6ec7ff/);
+  assert.match(css, /min-height:2\.7em/);
 });
