@@ -42,13 +42,13 @@ test('production DB stabilization migration never writes business rows', async (
   assert.doesNotMatch(sql, /\bDELETE\s+FROM\s+public\."GemeindeProfil"/i);
 });
 
-test('current site still loads the stable 1.1 entry point', async () => {
+test('current site keeps the stable bridge while Carte 1.2 is the single visible map UI', async () => {
   const html = await read('index.html');
   const loader = await read('app/prime-communes-1.1.js');
   assert.match(html, /<script src="app\/prime-communes-1\.1\.js\?v=\d+"><\/script>/);
   assert.match(loader, /prime-communes-1\.1-base\.js/);
   assert.match(loader, /prime-communes-map-1\.1\.js/);
-  assert.match(loader, /prime-communes-maplibre-poc\.js/);
+  assert.match(loader, /prime-communes-maplibre-poc\.js\?v=4/);
   assert.match(loader, /prime-communes-map-1\.1\.css/);
   assert.match(html, /id="communesView"/);
   assert.match(html, /id="mapView"/);
@@ -56,21 +56,16 @@ test('current site still loads the stable 1.1 entry point', async () => {
   assert.match(html, /id="roadmapView"/);
 });
 
-test('mobile map layer preserves swisstopo and adds bounded touch navigation', async () => {
+test('legacy SVG bridge stays available only as the stable geometry/mobile fallback layer', async () => {
   const js = await read('app/prime-communes-map-1.1.js');
   const css = await read('app/prime-communes-map-1.1.css');
-  const html = await read('index.html');
-  assert.match(html, /public\/swiss-base\.webp/);
-  assert.match(html, /Surfaces officielles 2026 · swisstopo/);
   assert.match(js, /two-finger pinch/);
   assert.match(js, /clampViewBox/);
   assert.match(js, /focusCommune/);
-  assert.match(js, /now - lastEmptyTap\.time < 320[\s\S]*?zoomMap\(\.62, event\.clientX, event\.clientY\)/);
-  assert.match(css, /background:#09111b!important/);
   assert.match(css, /touch-action:none!important/);
 });
 
-test('Carte 1.2 is the single MapLibre UI with professional map tools', async () => {
+test('Carte 1.2 exposes the validated professional map tools', async () => {
   const js = await read('app/prime-communes-maplibre-poc.js');
   const css = await read('app/prime-communes-maplibre-poc.css');
   assert.match(js, /MAPLIBRE_VERSION = '6\.7\.0'/);
@@ -86,11 +81,15 @@ test('Carte 1.2 is the single MapLibre UI with professional map tools', async ()
   assert.match(js, /municipalities-line/);
   assert.match(js, /cantons-border/);
   assert.match(js, /closeButton: false/);
-  assert.match(js, /public\/swiss-base(?:-light)?\.webp/);
+  assert.match(js, /public\/swiss-base\.webp/);
   assert.match(js, /lv95ToWgs84/);
   assert.match(js, /openDrawer\(commune\)/);
+  assert.doesNotMatch(js, /mapEngineCurrent/);
+  assert.doesNotMatch(js, /mapEngineMapLibre/);
   assert.match(css, /maplibre-metrics/);
   assert.match(css, /map-autocomplete/);
   assert.match(css, /map-engine-compare\{display:none!important\}/);
   assert.match(css, /maplibre-stage/);
+  assert.match(css, /font-size:13px/);
+  assert.match(css, /font-size:10\.5px/);
 });
