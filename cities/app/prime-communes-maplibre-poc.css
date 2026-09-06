@@ -1,131 +1,43 @@
 /* Prime Communes · Carte 1.2 / MapLibre
-   Professional UI aligned with the Stats page. Map colours are intentionally unchanged. */
+   The historical 1.1 SVG map remains available for direct A/B comparison. */
 
-/* The legacy SVG engine stays in the repository as history, but not in the UI. */
-#mapStage{display:none!important}
+.map-engine-compare{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin:0 0 12px;
+  padding:10px 12px;
+  border:1px solid rgba(255,255,255,.065);
+  border-radius:16px;
+  background:rgba(7,11,19,.62);
+}
+.map-engine-copy{display:flex;align-items:center;gap:9px;color:#718196;font-size:10px;letter-spacing:.02em}
+.map-engine-copy strong{color:#a8b6c7;font-size:10px;text-transform:uppercase;letter-spacing:.11em}
+.map-engine-switch{display:flex;gap:4px;padding:4px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:#090e18}
+.map-engine-switch button{min-height:34px;padding:0 13px;border:0;border-radius:8px;color:#7f8b9f;background:transparent;font-size:11px;font-weight:750;cursor:pointer;white-space:nowrap}
+.map-engine-switch button.active{color:#e4f4ff;background:linear-gradient(135deg,rgba(14,121,188,.28),rgba(91,65,190,.23));box-shadow:inset 0 0 0 1px rgba(84,177,239,.16)}
 
-/* Same visual grammar as the statistics cards: one border, one radius, one hierarchy. */
+/* Impact figures live ABOVE the map. They inform without masking geography. */
 .maplibre-metrics{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
-  margin:0 0 12px;
+  gap:10px;
+  margin:0 0 10px;
 }
 .maplibre-metrics[hidden]{display:none!important}
 .maplibre-metric{
   min-width:0;
-  min-height:126px;
-  padding:18px 20px!important;
-  border:1px solid rgba(255,255,255,.09)!important;
-  border-radius:18px!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018))!important;
-  box-shadow:0 18px 45px rgba(0,0,0,.18)!important;
+  padding:14px 16px;
+  border:1px solid rgba(96,183,235,.16);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(16,45,65,.80),rgba(28,26,52,.72));
+  box-shadow:inset 0 1px rgba(255,255,255,.035);
 }
-.maplibre-metric>span{display:block;color:#84bde8;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
-.maplibre-metric strong{display:block;margin-top:13px;color:#f3f6fa;font-size:27px;line-height:1.03;letter-spacing:-.04em}
-.maplibre-metric small{display:block;margin-top:9px;color:#a1adbd;font-size:12px;line-height:1.4}
-.maplibre-metric em{display:block;margin-top:5px;color:#77869a;font-size:10px;line-height:1.4;font-style:normal}
-
-.maplibre-toolbar{
-  position:relative;
-  display:grid!important;
-  grid-template-columns:minmax(280px,1fr) auto!important;
-  gap:10px!important;
-  margin:0 0 12px!important;
-  padding:13px!important;
-  border:1px solid rgba(255,255,255,.07)!important;
-  border-radius:17px!important;
-  background:rgba(255,255,255,.025)!important;
-}
-.maplibre-toolbar .map-search{
-  position:relative;
-  z-index:8;
-  min-height:44px;
-  margin:0!important;
-  border:1px solid rgba(255,255,255,.075)!important;
-  border-radius:11px!important;
-  background:#090e18!important;
-}
-.maplibre-toolbar .map-controls{margin:0!important}
-
-/* Smart commune search: typed value stays normal, completion is ghosted behind it. */
-.map-search-smart{position:relative;isolation:isolate}
-.map-search-smart input{position:relative;z-index:2;background:transparent!important}
-.map-search-ghost{
-  position:absolute;
-  z-index:1;
-  left:46px;
-  right:14px;
-  top:0;
-  height:100%;
-  display:flex;
-  align-items:center;
-  overflow:hidden;
-  white-space:nowrap;
-  color:#657489;
-  pointer-events:none;
-  font-size:inherit;
-}
-.map-search-ghost i{visibility:hidden;font-style:normal;white-space:pre}
-.map-suggestions{
-  position:absolute;
-  z-index:30;
-  left:0;
-  right:0;
-  top:calc(100% + 7px);
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.11);
-  border-radius:13px;
-  background:rgba(8,13,22,.985);
-  box-shadow:0 22px 55px rgba(0,0,0,.48);
-  backdrop-filter:blur(18px);
-}
-.map-suggestions[hidden]{display:none!important}
-.map-suggestions button{
-  width:100%;
-  min-height:48px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  padding:9px 12px;
-  border:0;
-  border-top:1px solid rgba(255,255,255,.055);
-  color:#dbe4ee;
-  background:transparent;
-  text-align:left;
-  cursor:pointer;
-}
-.map-suggestions button:first-child{border-top:0}
-.map-suggestions button.active,.map-suggestions button:hover{background:rgba(21,119,187,.14)}
-.map-suggestions strong{font-size:12px;font-weight:700}.map-suggestions span{color:#748499;font-size:10px;white-space:nowrap}
-
-/* Territory shortcuts are a professional segmented control, not decorative pills. */
-.map-utility-row{
-  grid-column:1/-1;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width:0;
-  padding-top:10px;
-  border-top:1px solid rgba(255,255,255,.06);
-}
-.map-utility-row>span{flex:0 0 auto;color:#718095;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
-.map-utility-row>div{display:flex;gap:5px;min-width:0;overflow-x:auto;scrollbar-width:none}.map-utility-row>div::-webkit-scrollbar{display:none}
-.map-utility-row button{
-  flex:0 0 auto;
-  min-height:31px;
-  padding:0 10px;
-  border:1px solid rgba(255,255,255,.075);
-  border-radius:9px;
-  color:#8290a3;
-  background:#090e18;
-  font-size:9px;
-  font-weight:700;
-  cursor:pointer;
-  white-space:nowrap;
-}
-.map-utility-row button.active{color:#c9ebff;border-color:rgba(55,162,236,.48);background:rgba(10,102,170,.17)}
+.maplibre-metric p{margin:0 0 6px;color:#79c9f5;font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+.maplibre-metric strong{display:block;color:#f2f6fa;font-size:23px;line-height:1.05;letter-spacing:-.035em}
+.maplibre-metric span{display:block;margin-top:6px;color:#9cacbc;font-size:10px;line-height:1.45}
+.maplibre-metric small{display:block;margin-top:4px;color:#718499;font-size:9px;line-height:1.4}
 
 .maplibre-stage{
   position:relative;
@@ -133,8 +45,7 @@
   min-height:620px;
   overflow:hidden;
   background:#26343f;
-  border:1px solid rgba(255,255,255,.065);
-  border-radius:18px 18px 0 0;
+  border-radius:0;
 }
 .maplibre-stage[hidden]{display:none!important}
 #primeMapLibre{position:absolute;inset:0;background:#26343f}
@@ -148,78 +59,65 @@
 #primeMapLibre .maplibregl-ctrl-scale{border-color:rgba(20,36,47,.75);color:#20303c;background:rgba(246,249,251,.82);font-size:9px;backdrop-filter:blur(8px)}
 
 .maplibre-badge{
-  position:absolute;z-index:3;left:12px;top:12px;padding:7px 10px;
-  border:1px solid rgba(71,180,241,.28);border-radius:999px;color:#d2efff;
-  background:rgba(12,43,61,.76);box-shadow:0 10px 28px rgba(0,0,0,.18);backdrop-filter:blur(12px);
-  font-size:9px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;pointer-events:none;
+  position:absolute;
+  z-index:3;
+  left:12px;
+  top:12px;
+  padding:7px 10px;
+  border:1px solid rgba(71,180,241,.28);
+  border-radius:999px;
+  color:#d2efff;
+  background:rgba(12,43,61,.76);
+  box-shadow:0 10px 28px rgba(0,0,0,.18);
+  backdrop-filter:blur(12px);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  pointer-events:none;
 }
 .maplibre-loading{position:absolute;z-index:5;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;color:#415467;background:#c7d0d6;font-size:12px}
 .maplibre-loading span{width:9px;height:9px;border-radius:50%;background:#32c989;box-shadow:0 0 16px rgba(50,201,137,.45);animation:maplibre-pulse 1s ease-in-out infinite alternate}
 @keyframes maplibre-pulse{to{opacity:.4;transform:scale(.72)}}
 .maplibre-error{padding:22px;color:#34495a;font-size:12px;line-height:1.5}
 
-/* Commune names appear only when zoom makes them useful. */
-.maplibre-commune-label{
-  display:block;
-  max-width:130px;
-  padding:2px 5px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:5px;
-  color:#f3f7fa;
-  background:rgba(14,24,32,.76);
-  box-shadow:0 3px 10px rgba(0,0,0,.22);
-  font-size:9px;
-  font-weight:750;
-  line-height:1.15;
-  text-align:center;
-  white-space:nowrap;
-  pointer-events:none;
-  backdrop-filter:blur(5px);
-}
-
 /* A click produces a small information bubble, never the large editor drawer. */
 #primeMapLibre .maplibregl-popup{max-width:min(300px,calc(100vw - 34px))!important}
-#primeMapLibre .maplibregl-popup-content{padding:12px 13px!important;border:1px solid rgba(47,79,99,.18)!important;border-radius:14px!important;color:#152633!important;background:rgba(247,250,252,.96)!important;box-shadow:0 15px 40px rgba(4,18,28,.25)!important;backdrop-filter:blur(14px);font:inherit}
+#primeMapLibre .maplibregl-popup-content{
+  padding:12px 13px!important;
+  border:1px solid rgba(47,79,99,.18)!important;
+  border-radius:14px!important;
+  color:#152633!important;
+  background:rgba(247,250,252,.96)!important;
+  box-shadow:0 15px 40px rgba(4,18,28,.25)!important;
+  backdrop-filter:blur(14px);
+  font:inherit;
+}
 #primeMapLibre .maplibregl-popup-tip{border-top-color:rgba(247,250,252,.96)!important;border-bottom-color:rgba(247,250,252,.96)!important}
-.maplibre-popup strong,.maplibre-popup>span,.maplibre-popup small{display:block}.maplibre-popup strong{font-size:14px;line-height:1.2}.maplibre-popup>span{margin-top:4px;color:#52687a;font-size:10px}.maplibre-popup small{margin-top:7px;color:#315f7d;font-size:10px;line-height:1.35}
-.maplibre-popup-meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.maplibre-popup-meta i{padding:3px 6px;border:1px solid rgba(41,104,143,.13);border-radius:999px;color:#2f607e;background:#edf5f9;font-size:9px;font-style:normal;font-weight:700}
+.maplibre-popup strong,.maplibre-popup>span,.maplibre-popup small{display:block}
+.maplibre-popup strong{font-size:14px;line-height:1.2}
+.maplibre-popup>span{margin-top:4px;color:#52687a;font-size:10px}
+.maplibre-popup small{margin-top:7px;color:#315f7d;font-size:10px;line-height:1.35}
+.maplibre-popup-meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.maplibre-popup-meta i{padding:3px 6px;border:1px solid rgba(41,104,143,.13);border-radius:999px;color:#2f607e;background:#edf5f9;font-size:9px;font-style:normal;font-weight:700}
 .maplibre-popup-action{display:inline-flex;margin-top:9px;padding:5px 8px;border:0;border-radius:8px;color:#f5fbff;background:#176f9f;font:inherit;font-size:9px;font-weight:800;cursor:pointer}
 
-/* The map footer becomes the clickable layer selector. */
-.maplibre-layer-legend{display:flex!important;flex-wrap:wrap;gap:6px!important}
-.maplibre-layer-legend button{
-  display:inline-flex;align-items:center;gap:6px;min-height:31px;padding:0 9px;
-  border:1px solid rgba(255,255,255,.075);border-radius:9px;color:#7d899b;background:#090e18;
-  font-size:9px;cursor:pointer;opacity:.55;transition:.15s ease;
+@media(max-width:900px){
+  .maplibre-stage{height:560px;min-height:560px}
 }
-.maplibre-layer-legend button.active{color:#aebacc;opacity:1;border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.035)}
-.maplibre-layer-legend button b{color:#dbe4ee;font-size:9px;font-weight:750}
-.maplibre-layer-legend button i{width:9px;height:9px;border-radius:50%;display:block;flex:0 0 auto}
-.maplibre-layer-legend i.prime{background:#249ef2;box-shadow:0 0 8px rgba(36,158,242,.55)}
-.maplibre-layer-legend i.innosolv-prime{background:#43d89a;box-shadow:0 0 8px rgba(67,216,154,.45)}
-.maplibre-layer-legend i.innosolv-eco{background:transparent;border:2px solid #43d89a}
-.maplibre-layer-legend i.eadmin{background:#e52332}
-
-@media(max-width:900px){.maplibre-stage{height:560px;min-height:560px}}
 @media(max-width:680px){
-  .maplibre-metrics{gap:8px;margin-bottom:9px}
-  .maplibre-metric{min-height:118px;padding:13px 12px!important;border-radius:15px!important}
-  .maplibre-metric>span{font-size:8px;line-height:1.25;letter-spacing:.11em}
-  .maplibre-metric strong{margin-top:10px;font-size:20px;line-height:1.06}
-  .maplibre-metric small{margin-top:7px;color:#aeb9c7;font-size:11px;line-height:1.35}
-  .maplibre-metric em{font-size:9px;line-height:1.35}
-
-  .maplibre-toolbar{display:block!important;margin-bottom:9px!important;padding:9px!important;border-radius:15px!important}
-  .maplibre-toolbar .map-search{width:100%;min-height:48px}
-  .maplibre-toolbar .map-controls{margin-top:8px!important}
-  .map-search-ghost{left:46px}
-  .map-suggestions button{min-height:50px}.map-suggestions strong{font-size:13px}.map-suggestions span{font-size:10px}
-  .map-utility-row{display:block;padding-top:9px;margin-top:9px}.map-utility-row>span{display:block;margin:0 0 7px 2px}.map-utility-row>div{width:100%}.map-utility-row button{min-height:34px;padding:0 11px;font-size:9px}
-
-  .maplibre-stage{height:535px;min-height:535px;touch-action:none;border-radius:15px 15px 0 0}
+  .map-engine-compare{display:block;margin-bottom:10px;padding:9px;border-radius:14px}
+  .map-engine-copy{margin:0 2px 8px}
+  .map-engine-switch{width:100%;box-sizing:border-box}
+  .map-engine-switch button{flex:1;min-width:0;padding:0 6px}
+  .maplibre-metrics{gap:7px;margin-bottom:8px}
+  .maplibre-metric{padding:11px 10px;border-radius:13px}
+  .maplibre-metric p{font-size:7.5px;letter-spacing:.11em}
+  .maplibre-metric strong{font-size:18px}
+  .maplibre-metric span{font-size:8.5px}
+  .maplibre-metric small{font-size:7.5px}
+  .maplibre-stage{height:535px;min-height:535px;touch-action:none}
   .maplibre-badge{left:9px;top:9px;max-width:calc(100% - 70px);padding:6px 8px;font-size:8px}
   #primeMapLibre .maplibregl-ctrl-top-right{top:9px;right:9px}
   #primeMapLibre .maplibregl-ctrl-group button{width:40px;height:40px}
-  .maplibre-commune-label{font-size:8px;max-width:105px}
-  .maplibre-layer-legend{gap:5px!important}.maplibre-layer-legend button{min-height:32px;padding:0 8px;font-size:8.5px}
 }
