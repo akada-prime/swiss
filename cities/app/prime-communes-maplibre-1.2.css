@@ -1,5 +1,5 @@
 /* Prime Communes · Carte 1.2
-   Canonical Carte stylesheet. Dark professional UI, compact stats, one map.
+   Canonical Carte stylesheet. One professional component layer, no patch CSS.
    The raster colour treatment itself remains unchanged. */
 
 :root{
@@ -8,7 +8,7 @@
   --pc-field-bg:#090e18;
   --pc-text:#edf2f7;
   --pc-muted:#7f8ca0;
-  --pc-blue:#6ec7ff;
+  --pc-blue:var(--pc-kpi-accent,#6ec7ff);
   --pc-blue-strong:#168fe0;
 }
 
@@ -39,7 +39,12 @@
   background:radial-gradient(circle at 90% 10%,rgba(30,144,225,.20),transparent 46%),linear-gradient(145deg,rgba(9,80,133,.28),rgba(255,255,255,.02));
 }
 
-.maplibre-metric-copy{min-width:0}
+.maplibre-metric-copy{
+  position:relative;
+  z-index:1;
+  min-width:0;
+}
+
 .maplibre-metric p,
 .maplibre-metric strong,
 .maplibre-metric span,
@@ -95,12 +100,17 @@
   transition:width .45s ease;
 }
 
-/* Small Switzerland indicator. The previous huge vector strokes were the
-   cause of the white/blue zig-zag rendering on iPhone. */
+/* Compact Switzerland silhouette used by both map KPIs. */
 .maplibre-mini-map{
+  position:relative;
+  z-index:1;
+  display:grid;
+  place-items:center;
+  align-self:center;
+  justify-self:end;
   width:150px;
   height:88px;
-  justify-self:end;
+  min-width:150px;
   opacity:.98;
   pointer-events:none;
 }
@@ -109,7 +119,8 @@
   display:block;
   width:100%;
   height:100%;
-  overflow:visible;
+  overflow:hidden;
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.18));
 }
 
 .metric-swiss-base{
@@ -128,8 +139,7 @@
 
 .maplibre-territory-chips{display:none}
 
-/* Filters sit directly between metrics and the map and use the same dark
-   language as Communes and Stats. */
+/* Filters sit directly between metrics and the map. */
 .map-toolbar.maplibre-toolbar{
   position:relative;
   z-index:20;
@@ -198,7 +208,7 @@
 .maplibre-filter select{cursor:pointer}
 .maplibre-filter select option{background:#0b111c;color:var(--pc-text)}
 .maplibre-product-filter{grid-column:3}
-.maplibre-product-filter[hidden]{display:none!important}
+.maplibre-product-filter[hidden]{display:none}
 
 .map-autocomplete{
   position:absolute;
@@ -217,52 +227,50 @@
   isolation:isolate;
 }
 
-.map-autocomplete[hidden]{display:none!important}
+.map-autocomplete[hidden]{display:none}
 
 .map-autocomplete button{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) auto!important;
-  align-items:center!important;
-  gap:14px!important;
-  width:100%!important;
-  min-height:39px!important;
-  margin:0!important;
-  padding:8px 10px!important;
-  border:0!important;
-  border-radius:8px!important;
-  background:#080e17!important;
-  color:#dfe7ef!important;
-  text-align:left!important;
-  transform:none!important;
-  opacity:1!important;
-  cursor:pointer!important;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:14px;
+  width:100%;
+  min-height:39px;
+  margin:0;
+  padding:8px 10px;
+  border:0;
+  border-radius:8px;
+  background:#080e17;
+  color:#dfe7ef;
+  text-align:left;
+  transform:none;
+  opacity:1;
+  cursor:pointer;
 }
 
 .map-autocomplete button:hover,
-.map-autocomplete button.active{background:rgba(22,126,194,.18)!important}
+.map-autocomplete button.active{background:rgba(22,126,194,.18)}
 
 .map-autocomplete strong{
-  display:block!important;
-  min-width:0!important;
-  overflow:hidden!important;
-  color:#e7edf5!important;
-  font-size:12px!important;
-  font-weight:750!important;
-  line-height:1.2!important;
-  text-overflow:ellipsis!important;
-  white-space:nowrap!important;
-  transform:none!important;
+  display:block;
+  min-width:0;
+  overflow:hidden;
+  color:#e7edf5;
+  font-size:12px;
+  font-weight:750;
+  line-height:1.2;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .map-autocomplete b{
-  display:block!important;
-  color:#7f8ea1!important;
-  font-size:11px!important;
-  font-weight:650!important;
-  line-height:1!important;
-  text-align:right!important;
-  transform:none!important;
-  white-space:nowrap!important;
+  display:block;
+  color:#7f8ea1;
+  font-size:11px;
+  font-weight:650;
+  line-height:1;
+  text-align:right;
+  white-space:nowrap;
 }
 
 .maplibre-stage{
@@ -308,15 +316,15 @@
   font-size:12px;
 }
 
-.maplibre-loading[hidden]{display:none!important}
+.maplibre-loading[hidden]{display:none}
 .maplibre-loading span{width:9px;height:9px;border-radius:50%;background:#32c989;box-shadow:0 0 16px rgba(50,201,137,.45);animation:maplibre-pulse 1s ease-in-out infinite alternate}
 @keyframes maplibre-pulse{to{opacity:.4;transform:scale(.72)}}
 .maplibre-error{padding:22px;color:#34495a;font-size:12px;line-height:1.5}
 
 /* Compact information bubble. */
-#primeMapLibre .maplibregl-popup{max-width:min(300px,calc(100vw - 34px))!important}
-#primeMapLibre .maplibregl-popup-content{padding:12px 13px!important;border:1px solid rgba(47,79,99,.18)!important;border-radius:14px!important;background:rgba(255,255,255,.97)!important;color:#152633!important;box-shadow:0 15px 40px rgba(4,18,28,.25)!important;backdrop-filter:blur(14px);font:inherit}
-#primeMapLibre .maplibregl-popup-tip{border-top-color:rgba(255,255,255,.97)!important;border-bottom-color:rgba(255,255,255,.97)!important}
+#primeMapLibre .maplibregl-popup{max-width:min(300px,calc(100vw - 34px))}
+#primeMapLibre .maplibregl-popup-content{padding:12px 13px;border:1px solid rgba(47,79,99,.18);border-radius:14px;background:rgba(255,255,255,.97);color:#152633;box-shadow:0 15px 40px rgba(4,18,28,.25);backdrop-filter:blur(14px);font:inherit}
+#primeMapLibre .maplibregl-popup-tip{border-top-color:rgba(255,255,255,.97);border-bottom-color:rgba(255,255,255,.97)}
 .maplibre-popup strong,.maplibre-popup>span,.maplibre-popup small{display:block}
 .maplibre-popup strong{color:#14263a;font-size:14px;line-height:1.2}
 .maplibre-popup>span{margin-top:4px;color:#52687a;font-size:10px}
@@ -325,24 +333,24 @@
 .maplibre-popup-meta i{padding:3px 6px;border:1px solid rgba(41,104,143,.13);border-radius:999px;background:#edf5f9;color:#2f607e;font-size:9px;font-style:normal;font-weight:700}
 .maplibre-popup-action{display:inline-flex;margin-top:9px;padding:5px 8px;border:0;border-radius:8px;background:#176f9f;color:#f5fbff;font:inherit;font-size:9px;font-weight:800;cursor:pointer}
 
-.map-engine-compare{display:none!important}
+.map-engine-compare{display:none}
 
 @media(max-width:900px){
   .maplibre-metric{grid-template-columns:minmax(0,1fr) 125px}
-  .maplibre-mini-map{width:125px;height:78px}
+  .maplibre-mini-map{width:125px;height:78px;min-width:125px}
   .map-toolbar.maplibre-toolbar{grid-template-columns:minmax(250px,1.3fr) minmax(130px,.55fr) minmax(155px,.65fr)}
   .maplibre-stage{height:560px;min-height:560px}
 }
 
 @media(max-width:680px){
   .maplibre-metrics{gap:8px;margin-bottom:9px}
-  .maplibre-metric{grid-template-columns:minmax(0,1fr) 88px;gap:9px;min-height:116px;padding:15px 15px;border-radius:16px}
+  .maplibre-metric{grid-template-columns:minmax(0,1fr) 102px;gap:10px;min-height:122px;padding:15px;border-radius:16px}
   .maplibre-metric p{font-size:8.5px}
   .maplibre-metric strong{margin-top:7px;font-size:28px}
   .maplibre-metric span{margin-top:5px;font-size:11.5px}
   .maplibre-metric small{margin-top:5px;font-size:10px}
   .maplibre-progress{height:6px;margin-top:8px}
-  .maplibre-mini-map{width:88px;height:64px}
+  .maplibre-mini-map{width:102px;height:68px;min-width:102px}
 
   .map-toolbar.maplibre-toolbar{grid-template-columns:1fr 1fr;gap:7px;padding:9px;border-radius:14px 14px 0 0}
   .maplibre-toolbar .map-search{grid-column:1/-1;height:46px}
@@ -352,9 +360,9 @@
   .maplibre-product-filter{grid-column:1/-1}
 
   .map-autocomplete{top:calc(100% + 5px);max-height:45vh}
-  .map-autocomplete button{min-height:42px!important;padding:9px 10px!important}
-  .map-autocomplete strong{font-size:12px!important}
-  .map-autocomplete b{font-size:11px!important}
+  .map-autocomplete button{min-height:42px;padding:9px 10px}
+  .map-autocomplete strong{font-size:12px}
+  .map-autocomplete b{font-size:11px}
 
   .maplibre-stage{height:535px;min-height:535px;touch-action:none;border-radius:0 0 14px 14px}
   #primeMapLibre .maplibregl-ctrl-top-right{top:9px;right:9px}
