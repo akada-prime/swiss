@@ -8,11 +8,13 @@
   style.href = 'app/prime-communes-map-1.1.css?v=1';
   document.head.append(style);
 
-  const loadStyle = href => {
+  const loadStyle = (href, onload) => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = href;
+    if (onload) link.onload = onload;
     document.head.append(link);
+    return link;
   };
 
   const loadScript = (src, onload) => {
@@ -24,8 +26,8 @@
     document.body.append(script);
   };
 
-  // Stats-only visual polish. No data/business behaviour.
-  loadStyle('app/prime-communes-stats-fix.css?v=1');
+  // Canonical Stats component styles. No data/business behaviour.
+  loadStyle('app/prime-communes-stats-1.2.css?v=1');
 
   // The historical data loader still writes the legacy #mapProduct select when
   // Supabase data arrives. Carte 1.2 may hide/remove its old visual controls,
@@ -51,10 +53,23 @@
     loadScript('app/prime-communes-map-1.1.js?v=1', () => {
       loadScript('app/prime-communes-maplibre-1.2.js?v=2', () => {
         ensureLegacyMapProduct();
+
+        // Cache-bust the canonical Carte stylesheet and retire the version
+        // injected by the map module once the fresh one is ready.
+        const oldMapStyle = document.querySelector('link[href*="prime-communes-maplibre-1.2.css"]');
+        loadStyle('app/prime-communes-maplibre-1.2.css?v=2', freshMapStyle => {
+          if (oldMapStyle && oldMapStyle !== freshMapStyle) oldMapStyle.remove();
+        });
+
+        // Validated wording for the targeted Prime territory.
+        const activeTerritoryLabel = document.querySelector('#mapLibreActivePopulation ~ small');
+        if (activeTerritoryLabel) {
+          activeTerritoryLabel.textContent = 'Jura · Berne · Vaud · Fribourg (romands)';
+        }
+
         if (mapProductGuard) {
           window.setTimeout(() => mapProductGuard.disconnect(), 1000);
         }
-        loadStyle('app/prime-communes-1.2-visual-fix.css?v=2');
       });
     });
   });
