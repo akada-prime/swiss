@@ -1,0 +1,132 @@
+/* Prime Communes 1.2 · visual correction
+   Align Carte with the existing dark professional UI used elsewhere. */
+
+/* Stats: same language as the Stats tab, no decorative Switzerland graphic. */
+.maplibre-metrics{
+  gap:10px!important;
+  margin:0 0 12px!important;
+}
+.maplibre-metric{
+  display:block!important;
+  min-height:126px!important;
+  padding:20px 22px!important;
+  border:1px solid rgba(255,255,255,.075)!important;
+  border-radius:20px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018))!important;
+  box-shadow:none!important;
+  color:#f3f6fa!important;
+}
+.maplibre-metric:first-child{
+  background:radial-gradient(circle at 90% 10%,rgba(30,144,225,.20),transparent 46%),linear-gradient(145deg,rgba(9,80,133,.28),rgba(255,255,255,.02))!important;
+}
+.maplibre-metric p{
+  color:#7f8ca0!important;
+  font-size:10px!important;
+  font-weight:750!important;
+  letter-spacing:.12em!important;
+}
+.maplibre-metric strong{
+  margin-top:14px!important;
+  color:#6ec7ff!important;
+  font-size:34px!important;
+  letter-spacing:-.045em!important;
+}
+.maplibre-metric span{
+  margin-top:7px!important;
+  color:#a8b4c4!important;
+  font-size:12px!important;
+  font-weight:500!important;
+}
+.maplibre-metric small{
+  margin-top:6px!important;
+  color:#77869a!important;
+  font-size:11px!important;
+}
+.maplibre-mini-map,
+.maplibre-territory-chips{
+  display:none!important;
+}
+.maplibre-progress{
+  width:min(100%,470px)!important;
+  height:6px!important;
+  margin-top:10px!important;
+  background:rgba(255,255,255,.06)!important;
+}
+.maplibre-progress i{
+  background:linear-gradient(90deg,#168fe0,#7059f4)!important;
+}
+
+/* Filters: restore the same dark language as Communes / Stats. */
+.map-toolbar.maplibre-toolbar{
+  border-color:rgba(255,255,255,.06)!important;
+  background:rgba(255,255,255,.025)!important;
+  box-shadow:none!important;
+}
+.maplibre-toolbar .map-search,
+.maplibre-filter{
+  border-color:rgba(255,255,255,.075)!important;
+  background:#090e18!important;
+  color:#778397!important;
+}
+.maplibre-toolbar .map-search:focus-within{
+  border-color:rgba(55,162,236,.55)!important;
+  box-shadow:inset 0 0 20px rgba(21,136,220,.10)!important;
+}
+.maplibre-toolbar .map-search>span{
+  color:#758297!important;
+}
+.maplibre-toolbar .map-search input,
+.maplibre-filter select{
+  color:#edf2f7!important;
+  background:#090e18!important;
+  color-scheme:dark!important;
+}
+.maplibre-toolbar .map-search input::placeholder{
+  color:#687689!important;
+}
+.maplibre-filter>span{
+  color:#778397!important;
+}
+.maplibre-filter select option{
+  background:#0b111c!important;
+  color:#edf2f7!important;
+}
+
+/* Autocomplete stays functional, opaque and readable on mobile. */
+.map-autocomplete{
+  border-color:rgba(110,199,255,.22)!important;
+  background:#080e17!important;
+  box-shadow:0 18px 46px rgba(0,0,0,.45)!important;
+}
+.map-autocomplete button{
+  background:#080e17!important;
+  color:#dfe7ef!important;
+}
+.map-autocomplete button:hover,
+.map-autocomplete button.active{
+  background:rgba(22,126,194,.18)!important;
+}
+.map-autocomplete strong{
+  color:#e7edf5!important;
+}
+.map-autocomplete b{
+  color:#7f8ea1!important;
+}
+
+.maplibre-stage{
+  border-color:rgba(255,255,255,.06)!important;
+}
+
+@media(max-width:680px){
+  .maplibre-metric{
+    min-height:0!important;
+    padding:16px!important;
+    border-radius:16px!important;
+  }
+  .maplibre-metric strong{
+    margin-top:10px!important;
+    font-size:28px!important;
+  }
+  .maplibre-metric span{font-size:11.5px!important}
+  .maplibre-metric small{font-size:10.5px!important}
+}
