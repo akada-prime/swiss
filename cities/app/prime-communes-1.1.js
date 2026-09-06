@@ -19,7 +19,7 @@
 
   loadScript('app/prime-communes-1.1-base.js?v=1', () => {
     loadScript('app/prime-communes-map-1.1.js?v=1', () => {
-      loadScript('app/prime-communes-maplibre-poc.js?v=1');
+      loadScript('app/prime-communes-maplibre-poc.js?v=2');
     });
   });
 })();
