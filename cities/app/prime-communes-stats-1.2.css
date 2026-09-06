@@ -1,42 +1,38 @@
 /* Prime Communes · Stats 1.2
-   Canonical Stats refinements. Scoped to Stats only; no data behaviour. */
+   Canonical Stats component rules. Scoped to Stats; no data behaviour. */
 
-/* Shared KPI accent: the important values use the same Prime blue language. */
-#statsMunicipalities,
-#statsCompetitor{
-  color:#6ec7ff;
+:root{
+  --pc-kpi-accent:#6ec7ff;
+  --pc-kpi-label-lines:3;
+  --pc-kpi-label-line-height:1.35;
 }
 
-/* Peer cards keep a common title block so values align on the same baseline. */
-.stats-kpi:has(#statsMunicipalities)>span,
-.stats-kpi:has(#statsCompetitor)>span{
-  min-height:2.7em;
-  line-height:1.35;
+/* One visual contract for every KPI card:
+   - labels may occupy 1, 2 or 3 lines;
+   - the value always begins on the same baseline;
+   - primary KPI values use the same Prime blue accent. */
+.stats-kpi{
+  display:flex;
+  flex-direction:column;
+}
+
+.stats-kpi>span{
+  display:block;
+  min-height:calc(var(--pc-kpi-label-lines) * 1em * var(--pc-kpi-label-line-height));
+  line-height:var(--pc-kpi-label-line-height);
+}
+
+.stats-kpi>strong{
+  margin-top:12px;
+  color:var(--pc-kpi-accent);
+}
+
+.stats-kpi>small{
+  margin-top:7px;
 }
 
 @media(max-width:760px){
-  .stats-kpi:has(#statsMunicipalities),
-  .stats-kpi:has(#statsCompetitor){
-    display:flex;
-    flex-direction:column;
-  }
-
-  .stats-kpi:has(#statsMunicipalities)>span,
-  .stats-kpi:has(#statsCompetitor)>span{
-    display:block;
-    min-height:2.7em;
-    line-height:1.35;
-  }
-
-  /* Keep “Premier intégrateur concurrent” on two lines on Natel. */
-  .stats-kpi:has(#statsCompetitor)>span{
-    font-size:7.6px;
-    letter-spacing:.065em;
-    line-height:1.35;
-  }
-
-  #statsMunicipalities,
-  #statsCompetitor{
-    margin-top:12px;
+  .stats-kpi>span{
+    min-height:calc(var(--pc-kpi-label-lines) * 1em * var(--pc-kpi-label-line-height));
   }
 }
