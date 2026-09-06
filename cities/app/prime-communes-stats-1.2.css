@@ -1,0 +1,42 @@
+/* Prime Communes · Stats 1.2
+   Canonical Stats refinements. Scoped to Stats only; no data behaviour. */
+
+/* Shared KPI accent: the important values use the same Prime blue language. */
+#statsMunicipalities,
+#statsCompetitor{
+  color:#6ec7ff;
+}
+
+/* Peer cards keep a common title block so values align on the same baseline. */
+.stats-kpi:has(#statsMunicipalities)>span,
+.stats-kpi:has(#statsCompetitor)>span{
+  min-height:2.7em;
+  line-height:1.35;
+}
+
+@media(max-width:760px){
+  .stats-kpi:has(#statsMunicipalities),
+  .stats-kpi:has(#statsCompetitor){
+    display:flex;
+    flex-direction:column;
+  }
+
+  .stats-kpi:has(#statsMunicipalities)>span,
+  .stats-kpi:has(#statsCompetitor)>span{
+    display:block;
+    min-height:2.7em;
+    line-height:1.35;
+  }
+
+  /* Keep “Premier intégrateur concurrent” on two lines on Natel. */
+  .stats-kpi:has(#statsCompetitor)>span{
+    font-size:7.6px;
+    letter-spacing:.065em;
+    line-height:1.35;
+  }
+
+  #statsMunicipalities,
+  #statsCompetitor{
+    margin-top:12px;
+  }
+}
