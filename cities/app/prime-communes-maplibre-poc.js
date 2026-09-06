@@ -1,11 +1,12 @@
 (() => {
   'use strict';
 
-  // Prime Communes · POC MapLibre 1.5.
-  // The historical 1.1 SVG map remains the default and stays fully available.
+  // Prime Communes · Carte 1.2 / MapLibre.
+  // Carte actuelle 1.1 conservée en parallèle pour comparaison A/B.
   const MAPLIBRE_VERSION = '6.7.0';
   const MAPLIBRE_MODULE = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.mjs`;
   const MAPLIBRE_CSS = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.css`;
+  const ACTIVE_TERRITORIES = new Set(['JU', 'BE', 'VD', 'FR']);
 
   const panel = document.getElementById('mapPanel');
   const currentStage = document.getElementById('mapStage');
@@ -13,19 +14,23 @@
   if (!panel || !currentStage || !query) return;
 
   let engine = 'current';
-  let pocStage = null;
+  let stage = null;
+  let metrics = null;
   let map = null;
   let maplibregl = null;
-  let popup = null;
+  let hoverPopup = null;
+  let clickPopup = null;
   let municipalityGeoJSON = null;
+  let cantonGeoJSON = null;
   let pointGeoJSON = null;
   let loadingPromise = null;
+  let selectedId = '';
 
   function injectStyles() {
     if (!document.querySelector('link[href*="prime-communes-maplibre-poc.css"]')) {
       const local = document.createElement('link');
       local.rel = 'stylesheet';
-      local.href = 'app/prime-communes-maplibre-poc.css?v=1';
+      local.href = 'app/prime-communes-maplibre-poc.css?v=2';
       document.head.append(local);
     }
     if (!document.querySelector(`link[href="${MAPLIBRE_CSS}"]`)) {
@@ -42,48 +47,78 @@
     compare.className = 'map-engine-compare';
     compare.id = 'mapEngineCompare';
     compare.innerHTML = `
-      <div class="map-engine-copy"><strong>Comparer le moteur</strong><span>Même fond swisstopo, navigation différente.</span></div>
+      <div class="map-engine-copy"><strong>Comparer le moteur</strong><span>Même swisstopo, deux comportements.</span></div>
       <div class="map-engine-switch" role="group" aria-label="Moteur cartographique">
         <button type="button" class="active" id="mapEngineCurrent">Carte actuelle · 1.1</button>
-        <button type="button" id="mapEngineMapLibre">MapLibre · POC 1.5</button>
+        <button type="button" id="mapEngineMapLibre">Carte 1.2 · MapLibre</button>
       </div>`;
     panel.insertAdjacentElement('beforebegin', compare);
     document.getElementById('mapEngineCurrent').onclick = () => activateEngine('current');
     document.getElementById('mapEngineMapLibre').onclick = () => activateEngine('maplibre');
   }
 
-  function ensurePocStage() {
-    if (pocStage) return pocStage;
-    pocStage = document.createElement('div');
-    pocStage.className = 'maplibre-stage';
-    pocStage.id = 'mapLibreStage';
-    pocStage.hidden = true;
-    pocStage.innerHTML = `
+  function ensureMetrics() {
+    if (metrics) return metrics;
+    metrics = document.createElement('div');
+    metrics.className = 'maplibre-metrics';
+    metrics.id = 'mapLibreMetrics';
+    metrics.hidden = true;
+    metrics.innerHTML = `
+      <article class="maplibre-metric">
+        <p>Romandie · empreinte Prime</p>
+        <strong id="mapLibreRomandieRatio">—</strong>
+        <span id="mapLibreRomandiePopulation">—</span>
+      </article>
+      <article class="maplibre-metric">
+        <p>Territoires innosolvcity Prime</p>
+        <strong id="mapLibreActiveRatio">—</strong>
+        <span id="mapLibreActivePopulation">—</span>
+        <small>JU · BE romand · VD · FR romand</small>
+      </article>`;
+    currentStage.insertAdjacentElement('beforebegin', metrics);
+    return metrics;
+  }
+
+  function ensureStage() {
+    if (stage) return stage;
+    stage = document.createElement('div');
+    stage.className = 'maplibre-stage';
+    stage.id = 'mapLibreStage';
+    stage.hidden = true;
+    stage.innerHTML = `
       <div id="primeMapLibre" aria-label="Carte MapLibre de la Suisse romande"></div>
-      <div class="maplibre-badge">POC 1.5 · MapLibre + swisstopo</div>
-      <aside class="maplibre-impact" id="mapLibreImpact">
-        <p>L’empreinte Prime</p>
-        <strong id="mapLibreImpactRatio">—</strong>
-        <span>vit dans une commune gérée par Prime</span>
-        <div><b id="mapLibreImpactPopulation">—</b><small> habitants · <span id="mapLibreImpactShare">—</span> de la Romandie</small></div>
-      </aside>
+      <div class="maplibre-badge">Carte 1.2 · MapLibre + swisstopo</div>
       <div class="maplibre-loading" id="mapLibreLoading"><span></span>Chargement du moteur MapLibre…</div>`;
-    currentStage.insertAdjacentElement('afterend', pocStage);
-    return pocStage;
+    currentStage.insertAdjacentElement('afterend', stage);
+    return stage;
   }
 
-  function syncImpactCard() {
-    const ratio = document.getElementById('mapImpactRatio')?.textContent || '—';
-    const population = document.getElementById('mapImpactPopulation')?.textContent || '—';
-    const share = document.getElementById('mapImpactShare')?.textContent || '—';
-    if (document.getElementById('mapLibreImpactRatio')) document.getElementById('mapLibreImpactRatio').textContent = ratio;
-    if (document.getElementById('mapLibreImpactPopulation')) document.getElementById('mapLibreImpactPopulation').textContent = population;
-    if (document.getElementById('mapLibreImpactShare')) document.getElementById('mapLibreImpactShare').textContent = share;
-    if (document.getElementById('mapLibreImpact')) document.getElementById('mapLibreImpact').hidden = mapPerspective !== 'impact';
+  function coverage(rows) {
+    const total = rows.reduce((sum, row) => sum + Number(row.expectedPopulation || 0), 0);
+    const covered = rows.filter(row => row.isPrime).reduce((sum, row) => sum + Number(row.expectedPopulation || 0), 0);
+    return {
+      covered,
+      share: total ? covered / total * 100 : 0,
+      ratio: covered ? Math.max(1, Math.round(total / covered)) : 0
+    };
   }
 
-  // Approximate official swisstopo LV95 -> WGS84 conversion, sufficient for
-  // positioning the same local raster and municipality shapes in MapLibre.
+  function syncMetrics() {
+    if (!all.length) return;
+    const romandie = all.filter(row => row.market === 'Welsch');
+    const active = all.filter(row => row.market === 'Welsch' && ACTIVE_TERRITORIES.has(row.canton));
+    const r = coverage(romandie);
+    const a = coverage(active);
+    const set = (id, value) => {
+      const node = document.getElementById(id);
+      if (node) node.textContent = value;
+    };
+    set('mapLibreRomandieRatio', r.ratio ? `1 Romand sur ${r.ratio}` : '—');
+    set('mapLibreRomandiePopulation', `${fmt.format(r.covered)} hab. · ${pct.format(r.share)}%`);
+    set('mapLibreActiveRatio', a.ratio ? `1 habitant sur ${a.ratio}` : '—');
+    set('mapLibreActivePopulation', `${fmt.format(a.covered)} hab. · ${pct.format(a.share)}%`);
+  }
+
   function lv95ToWgs84(easting, northing) {
     const y = (Number(easting) - 2600000) / 1000000;
     const x = (Number(northing) - 1200000) / 1000000;
@@ -98,17 +133,13 @@
     let ring = [];
     let command = '';
     const closeRing = () => {
-      if (ring.length < 3) {
-        ring = [];
-        return;
-      }
+      if (ring.length < 3) { ring = []; return; }
       const first = ring[0];
       const last = ring[ring.length - 1];
       if (first[0] !== last[0] || first[1] !== last[1]) ring.push([...first]);
       if (ring.length >= 4) rings.push(ring);
       ring = [];
     };
-
     for (let i = 0; i < tokens.length;) {
       const token = tokens[i++];
       if (/^[MLZ]$/i.test(token)) {
@@ -128,10 +159,17 @@
     return rings;
   }
 
-  function featureForMunicipality(shape, lookup) {
-    const commune = lookup.get(String(shape.id));
-    const rings = parsePathRings(shape.d);
+  function geometryFromRings(rings) {
     if (!rings.length) return null;
+    return rings.length === 1
+      ? { type: 'Polygon', coordinates: [rings[0]] }
+      : { type: 'MultiPolygon', coordinates: rings.map(ring => [ring]) };
+  }
+
+  function municipalityFeature(shape, lookup) {
+    const commune = lookup.get(String(shape.id));
+    const geometry = geometryFromRings(parsePathRings(shape.d));
+    if (!geometry) return null;
     return {
       type: 'Feature',
       id: String(shape.id),
@@ -139,54 +177,73 @@
         id: String(shape.id),
         name: commune?.name || '',
         canton: commune?.canton || '',
+        market: commune?.market || '',
         population: Number(commune?.expectedPopulation || 0),
         isPrime: Boolean(commune?.isPrime),
         integrator: commune?.integrator || '',
         software: commune?.software || '',
+        erp: commune?.erp || '',
+        products: (commune?.products || []).join(' · '),
         isInnosolv: commune?.software === 'innosolvcity',
         hasEadmin: Boolean(commune?.products?.includes('eAdmin')),
         productMatch: Boolean(commune?.products?.includes(mapProduct))
       },
-      geometry: rings.length === 1
-        ? { type: 'Polygon', coordinates: [rings[0]] }
-        : { type: 'MultiPolygon', coordinates: rings.map(ring => [ring]) }
+      geometry
     };
   }
 
-  function centroidPoint(shape, lookup) {
-    const commune = lookup.get(String(shape.id));
-    const oldPath = document.querySelector(`#swissMap .map-commune[data-id="${CSS.escape(String(shape.id))}"]`);
-    if (!commune || !oldPath) return null;
-    const box = oldPath.getBBox();
-    const [lon, lat] = lv95ToWgs84(box.x + box.width / 2, -(box.y + box.height / 2));
+  function cantonFeature(shape) {
+    const geometry = geometryFromRings(parsePathRings(shape.d));
+    if (!geometry) return null;
+    return { type: 'Feature', id: String(shape.code), properties: { code: String(shape.code) }, geometry };
+  }
+
+  function coordinatesOf(geometry) {
+    const result = [];
+    const walk = value => {
+      if (!Array.isArray(value)) return;
+      if (value.length >= 2 && Number.isFinite(Number(value[0])) && Number.isFinite(Number(value[1]))) {
+        result.push([Number(value[0]), Number(value[1])]);
+      } else value.forEach(walk);
+    };
+    walk(geometry?.coordinates);
+    return result;
+  }
+
+  function pointFeature(feature, commune) {
+    if (!feature || !commune) return null;
+    const points = coordinatesOf(feature.geometry);
+    if (!points.length) return null;
+    const lngs = points.map(point => point[0]);
+    const lats = points.map(point => point[1]);
     return {
       type: 'Feature',
-      id: String(shape.id),
+      id: String(commune.id),
       properties: {
-        id: String(shape.id),
-        name: commune.name,
-        canton: commune.canton,
+        id: String(commune.id),
         population: Number(commune.expectedPopulation || 0),
         isPrime: Boolean(commune.isPrime),
         isInnosolv: commune.software === 'innosolvcity',
         hasEadmin: Boolean(commune.products?.includes('eAdmin'))
       },
-      geometry: { type: 'Point', coordinates: [lon, lat] }
+      geometry: { type: 'Point', coordinates: [(Math.min(...lngs) + Math.max(...lngs)) / 2, (Math.min(...lats) + Math.max(...lats)) / 2] }
     };
   }
 
   function buildGeoJSON() {
     const lookup = new Map(all.map(row => [String(row.id), row]));
-    const municipalityFeatures = [];
-    const pointFeatures = [];
+    const municipalities = [];
+    const points = [];
     for (const shape of mapGeometry?.municipalities || []) {
-      const feature = featureForMunicipality(shape, lookup);
-      if (feature) municipalityFeatures.push(feature);
-      const point = centroidPoint(shape, lookup);
-      if (point) pointFeatures.push(point);
+      const feature = municipalityFeature(shape, lookup);
+      if (!feature) continue;
+      municipalities.push(feature);
+      const point = pointFeature(feature, lookup.get(String(shape.id)));
+      if (point) points.push(point);
     }
-    municipalityGeoJSON = { type: 'FeatureCollection', features: municipalityFeatures };
-    pointGeoJSON = { type: 'FeatureCollection', features: pointFeatures };
+    municipalityGeoJSON = { type: 'FeatureCollection', features: municipalities };
+    pointGeoJSON = { type: 'FeatureCollection', features: points };
+    cantonGeoJSON = { type: 'FeatureCollection', features: (mapGeometry?.cantons || []).map(cantonFeature).filter(Boolean) };
   }
 
   function paletteExpression(key, palette) {
@@ -195,176 +252,147 @@
   }
 
   function fillColorExpression() {
-    if (mapPerspective === 'impact') {
-      return ['case', ['==', ['get', 'isPrime'], true], '#188bdc', 'rgba(225,232,232,0.28)'];
-    }
-    if (mapMode === 'product') {
-      return ['case', ['==', ['get', 'productMatch'], true], '#36d494', '#253142'];
-    }
+    if (mapPerspective === 'impact') return ['case', ['==', ['get', 'isPrime'], true], '#1596e6', '#d8e1e6'];
+    if (mapMode === 'product') return ['case', ['==', ['get', 'productMatch'], true], '#36d494', '#50616e'];
     return paletteExpression(mapMode === 'software' ? 'software' : 'integrator', mapPalettes[mapMode]);
   }
 
-  function refreshProductMatch() {
-    if (!municipalityGeoJSON) return;
-    const lookup = new Map(all.map(row => [String(row.id), row]));
-    municipalityGeoJSON.features.forEach(feature => {
-      const commune = lookup.get(String(feature.properties.id));
-      feature.properties.productMatch = Boolean(commune?.products?.includes(mapProduct));
-    });
-    map?.getSource('municipalities')?.setData(municipalityGeoJSON);
+  function fillOpacityExpression() {
+    if (mapPerspective === 'impact') return ['case', ['==', ['get', 'isPrime'], true], 0.54, 0.09];
+    return 0.72;
   }
 
-  function syncPocStyle({ fit = false } = {}) {
+  function syncMapData() {
+    if (!mapGeometry || !all.length) return;
+    buildGeoJSON();
+    map?.getSource('municipalities')?.setData(municipalityGeoJSON);
+    map?.getSource('municipality-points')?.setData(pointGeoJSON);
+    map?.getSource('cantons')?.setData(cantonGeoJSON);
+  }
+
+  function syncStyle({ fit = false } = {}) {
     if (!map || !map.isStyleLoaded()) return;
-    refreshProductMatch();
+    syncMapData();
     if (map.getLayer('municipalities-fill')) {
       map.setPaintProperty('municipalities-fill', 'fill-color', fillColorExpression());
-      map.setPaintProperty('municipalities-fill', 'fill-opacity', mapPerspective === 'impact' ? 0.78 : 0.82);
+      map.setPaintProperty('municipalities-fill', 'fill-opacity', fillOpacityExpression());
     }
-    if (map.getLayer('prime-halo')) map.setLayoutProperty('prime-halo', 'visibility', mapPerspective === 'impact' ? 'visible' : 'none');
-    if (map.getLayer('prime-core')) map.setLayoutProperty('prime-core', 'visibility', mapPerspective === 'impact' ? 'visible' : 'none');
-    if (map.getLayer('innosolv-dots')) map.setLayoutProperty('innosolv-dots', 'visibility', mapPerspective === 'impact' ? 'visible' : 'none');
-    if (map.getLayer('eadmin-dots')) map.setLayoutProperty('eadmin-dots', 'visibility', mapPerspective === 'impact' ? 'visible' : 'none');
-    syncImpactCard();
+    for (const id of ['prime-halo', 'prime-core', 'innosolv-dots', 'eadmin-dots']) {
+      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', mapPerspective === 'impact' ? 'visible' : 'none');
+    }
+    syncMetrics();
     if (fit) fitCurrentPerspective();
   }
 
-  function boundsFromLv95Box(box) {
+  function boundsFromBox(box) {
     const [x, y, w, h] = box.map(Number);
-    const corners = [
-      lv95ToWgs84(x, -y),
-      lv95ToWgs84(x + w, -y),
-      lv95ToWgs84(x + w, -(y + h)),
-      lv95ToWgs84(x, -(y + h))
-    ];
-    const lngs = corners.map(point => point[0]);
-    const lats = corners.map(point => point[1]);
-    return [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]];
+    const points = [lv95ToWgs84(x, -y), lv95ToWgs84(x + w, -y), lv95ToWgs84(x + w, -(y + h)), lv95ToWgs84(x, -(y + h))];
+    return [[Math.min(...points.map(p => p[0])), Math.min(...points.map(p => p[1]))], [Math.max(...points.map(p => p[0])), Math.max(...points.map(p => p[1]))]];
+  }
+
+  function boundsFromFeatures(features) {
+    const points = (features || []).flatMap(feature => coordinatesOf(feature.geometry));
+    if (!points.length) return null;
+    return [[Math.min(...points.map(p => p[0])), Math.min(...points.map(p => p[1]))], [Math.max(...points.map(p => p[0])), Math.max(...points.map(p => p[1]))]];
+  }
+
+  function romandieBounds() {
+    const features = municipalityGeoJSON?.features?.filter(feature => feature.properties.market === 'Welsch') || [];
+    return boundsFromFeatures(features) || [[5.75, 45.78], [7.75, 47.55]];
   }
 
   function fitCurrentPerspective() {
     if (!map || !mapGeometry) return;
-    const box = mapPerspective === 'impact' ? impactInitialViewBox() : mapGeometry.meta.viewBox;
-    map.fitBounds(boundsFromLv95Box(box), {
-      padding: window.matchMedia('(max-width:680px)').matches ? 8 : 18,
-      duration: 380
-    });
+    // Impact opens on ALL of Suisse romande: Geneva must be visible at the far left.
+    // We deliberately do not waste the initial viewport on Glarus/eastern Switzerland.
+    const bounds = mapPerspective === 'impact' ? romandieBounds() : boundsFromBox(mapGeometry.meta.viewBox);
+    map.fitBounds(bounds, { padding: window.matchMedia('(max-width:680px)').matches ? 8 : 18, duration: 380 });
   }
 
-  function addMapLayers() {
-    const full = mapGeometry.meta.viewBox;
-    const [x, y, w, h] = full;
-    const imageCoordinates = [
-      lv95ToWgs84(x, -y),
-      lv95ToWgs84(x + w, -y),
-      lv95ToWgs84(x + w, -(y + h)),
-      lv95ToWgs84(x, -(y + h))
-    ];
+  function addLayers() {
+    const [x, y, w, h] = mapGeometry.meta.viewBox;
+    const imageCoordinates = [lv95ToWgs84(x, -y), lv95ToWgs84(x + w, -y), lv95ToWgs84(x + w, -(y + h)), lv95ToWgs84(x, -(y + h))];
 
-    map.addSource('swisstopo-base', {
-      type: 'image',
-      url: 'public/swiss-base.webp',
-      coordinates: imageCoordinates
-    });
+    map.addSource('swisstopo-base', { type: 'image', url: 'public/swiss-base.webp', coordinates: imageCoordinates });
     map.addLayer({
-      id: 'swisstopo-base',
-      type: 'raster',
-      source: 'swisstopo-base',
-      paint: { 'raster-opacity': 1 }
+      id: 'swisstopo-base', type: 'raster', source: 'swisstopo-base',
+      paint: { 'raster-opacity': 1, 'raster-brightness-min': 0.24, 'raster-brightness-max': 0.98, 'raster-contrast': -0.15, 'raster-saturation': -0.08 }
     });
 
     map.addSource('municipalities', { type: 'geojson', data: municipalityGeoJSON, promoteId: 'id' });
+    map.addLayer({ id: 'municipalities-fill', type: 'fill', source: 'municipalities', paint: { 'fill-color': fillColorExpression(), 'fill-opacity': fillOpacityExpression() } });
     map.addLayer({
-      id: 'municipalities-fill',
-      type: 'fill',
-      source: 'municipalities',
+      id: 'municipalities-line', type: 'line', source: 'municipalities',
       paint: {
-        'fill-color': fillColorExpression(),
-        'fill-opacity': mapPerspective === 'impact' ? 0.78 : 0.82
+        'line-color': 'rgba(236,247,252,.98)',
+        'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.08, 8, 0.25, 10, 0.68, 12, 0.94],
+        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.22, 8, 0.42, 10, 0.9, 12, 1.5]
       }
     });
-    map.addLayer({
-      id: 'municipalities-line',
-      type: 'line',
-      source: 'municipalities',
-      paint: {
-        'line-color': mapPerspective === 'impact' ? 'rgba(45,79,102,.46)' : 'rgba(10,31,47,.72)',
-        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.35, 10, 0.8, 13, 1.6]
-      }
-    });
+
+    // True canton boundaries from all canton shapes contained in swissBOUNDARIES3D.
+    map.addSource('cantons', { type: 'geojson', data: cantonGeoJSON });
+    map.addLayer({ id: 'cantons-border-casing', type: 'line', source: 'cantons', paint: { 'line-color': 'rgba(13,28,39,.86)', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 2.8, 9, 3.5, 12, 4.6], 'line-opacity': 0.82 } });
+    map.addLayer({ id: 'cantons-border', type: 'line', source: 'cantons', paint: { 'line-color': 'rgba(242,249,252,.96)', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.9, 9, 1.25, 12, 1.85], 'line-opacity': 0.92 } });
 
     map.addSource('municipality-points', { type: 'geojson', data: pointGeoJSON, promoteId: 'id' });
-    map.addLayer({
-      id: 'prime-halo',
-      type: 'circle',
-      source: 'municipality-points',
-      filter: ['==', ['get', 'isPrime'], true],
-      paint: {
-        'circle-color': '#159cff',
-        'circle-opacity': 0.13,
-        'circle-blur': 0.65,
-        'circle-radius': ['interpolate', ['linear'], ['get', 'population'], 0, 11, 10000, 18, 100000, 29, 500000, 43]
-      }
-    });
-    map.addLayer({
-      id: 'prime-core',
-      type: 'circle',
-      source: 'municipality-points',
-      filter: ['==', ['get', 'isPrime'], true],
-      paint: {
-        'circle-color': '#087bc4',
-        'circle-opacity': 0.9,
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.4, 10, 4.2, 13, 6.5]
-      }
-    });
-    map.addLayer({
-      id: 'innosolv-dots',
-      type: 'circle',
-      source: 'municipality-points',
-      filter: ['==', ['get', 'isInnosolv'], true],
-      paint: {
-        'circle-color': ['case', ['==', ['get', 'isPrime'], true], '#44dc98', 'rgba(7,22,31,.92)'],
-        'circle-stroke-color': '#44dc98',
-        'circle-stroke-width': ['case', ['==', ['get', 'isPrime'], true], 1.1, 2.2],
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.8, 10, 4.2, 13, 6]
-      }
-    });
-    map.addLayer({
-      id: 'eadmin-dots',
-      type: 'circle',
-      source: 'municipality-points',
-      filter: ['all', ['==', ['get', 'hasEadmin'], true], ['==', ['get', 'isPrime'], true]],
-      paint: {
-        'circle-color': '#e52332',
-        'circle-stroke-color': '#fff',
-        'circle-stroke-width': 1,
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.4, 10, 4, 13, 5.8]
-      }
-    });
+    map.addLayer({ id: 'prime-halo', type: 'circle', source: 'municipality-points', filter: ['==', ['get', 'isPrime'], true], paint: { 'circle-color': '#159cff', 'circle-opacity': 0.12, 'circle-blur': 0.68, 'circle-radius': ['interpolate', ['linear'], ['get', 'population'], 0, 11, 10000, 18, 100000, 29, 500000, 43] } });
+    map.addLayer({ id: 'prime-core', type: 'circle', source: 'municipality-points', filter: ['==', ['get', 'isPrime'], true], paint: { 'circle-color': '#087bc4', 'circle-opacity': 0.92, 'circle-stroke-color': 'rgba(229,247,255,.85)', 'circle-stroke-width': 0.6, 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.4, 10, 4.2, 13, 6.5] } });
+    map.addLayer({ id: 'innosolv-dots', type: 'circle', source: 'municipality-points', filter: ['==', ['get', 'isInnosolv'], true], paint: { 'circle-color': ['case', ['==', ['get', 'isPrime'], true], '#44dc98', 'rgba(247,250,252,.92)'], 'circle-stroke-color': '#31be7f', 'circle-stroke-width': ['case', ['==', ['get', 'isPrime'], true], 1.1, 2.1], 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.8, 10, 4.2, 13, 6] } });
+    map.addLayer({ id: 'eadmin-dots', type: 'circle', source: 'municipality-points', filter: ['all', ['==', ['get', 'hasEadmin'], true], ['==', ['get', 'isPrime'], true]], paint: { 'circle-color': '#e52332', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1, 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.4, 10, 4, 13, 5.8] } });
+    map.addLayer({ id: 'municipality-selected', type: 'line', source: 'municipalities', filter: ['==', ['get', 'id'], '__none__'], paint: { 'line-color': '#ff7047', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 2, 10, 3.2, 13, 4.2], 'line-opacity': 0.96 } });
 
-    syncPocStyle({ fit: true });
+    syncStyle({ fit: true });
   }
 
-  function communePopupHTML(commune) {
-    return `<div class="maplibre-popup"><strong>${esc(commune.name)}</strong><span>${esc(commune.canton)} · ${fmt.format(commune.expectedPopulation)} habitants${commune.isPrime ? ' · Client Prime' : ''}</span><small>${esc(commune.integrator || 'Intégrateur à compléter')} · ${esc(commune.software || 'métier à compléter')}${commune.erp ? ' · ERP ' + esc(commune.erp) : ''}${commune.products?.length ? ' · ' + esc(commune.products.join(' · ')) : ''}</small></div>`;
+  function popupNode(commune, interactive = false) {
+    const root = document.createElement('div');
+    root.className = 'maplibre-popup';
+    const tags = [commune.isPrime ? 'Client Prime' : '', commune.integrator || '', commune.software || '', commune.erp ? `ERP ${commune.erp}` : ''].filter(Boolean);
+    root.innerHTML = `<strong>${esc(commune.name)}</strong><span>${esc(commune.canton)} · ${fmt.format(commune.expectedPopulation)} habitants</span><div class="maplibre-popup-meta">${tags.map(tag => `<i>${esc(tag)}</i>`).join('')}</div>${commune.products?.length ? `<small>Modules · ${esc(commune.products.join(' · '))}</small>` : ''}`;
+    if (interactive) {
+      const button = document.createElement('button');
+      button.className = 'maplibre-popup-action';
+      button.type = 'button';
+      button.textContent = 'Fiche complète →';
+      button.onclick = event => { event.stopPropagation(); clickPopup?.remove(); openDrawer(commune); };
+      root.append(button);
+    }
+    return root;
+  }
+
+  function selectMunicipality(id) {
+    selectedId = String(id || '');
+    if (map?.getLayer('municipality-selected')) map.setFilter('municipality-selected', ['==', ['get', 'id'], selectedId || '__none__']);
+  }
+
+  function showClickPopup(commune, lngLat) {
+    hoverPopup?.remove();
+    if (!clickPopup) clickPopup = new maplibregl.Popup({ closeButton: false, closeOnClick: true, offset: 10, maxWidth: '300px' });
+    clickPopup.setLngLat(lngLat).setDOMContent(popupNode(commune, true)).addTo(map);
+    selectMunicipality(commune.id);
   }
 
   function bindInteractions() {
     map.on('mouseenter', 'municipalities-fill', () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', 'municipalities-fill', () => { map.getCanvas().style.cursor = ''; });
     map.on('mousemove', 'municipalities-fill', event => {
-      if (window.matchMedia('(max-width:680px)').matches) return;
+      if (window.matchMedia('(max-width:680px)').matches || clickPopup?.isOpen()) return;
       const id = event.features?.[0]?.properties?.id;
       const commune = all.find(row => String(row.id) === String(id));
       if (!commune) return;
-      if (!popup) popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 12 });
-      popup.setLngLat(event.lngLat).setHTML(communePopupHTML(commune)).addTo(map);
+      if (!hoverPopup) hoverPopup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 9, maxWidth: '280px' });
+      hoverPopup.setLngLat(event.lngLat).setDOMContent(popupNode(commune)).addTo(map);
     });
-    map.on('mouseleave', 'municipalities-fill', () => popup?.remove());
+    map.on('mouseleave', 'municipalities-fill', () => hoverPopup?.remove());
     map.on('click', 'municipalities-fill', event => {
       const id = event.features?.[0]?.properties?.id;
       const commune = all.find(row => String(row.id) === String(id));
-      if (commune) openDrawer(commune);
+      if (commune) showClickPopup(commune, event.lngLat);
+    });
+    map.on('click', event => {
+      const features = map.queryRenderedFeatures(event.point, { layers: ['municipalities-fill'] });
+      if (!features.length) { selectMunicipality(''); clickPopup?.remove(); }
     });
   }
 
@@ -372,54 +400,42 @@
     if (all.length) return;
     await new Promise(resolve => {
       const started = Date.now();
-      const timer = window.setInterval(() => {
-        if (all.length || Date.now() - started > 5000) {
-          window.clearInterval(timer);
-          resolve();
-        }
+      const timer = setInterval(() => {
+        if (all.length || Date.now() - started > 5000) { clearInterval(timer); resolve(); }
       }, 80);
     });
   }
 
   async function ensureMapLibre() {
-    if (map) {
-      window.setTimeout(() => map.resize(), 0);
-      return map;
-    }
+    if (map) { setTimeout(() => map.resize(), 0); return map; }
     if (loadingPromise) return loadingPromise;
     loadingPromise = (async () => {
-      ensurePocStage();
+      ensureMetrics();
+      ensureStage();
       await waitForData();
       if (!mapGeometry) await loadMap();
       if (!mapGeometry || !all.length) throw new Error('Données cartographiques indisponibles.');
       buildGeoJSON();
       maplibregl = await import(MAPLIBRE_MODULE);
-      const container = document.getElementById('primeMapLibre');
       map = new maplibregl.Map({
-        container,
-        style: { version: 8, sources: {}, layers: [{ id: 'background', type: 'background', paint: { 'background-color': '#09111b' } }] },
-        center: [7.55, 46.75],
-        zoom: 7,
-        attributionControl: false,
-        dragRotate: false,
-        pitchWithRotate: false,
-        maxBounds: [[5.70, 45.35], [10.85, 48.05]]
+        container: document.getElementById('primeMapLibre'),
+        style: { version: 8, sources: {}, layers: [{ id: 'background', type: 'background', paint: { 'background-color': '#c8d2d8' } }] },
+        center: [6.75, 46.65], zoom: 7.25, attributionControl: false, dragRotate: false, pitchWithRotate: false,
+        maxBounds: [[5.55, 45.35], [10.85, 48.05]]
       });
       map.addControl(new maplibregl.NavigationControl({ showCompass: false, visualizePitch: false }), 'top-right');
+      map.addControl(new maplibregl.ScaleControl({ maxWidth: 80, unit: 'metric' }), 'bottom-left');
       map.touchZoomRotate.disableRotation();
       map.on('load', () => {
-        addMapLayers();
+        addLayers();
         bindInteractions();
+        syncMetrics();
         const loading = document.getElementById('mapLibreLoading');
         if (loading) loading.hidden = true;
       });
-      map.on('error', event => {
-        if (!event?.error) return;
-        console.error('Prime Communes · MapLibre', event.error);
-      });
+      map.on('error', event => { if (event?.error) console.error('Prime Communes · MapLibre', event.error); });
       return map;
     })().catch(error => {
-      console.error(error);
       const loading = document.getElementById('mapLibreLoading');
       if (loading) loading.innerHTML = `<div class="maplibre-error">MapLibre n’a pas pu démarrer sur cet appareil.<br>${esc(error?.message || error)}</div>`;
       loadingPromise = null;
@@ -432,67 +448,68 @@
     engine = next === 'maplibre' ? 'maplibre' : 'current';
     document.getElementById('mapEngineCurrent')?.classList.toggle('active', engine === 'current');
     document.getElementById('mapEngineMapLibre')?.classList.toggle('active', engine === 'maplibre');
-    ensurePocStage();
+    ensureMetrics();
+    ensureStage();
     currentStage.hidden = engine !== 'current';
-    pocStage.hidden = engine !== 'maplibre';
+    stage.hidden = engine !== 'maplibre';
+    metrics.hidden = engine !== 'maplibre';
     if (engine === 'maplibre') {
       try {
         await ensureMapLibre();
-        syncPocStyle();
-        window.setTimeout(() => map?.resize(), 0);
+        syncStyle();
+        setTimeout(() => { map?.resize(); fitCurrentPerspective(); }, 0);
       } catch (_) {}
     }
   }
 
-  function findMapCommune(value) {
+  function findCommune(value) {
     const q = String(value || '').trim().toLocaleLowerCase('fr-CH');
     if (!q) return null;
     return all.find(row => row.market === 'Welsch' && row.name.toLocaleLowerCase('fr-CH') === q)
       || all.find(row => row.market === 'Welsch' && row.name.toLocaleLowerCase('fr-CH').includes(q));
   }
 
-  function focusMapLibreCommune(commune) {
+  function focusCommune(commune) {
     if (!map || !commune || !pointGeoJSON) return;
     const point = pointGeoJSON.features.find(feature => String(feature.properties.id) === String(commune.id));
     if (!point) return;
     map.easeTo({ center: point.geometry.coordinates, zoom: Math.max(map.getZoom(), 11), duration: 550 });
-    if (!popup) popup = new maplibregl.Popup({ closeButton: false, closeOnClick: true, offset: 12 });
-    popup.setLngLat(point.geometry.coordinates).setHTML(communePopupHTML(commune)).addTo(map);
+    showClickPopup(commune, point.geometry.coordinates);
   }
 
   query.addEventListener('keydown', event => {
     if (engine !== 'maplibre' || event.key !== 'Enter') return;
-    const commune = findMapCommune(event.currentTarget.value);
+    const commune = findCommune(event.currentTarget.value);
     if (!commune) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     query.blur();
-    focusMapLibreCommune(commune);
+    focusCommune(commune);
   }, true);
 
   document.querySelectorAll('[data-map-perspective],[data-map-mode]').forEach(button => {
-    button.addEventListener('click', () => window.setTimeout(() => {
-      if (engine === 'maplibre') syncPocStyle({ fit: button.hasAttribute('data-map-perspective') });
+    button.addEventListener('click', () => setTimeout(() => {
+      if (engine === 'maplibre') syncStyle({ fit: button.hasAttribute('data-map-perspective') });
     }, 0));
   });
-  document.getElementById('mapProduct')?.addEventListener('change', () => window.setTimeout(() => {
-    if (engine === 'maplibre') syncPocStyle();
-  }, 0));
+  document.getElementById('mapProduct')?.addEventListener('change', () => setTimeout(() => { if (engine === 'maplibre') syncStyle(); }, 0));
+  document.getElementById('syncReload')?.addEventListener('click', () => setTimeout(() => { if (engine === 'maplibre') syncStyle(); }, 700));
   document.querySelector('[data-view="map"]')?.addEventListener('click', () => {
-    if (engine === 'maplibre') window.setTimeout(() => map?.resize(), 120);
+    if (engine === 'maplibre') setTimeout(() => { map?.resize(); fitCurrentPerspective(); }, 120);
   });
 
-  function recordRoadmapPoc() {
-    const stage15 = [...document.querySelectorAll('.roadmap-stage')]
-      .find(stage => stage.querySelector('.roadmap-version')?.textContent.trim() === '1.5');
+  function recordRoadmap() {
+    const stage15 = [...document.querySelectorAll('.roadmap-stage')].find(node => node.querySelector('.roadmap-version')?.textContent.trim() === '1.5');
     const items = stage15?.querySelector('.roadmap-items');
-    if (!items || [...items.querySelectorAll('strong')].some(node => /MapLibre/i.test(node.textContent))) return;
-    const item = document.createElement('div');
-    item.innerHTML = '<strong>Moteur cartographique MapLibre · POC</strong><span>Comparer le moteur SVG 1.1 et MapLibre en conservant le fond swisstopo et les données Prime.</span><small>POC actif · ancienne carte conservée en parallèle</small>';
-    items.prepend(item);
+    if (!items) return;
+    const existing = [...items.querySelectorAll('div')].find(node => /MapLibre/i.test(node.textContent));
+    const html = '<strong>Carte 1.2 · MapLibre</strong><span>Évolution avant la 1.5 : swisstopo conservé, navigation native, frontières communales/cantonales, statistiques hors carte et infobulles légères.</span><small>Comparaison A/B active · ancienne carte 1.1 conservée</small>';
+    if (existing) existing.innerHTML = html;
+    else { const item = document.createElement('div'); item.innerHTML = html; items.prepend(item); }
   }
 
   injectStyles();
   injectEngineSwitch();
-  recordRoadmapPoc();
+  ensureMetrics();
+  recordRoadmap();
 })();
