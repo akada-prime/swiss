@@ -64,13 +64,11 @@ jobs:
 
           css_path = Path('cities/app/prime-communes-maplibre-poc.css')
           css = css_path.read_text(encoding='utf-8')
-
           old_stats = """.maplibre-metric{\n  min-width:0;\n  padding:14px 16px;\n  border:1px solid rgba(96,183,235,.16);\n  border-radius:16px;\n  background:linear-gradient(135deg,rgba(16,45,65,.80),rgba(28,26,52,.72));\n  box-shadow:inset 0 1px rgba(255,255,255,.035);\n}\n.maplibre-metric p{margin:0 0 6px;color:#79c9f5;font-size:9px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}\n.maplibre-metric strong{display:block;color:#f2f6fa;font-size:23px;line-height:1.05;letter-spacing:-.035em}\n.maplibre-metric span{display:block;margin-top:6px;color:#9cacbc;font-size:10px;line-height:1.45}\n.maplibre-metric small{display:block;margin-top:4px;color:#718499;font-size:9px;line-height:1.4}\n"""
           new_stats = """.maplibre-metric{\n  min-width:0;\n  min-height:142px;\n  padding:22px;\n  border:1px solid rgba(255,255,255,.075);\n  border-radius:20px;\n  background:radial-gradient(circle at 90% 10%,rgba(30,144,225,.20),transparent 46%),linear-gradient(145deg,rgba(9,80,133,.28),rgba(255,255,255,.02));\n  box-shadow:0 18px 45px rgba(0,0,0,.18);\n}\n.maplibre-metric:nth-child(2){background:radial-gradient(circle at 90% 10%,rgba(111,87,255,.15),transparent 48%),linear-gradient(145deg,rgba(12,74,118,.22),rgba(255,255,255,.018))}\n.maplibre-metric p{margin:0;color:#7f8ca0;font-size:10px;font-weight:750;letter-spacing:.12em;text-transform:uppercase}\n.maplibre-metric strong{display:block;margin-top:20px;color:#6ec7ff;font-size:34px;line-height:1;letter-spacing:-.045em}\n.maplibre-metric span{display:block;margin-top:8px;color:#8d9bad;font-size:11px;line-height:1.45}\n.maplibre-metric small{display:block;margin-top:6px;color:#68788d;font-size:9px;line-height:1.4}\n"""
           if old_stats not in css:
               raise SystemExit('Missing metric CSS contract')
           css = css.replace(old_stats, new_stats, 1)
-
           css = css.replace("background:#26343f;\n  border-radius:0;", "background:#edf2f5;\n  border:1px solid rgba(31,58,77,.12);\n  border-radius:18px 18px 0 0;", 1)
           css = css.replace("#primeMapLibre{position:absolute;inset:0;background:#26343f}", "#primeMapLibre{position:absolute;inset:0;background:#edf2f5}", 1)
           css = css.replace("#primeMapLibre .maplibregl-ctrl-group{overflow:hidden;border:1px solid rgba(255,255,255,.16);border-radius:11px;background:rgba(14,22,31,.76);box-shadow:0 8px 24px rgba(0,0,0,.18);backdrop-filter:blur(12px)}", "#primeMapLibre .maplibregl-ctrl-group{overflow:hidden;border:1px solid rgba(30,55,73,.16);border-radius:11px;background:rgba(255,255,255,.93);box-shadow:0 8px 24px rgba(23,48,65,.16);backdrop-filter:blur(12px)}", 1)
@@ -99,6 +97,20 @@ jobs:
           if old not in index:
               raise SystemExit('Missing index cache contract')
           index_path.write_text(index.replace(old, new, 1), encoding='utf-8')
+
+          test_path = Path('cities/tests/stabilization-1.1.test.mjs')
+          tests = test_path.read_text(encoding='utf-8')
+          old = r'''assert.match(html, /<script src="app\/prime-communes-1\.1\.js\?v=1"><\/script>/);'''
+          new = r'''assert.match(html, /<script src="app\/prime-communes-1\.1\.js\?v=\d+"><\/script>/);'''
+          if old not in tests:
+              raise SystemExit('Missing loader-version test contract')
+          tests = tests.replace(old, new, 1)
+          old = r'''assert.match(js, /public\/swiss-base\.webp/);'''
+          new = r'''assert.match(js, /public\/swiss-base(?:-light)?\.webp/);'''
+          if old not in tests:
+              raise SystemExit('Missing swisstopo MapLibre test contract')
+          tests = tests.replace(old, new, 1)
+          test_path.write_text(tests, encoding='utf-8')
           PY
 
       - name: Validate 1.2
@@ -116,6 +128,6 @@ jobs:
           git rm -f .github/workflows/prime-communes-1.2-light-patch.yml
           git config user.name "Prime Communes automation"
           git config user.email "actions@users.noreply.github.com"
-          git add cities/app/prime-communes-maplibre-poc.css cities/app/prime-communes-maplibre-poc.js cities/app/prime-communes-1.1.js cities/index.html cities/public/swiss-base-light.webp
+          git add cities/app/prime-communes-maplibre-poc.css cities/app/prime-communes-maplibre-poc.js cities/app/prime-communes-1.1.js cities/index.html cities/public/swiss-base-light.webp cities/tests/stabilization-1.1.test.mjs
           git commit -m "Refine Carte 1.2 light professional map"
           git push origin HEAD:main
