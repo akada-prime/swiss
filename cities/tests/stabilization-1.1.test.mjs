@@ -26,10 +26,14 @@ test('mobile peer filters remain a strict two-column grid', async () => {
   }
 });
 
-test('mobile row ranking is anchored to the semantic commune cell', async () => {
-  const css = await read('app/prime-communes-1.1.7-mobile.css');
-  assert.match(css, /\.commune-cell::before/);
-  assert.doesNotMatch(css, /tbody td:first-child::before/);
+test('row ranking belongs to commune identity on every viewport', async () => {
+  const js = await read('app/prime-communes-communes-1.2.js');
+  const css = await read('app/prime-communes-1.1.5.css');
+  const mobile = await read('app/prime-communes-1.1.7-mobile.css');
+  assert.match(js, /commune-rank/);
+  assert.match(js, /rowIndex \+ 1/);
+  assert.match(css, /\.commune-rank/);
+  assert.doesNotMatch(mobile, /commune-cell::before|counter-reset:commune-rank|counter-increment:commune-rank/);
 });
 
 test('commune identity owns the canton flag and standalone Canton is hidden', async () => {
@@ -120,10 +124,11 @@ test('Carte 1.2 is MapLibre-only, preloads assets and exposes meaningful dimensi
   assert.doesNotMatch(css, /!important/);
 });
 
-test('Stats 1.2 uses one KPI contract independent of label line count', async () => {
+test('Stats 1.2 uses one responsive KPI contract independent of label line count', async () => {
   const css = await read('app/prime-communes-stats-1.2.css');
   assert.match(css, /--pc-kpi-accent:#6ec7ff/);
-  assert.match(css, /--pc-kpi-label-lines:3/);
+  assert.match(css, /--pc-kpi-label-lines:2/);
+  assert.match(css, /@media\(max-width:760px\)[\s\S]*--pc-kpi-label-lines:3/);
   assert.match(css, /\.stats-kpi>span/);
   assert.match(css, /\.stats-kpi>strong/);
   assert.doesNotMatch(css, /#statsMunicipalities/);
