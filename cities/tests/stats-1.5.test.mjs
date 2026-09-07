@@ -15,13 +15,13 @@ test('Stats 1.5 hero is data-driven Prime + innosolvcity', async () => {
   assert.doesNotMatch(js, /\b63\b|\b64\b|420264|18\.8/);
 });
 
-test('Stats compact cards use one bounded 3-line layout without oversized outer padding', async () => {
+test('Stats compact cards use one responsive bounded-label contract', async () => {
   const css = await read('app/prime-communes-stats-1.2.css');
-  assert.match(css, /--pc-kpi-label-lines:3/);
+  assert.match(css, /--pc-kpi-label-lines:2/);
+  assert.match(css, /@media\(max-width:760px\)[\s\S]*?--pc-kpi-label-lines:3/);
   assert.match(css, /grid-template-rows:[\s\S]*?var\(--pc-kpi-label-lines\)/);
+  assert.match(css, /align-content:start/);
   assert.match(css, /min-height:0/);
-  assert.match(css, /align-self:start/);
-  assert.match(css, /align-self:end/);
   assert.match(css, /stats-prime-progress/);
   assert.match(css, /stats-swiss-active/);
   assert.doesNotMatch(css, /stats-prime-watermark|nth-child|:has\(|!important/);
