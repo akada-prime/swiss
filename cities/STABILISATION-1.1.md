@@ -2,7 +2,7 @@
 
 ## But
 
-Cette étape ne crée aucune nouvelle fonction métier. Elle stabilise la version 1.1 livrée afin de préparer la 1.5 et une éventuelle migration vers l’infrastructure Prime sans changer le comportement visible du site.
+Cette étape ne crée aucune nouvelle fonction métier. Elle stabilise la version 1.1 livrée afin de préparer NEWS 2.0, la phase technique 2.5 et une éventuelle migration vers l’infrastructure Prime sans changer le comportement visible du socle.
 
 Le point de retour GitHub avant refactoring est la branche :
 
@@ -34,7 +34,7 @@ Prime Communes 1.1 est une **Base Delivery** : elle consolide l’état courant 
 - `GemeindeProduct` : relation plusieurs-produits-par-commune.
 - `GemeindeAktuell` : vue de lecture utilisée par le site.
 
-`GemeindeProfilAudit` reste uniquement comme structure dormante pour ne pas casser les anciennes migrations. **Elle est vide en 1.1 et son trigger est désactivé.** Aucun historique fonctionnel n’est conservé avant la 1.5. L’audit sera redéfini avec les utilisateurs, rôles et droits nominatifs en 1.5.
+`GemeindeProfilAudit` reste uniquement comme structure dormante pour ne pas casser les anciennes migrations. **Elle est vide en 1.1 et son trigger est désactivé.** Aucun historique fonctionnel n’est conservé avant la 2.5. L’audit sera redéfini avec les utilisateurs, rôles et droits nominatifs en 2.5.
 
 ## Règles d’extension
 
@@ -50,7 +50,7 @@ Un logiciel métier n’est pas un module et un ERP n’est pas un module par d�
 
 Les valeurs financières, contrats, LCM, prix, marges, récurrence ou autres notions commerciales futures ne doivent pas être ajoutés comme une série de colonnes improvisées dans `GemeindeProfil` ou `Product`.
 
-Elles devront être modélisées dans une structure dédiée en 1.5, une fois leurs règles fonctionnelles précisées. Cela permettra notamment plusieurs produits, plusieurs valeurs ou contrats par commune, des droits d’accès spécifiques et, à partir de la 1.5, un historique propre.
+Elles devront être modélisées dans une structure dédiée en 2.5, une fois leurs règles fonctionnelles précisées. Cela permettra notamment plusieurs produits, plusieurs valeurs ou contrats par commune, des droits d’accès spécifiques et, à partir de la 2.5, un historique propre.
 
 ## Sécurité 1.1
 
@@ -59,7 +59,7 @@ Elles devront être modélisées dans une structure dédiée en 1.5, une fois le
 - pas d’écriture directe `authenticated` sur `GemeindeProfil` ou `GemeindeProduct` ;
 - privilèges `TRUNCATE`, `TRIGGER` et `REFERENCES` retirés à `anon` et `authenticated` sur les tables métier ;
 - fonctions techniques et audit non exposés publiquement ;
-- SSO + rôles + RLS métier reportés à la 1.5.
+- SSO + rôles + RLS métier reportés à la 2.5.
 
 ## Outillage stabilisé
 
@@ -82,7 +82,7 @@ Elles devront être modélisées dans une structure dédiée en 1.5, une fois le
 9. Carte : recherche, zoom, ouverture d’une commune.
 10. Stats : territoires, seuils et mesures.
 11. Export TSV.
-12. Roadmap : 1.0 et 1.1 terminées ; Stabilisation 1.1 mentionnée ; audit en 1.5.
+12. Roadmap : 1.0 et 1.1 terminées ; NEWS en 2.0 ; audit et temporalité en 2.5.
 13. Build : `npm ci && npm run build` doit réussir sans dépendance à un environnement OpenAI/Cloudflare.
 
 ## Avant migration vers les sites Prime

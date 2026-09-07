@@ -61,18 +61,21 @@ test('commune identity owns the canton flag and standalone Canton is hidden', as
   assert.match(css, /\.canton-column\s*\{\s*display:none;/);
 });
 
-test('roadmap records stabilization and keeps audit in 1.5', async () => {
+test('roadmap records stabilization and moves audit to technical 2.5', async () => {
   const js = await read('app/prime-communes-1.1-base.js');
-  assert.match(js, /Stabilisation 1\.1/);
-  assert.match(js, /const audit = findItem\(items11, 'Audit trail'\)/);
-  assert.match(js, /if \(audit\) items15\.prepend\(audit\)/);
+  const html = await read('index.html');
+  assert.match(html, /Stabilisation 1\.1/);
+  assert.match(html, /<span class="roadmap-version">2\.5<\/span>/);
+  assert.match(html, /Audit trail et temporalité/);
+  assert.doesNotMatch(html, /<span class="roadmap-version">1\.5<\/span>/);
+  assert.doesNotMatch(js, /items15|stage15/);
 });
 
 test('Roadmap infrastructure is a real semantic item, never CSS pseudo-content', async () => {
-  const js = await read('app/prime-communes-roadmap-1.2.js');
+  const html = await read('index.html');
   const css = await read('app/prime-communes-1.1.5.css');
-  assert.match(js, /<strong>Infrastructure Prime<\/strong>/);
-  assert.match(js, /serveurs Prime/);
+  assert.match(html, /<strong>Infrastructure Prime<\/strong>/);
+  assert.match(html, /serveurs Prime/);
   assert.doesNotMatch(css, /roadmap-items::after/);
 });
 
@@ -109,6 +112,7 @@ test('current site loads one canonical runtime per view and no SVG map runtime',
   assert.match(html, /id="communesView"/);
   assert.match(html, /id="mapView"/);
   assert.match(html, /id="statsView"/);
+  assert.match(html, /id="newsView"/);
   assert.match(html, /id="roadmapView"/);
 });
 

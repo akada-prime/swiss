@@ -1,6 +1,6 @@
 {
   "name": "prime-communes",
-  "version": "1.1.8",
+  "version": "2.0.1",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "node --test tests/*.test.mjs",
-    "lint": "node --check app/prime-communes-1.1.js && node --check app/prime-communes-data-1.5.js && node --check app/prime-communes-1.1-base.js && node --check app/prime-communes-stats-1.5.js && node --check app/prime-communes-communes-1.2.js && node --check app/prime-communes-maplibre-1.2.js && node --check app/prime-communes-roadmap-1.2.js && node --check tests/*.mjs && node --check scripts/*.mjs",
+    "lint": "node --check app/prime-communes-1.1.js && node --check app/prime-communes-data-1.5.js && node --check app/prime-communes-1.1-base.js && node --check app/prime-communes-stats-1.5.js && node --check app/prime-communes-communes-1.2.js && node --check app/prime-communes-maplibre-1.2.js && node --check app/prime-communes-news-2.0.js && node --check app/prime-communes-roadmap-1.2.js && node --check tests/*.mjs && node --check scripts/*.mjs",
     "check": "npm run lint && npm test"
   },
   "dependencies": {

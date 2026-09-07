@@ -8,7 +8,7 @@
 
   const byId = id => document.getElementById(id);
   const truthyParam = value => value === '1' || value === 'true';
-  const validViews = new Set(['communes', 'map', 'stats', 'roadmap']);
+  const validViews = new Set(['communes', 'map', 'stats', 'news', 'roadmap']);
   const validSortKeys = new Set(['population', 'name']);
   const validDirections = new Set(['asc', 'desc']);
   const validMarkets = new Set(['Welsch', 'Uf Tüütsch', 'Ticino']);
@@ -243,6 +243,7 @@
     byId('communesView').hidden = next !== 'communes';
     byId('mapView').hidden = next !== 'map';
     byId('statsView').hidden = next !== 'stats';
+    byId('newsView').hidden = next !== 'news';
     byId('roadmapView').hidden = next !== 'roadmap';
     byId('syncReload').hidden = next !== 'communes';
     if (next === 'map') loadMap().then(restoreMapUi);
@@ -438,58 +439,9 @@
 
   window.addEventListener('popstate', restoreFromUrl);
 
-  function refreshRoadmap() {
-    const stages = [...document.querySelectorAll('.roadmap-stage')];
-    const stage11 = stages.find(stage => stage.querySelector('.roadmap-version')?.textContent.trim() === '1.1');
-    const stage15 = stages.find(stage => stage.querySelector('.roadmap-version')?.textContent.trim() === '1.5');
-    if (!stage11 || !stage15) return;
-
-    const items11 = stage11.querySelector('.roadmap-items');
-    const items15 = stage15.querySelector('.roadmap-items');
-    if (!items11 || !items15) return;
-
-    const findItem = (container, title) => [...container.children].find(item => item.querySelector('strong')?.textContent.trim() === title);
-    const audit = findItem(items11, 'Audit trail');
-    const map = findItem(items15, 'Carte suisse interactive');
-    if (audit) items15.prepend(audit);
-    if (map) items11.prepend(map);
-
-    const temporalDependency = [...document.querySelectorAll('.roadmap-stage small')].find(node => node.textContent.includes('carte suisse 1.5'));
-    if (temporalDependency) temporalDependency.textContent = temporalDependency.textContent.replace('carte suisse 1.5', 'carte suisse 1.1');
-
-    if (!findItem(items11, 'Liens partageables')) {
-      const deepLink = document.createElement('div');
-      deepLink.innerHTML = '<strong>Liens partageables</strong><span>L’URL conserve l’onglet actif, les filtres, la recherche et le tri afin de rouvrir exactement la même vue.</span><small>Navigation Retour / Suivant du navigateur incluse</small>';
-      items11.append(deepLink);
-    }
-
-    if (!findItem(items11, 'Stabilisation 1.1')) {
-      const stabilization = document.createElement('div');
-      stabilization.innerHTML = '<strong>Stabilisation 1.1</strong><span>Refactoring sans changement visuel : état des filtres fiabilisé, base Delivery documentée, permissions DB resserrées et point de restauration GitHub créé.</span><small>Socle préparé pour produits supplémentaires, données financières et migration vers l’infrastructure Prime</small>';
-      items11.append(stabilization);
-    }
-
-    // 1.1 is delivered and stabilized.
-    stage11.classList.remove('current');
-    stage11.classList.add('completed-11');
-    if (!stage11.querySelector('.roadmap-done')) {
-      const done = document.createElement('span');
-      done.className = 'roadmap-done';
-      done.textContent = 'Terminé ✓';
-      stage11.querySelector('header')?.append(done);
-    }
-    const journey11 = [...document.querySelectorAll('.roadmap-journey li')].find(item => item.querySelector('span')?.textContent.trim() === '1.1');
-    if (journey11) {
-      journey11.classList.remove('journey-know');
-      journey11.classList.add('journey-done');
-      const label = journey11.querySelector('strong');
-      if (label && !label.textContent.includes('✓')) label.textContent = `${label.textContent} ✓`;
-    }
-  }
-
-  refreshRoadmap();
+  // Roadmap 2.0 is now semantic HTML. Runtime mutation is intentionally retired.
   const footerVersion = document.querySelector('.footer-meta span:first-child');
-  if (footerVersion) footerVersion.textContent = 'Prime Communes · version 1.1.8';
+  if (footerVersion) footerVersion.textContent = 'Prime Communes · version 2.0.1';
 
   if (all.length) restoreFromUrl();
   else render();

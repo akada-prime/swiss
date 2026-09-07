@@ -22,6 +22,7 @@
       <button class="view-tab active" data-view="communes">Communes</button>
       <button class="view-tab" data-view="map">Carte</button>
       <button class="view-tab" data-view="stats">Stats</button>
+      <button class="view-tab news-nav-tab" data-view="news">NEWS<span class="news-nav-dot" aria-hidden="true"></span></button>
       <button class="view-tab" data-view="roadmap">Roadmap</button>
     </nav>
     <button class="sync-state" id="syncReload" title="Recharger depuis Supabase"><span></span><b id="syncText">Connexion à la base…</b></button>
@@ -116,6 +117,36 @@
         </div>
       </section>
     </section>
+    <section class="news-view" id="newsView" hidden>
+      <div class="news-intro">
+        <div><p class="eyebrow">Prime Communes · NEWS 2.0</p><h1>Ce qui bouge.<br><span>Avant que ça bouge.</span></h1></div>
+        <div class="news-intro-copy"><p>Les faits communaux qui méritent notre attention, reliés au marché et à la connaissance Prime.</p><strong>Un signal n'est pas une tâche commerciale : c'est une raison documentée de regarder une commune maintenant.</strong></div>
+      </div>
+      <section class="news-panel" aria-label="Radar communal">
+        <header class="news-panel-heading">
+          <div><p class="eyebrow">Radar communal · 2.0.1</p><h2>Les signaux du territoire</h2></div>
+          <div class="news-radar-state"><span></span><b>Première veille éditoriale</b><small>Automatisation prévue en 2.5</small></div>
+        </header>
+        <div class="news-kpis" aria-label="Synthèse du Radar">
+          <article class="news-kpi news-kpi-hot"><span>Signaux forts</span><strong id="newsStrongCount">—</strong><small>faits à regarder maintenant</small></article>
+          <article class="news-kpi"><span>À surveiller</span><strong id="newsWatchCount">—</strong><small>changements ou indices utiles</small></article>
+          <article class="news-kpi"><span>Communes concernées</span><strong id="newsMunicipalityCount">—</strong><small>reliées à la base OFS</small></article>
+          <article class="news-kpi"><span>Sources</span><strong id="newsSourceCount">—</strong><small>Prime et sources publiques</small></article>
+        </div>
+        <div class="news-toolbar">
+          <label class="news-search"><span>⌕</span><input id="newsQuery" placeholder="Rechercher une commune, un sujet, une source…"></label>
+          <div class="news-filters" aria-label="Niveau du signal">
+            <button class="active" data-news-level="all">Tous</button>
+            <button data-news-level="strong">Signal fort</button>
+            <button data-news-level="watch">À surveiller</button>
+            <button data-news-level="info">Information</button>
+          </div>
+        </div>
+        <div class="news-result-line"><span><strong id="newsResultCount">0</strong> signaux</span><span>Triés par importance puis fraîcheur</span></div>
+        <div class="news-feed" id="newsFeed"><p class="news-loading">Lecture des premiers signaux…</p></div>
+        <footer class="news-method"><strong>Ce que le Radar fait déjà</strong><span>Relier un fait à une commune, expliquer son intérêt et afficher sa provenance.</span><strong>Ce qui arrive en 2.5</strong><span>Collecte Web, dédoublonnage, dates de validité, contradictions et file de validation.</span></footer>
+      </section>
+    </section>
     <section class="roadmap-view" id="roadmapView" hidden>
       <div class="roadmap-intro">
         <div><h1>La suite.<br><span>Déjà pensée.</span></h1></div>
@@ -124,8 +155,8 @@
       <ol class="roadmap-journey" aria-label="Trajectoire produit">
         <li class="journey-done"><span>1.0</span><strong>Rassembler</strong></li>
         <li class="journey-know"><span>1.1</span><strong>Savoir</strong></li>
-        <li class="journey-see"><span>1.5</span><strong>Voir</strong></li>
-        <li class="journey-understand"><span>2.0</span><strong>Comprendre</strong></li>
+        <li class="journey-understand"><span>2.0</span><strong>Faire parler</strong></li>
+        <li class="journey-see"><span>2.5</span><strong>Comprendre le temps</strong></li>
         <li class="journey-anticipate"><span>3.0</span><strong>Anticiper</strong></li>
       </ol>
       <div class="roadmap-principle"><span>Principe directeur</span><p>Chaque choix doit rester propre lorsque nous ajouterons la carte, les statistiques, les finances, plusieurs logiciels, l’historique, les droits nominatifs et l’IA.</p></div>
@@ -136,37 +167,46 @@
         </div>
       </article>
       <div class="roadmap-grid">
-        <article class="roadmap-stage current">
-          <header><span class="roadmap-version">1.1</span><div><p>Fondations</p><h2>Savoir</h2></div></header>
+        <article class="roadmap-stage completed-11">
+          <header><span class="roadmap-version">1.1</span><div><p>Fondations</p><h2>Savoir</h2></div><span class="roadmap-done">Terminé ✓</span></header>
           <div class="roadmap-items">
-            <div><strong>Audit trail</strong><span>Savoir qui a créé, modifié, validé ou supprimé chaque information.</span><small>8–16 h · 20–45 crédits · 0,08–0,35 kWh · ≈ 5–21 recharges</small></div>
+            <div><strong>Carte suisse interactive</strong><span>Surfaces communales officielles, recherche, fiche, zoom et colorations Empreinte Prime, Intégrateur ou Logiciel.</span><small>Livrée en 1.1 · contexte suisse et Romandie commerciale</small></div>
             <div><strong>Statistiques</strong><span>Parts de marché par communes ou habitants, Romandie, canton, Jura bernois et seuils de 5’000 ou 10’000 habitants.</span><small>10–20 h · 25–55 crédits · 0,1–0,5 kWh · ≈ 6–30 recharges</small></div>
             <div><strong>Modèle multi-produits</strong><span>innosolv, ProConcept, Abacus, LCM, eAdmin et les autres solutions Prime.</span><small>12–28 h · 30–75 crédits · 0,15–0,7 kWh · ≈ 9–42 recharges</small></div>
+            <div><strong>Liens partageables</strong><span>L'URL conserve l'onglet actif, les filtres, la recherche et le tri.</span><small>Navigation Retour / Suivant incluse</small></div>
+            <div><strong>Stabilisation 1.1</strong><span>Base Delivery documentée, permissions resserrées, tests de non-régression et point de restauration GitHub.</span><small>État courant fiable · aucune historisation active</small></div>
+          </div>
+        </article>
+        <article class="roadmap-stage history-stage current">
+          <header><span class="roadmap-version">2.0</span><div><p>NEWS</p><h2>Faire parler</h2></div></header>
+          <div class="roadmap-items">
+            <div><strong>NEWS · Radar communal</strong><span>Détecter et interpréter les actualités, décisions et indices qui annoncent une transformation communale.</span><small>2.0.1 · première veille éditoriale en cours</small></div>
+            <div><strong>Une commune, une histoire</strong><span>Raconter son identité, son histoire avec Prime et les liens humains ou territoriaux qui donnent du sens à notre métier.</span><small>2.0.2 · Avenches et le Franches-Montagnes comme récit de référence</small></div>
+            <div><strong>Actualités interprétées</strong><span>Expliquer ce qu'un fait change, quelles communes sont concernées et distinguer fait, déduction et lecture Prime.</span><small>2.0.3 · sources visibles et validation humaine</small></div>
+            <div><strong>Qualification légère et forecast</strong><span>Responsable, prochaine action, probabilité, échéance et valeur estimée, reliés aux signaux qui les justifient.</span><small>Ancien point Leads et forecast conservé · sans recréer un CRM</small></div>
           </div>
         </article>
         <article class="roadmap-stage map-stage">
-          <header><span class="roadmap-version">1.5</span><div><p>Marché</p><h2>Voir</h2></div></header>
+          <header><span class="roadmap-version">2.5</span><div><p>Fondations techniques</p><h2>Comprendre le temps</h2></div></header>
           <div class="roadmap-items">
-            <div><strong>Carte suisse interactive</strong><span>Romandie commerciale par défaut, puis 2’110 surfaces communales avec survol, fiche, zoom et colorations.</span><small>12–24 h · 30–65 crédits · 0,12–0,6 kWh · ≈ 7–36 recharges</small></div>
-            <div><strong>Authentification · SSO · rôles · RLS</strong><span>Transfert de la base, comptes professionnels et accès nominatifs TeamVente, Direction et Admin.</span><small>16–30 h · 40–90 crédits · 0,2–0,8 kWh · ≈ 12–48 recharges</small></div>
-            <div><strong>Leads et forecast</strong><span>Responsable, prochaine action, probabilité, échéance et valeur estimée.</span><small>14–28 h · 35–80 crédits · 0,15–0,8 kWh · ≈ 9–48 recharges</small></div>
-            <div><strong>Données financières</strong><span>PA, PV, LCM, marge, récurrence et historique tarifaire selon les droits.</span><small>16–36 h · 40–100 crédits · 0,2–1,0 kWh · ≈ 12–60 recharges</small></div>
-          </div>
-        </article>
-        <article class="roadmap-stage history-stage">
-          <header><span class="roadmap-version">2.0</span><div><p>Observatoire</p><h2>Comprendre</h2></div></header>
-          <div class="roadmap-items">
+            <div><strong>Infrastructure Prime</strong><span>Déplacer l'application et la base stabilisées vers les serveurs Prime, puis figer l'architecture cible.</span><small>Frontend / configuration / secrets séparés · point de restauration 1.1</small></div>
+            <div><strong>Authentification · SSO · rôles · RLS</strong><span>Comptes professionnels et accès nominatifs TeamVente, Direction et Admin.</span><small>Ancien point 1.5 conservé</small></div>
+            <div><strong>Audit trail et temporalité</strong><span>Savoir qui a créé, modifié, validé ou supprimé chaque information, avec valeurs précédentes et périodes de validité.</span><small>Trigger toujours désactivé jusqu'à cette phase</small></div>
+            <div><strong>Sources, confiance et contradictions</strong><span>Dater, sourcer et qualifier les faits ; rendre visibles les divergences entre données Prime et sources publiques.</span><small>Fait · déduction · avis toujours distingués</small></div>
+            <div><strong>Collecte Web et PV</strong><span>Budgets, décisions, appels d'offres, recrutements, sites communaux et veille des intégrateurs et logiciels.</span><small>Moteur technique du Radar · aucune GED recréée</small></div>
             <div><strong>Historique Delimo</strong><span>Photographies successives, retour dans le temps, population, fusions et qualité des livraisons.</span><small>12–26 h · 30–70 crédits · 0,15–0,7 kWh · ≈ 9–42 recharges</small></div>
             <div><strong>Mouvements de marché</strong><span>Gains, pertes, migrations et changements de fournisseurs avec provenance et dates.</span><small>Énergie à préciser après inventaire des sources</small></div>
-            <div><strong>Carte et statistiques temporelles</strong><span>Comparer instantanément deux dates avec le même moteur de filtres.</span><small>Dépend des statistiques 1.1 et de la carte suisse 1.5</small></div>
+            <div><strong>Carte et statistiques temporelles</strong><span>Comparer instantanément deux dates avec le même moteur de filtres.</span><small>Dépend des statistiques et de la carte suisse 1.1</small></div>
+            <div><strong>Données financières sécurisées</strong><span>PA, PV, LCM, marge, récurrence et historique tarifaire dans un modèle dédié selon les droits.</span><small>Ancien point 1.5 conservé</small></div>
+            <div><strong>API interne et qualité</strong><span>Cohérence OFS, complétude, doublons et modèle multi-produits / multi-périodes avec provenance.</span><small>Socle des futurs consommateurs autorisés</small></div>
           </div>
         </article>
         <article class="roadmap-stage ai-stage">
           <header><span class="roadmap-version">3.0</span><div><p>Copilote IA</p><h2>Anticiper</h2></div></header>
           <div class="roadmap-items">
-            <div><strong>Opportunités marché</strong><span>Croiser les données Prime avec le web, les médias et les publications publiques.</span><small>40–100 h · 100–300+ crédits · 0,8–4 kWh · ≈ 48–240 recharges</small></div>
-            <div><strong>Mise à jour web et PV</strong><span>Rechercher budgets, décisions, logiciels, intégrateurs et projets dans les documents communaux.</span><small>35–90 h · 90–250+ crédits · 0,7–3,5 kWh · ≈ 42–210 recharges</small></div>
-            <div><strong>Veille intégrateurs et logiciels</strong><span>Distinguer clairement faits sourcés, déductions et avis de l’IA.</span><small>25–60 h · 70–180+ crédits · 0,5–2,5 kWh · ≈ 30–150 recharges</small></div>
+            <div><strong>Demande à la Suisse</strong><span>Interroger la base et ses sources en langage naturel, puis obtenir une réponse, une carte et un tableau vérifiables.</span><small>Copilote sourcé · aucune donnée inventée</small></div>
+            <div><strong>Briefing et jumeau communal</strong><span>Préparer une commune, trouver ses références comparables et expliquer pourquoi elles se ressemblent.</span><small>Données 2.5 + interprétation contrôlée</small></div>
+            <div><strong>Effet domino et simulateur de séisme</strong><span>Mesurer l'effet d'un gain, d'une fusion, d'un rachat, d'une fin de technologie ou d'un changement légal.</span><small>Scénarios distincts des faits observés</small></div>
           </div>
         </article>
       </div>
@@ -175,7 +215,7 @@
   </section>
   <footer class="site-footer" aria-label="Informations légales et techniques">
     <div class="footer-meta">
-      <span>Prime Communes · version 1.1.3</span>
+      <span>Prime Communes · version 2.0.1</span>
       <span class="footer-confidential">Données confidentielles</span>
     </div>
     <div class="footer-legal">
@@ -308,7 +348,7 @@ $('swissMap').addEventListener('pointerup',event=>{const path=event.target.close
 $('mapZoomIn').onclick=()=>zoomMap(.72);$('mapZoomOut').onclick=()=>zoomMap(1.35);$('mapReset').onclick=()=>{mapViewBox=[...mapInitialViewBox];setMapView();$('mapQuery').value='';updateMapSearch()};
 $('statsScope').addEventListener('change',renderStats);document.querySelectorAll('[data-stats-metric]').forEach(button=>button.onclick=()=>{statsMetric=button.dataset.statsMetric;document.querySelectorAll('[data-stats-metric]').forEach(x=>x.classList.toggle('active',x===button));renderStats()});document.querySelectorAll('[data-stats-threshold]').forEach(button=>button.onclick=()=>{statsThreshold=Number(button.dataset.statsThreshold);document.querySelectorAll('[data-stats-threshold]').forEach(x=>x.classList.toggle('active',x===button));renderStats()});
 $('query').addEventListener('input',render);$('solution').addEventListener('change',render);$('district').addEventListener('change',render);$('canton').addEventListener('change',()=>{$('district').value='';updateDistrictOptions();render()});$('primeOnly').onclick=()=>{primeOnly=!primeOnly;$('primeOnly').classList.toggle('on',primeOnly);render()};$('eadminOnly').onclick=()=>{eadminOnly=!eadminOnly;$('eadminOnly').classList.toggle('on',eadminOnly);$('eadminOnly').classList.toggle('eadmin-on',eadminOnly);render()};$('districtsToggle').onclick=()=>{districtsMode=!districtsMode;$('districtsToggle').classList.toggle('on',districtsMode);render()};document.querySelectorAll('.market-toggle').forEach(button=>button.onclick=()=>{marketOnly=marketOnly===button.dataset.market?'':button.dataset.market;document.querySelectorAll('.market-toggle').forEach(x=>x.classList.toggle('on',x.dataset.market===marketOnly));render()});$('issuesOnly').onclick=()=>{issuesOnly=!issuesOnly;$('issuesOnly').classList.toggle('on',issuesOnly);$('issuesOnly').classList.toggle('warning',issuesOnly);render()};$('issuesCard').onclick=()=>{ofsMode=!ofsMode; if(!ofsMode)issuesOnly=false; $('issuesOnly').hidden=!ofsMode; $('issuesCard').classList.toggle('ofs-active',ofsMode); $('ofsLabel').textContent=ofsMode?$('issues').textContent:'Ouvrir'; $('ofsCopy').textContent=ofsMode?'Revenir à la vue de marché':'Afficher les statuts Delimo'; $('ofsArrow').textContent=ofsMode?'←':'→'; render()};$('reset').onclick=()=>{$('query').value='';$('canton').value='Tous';$('district').value='';$('solution').value='Tous';primeOnly=eadminOnly=issuesOnly=false;marketOnly='';updateDistrictOptions();document.querySelectorAll('.filter-toggle').forEach(x=>{if(x.id!=='districtsToggle')x.classList.remove('on','warning')});render()};$('syncReload').onclick=loadData;$('exportBtn').onclick=()=>{const rows=filtered(),withDistrict=districtsMode,header=['Nom','Client Prime','Canton',...(withDistrict?['District']:[]),'Population','Intégrateur','Métier','ERP','Modules'],lines=[header.join('\t'),...rows.map(x=>[x.name,x.isPrime?'Oui':'Non',x.canton,...(withDistrict?[x.district]:[]),x.expectedPopulation,x.integrator,x.software,x.erp,(x.products||[]).join(' | ')].join('\t'))];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/tab-separated-values'}));a.download='communes.tsv';a.click()};
-document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
+document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('newsView').hidden=view!=='news';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
 </script>
 <script src="app/prime-communes-1.1.js?v=2"></script>
 </body>

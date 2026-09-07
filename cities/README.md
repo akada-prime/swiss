@@ -4,7 +4,7 @@ Observatoire interne du marché communal suisse de Prime Technologies, construit
 
 ## Version 1.1
 
-La 1.1 est une **Base Delivery** : elle consolide l’état courant des informations disponibles. Elle n’a pas vocation à historiser les modifications. L’audit fonctionnel commencera avec la 1.5, en même temps que les utilisateurs, rôles et droits nominatifs.
+La 1.1 est une **Base Delivery** : elle consolide l’état courant des informations disponibles. Elle n’a pas vocation à historiser les modifications. L’audit fonctionnel commencera avec la 2.5 technique, en même temps que les utilisateurs, rôles et droits nominatifs.
 
 Fonctions livrées :
 
@@ -56,6 +56,12 @@ npm run build
 
 Une GitHub Action exécute automatiquement le contrôle statique et le build Vite à chaque modification de `cities/`.
 
-## Suite
+## NEWS 2.0
 
-La 1.5 introduira notamment l’authentification professionnelle, les rôles/RLS, l’audit trail propre, les données commerciales plus sensibles et les futurs objets financiers. Les futurs produits restent extensibles via `Product` + `GemeindeProduct` ; les valeurs financières/LCM devront disposer d’un modèle dédié plutôt que d’être ajoutées comme colonnes improvisées au profil communal.
+La phase 2.0 fait parler les communes. Sa première fonction est le **Radar communal** : un flux éditorial de signaux reliés aux communes, avec niveau, intérêt, provenance et confiance. Cette V0 lit `public/data/news-radar-v1.json` et n'ajoute aucune écriture Supabase.
+
+La roadmap complète validée est conservée dans [`Prime-Communes-Roadmap.md`](./Prime-Communes-Roadmap.md).
+
+## Suite technique
+
+La 2.5 introduira notamment l’authentification professionnelle, les rôles/RLS, l’audit trail propre, la provenance, la collecte Web, les données commerciales plus sensibles et les futurs objets financiers. Les futurs produits restent extensibles via `Product` + `GemeindeProduct` ; les valeurs financières/LCM devront disposer d’un modèle dédié plutôt que d’être ajoutées comme colonnes improvisées au profil communal.
