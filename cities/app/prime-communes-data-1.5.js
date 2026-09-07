@@ -265,6 +265,10 @@
   const reloadButton = byId('syncReload');
   if (reloadButton) reloadButton.onclick = () => reload().catch(() => {});
 
+  // mapProduct belonged to the retired SVG/product map. DATA no longer writes it,
+  // so it can leave the DOM before MapLibre retires the rest of the legacy controls.
+  byId('mapProduct')?.remove();
+
   // If the very first legacy request won the race before this file loaded,
   // adopt its rows so 1.5 consumers still receive a canonical ready signal.
   queueMicrotask(() => {
