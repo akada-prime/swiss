@@ -22,7 +22,7 @@
       <button class="view-tab active" data-view="communes">Communes</button>
       <button class="view-tab" data-view="map">Carte</button>
       <button class="view-tab" data-view="stats">Stats</button>
-      <button class="view-tab news-nav-tab" data-view="news">NEWS<span class="news-nav-dot" aria-hidden="true"></span></button>
+      <button class="view-tab news-nav-tab" data-view="news">NEWS!<span class="news-nav-dot" aria-hidden="true"></span></button>
       <button class="view-tab" data-view="roadmap">Roadmap</button>
     </nav>
     <button class="sync-state" id="syncReload" title="Recharger depuis Supabase"><span></span><b id="syncText">Connexion à la base…</b></button>
@@ -119,17 +119,17 @@
     </section>
     <section class="news-view" id="newsView" hidden>
       <div class="news-intro">
-        <div><p class="eyebrow">Prime Communes · NEWS 2.0</p><h1>Ce qui bouge.<br><span>Avant que ça bouge.</span></h1></div>
-        <div class="news-intro-copy"><p>Les faits communaux qui méritent notre attention, reliés au marché et à la connaissance Prime.</p><strong>Un signal n'est pas une tâche commerciale : c'est une raison documentée de regarder une commune maintenant.</strong></div>
+        <div><p class="eyebrow">Prime Communes · NEWS! 2.0</p><h1>Ce qui bouge.<br><span>Avant que ça bouge.</span></h1></div>
+        <div class="news-intro-copy"><p>Des faits publics qui annoncent peut-être un projet communal — avant l'appel d'offres, avant le devis, avant que tout le monde le sache.</p><strong>Le Radar ne raconte pas les projets déjà gagnés par Prime. Il détecte ce qui mérite d'être qualifié maintenant.</strong></div>
       </div>
       <section class="news-panel" aria-label="Radar communal">
         <header class="news-panel-heading">
           <div><p class="eyebrow">Radar communal · 2.0.1</p><h2>Les signaux du territoire</h2></div>
-          <div class="news-radar-state"><span></span><b>Première veille éditoriale</b><small>Automatisation prévue en 2.5</small></div>
+          <div class="news-radar-state"><span></span><b>Veille de l'IA d'Axel</b><small>Sélection humaine · consommation minimale</small></div>
         </header>
         <div class="news-kpis" aria-label="Synthèse du Radar">
-          <article class="news-kpi news-kpi-hot"><span>Signaux forts</span><strong id="newsStrongCount">—</strong><small>faits à regarder maintenant</small></article>
-          <article class="news-kpi"><span>À surveiller</span><strong id="newsWatchCount">—</strong><small>changements ou indices utiles</small></article>
+          <article class="news-kpi news-kpi-hot"><span>Signaux forts</span><strong id="newsStrongCount">—</strong><small>faits publics à qualifier</small></article>
+          <article class="news-kpi"><span>À surveiller</span><strong id="newsWatchCount">—</strong><small>indices documentés</small></article>
           <article class="news-kpi"><span>Communes concernées</span><strong id="newsMunicipalityCount">—</strong><small>reliées à la base OFS</small></article>
           <article class="news-kpi"><span>Sources</span><strong id="newsSourceCount">—</strong><small>Prime et sources publiques</small></article>
         </div>
@@ -144,7 +144,7 @@
         </div>
         <div class="news-result-line"><span><strong id="newsResultCount">0</strong> signaux</span><span>Triés par importance puis fraîcheur</span></div>
         <div class="news-feed" id="newsFeed"><p class="news-loading">Lecture des premiers signaux…</p></div>
-        <footer class="news-method"><strong>Ce que le Radar fait déjà</strong><span>Relier un fait à une commune, expliquer son intérêt et afficher sa provenance.</span><strong>Ce qui arrive en 2.5</strong><span>Collecte Web, dédoublonnage, dates de validité, contradictions et file de validation.</span></footer>
+        <footer class="news-method"><strong>Règle éditoriale</strong><span>Un fait public vérifiable, séparé de la lecture de l'IA d'Axel. Aucun projet Prime déjà gagné ou livré.</span><strong>Plus tard en 2.5</strong><span>Le robot pourra détecter des sources ; la sélection, la vérification et la publication resteront sobres et maîtrisées.</span></footer>
       </section>
     </section>
     <section class="roadmap-view" id="roadmapView" hidden>
