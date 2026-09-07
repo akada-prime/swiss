@@ -47,7 +47,7 @@ start = text.find('def patch_tests():')
 end = text.find("\n\nif __name__ == '__main__':", start)
 if start < 0 or end < 0:
     raise SystemExit('patch_tests function not found')
-patch_tests = r'''def patch_tests():
+patch_tests = r"""def patch_tests():
     path = ROOT / 'tests/stabilization-1.1.test.mjs'
     tests = path.read_text()
 
@@ -94,7 +94,7 @@ test('official national border is a stored swissBOUNDARIES3D 2026 geometry', asy
         tests += border_test
 
     path.write_text(tests)
-'''
+"""
 text = text[:start] + patch_tests + text[end:]
 
 path.write_text(text)
