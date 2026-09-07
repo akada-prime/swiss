@@ -109,67 +109,21 @@
     white-space:nowrap;
   }
 
-  /* Ranking belongs to the semantic commune cell, not to a positional column. */
-  .table-wrap tbody{counter-reset:commune-rank}
-  .table-wrap tbody tr{counter-increment:commune-rank}
+  /* Same row identity as desktop; mobile only controls available width. */
   .table-wrap table{min-width:800px!important}
   .table-wrap.logiciels-hidden table{min-width:770px!important}
-
   .table-wrap .commune-heading,
   .table-wrap .commune-cell{
-    width:196px!important;
-    min-width:196px!important;
-    max-width:196px!important;
+    width:214px!important;
+    min-width:214px!important;
+    max-width:214px!important;
     white-space:normal!important;
-  }
-  .table-wrap .commune-cell{
-    position:relative!important;
-    padding-left:58px!important;
-    padding-right:12px!important;
-  }
-  .table-wrap .commune-cell::before{
-    content:counter(commune-rank);
-    position:absolute;
-    left:14px;
-    top:50%;
-    transform:translateY(-50%);
-    display:grid;
-    place-items:center;
-    width:30px;
-    height:27px;
-    border:1px solid rgba(255,255,255,.075);
-    border-radius:8px;
-    color:#6f8096;
-    background:rgba(255,255,255,.025);
-    font-size:10px;
-    font-weight:750;
-    line-height:1;
-    font-variant-numeric:tabular-nums;
-  }
-  .table-wrap tbody tr:hover .commune-cell::before{
-    color:#a8d9fb;
-    border-color:rgba(55,162,236,.28);
-    background:rgba(10,102,170,.10);
-  }
-  .table-wrap .commune-identity{
-    display:grid;
-    grid-template-columns:22px minmax(0,1fr);
-    align-items:center;
-    gap:8px;
-  }
-  .table-wrap .commune-canton-flag{
-    width:22px;
-    height:22px;
   }
   .table-wrap .commune-cell strong{
     display:block!important;
     width:100%!important;
     max-width:none!important;
-    margin:0!important;
     white-space:normal!important;
-    overflow-wrap:break-word;
-    word-break:normal;
-    line-height:1.23;
   }
 
   .topbar{
