@@ -52,6 +52,8 @@
       integrator: row.integrator ?? '',
       primeClient: row.prime_client,
       erp: row.erp ?? '',
+      hosting: row.hosting ?? '',
+      hostingCode: row.hosting_code ?? '',
       salesStatus: row.sales_status ?? 'none',
       notes: row.notes ?? '',
       products: row.products ?? []
@@ -227,7 +229,7 @@
     } catch (error) {
       if (syncText) syncText.textContent = 'Erreur de chargement';
       const rowsNode = byId('rows');
-      if (rowsNode) rowsNode.innerHTML = `<tr><td colspan="8">${String(error?.message || error)}</td></tr>`;
+      if (rowsNode) rowsNode.innerHTML = `<tr><td colspan="9">${String(error?.message || error)}</td></tr>`;
       throw error;
     }
   }
