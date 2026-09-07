@@ -147,15 +147,15 @@
 
 /* Compact KPI contract.
    The runtime measures the tallest visible label and exposes one shared
-   --pc-kpi-label-height. This keeps values aligned without reserving empty
-   lines on wide screens. */
+   --pc-kpi-label-height. Values stay aligned while the vertical rhythm keeps
+   the same breathing room as the rest of the dashboard. */
 .stats-kpi:not(.stats-kpi-prime){
   display:grid;
   grid-template-rows:var(--pc-kpi-label-height,auto) auto auto;
   align-content:start;
-  row-gap:2px;
+  row-gap:6px;
   min-height:0;
-  padding:8px 14px 9px;
+  padding:10px 14px 11px;
 }
 
 .stats-kpi:not(.stats-kpi-prime)>span{
@@ -249,8 +249,8 @@
 
   .stats-kpi:not(.stats-kpi-prime){
     min-height:0;
-    padding:7px 12px 8px;
-    row-gap:2px;
+    padding:8px 12px 9px;
+    row-gap:4px;
   }
 }
 
