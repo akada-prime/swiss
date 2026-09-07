@@ -1,4 +1,4 @@
-name: Prime Communes 1.1
+name: Prime Communes
 
 on:
   push:
@@ -22,11 +22,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --check app/prime-communes-1.1.js
-      - run: node --check app/prime-communes-1.1-base.js
-      - run: node --check app/prime-communes-map-1.1.js
-      - run: node --check app/prime-communes-maplibre-1.2.js
-      - run: node --test tests/*.test.mjs
+          cache: npm
+          cache-dependency-path: cities/package-lock.json
+      - run: npm ci
+      - run: npm run check
 
   build:
     name: Vite production build
