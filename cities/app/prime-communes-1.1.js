@@ -2,7 +2,7 @@
   'use strict';
 
   // Prime Communes · application loader
-  // One canonical module per view. Carte is MapLibre-only at runtime.
+  // DATA loads first; Communes, Carte, Stats and Roadmap consume the same source.
   const loadStyle = href => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -20,15 +20,19 @@
   };
 
   loadStyle('app/prime-communes-1.1.5.css?v=5');
-  loadStyle('app/prime-communes-stats-1.2.css?v=3');
+  loadStyle('app/prime-communes-stats-1.2.css?v=4');
   loadStyle('app/prime-communes-maplibre-1.2.css?v=7');
 
-  // Carte loads first so it owns the global loadMap entry point before the
-  // historical state/deep-link bridge restores a deep-linked map view.
-  loadScript('app/prime-communes-maplibre-1.2.js?v=7', () => {
-    loadScript('app/prime-communes-1.1-base.js?v=2', () => {
-      loadScript('app/prime-communes-communes-1.2.js?v=1', () => {
-        loadScript('app/prime-communes-roadmap-1.2.js?v=1');
+  // First 1.5 plumbing step: transport/normalization/language scopes are owned
+  // by DATA before any view-specific runtime starts.
+  loadScript('app/prime-communes-data-1.5.js?v=1', () => {
+    // Carte still loads before the state bridge so deep-linked map views resolve
+    // to MapLibre, never to the retired SVG runtime.
+    loadScript('app/prime-communes-maplibre-1.2.js?v=7', () => {
+      loadScript('app/prime-communes-1.1-base.js?v=2', () => {
+        loadScript('app/prime-communes-communes-1.2.js?v=1', () => {
+          loadScript('app/prime-communes-roadmap-1.2.js?v=1');
+        });
       });
     });
   });
