@@ -15,7 +15,19 @@ test('1.1 state bridge keeps the minimal software view as the real default state
 test('software columns are controlled by one semantic class', async () => {
   const css = await read('app/prime-communes-1.1.5.css');
   assert.match(css, /\.table-wrap\.logiciels-hidden \.erp-cell/);
+  assert.match(css, /\.table-wrap\.logiciels-hidden \.modules-cell/);
+  assert.match(css, /\.table-wrap\.logiciels-hidden \.hosting-cell/);
+  assert.match(css, /th\[data-software-column="hosting"\]/);
   assert.doesNotMatch(css, /:not\(\.logiciels-hidden\)/);
+});
+
+test('hosting is appended after Modules by the canonical Communes view', async () => {
+  const js = await read('app/prime-communes-communes-1.2.js');
+  assert.match(js, /decorateHostingColumn/);
+  assert.match(js, /textContent = 'Hébergeur'/);
+  assert.match(js, /dataset\.softwareColumn = 'hosting'/);
+  assert.match(js, /modulesHeading\.insertAdjacentElement\('afterend', hostingHeading\)/);
+  assert.match(js, /commune\.hosting \|\| '—'/);
 });
 
 test('mobile peer filters remain a strict two-column grid', async () => {
@@ -115,6 +127,9 @@ test('Carte 1.2 is MapLibre-only, preloads assets and exposes meaningful dimensi
   assert.match(js, /renderWorldCopies: false/);
   assert.match(js, /closeButton: false/);
   assert.match(js, /RASTER_URL = 'public\/swiss-base\.webp'/);
+  assert.match(js, /fitBounds\(romandieBounds\(\)/);
+  assert.match(css, /\.maplibre-stage\{[^}]*height:760px;min-height:760px/);
+  assert.match(css, /@media\(max-width:900px\)[\s\S]*\.maplibre-stage\{height:560px;min-height:560px\}/);
   assert.match(css, /maplibre-mini-map/);
   assert.match(css, /metric-swiss-base/);
   assert.match(css, /metric-swiss-active/);
