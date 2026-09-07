@@ -31,8 +31,8 @@
 .metric-swiss-active{fill:#2698f0;stroke:#7acbff;stroke-width:.45;vector-effect:non-scaling-stroke}
 .maplibre-territory-chips{display:none}
 
-/* Filters sit directly between metrics and the map. */
-.map-toolbar.maplibre-toolbar{position:relative;z-index:20;display:grid;grid-template-columns:minmax(320px,1.45fr) minmax(145px,.5fr) minmax(170px,.55fr);gap:8px;margin:0;padding:10px;border:1px solid rgba(255,255,255,.06);border-bottom:0;border-radius:15px 15px 0 0;background:rgba(255,255,255,.025)}
+/* Search + one reading filter. On mobile each owns a full row. */
+.map-toolbar.maplibre-toolbar{position:relative;z-index:20;display:grid;grid-template-columns:minmax(320px,1.65fr) minmax(190px,.55fr);gap:8px;margin:0;padding:10px;border:1px solid rgba(255,255,255,.06);border-bottom:0;border-radius:15px 15px 0 0;background:rgba(255,255,255,.025)}
 .maplibre-toolbar .map-search,.maplibre-filter{position:relative;display:flex;align-items:center;gap:9px;min-width:0;height:44px;padding:0 12px;border:1px solid var(--pc-card-line);border-radius:11px;background:var(--pc-field-bg);color:#778397}
 .maplibre-toolbar .map-search:focus-within{border-color:rgba(55,162,236,.55);box-shadow:inset 0 0 20px rgba(21,136,220,.10)}
 .maplibre-toolbar .map-search>span{flex:0 0 auto;color:#758297;font-size:21px;line-height:1}
@@ -84,7 +84,7 @@
 @media(max-width:900px){
   .maplibre-metric{grid-template-columns:minmax(0,1fr) 125px}
   .maplibre-mini-map{width:125px;height:78px;min-width:125px}
-  .map-toolbar.maplibre-toolbar{grid-template-columns:minmax(250px,1.3fr) minmax(130px,.55fr) minmax(155px,.65fr)}
+  .map-toolbar.maplibre-toolbar{grid-template-columns:minmax(230px,1.45fr) minmax(180px,.55fr)}
   .maplibre-stage{height:560px;min-height:560px}
 }
 
@@ -97,9 +97,9 @@
   .maplibre-metric small{margin-top:5px;font-size:10px}
   .maplibre-progress{height:6px;margin-top:8px}
   .maplibre-mini-map{width:102px;height:68px;min-width:102px}
-  .map-toolbar.maplibre-toolbar{grid-template-columns:1fr 1fr;gap:7px;padding:9px;border-radius:14px 14px 0 0}
-  .maplibre-toolbar .map-search{grid-column:1/-1;height:46px}
-  .maplibre-filter{height:42px;padding:0 10px;gap:7px}
+  .map-toolbar.maplibre-toolbar{grid-template-columns:1fr;gap:7px;padding:9px;border-radius:14px 14px 0 0}
+  .maplibre-toolbar .map-search,.maplibre-view-filter{grid-column:1/-1;width:100%;height:46px}
+  .maplibre-filter{padding:0 10px;gap:7px}
   .maplibre-filter>span{font-size:8.5px}
   .maplibre-toolbar .map-search input,.maplibre-filter select{font-size:11px}
   .map-autocomplete{top:calc(100% + 5px);max-height:45vh}
