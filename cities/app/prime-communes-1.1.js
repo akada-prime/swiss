@@ -21,13 +21,13 @@
 
   loadStyle('app/prime-communes-1.1.5.css?v=7');
   loadStyle('app/prime-communes-stats-1.2.css?v=9');
-  loadStyle('app/prime-communes-maplibre-1.2.css?v=9');
+  loadStyle('app/prime-communes-maplibre-1.2.css?v=10');
 
   // DATA owns transport/normalization/language scopes before any view starts.
   loadScript('app/prime-communes-data-1.5.js?v=3', () => {
     // Carte still loads before the state bridge so deep-linked map views resolve
     // to MapLibre, never to the retired SVG runtime.
-    loadScript('app/prime-communes-maplibre-1.2.js?v=7', () => {
+    loadScript('app/prime-communes-maplibre-1.2.js?v=8', () => {
       loadScript('app/prime-communes-1.1-base.js?v=2', () => {
         loadScript('app/prime-communes-stats-1.5.js?v=3', () => {
           loadScript('app/prime-communes-communes-1.2.js?v=3', () => {
