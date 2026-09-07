@@ -5,6 +5,7 @@
   --pc-kpi-accent:#6ec7ff;
   --pc-kpi-label-lines:3;
   --pc-kpi-label-line-height:1.35;
+  --pc-territory-heading-height:64px;
 }
 
 /* One visual contract for every KPI card:
@@ -31,7 +32,27 @@
   margin-top:7px;
 }
 
+/* Territory cards use the same principle: the title + commune-count area has
+   a standard height, so percentages/bars/details align across each row even
+   when one label wraps and its neighbour does not. */
+.territory-comparison button>span{
+  display:block;
+  min-height:var(--pc-territory-heading-height);
+}
+
+.territory-comparison button>span>strong{
+  line-height:1.2;
+}
+
+.territory-comparison button>span>small{
+  line-height:1.35;
+}
+
 @media(max-width:760px){
+  :root{
+    --pc-territory-heading-height:72px;
+  }
+
   .stats-kpi>span{
     min-height:calc(var(--pc-kpi-label-lines) * 1em * var(--pc-kpi-label-line-height));
   }
