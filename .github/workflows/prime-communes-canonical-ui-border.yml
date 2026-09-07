@@ -28,7 +28,7 @@ jobs:
           mkdir -p /tmp/swissboundaries
           unzip -q /tmp/swissboundaries.zip -d /tmp/swissboundaries
 
-      - name: Apply idempotent canonical migration
+      - name: Apply canonical UI migration
         run: python cities/scripts/run_canonicalize.py
 
       - name: Run checks
