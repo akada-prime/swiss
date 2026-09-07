@@ -10,6 +10,7 @@
   const GLYPHS_URL = 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf';
   const GEOMETRY_URL = 'public/data/swiss-map-v1.json';
   const RASTER_URL = 'public/swiss-base.webp';
+  const COUNTRY_BORDER_URL = 'public/data/switzerland-border-2026.geojson';
   const ACTIVE_TERRITORIES = new Set(['JU', 'BE', 'VD', 'FR']);
   const ACTIVE_TERRITORY_LABEL = 'Jura · Berne · Vaud · Fribourg (romands)';
   const PRIME_INNOSOLV_SOFTWARE = new Set(['innosolvcity', 'innosolv']);
@@ -56,6 +57,11 @@
   const geometryPromise = fetch(GEOMETRY_URL, { cache: 'force-cache' })
     .then(response => {
       if (!response.ok) throw new Error('Géométrie cartographique indisponible.');
+      return response.json();
+    });
+  const countryBorderPromise = fetch(COUNTRY_BORDER_URL, { cache: 'force-cache' })
+    .then(response => {
+      if (!response.ok) throw new Error('Frontière nationale indisponible.');
       return response.json();
     });
   const rasterPreload = new Image();
@@ -320,43 +326,6 @@
       : { type: 'MultiPolygon', coordinates: rings.map(ring => [ring]) };
   }
 
-  function buildCountryBorderGeoJSON() {
-    const edges = new Map();
-    const pointKey = point => `${Number(point[0]).toFixed(7)},${Number(point[1]).toFixed(7)}`;
-    const edgeKey = (a, b) => {
-      const ka = pointKey(a);
-      const kb = pointKey(b);
-      return ka < kb ? `${ka}|${kb}` : `${kb}|${ka}`;
-    };
-
-    for (const shape of geometry?.cantons || []) {
-      for (const ring of parsePathRings(shape.d)) {
-        for (let index = 1; index < ring.length; index += 1) {
-          const a = ring[index - 1];
-          const b = ring[index];
-          if (!a || !b || (a[0] === b[0] && a[1] === b[1])) continue;
-          const key = edgeKey(a, b);
-          const current = edges.get(key);
-          if (current) current.count += 1;
-          else edges.set(key, { count: 1, coordinates: [a, b] });
-        }
-      }
-    }
-
-    const coordinates = [...edges.values()]
-      .filter(edge => edge.count === 1)
-      .map(edge => edge.coordinates);
-
-    return {
-      type: 'FeatureCollection',
-      features: coordinates.length ? [{
-        type: 'Feature',
-        properties: { boundary: 'switzerland' },
-        geometry: { type: 'MultiLineString', coordinates }
-      }] : []
-    };
-  }
-
   function municipalityFeature(shape, lookup) {
     const commune = lookup.get(String(shape.id));
     const shapeGeometry = geometryFromRings(parsePathRings(shape.d));
@@ -422,7 +391,6 @@
     municipalityGeoJSON = { type: 'FeatureCollection', features: municipalities };
     pointGeoJSON = { type: 'FeatureCollection', features: points };
     cantonGeoJSON = { type: 'FeatureCollection', features: (geometry?.cantons || []).map(cantonFeature).filter(Boolean) };
-    countryBorderGeoJSON = buildCountryBorderGeoJSON();
   }
 
   const mapFallback = '#182534';
@@ -625,7 +593,8 @@
     loadingPromise = (async () => {
       ensureMetrics();
       ensureStage();
-      await Promise.all([waitForData(), ensureGeometry()]);
+      const [, , officialBorder] = await Promise.all([waitForData(), ensureGeometry(), countryBorderPromise]);
+      countryBorderGeoJSON = officialBorder;
       if (!all.length) throw new Error('Données communales indisponibles.');
       syncToolbarFromUrl();
       syncMetrics();

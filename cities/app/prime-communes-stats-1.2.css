@@ -3,8 +3,6 @@
 
 :root{
   --pc-kpi-accent:#6ec7ff;
-  --pc-kpi-label-lines:2;
-  --pc-kpi-label-line-height:1.08;
   --pc-kpi-detail-line-height:1.18;
   --pc-territory-heading-height:48px;
 }
@@ -148,30 +146,30 @@
 }
 
 /* Compact KPI contract.
-   Desktop reserves two heading lines: enough for the current labels without
-   creating a large title/value void. Narrow screens switch to three lines so
-   all four cards keep one shared value baseline even when labels wrap. */
+   The runtime measures the tallest visible label and exposes one shared
+   --pc-kpi-label-height. This keeps values aligned without reserving empty
+   lines on wide screens. */
 .stats-kpi:not(.stats-kpi-prime){
   display:grid;
-  grid-template-rows:
-    calc(var(--pc-kpi-label-lines) * 1em * var(--pc-kpi-label-line-height))
-    auto
-    auto;
+  grid-template-rows:var(--pc-kpi-label-height,auto) auto auto;
   align-content:start;
-  row-gap:4px;
+  row-gap:2px;
   min-height:0;
-  padding:9px 14px;
+  padding:8px 14px 9px;
 }
 
 .stats-kpi:not(.stats-kpi-prime)>span{
   min-height:0;
   align-self:start;
-  line-height:var(--pc-kpi-label-line-height);
+  line-height:1.08;
 }
 
+/* Context / market KPIs are deliberately neutral. Prime emphasis stays blue
+   in the hero and territory cards. */
 .stats-kpi:not(.stats-kpi-prime)>strong{
   margin:0;
   align-self:start;
+  color:#f3f6fa;
   line-height:1;
 }
 
@@ -197,7 +195,6 @@
 
 @media(max-width:760px){
   :root{
-    --pc-kpi-label-lines:3;
     --pc-territory-heading-height:46px;
   }
 
@@ -252,7 +249,7 @@
 
   .stats-kpi:not(.stats-kpi-prime){
     min-height:0;
-    padding:7px 12px;
+    padding:7px 12px 8px;
     row-gap:2px;
   }
 }

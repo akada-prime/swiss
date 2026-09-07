@@ -126,8 +126,20 @@
     target.innerHTML = `<svg viewBox="${x} ${y} ${w} ${h}" preserveAspectRatio="xMidYMid meet" focusable="false">${base}${scope}${active}</svg>`;
   }
 
+  function syncContextKpiLabelHeight() {
+    const cards = [...root.querySelectorAll('.stats-kpi:not(.stats-kpi-prime)')];
+    if (!cards.length || root.hidden) return;
+    cards.forEach(card => card.style.removeProperty('--pc-kpi-label-height'));
+    const height = Math.ceil(Math.max(0, ...cards.map(card => card.querySelector(':scope > span')?.getBoundingClientRect().height || 0)));
+    if (!height) return;
+    cards.forEach(card => card.style.setProperty('--pc-kpi-label-height', `${height}px`));
+  }
+
   function queueRender() {
-    window.requestAnimationFrame(renderHero);
+    window.requestAnimationFrame(() => {
+      renderHero();
+      window.requestAnimationFrame(syncContextKpiLabelHeight);
+    });
   }
 
   window.PrimeCommunesData.subscribe(next => {
@@ -144,6 +156,7 @@
   metricButtons.forEach(button => button.addEventListener('click', queueRender));
   thresholdButtons.forEach(button => button.addEventListener('click', queueRender));
   statsTab?.addEventListener('click', queueRender);
+  window.addEventListener('resize', () => window.requestAnimationFrame(syncContextKpiLabelHeight));
 
   ensureHeroMarkup();
   window.PrimeCommunesData.whenReady().then(next => {

@@ -19,6 +19,9 @@ test('software columns are controlled by one semantic class', async () => {
   assert.match(css, /\.table-wrap\.logiciels-hidden \.hosting-cell/);
   assert.match(css, /th\[data-software-column="hosting"\]/);
   assert.doesNotMatch(css, /:not\(\.logiciels-hidden\)/);
+  assert.match(css, /--pc-table-secondary/);
+  assert.match(css, /\.cell-empty/);
+  assert.doesNotMatch(css, /\.hosting-cell\s*\{[^}]*color:/);
 });
 
 test('hosting is appended after Modules by the canonical Communes view', async () => {
@@ -27,7 +30,8 @@ test('hosting is appended after Modules by the canonical Communes view', async (
   assert.match(js, /textContent = 'Hébergeur'/);
   assert.match(js, /dataset\.softwareColumn = 'hosting'/);
   assert.match(js, /modulesHeading\.insertAdjacentElement\('afterend', hostingHeading\)/);
-  assert.match(js, /commune\.hosting \|\| '—'/);
+  assert.match(js, /cell-empty/);
+  assert.match(js, /normalizeEmptyCells/);
 });
 
 test('mobile peer filters remain a strict two-column grid', async () => {
@@ -108,7 +112,7 @@ test('current site loads one canonical runtime per view and no SVG map runtime',
   assert.match(html, /id="roadmapView"/);
 });
 
-test('Carte 1.2 is MapLibre-only, fits all Switzerland and exposes a national border', async () => {
+test('Carte 1.2 is MapLibre-only, fits all Switzerland and uses the official national border', async () => {
   const js = await read('app/prime-communes-maplibre-1.2.js');
   const css = await read('app/prime-communes-maplibre-1.2.css');
   assert.match(js, /MAPLIBRE_VERSION = '6\.7\.0'/);
@@ -132,7 +136,9 @@ test('Carte 1.2 is MapLibre-only, fits all Switzerland and exposes a national bo
   assert.match(js, /cantons-border/);
   assert.match(js, /country-border-casing/);
   assert.match(js, /country-border'/);
-  assert.match(js, /buildCountryBorderGeoJSON/);
+  assert.match(js, /COUNTRY_BORDER_URL = 'public\/data\/switzerland-border-2026\.geojson'/);
+  assert.match(js, /countryBorderPromise = fetch/);
+  assert.doesNotMatch(js, /buildCountryBorderGeoJSON/);
   assert.match(js, /map\.setMaxBounds\(bounds\)/);
   assert.match(js, /Math\.min\(zoomX, zoomY\)/);
   assert.match(js, /map\.fitBounds\(countryBounds\(\)/);
@@ -153,12 +159,23 @@ test('Carte 1.2 is MapLibre-only, fits all Switzerland and exposes a national bo
 test('Stats 1.2 uses one responsive KPI contract independent of label line count', async () => {
   const css = await read('app/prime-communes-stats-1.2.css');
   assert.match(css, /--pc-kpi-accent:#6ec7ff/);
-  assert.match(css, /--pc-kpi-label-lines:2/);
-  assert.match(css, /@media\(max-width:760px\)[\s\S]*--pc-kpi-label-lines:3/);
+  assert.match(css, /--pc-kpi-label-height/);
+  assert.doesNotMatch(css, /--pc-kpi-label-lines/);
+  assert.match(css, /\.stats-kpi:not\(\.stats-kpi-prime\)>strong[\s\S]*color:#f3f6fa/);
+  const runtime = await read('app/prime-communes-stats-1.5.js');
+  assert.match(runtime, /syncContextKpiLabelHeight/);
   assert.match(css, /\.stats-kpi>span/);
   assert.match(css, /\.stats-kpi>strong/);
   assert.doesNotMatch(css, /#statsMunicipalities/);
   assert.doesNotMatch(css, /#statsCompetitor/);
   assert.doesNotMatch(css, /nth-child/);
   assert.doesNotMatch(css, /:has\(/);
+});
+
+test('official national border is a stored swissBOUNDARIES3D 2026 geometry', async () => {
+  const geo = JSON.parse(await read('public/data/switzerland-border-2026.geojson'));
+  assert.equal(geo.type, 'FeatureCollection');
+  assert.equal(geo.features[0]?.properties?.referenceDate, '2026-01-01');
+  assert.equal(geo.features[0]?.properties?.icc, 'CH');
+  assert.match(String(geo.features[0]?.geometry?.type), /LineString/);
 });

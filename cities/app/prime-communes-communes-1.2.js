@@ -90,8 +90,16 @@
       const hostingCell = document.createElement('td');
       hostingCell.className = 'hosting-cell';
       hostingCell.dataset.softwareColumn = 'hosting';
-      hostingCell.textContent = commune.hosting || '—';
+      const hosting = String(commune.hosting || '').trim();
+      hostingCell.innerHTML = hosting ? esc(hosting) : '<span class="cell-empty">—</span>';
       modulesCell.insertAdjacentElement('afterend', hostingCell);
+    });
+  }
+
+  function normalizeEmptyCells() {
+    document.querySelectorAll('.table-wrap tbody .empty').forEach(node => {
+      node.classList.remove('empty');
+      node.classList.add('cell-empty');
     });
   }
 
@@ -99,6 +107,7 @@
     baseRender();
     decorateCommuneIdentity();
     decorateHostingColumn();
+    normalizeEmptyCells();
   };
 
   // Apply the canonical layout immediately if the live data arrived before

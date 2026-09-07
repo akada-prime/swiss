@@ -3,6 +3,11 @@
 
 /* Prime Communes 1.1 · stabilized visual layer */
 
+:root{
+  --pc-table-secondary:#98a4b5;
+  --pc-table-empty:#6f7d90;
+}
+
 /* Table typography: one visual language across Métier / ERP / Modules / Hébergeur. */
 .table-wrap th{
   font-size:11px;
@@ -11,6 +16,7 @@
 }
 .table-wrap td{
   font-size:13px;
+  color:var(--pc-table-secondary);
 }
 
 /* Municipality identity is identical on every viewport:
@@ -69,7 +75,6 @@
   min-width:120px;
 }
 .hosting-cell{
-  color:#a9b5c5;
   white-space:nowrap;
 }
 .modules-cell{
@@ -97,6 +102,12 @@
   width:24px;
   height:24px;
 }
+.cell-empty{
+  color:var(--pc-table-empty);
+  font-style:normal;
+  font-weight:400;
+}
+
 .modules-cell .eadmin-mark,
 .clevertax-mark{
   width:auto;
@@ -106,7 +117,7 @@
   padding:0;
   border:0;
   border-radius:0;
-  color:#98a4b5;
+  color:var(--pc-table-secondary);
   background:transparent;
   font-size:13px;
   line-height:24px;
