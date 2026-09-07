@@ -10,19 +10,21 @@ test('Stats 1.5 hero is data-driven Prime + innosolvcity', async () => {
   assert.match(js, /PrimeCommunesData\.scopeRows/);
   assert.match(js, /statsPrimeProgress/);
   assert.match(js, /statsPrimeMap/);
-  assert.match(js, /prime-logo-negative\.svg/);
   assert.match(js, /stats-swiss-active/);
+  assert.doesNotMatch(js, /stats-prime-watermark|prime-logo-negative\.svg/);
   assert.doesNotMatch(js, /\b63\b|\b64\b|420264|18\.8/);
 });
 
-test('Stats compact cards use one bounded 3-line layout', async () => {
+test('Stats compact cards use one bounded 3-line layout without oversized outer padding', async () => {
   const css = await read('app/prime-communes-stats-1.2.css');
   assert.match(css, /--pc-kpi-label-lines:3/);
-  assert.match(css, /min-height:126px/);
-  assert.match(css, /stats-prime-watermark/);
+  assert.match(css, /grid-template-rows:[\s\S]*?var\(--pc-kpi-label-lines\)/);
+  assert.match(css, /min-height:0/);
+  assert.match(css, /align-self:start/);
+  assert.match(css, /align-self:end/);
   assert.match(css, /stats-prime-progress/);
   assert.match(css, /stats-swiss-active/);
-  assert.doesNotMatch(css, /nth-child|:has\(/);
+  assert.doesNotMatch(css, /stats-prime-watermark|nth-child|:has\(|!important/);
 });
 
 test('application loader includes canonical Stats 1.5 runtime', async () => {
