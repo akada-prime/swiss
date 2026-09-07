@@ -1,0 +1,311 @@
+name: Prime Communes canonical UI and official border
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/prime-communes-canonical-ui-border.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  canonicalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build official Switzerland border from swissBOUNDARIES3D 2026
+        shell: bash
+        run: |
+          python -m pip install --quiet geopandas pyogrio shapely pyproj
+          wget -q https://data.geo.admin.ch/ch.swisstopo.swissboundaries3d/swissboundaries3d_2026-01/swissboundaries3d_2026-01_2056_5728.gpkg.zip -O /tmp/swissboundaries.zip
+          mkdir -p /tmp/swissboundaries
+          unzip -q /tmp/swissboundaries.zip -d /tmp/swissboundaries
+          python - <<'PY'
+          import glob, json
+          import geopandas as gpd
+          import pyogrio
+          from shapely import force_2d
+          from shapely.geometry import mapping
+
+          files = glob.glob('/tmp/swissboundaries/**/*.gpkg', recursive=True)
+          if not files:
+              raise SystemExit('No GeoPackage found in swissBOUNDARIES3D archive')
+          gpkg = files[0]
+          layers = [name for name, *_ in pyogrio.list_layers(gpkg)]
+          layer = next((name for name in layers if 'TLM_LANDESGEBIET' in name.upper()), None)
+          if not layer:
+              raise SystemExit(f'TLM_LANDESGEBIET not found. Layers: {layers}')
+
+          gdf = gpd.read_file(gpkg, layer=layer, engine='pyogrio')
+          if 'ICC' in gdf.columns:
+              swiss = gdf[gdf['ICC'].astype(str).str.upper().eq('CH')]
+          elif 'NAME' in gdf.columns:
+              swiss = gdf[gdf['NAME'].astype(str).str.lower().str.contains('schweiz|suisse|svizzera|switzerland', regex=True)]
+          else:
+              raise SystemExit(f'No country discriminator in {list(gdf.columns)}')
+          if swiss.empty:
+              raise SystemExit('Switzerland row not found in TLM_LANDESGEBIET')
+
+          swiss = swiss.to_crs(4326)
+          geom = swiss.geometry.union_all() if hasattr(swiss.geometry, 'union_all') else swiss.geometry.unary_union
+          geom = force_2d(geom)
+          border = geom.boundary.simplify(0.00004, preserve_topology=True)
+          minx, miny, maxx, maxy = border.bounds
+          if not (5.8 < minx < 6.3 and 10.2 < maxx < 10.7 and 45.7 < miny < 46.1 and 47.6 < maxy < 48.0):
+              raise SystemExit(f'Unexpected Switzerland bounds: {border.bounds}')
+
+          output = {
+              'type': 'FeatureCollection',
+              'features': [{
+                  'type': 'Feature',
+                  'properties': {
+                      'name': 'Suisse',
+                      'icc': 'CH',
+                      'source': 'swissBOUNDARIES3D',
+                      'referenceDate': '2026-01-01'
+                  },
+                  'geometry': mapping(border)
+              }]
+          }
+          path = 'cities/public/data/switzerland-border-2026.geojson'
+          with open(path, 'w', encoding='utf-8') as handle:
+              json.dump(output, handle, ensure_ascii=False, separators=(',', ':'))
+          print(path, border.geom_type, border.bounds)
+          PY
+
+      - name: Canonicalize Stats, table text and MapLibre border
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          def replace_once(text, old, new, label):
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected 1 exact match, found {count}')
+              return text.replace(old, new, 1)
+
+          # --- Stats: measured heading height, compact cards, contextual values in white.
+          stats_css_path = Path('cities/app/prime-communes-stats-1.2.css')
+          css = stats_css_path.read_text()
+          css = css.replace('  --pc-kpi-label-lines:2;\n  --pc-kpi-label-line-height:1.08;\n', '')
+          old_block = re.search(r'/\* Compact KPI contract\.[\s\S]*?/\* Territory cards use the same bounded-heading principle\. \*/', css)
+          if not old_block:
+              raise SystemExit('Stats compact KPI contract block not found')
+          new_block = '''/* Compact KPI contract.
+   The runtime measures the tallest visible label and exposes one shared
+   --pc-kpi-label-height. This keeps values aligned without reserving empty
+   lines on wide screens. */
+.stats-kpi:not(.stats-kpi-prime){
+  display:grid;
+  grid-template-rows:var(--pc-kpi-label-height,auto) auto auto;
+  align-content:start;
+  row-gap:2px;
+  min-height:0;
+  padding:8px 14px 9px;
+}
+
+.stats-kpi:not(.stats-kpi-prime)>span{
+  min-height:0;
+  align-self:start;
+  line-height:1.08;
+}
+
+/* Context / market KPIs are deliberately neutral. Prime emphasis stays blue
+   in the hero and territory cards. */
+.stats-kpi:not(.stats-kpi-prime)>strong{
+  margin:0;
+  align-self:start;
+  color:#f3f6fa;
+  line-height:1;
+}
+
+.stats-kpi:not(.stats-kpi-prime)>small{
+  margin:0;
+  align-self:start;
+  line-height:var(--pc-kpi-detail-line-height);
+}
+
+/* Territory cards use the same bounded-heading principle. */'''
+          css = css[:old_block.start()] + new_block + css[old_block.end():]
+          css = css.replace('    --pc-kpi-label-lines:3;\n', '')
+          css = css.replace('    padding:7px 12px;\n    row-gap:2px;', '    padding:7px 12px 8px;\n    row-gap:2px;')
+          stats_css_path.write_text(css)
+
+          stats_js_path = Path('cities/app/prime-communes-stats-1.5.js')
+          js = stats_js_path.read_text()
+          old = '''  function queueRender() {
+    window.requestAnimationFrame(renderHero);
+  }
+'''
+          new = '''  function syncContextKpiLabelHeight() {
+    const cards = [...root.querySelectorAll('.stats-kpi:not(.stats-kpi-prime)')];
+    if (!cards.length || root.hidden) return;
+    cards.forEach(card => card.style.removeProperty('--pc-kpi-label-height'));
+    const height = Math.ceil(Math.max(0, ...cards.map(card => card.querySelector(':scope > span')?.getBoundingClientRect().height || 0)));
+    if (!height) return;
+    cards.forEach(card => card.style.setProperty('--pc-kpi-label-height', `${height}px`));
+  }
+
+  function queueRender() {
+    window.requestAnimationFrame(() => {
+      renderHero();
+      window.requestAnimationFrame(syncContextKpiLabelHeight);
+    });
+  }
+'''
+          js = replace_once(js, old, new, 'Stats measured heading runtime')
+          anchor = "  statsTab?.addEventListener('click', queueRender);\n"
+          js = replace_once(js, anchor, anchor + "  window.addEventListener('resize', () => window.requestAnimationFrame(syncContextKpiLabelHeight));\n", 'Stats resize measurement')
+          stats_js_path.write_text(js)
+
+          # --- Communes: one semantic empty-value class and one secondary-text token.
+          communes_path = Path('cities/app/prime-communes-communes-1.2.js')
+          js = communes_path.read_text()
+          old = '''      const hostingCell = document.createElement('td');
+      hostingCell.className = 'hosting-cell';
+      hostingCell.dataset.softwareColumn = 'hosting';
+      hostingCell.textContent = commune.hosting || '—';
+      modulesCell.insertAdjacentElement('afterend', hostingCell);
+'''
+          new = '''      const hostingCell = document.createElement('td');
+      hostingCell.className = 'hosting-cell';
+      hostingCell.dataset.softwareColumn = 'hosting';
+      const hosting = String(commune.hosting || '').trim();
+      hostingCell.innerHTML = hosting ? html(hosting) : '<span class="cell-empty">—</span>';
+      modulesCell.insertAdjacentElement('afterend', hostingCell);
+'''
+          # This view is loaded after the global esc helper; use it directly rather than introducing another formatter.
+          new = new.replace('html(hosting)', 'esc(hosting)')
+          js = replace_once(js, old, new, 'Hosting empty-value rendering')
+          insert_before = '''  render = function renderCommunesView() {
+    baseRender();
+    decorateCommuneIdentity();
+    decorateHostingColumn();
+  };
+'''
+          replacement = '''  function normalizeEmptyCells() {
+    document.querySelectorAll('.table-wrap tbody .empty').forEach(node => {
+      node.classList.remove('empty');
+      node.classList.add('cell-empty');
+    });
+  }
+
+  render = function renderCommunesView() {
+    baseRender();
+    decorateCommuneIdentity();
+    decorateHostingColumn();
+    normalizeEmptyCells();
+  };
+'''
+          js = replace_once(js, insert_before, replacement, 'Canonical empty-cell normalization')
+          communes_path.write_text(js)
+
+          table_css_path = Path('cities/app/prime-communes-1.1.5.css')
+          css = table_css_path.read_text()
+          css = css.replace('/* Prime Communes 1.1 · stabilized visual layer */\n', '''/* Prime Communes 1.1 · stabilized visual layer */
+
+:root{
+  --pc-table-secondary:#98a4b5;
+  --pc-table-empty:#6f7d90;
+}
+''')
+          css = css.replace('  font-size:13px;\n}', '  font-size:13px;\n  color:var(--pc-table-secondary);\n}', 1)
+          css = css.replace('  color:#a9b5c5;\n  white-space:nowrap;', '  white-space:nowrap;')
+          css = css.replace('  color:#98a4b5;\n  background:transparent;', '  color:var(--pc-table-secondary);\n  background:transparent;')
+          marker = '.modules-cell .eadmin-mark,\n.clevertax-mark{\n'
+          empty_rule = '''.cell-empty{
+  color:var(--pc-table-empty);
+  font-style:normal;
+  font-weight:400;
+}
+
+'''
+          if marker not in css:
+              raise SystemExit('Table empty-value CSS insertion point not found')
+          css = css.replace(marker, empty_rule + marker, 1)
+          table_css_path.write_text(css)
+
+          # --- Map: official national territory border, not inferred canton edges.
+          map_path = Path('cities/app/prime-communes-maplibre-1.2.js')
+          js = map_path.read_text()
+          js = replace_once(js, "  const RASTER_URL = 'public/swiss-base.webp';\n", "  const RASTER_URL = 'public/swiss-base.webp';\n  const COUNTRY_BORDER_URL = 'public/data/switzerland-border-2026.geojson';\n", 'Country border constant')
+          geometry_anchor = '''  const geometryPromise = fetch(GEOMETRY_URL, { cache: 'force-cache' })
+    .then(response => {
+      if (!response.ok) throw new Error('Géométrie cartographique indisponible.');
+      return response.json();
+    });
+'''
+          border_promise = geometry_anchor + '''  const countryBorderPromise = fetch(COUNTRY_BORDER_URL, { cache: 'force-cache' })
+    .then(response => {
+      if (!response.ok) throw new Error('Frontière nationale indisponible.');
+      return response.json();
+    });
+'''
+          js = replace_once(js, geometry_anchor, border_promise, 'Official border preload')
+
+          js, count = re.subn(r'\n  function buildCountryBorderGeoJSON\(\) \{[\s\S]*?\n  \}\n\n  function municipalityFeature', '\n  function municipalityFeature', js, count=1)
+          if count != 1:
+              raise SystemExit(f'Approximate country-border helper removal: found {count}')
+          js = replace_once(js, "    countryBorderGeoJSON = buildCountryBorderGeoJSON();\n", '', 'Remove inferred border assignment')
+          js = replace_once(js, "      await Promise.all([waitForData(), ensureGeometry()]);\n", "      const [, , officialBorder] = await Promise.all([waitForData(), ensureGeometry(), countryBorderPromise]);\n      countryBorderGeoJSON = officialBorder;\n", 'Await official border')
+          map_path.write_text(js)
+
+          map_css_path = Path('cities/app/prime-communes-maplibre-1.2.css')
+          css = map_css_path.read_text()
+          css = replace_once(css, '.maplibre-stage{position:relative;height:760px;min-height:760px;', '.maplibre-stage{position:relative;height:clamp(820px,58vw,980px);min-height:820px;', 'Desktop map height')
+          map_css_path.write_text(css)
+
+          # --- Cache versions.
+          loader_path = Path('cities/app/prime-communes-1.1.js')
+          loader = loader_path.read_text()
+          swaps = {
+              'prime-communes-1.1.5.css?v=7':'prime-communes-1.1.5.css?v=8',
+              'prime-communes-stats-1.2.css?v=9':'prime-communes-stats-1.2.css?v=10',
+              'prime-communes-maplibre-1.2.css?v=9':'prime-communes-maplibre-1.2.css?v=10',
+              'prime-communes-maplibre-1.2.js?v=7':'prime-communes-maplibre-1.2.js?v=8',
+              'prime-communes-stats-1.5.js?v=3':'prime-communes-stats-1.5.js?v=4',
+              'prime-communes-communes-1.2.js?v=3':'prime-communes-communes-1.2.js?v=4'
+          }
+          for old, new in swaps.items():
+              loader = replace_once(loader, old, new, f'Cache bump {old}')
+          loader_path.write_text(loader)
+
+          # --- Contract tests.
+          test_path = Path('cities/tests/stabilization-1.1.test.mjs')
+          tests = test_path.read_text()
+          tests = tests.replace("  assert.match(js, /fitBounds\\(romandieBounds\\(\\)/);\n  assert.match(css, /\\.maplibre-stage\\{[^}]*height:760px;min-height:760px/);", "  assert.match(js, /COUNTRY_BORDER_URL = 'public\\/data\\/switzerland-border-2026\\.geojson'/);\n  assert.match(js, /countryBorderPromise = fetch/);\n  assert.doesNotMatch(js, /buildCountryBorderGeoJSON/);\n  assert.match(js, /map\\.fitBounds\\(countryBounds\\(\\)/);\n  assert.match(css, /\\.maplibre-stage\\{[^}]*height:clamp\\(820px,58vw,980px\\);min-height:820px/);")
+          tests = tests.replace("  assert.match(css, /--pc-kpi-label-lines:2/);\n  assert.match(css, /@media\\(max-width:760px\\)[\\s\\S]*--pc-kpi-label-lines:3/);", "  assert.match(css, /--pc-kpi-label-height/);\n  assert.doesNotMatch(css, /--pc-kpi-label-lines/);\n  assert.match(css, /\\.stats-kpi:not\\(\\.stats-kpi-prime\\)>strong[\\s\\S]*color:#f3f6fa/);\n  assert.match(await read('app/prime-communes-stats-1.5.js'), /syncContextKpiLabelHeight/);")
+          hosting_anchor = "  assert.match(js, /commune\\.hosting \\|\\| '—'/);\n"
+          if hosting_anchor in tests:
+              tests = tests.replace(hosting_anchor, "  assert.match(js, /cell-empty/);\n  assert.match(js, /normalizeEmptyCells/);\n")
+          software_test_anchor = "  assert.doesNotMatch(css, /:not\\(\\.logiciels-hidden\\)/);\n"
+          tests = tests.replace(software_test_anchor, software_test_anchor + "  assert.match(css, /--pc-table-secondary/);\n  assert.match(css, /\\.cell-empty/);\n  assert.doesNotMatch(css, /\\.hosting-cell\\s*\\{[^}]*color:/);\n")
+          test_path.write_text(tests)
+          PY
+
+      - name: Run checks
+        working-directory: cities
+        run: |
+          npm ci
+          npm run check
+          npm run build
+
+      - name: Commit canonical changes and remove one-time workflow
+        shell: bash
+        run: |
+          rm .github/workflows/prime-communes-canonical-ui-border.yml
+          git config user.name "Prime Communes Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add cities/app/prime-communes-stats-1.2.css cities/app/prime-communes-stats-1.5.js cities/app/prime-communes-communes-1.2.js cities/app/prime-communes-1.1.5.css cities/app/prime-communes-maplibre-1.2.js cities/app/prime-communes-maplibre-1.2.css cities/app/prime-communes-1.1.js cities/public/data/switzerland-border-2026.geojson cities/tests/stabilization-1.1.test.mjs .github/workflows/prime-communes-canonical-ui-border.yml
+          git commit -m "Canonicalize Stats and use official Swiss border"
+          git push
