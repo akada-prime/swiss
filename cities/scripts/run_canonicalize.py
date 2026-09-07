@@ -27,8 +27,7 @@ if text.count(old) != 1:
     raise SystemExit('swisstopo field normalization target not found')
 text = text.replace(old, new, 1)
 
-# Desktop height is already canonical on the current HEAD. Treat an already
-# compliant file as success instead of forcing a historical 760px match.
+# Desktop height is already canonical on the current HEAD.
 old_height = """    css = replace_once(css, '.maplibre-stage{position:relative;height:760px;min-height:760px;', '.maplibre-stage{position:relative;height:clamp(820px,58vw,980px);min-height:820px;', 'Desktop map height')
 """
 new_height = """    old_stage = '.maplibre-stage{position:relative;height:760px;min-height:760px;'
@@ -41,6 +40,28 @@ new_height = """    old_stage = '.maplibre-stage{position:relative;height:760px;
 if text.count(old_height) != 1:
     raise SystemExit('desktop map idempotency target not found')
 text = text.replace(old_height, new_height, 1)
+
+# Cache-bust only files changed by this pass, from the versions actually live
+# on the current HEAD. Map CSS is already v10 and unchanged here.
+bump_start = text.find('def bump_loader():')
+bump_end = text.find('\n\ndef patch_tests():', bump_start)
+if bump_start < 0 or bump_end < 0:
+    raise SystemExit('bump_loader function not found')
+bump_loader = """def bump_loader():
+    path = ROOT / 'app/prime-communes-1.1.js'
+    text = path.read_text()
+    swaps = {
+        'prime-communes-1.1.5.css?v=7': 'prime-communes-1.1.5.css?v=8',
+        'prime-communes-stats-1.2.css?v=9': 'prime-communes-stats-1.2.css?v=10',
+        'prime-communes-maplibre-1.2.js?v=8': 'prime-communes-maplibre-1.2.js?v=9',
+        'prime-communes-stats-1.5.js?v=3': 'prime-communes-stats-1.5.js?v=4',
+        'prime-communes-communes-1.2.js?v=3': 'prime-communes-communes-1.2.js?v=4',
+    }
+    for old, new in swaps.items():
+        text = replace_once(text, old, new, f'Cache bump {old}')
+    path.write_text(text)
+"""
+text = text[:bump_start] + bump_loader + text[bump_end:]
 
 # Replace the historical-test patcher with a direct canonical contract patch.
 start = text.find('def patch_tests():')
@@ -69,7 +90,6 @@ patch_tests = r"""def patch_tests():
             1
         )
 
-    # Upgrade the existing MapLibre contract from inferred to official border.
     tests = tests.replace(
         "  assert.match(js, /buildCountryBorderGeoJSON/);",
         "  assert.match(js, /COUNTRY_BORDER_URL = 'public\\/data\\/switzerland-border-2026\\.geojson'/);\n  assert.match(js, /countryBorderPromise = fetch/);\n  assert.doesNotMatch(js, /buildCountryBorderGeoJSON/);"
