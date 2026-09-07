@@ -37,11 +37,11 @@ interprétation.
 
 La 1.1 décrit l'état courant. Elle n'historise pas encore les changements.
 
-## 2.0 — NEWS · Faire parler les communes
+## 2.0 — NEWS! · Faire parler les communes
 
 ### 2.0.1 — Radar communal · première version en cours
 
-- Nouvel onglet **NEWS**.
+- Nouvel onglet **NEWS!**.
 - Flux de signaux forts, éléments à surveiller et informations de marché.
 - Recherche par commune, canton, sujet ou source.
 - Filtres par niveau de signal.
