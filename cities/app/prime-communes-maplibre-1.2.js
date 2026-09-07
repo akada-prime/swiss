@@ -39,6 +39,7 @@
   let geometry = null;
   let municipalityGeoJSON = null;
   let cantonGeoJSON = null;
+  let countryBorderGeoJSON = null;
   let pointGeoJSON = null;
   let hoverPopup = null;
   let clickPopup = null;
@@ -319,6 +320,43 @@
       : { type: 'MultiPolygon', coordinates: rings.map(ring => [ring]) };
   }
 
+  function buildCountryBorderGeoJSON() {
+    const edges = new Map();
+    const pointKey = point => `${Number(point[0]).toFixed(7)},${Number(point[1]).toFixed(7)}`;
+    const edgeKey = (a, b) => {
+      const ka = pointKey(a);
+      const kb = pointKey(b);
+      return ka < kb ? `${ka}|${kb}` : `${kb}|${ka}`;
+    };
+
+    for (const shape of geometry?.cantons || []) {
+      for (const ring of parsePathRings(shape.d)) {
+        for (let index = 1; index < ring.length; index += 1) {
+          const a = ring[index - 1];
+          const b = ring[index];
+          if (!a || !b || (a[0] === b[0] && a[1] === b[1])) continue;
+          const key = edgeKey(a, b);
+          const current = edges.get(key);
+          if (current) current.count += 1;
+          else edges.set(key, { count: 1, coordinates: [a, b] });
+        }
+      }
+    }
+
+    const coordinates = [...edges.values()]
+      .filter(edge => edge.count === 1)
+      .map(edge => edge.coordinates);
+
+    return {
+      type: 'FeatureCollection',
+      features: coordinates.length ? [{
+        type: 'Feature',
+        properties: { boundary: 'switzerland' },
+        geometry: { type: 'MultiLineString', coordinates }
+      }] : []
+    };
+  }
+
   function municipalityFeature(shape, lookup) {
     const commune = lookup.get(String(shape.id));
     const shapeGeometry = geometryFromRings(parsePathRings(shape.d));
@@ -384,7 +422,14 @@
     municipalityGeoJSON = { type: 'FeatureCollection', features: municipalities };
     pointGeoJSON = { type: 'FeatureCollection', features: points };
     cantonGeoJSON = { type: 'FeatureCollection', features: (geometry?.cantons || []).map(cantonFeature).filter(Boolean) };
+    countryBorderGeoJSON = buildCountryBorderGeoJSON();
   }
+
+  const mapFallback = '#182534';
+  const mapPalettes = {
+    integrator: { Prime: '#289cff', Ofisa: '#f08a4b', T2i: '#8c6cff', SIEN: '#36bca5', Ciges: '#e76369', Talus: '#d7a941', Data: '#d15fa4', OBT: '#78bc62', Abraxas: '#4f7fd5', Axians: '#43a6b5', Epsitec: '#b271d7', SIACG: '#cf7354' },
+    software: { innosolvcity: '#289cff', Calvin: '#f08a4b', Citizen: '#8c6cff', ETIC: '#36bca5', BDI: '#e76369', 'Crésus': '#d7a941', Urbanus: '#d15fa4', Epsilon: '#78bc62', Ruf: '#4f7fd5' }
+  };
 
   function paletteExpression(key, palette) {
     const values = Object.entries(palette || {}).flatMap(([name, color]) => [name, color]);
@@ -406,6 +451,7 @@
     map?.getSource('municipalities')?.setData(municipalityGeoJSON);
     map?.getSource('municipality-points')?.setData(pointGeoJSON);
     map?.getSource('cantons')?.setData(cantonGeoJSON);
+    map?.getSource('country-border')?.setData(countryBorderGeoJSON);
   }
 
   function syncLayerFilters() {
@@ -430,7 +476,7 @@
     }
     syncLayerFilters();
     syncMetrics();
-    if (fit) fitActiveScope();
+    if (fit) fitCountryScope();
   }
 
   function boundsFromBox(box) {
@@ -449,8 +495,8 @@
     return boundsFromBox(geometry?.meta?.viewBox || [2480000, -1305000, 360000, 260000]);
   }
 
-  function romandieBounds() {
-    return boundsFromFeatures(municipalityGeoJSON?.features?.filter(feature => feature.properties.market === 'Welsch')) || [[5.75, 45.78], [7.75, 47.55]];
+  function countryBounds() {
+    return boundsFromFeatures(cantonGeoJSON?.features) || swissBounds();
   }
 
   function mercatorX(lon) { return (Number(lon) + 180) / 360; }
@@ -470,12 +516,13 @@
     const dy = Math.abs(mercatorY(bounds[0][1]) - mercatorY(bounds[1][1]));
     const zoomX = Math.log2(width / (512 * Math.max(dx, 1e-9)));
     const zoomY = Math.log2(height / (512 * Math.max(dy, 1e-9)));
-    map.setMinZoom(Math.max(0, zoomX, zoomY) + 0.03);
+    map.setMinZoom(Math.max(0, Math.min(zoomX, zoomY) - 0.03));
   }
 
-  function fitActiveScope() {
+  function fitCountryScope() {
     if (!map || !geometry) return;
-    map.fitBounds(romandieBounds(), { padding: window.matchMedia('(max-width:680px)').matches ? 12 : 28, duration: 380 });
+    const mobile = window.matchMedia('(max-width:680px)').matches;
+    map.fitBounds(countryBounds(), { padding: mobile ? 10 : 18, duration: 380 });
   }
 
   function addLayers() {
@@ -489,6 +536,9 @@
     map.addSource('cantons', { type: 'geojson', data: cantonGeoJSON });
     map.addLayer({ id: 'cantons-border-casing', type: 'line', source: 'cantons', paint: { 'line-color': 'rgba(13,28,39,.86)', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 2.8, 9, 3.5, 12, 4.6], 'line-opacity': 0.82 } });
     map.addLayer({ id: 'cantons-border', type: 'line', source: 'cantons', paint: { 'line-color': 'rgba(242,249,252,.96)', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.9, 9, 1.25, 12, 1.85], 'line-opacity': 0.92 } });
+    map.addSource('country-border', { type: 'geojson', data: countryBorderGeoJSON });
+    map.addLayer({ id: 'country-border-casing', type: 'line', source: 'country-border', paint: { 'line-color': 'rgba(5,15,24,.98)', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 5.2, 9, 6.4, 12, 8.0], 'line-opacity': 0.96 } });
+    map.addLayer({ id: 'country-border', type: 'line', source: 'country-border', paint: { 'line-color': 'rgba(111,203,255,.99)', 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 2.0, 9, 2.7, 12, 3.5], 'line-opacity': 0.99 } });
     map.addSource('municipality-points', { type: 'geojson', data: pointGeoJSON, promoteId: 'id' });
     map.addLayer({ id: 'prime-halo', type: 'circle', source: 'municipality-points', filter: ['==', ['get', 'isPrime'], true], paint: { 'circle-color': '#159cff', 'circle-opacity': 0.12, 'circle-blur': 0.68, 'circle-radius': ['interpolate', ['linear'], ['get', 'population'], 0, 11, 10000, 18, 100000, 29, 500000, 43] } });
     map.addLayer({ id: 'prime-core', type: 'circle', source: 'municipality-points', filter: ['==', ['get', 'isPrime'], true], paint: { 'circle-color': '#087bc4', 'circle-opacity': 0.92, 'circle-stroke-color': 'rgba(229,247,255,.85)', 'circle-stroke-width': 0.6, 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.4, 10, 4.2, 13, 6.5] } });
@@ -716,7 +766,7 @@
       mapMode = value === 'software' ? 'software' : 'integrator';
     }
     syncStyle();
-    fitActiveScope();
+    fitCountryScope();
   }
 
   injectAssets();
@@ -745,7 +795,7 @@
   });
 
   document.querySelector('[data-view="map"]')?.addEventListener('click', () => {
-    ensureMapLibre().then(() => setTimeout(() => { map?.resize(); applyMapBounds(); fitActiveScope(); }, 100)).catch(() => {});
+    ensureMapLibre().then(() => setTimeout(() => { map?.resize(); applyMapBounds(); fitCountryScope(); }, 100)).catch(() => {});
   });
 
   window.addEventListener('resize', () => {
