@@ -4,7 +4,7 @@
   // Prime Communes · Communes view
   // Municipality identity is one semantic unit on every viewport:
   // row number → canton flag → commune name.
-  // Data/filter/export semantics remain untouched.
+  // Hosting belongs to the enriched Logiciels view, alongside ERP and Modules.
   const baseRender = render;
 
   function decorateCommuneIdentity() {
@@ -65,9 +65,40 @@
     });
   }
 
+  function decorateHostingColumn() {
+    const table = document.querySelector('.table-wrap table');
+    const headRow = table?.querySelector('thead tr');
+    const bodyRows = [...(table?.querySelectorAll('tbody tr') || [])];
+    if (!table || !headRow || headRow.querySelector('.hosting-heading')) return;
+
+    const headings = [...headRow.children];
+    const modulesIndex = headings.findIndex(th => th.textContent.trim().toLocaleLowerCase('fr-CH') === 'modules');
+    if (modulesIndex < 0) return;
+
+    const modulesHeading = headings[modulesIndex];
+    const hostingHeading = document.createElement('th');
+    hostingHeading.className = 'hosting-heading';
+    hostingHeading.dataset.softwareColumn = 'hosting';
+    hostingHeading.textContent = 'Hébergeur';
+    modulesHeading.insertAdjacentElement('afterend', hostingHeading);
+
+    bodyRows.forEach(row => {
+      const commune = all.find(item => String(item.id) === String(row.dataset.id));
+      const modulesCell = row.children[modulesIndex];
+      if (!commune || !modulesCell) return;
+
+      const hostingCell = document.createElement('td');
+      hostingCell.className = 'hosting-cell';
+      hostingCell.dataset.softwareColumn = 'hosting';
+      hostingCell.textContent = commune.hosting || '—';
+      modulesCell.insertAdjacentElement('afterend', hostingCell);
+    });
+  }
+
   render = function renderCommunesView() {
     baseRender();
     decorateCommuneIdentity();
+    decorateHostingColumn();
   };
 
   // Apply the canonical layout immediately if the live data arrived before
