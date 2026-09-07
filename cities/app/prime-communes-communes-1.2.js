@@ -2,7 +2,8 @@
   'use strict';
 
   // Prime Communes · Communes view
-  // The canton is part of the municipality identity, not a standalone table column.
+  // Municipality identity is one semantic unit on every viewport:
+  // row number → canton flag → commune name.
   // Data/filter/export semantics remain untouched.
   const baseRender = render;
 
@@ -25,7 +26,7 @@
       headings[cantonIndex].classList.add('canton-column');
     }
 
-    bodyRows.forEach(row => {
+    bodyRows.forEach((row, rowIndex) => {
       const commune = all.find(item => String(item.id) === String(row.dataset.id));
       if (!commune) return;
 
@@ -41,6 +42,11 @@
         const identity = document.createElement('span');
         identity.className = 'commune-identity';
 
+        const rank = document.createElement('span');
+        rank.className = 'commune-rank';
+        rank.textContent = String(rowIndex + 1);
+        rank.setAttribute('aria-label', `Ligne ${rowIndex + 1}`);
+
         const flag = document.createElement('img');
         flag.className = 'commune-canton-flag';
         flag.src = `public/cantons/${String(commune.canton || '').toLowerCase()}.svg`;
@@ -49,7 +55,7 @@
         flag.setAttribute('aria-hidden', 'true');
 
         name.replaceWith(identity);
-        identity.append(flag, name);
+        identity.append(rank, flag, name);
       }
 
       if (cantonIndex >= 0 && cells[cantonIndex]) {
