@@ -49,9 +49,9 @@
 .map-autocomplete strong{display:block;min-width:0;overflow:hidden;color:#e7edf5;font-size:12px;font-weight:750;line-height:1.2;text-overflow:ellipsis;white-space:nowrap}
 .map-autocomplete b{display:block;color:#7f8ea1;font-size:11px;font-weight:650;line-height:1;text-align:right;white-space:nowrap}
 
-/* Desktop deliberately gets a taller canvas so the complete French-speaking
-   territory is visible at first fit; tablet/mobile retain their tuned heights. */
-.maplibre-stage{position:relative;height:760px;min-height:760px;overflow:hidden;border:1px solid rgba(255,255,255,.06);border-top:0;border-radius:0 0 15px 15px;background:#26343f}
+/* Desktop canvas follows the country's proportions closely enough that the
+   complete Swiss outline is visible at the initial fit without compressing it. */
+.maplibre-stage{position:relative;height:clamp(820px,58vw,980px);min-height:820px;overflow:hidden;border:1px solid rgba(255,255,255,.06);border-top:0;border-radius:0 0 15px 15px;background:#26343f}
 #primeMapLibre{position:absolute;inset:0;background:#26343f}
 #primeMapLibre .maplibregl-canvas{outline:0}
 #primeMapLibre .maplibregl-ctrl-top-right{top:10px;right:10px}
