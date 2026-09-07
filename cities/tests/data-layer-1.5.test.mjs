@@ -29,6 +29,12 @@ test('French statistical scopes are centralized and strict for bilingual cantons
   assert.match(data, /row\.canton === 'BE' && isFrench\(row\).*jura bernois/i);
 });
 
+test('hosting is a first-class DATA 1.5 field from the live view', async () => {
+  const data = await read('app/prime-communes-data-1.5.js');
+  assert.match(data, /hosting: row\.hosting \?\? ''/);
+  assert.match(data, /hostingCode: row\.hosting_code \?\? ''/);
+});
+
 test('retired map product control is no longer part of the data contract', async () => {
   const data = await read('app/prime-communes-data-1.5.js');
   assert.doesNotMatch(data, /mapProduct['"]?\)\.innerHTML/);
