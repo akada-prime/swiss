@@ -20,7 +20,7 @@
   };
 
   loadStyle('app/prime-communes-1.1.5.css?v=5');
-  loadStyle('app/prime-communes-stats-1.2.css?v=4');
+  loadStyle('app/prime-communes-stats-1.2.css?v=5');
   loadStyle('app/prime-communes-maplibre-1.2.css?v=7');
 
   // First 1.5 plumbing step: transport/normalization/language scopes are owned
