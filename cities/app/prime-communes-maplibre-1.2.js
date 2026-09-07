@@ -44,14 +44,12 @@
   let cantonFilter = '';
   let cantonSelect = null;
   let viewSelect = null;
-  let productSelect = null;
   let suggestionsBox = null;
   let suggestions = [];
   let suggestionIndex = -1;
   let resizeTimer = null;
 
-  // Warm the slow pieces before the user opens Carte. This is intentionally
-  // asynchronous and low-priority from the browser's point of view.
+  // Warm the slow pieces before the user opens Carte.
   const mapLibreModulePromise = import(MAPLIBRE_MODULE);
   const geometryPromise = fetch(GEOMETRY_URL, { cache: 'force-cache' })
     .then(response => {
@@ -109,9 +107,8 @@
     const legacyControls = toolbar?.querySelector('.map-controls');
     const legacyProduct = legacyControls?.querySelector('#mapProduct');
 
-    // The 1.1 data loader still writes the available product list into
-    // #mapProduct. Keep only that select in a hidden compatibility bridge;
-    // every visual/interactive part of the SVG map is removed.
+    // The historical data loader still populates #mapProduct. Keep only this
+    // invisible compatibility select until the data layer itself is split in 1.5.
     if (legacyProduct) {
       let bridge = document.getElementById('mapCompatibilityBridge');
       if (!bridge) {
@@ -176,17 +173,9 @@
         <option value="impact">Empreinte Prime</option>
         <option value="integrator">Intégrateur</option>
         <option value="software">Logiciel</option>
-        <option value="product">Produit</option>
       </select>`;
     toolbar.append(viewLabel);
     viewSelect = viewLabel.querySelector('select');
-
-    const productLabel = document.createElement('label');
-    productLabel.className = 'maplibre-filter maplibre-product-filter';
-    productLabel.hidden = true;
-    productLabel.innerHTML = '<span>Produit</span><select id="mapProductFilter" aria-label="Choisir un produit"></select>';
-    toolbar.append(productLabel);
-    productSelect = productLabel.querySelector('select');
 
     const params = new URLSearchParams(window.location.search);
     query.value = params.get('mq') || query.value || '';
@@ -205,11 +194,6 @@
       closeSuggestions();
       syncMapUrl();
     });
-    productSelect.addEventListener('change', () => {
-      mapProduct = productSelect.value;
-      syncStyle();
-      syncMapUrl();
-    });
   }
 
   function syncMapUrl() {
@@ -219,17 +203,16 @@
     if (mq) params.set('mq', mq); else params.delete('mq');
     if (cantonFilter) params.set('mapCanton', cantonFilter); else params.delete('mapCanton');
     const view = viewSelect?.value || 'impact';
+    params.delete('mapProduct');
     if (view === 'impact') {
       params.delete('mapPerspective');
       params.delete('mapMode');
-      params.delete('mapProduct');
     } else {
       params.set('mapPerspective', 'factual');
       params.set('mapMode', view);
-      if (view === 'product' && productSelect?.value) params.set('mapProduct', productSelect.value);
-      else params.delete('mapProduct');
     }
-    const next = `${window.location.pathname}?${params.toString()}`;
+    const queryString = params.toString();
+    const next = `${window.location.pathname}${queryString ? `?${queryString}` : ''}`;
     window.history.replaceState({ primeCommunes: true }, '', next);
   }
 
@@ -247,25 +230,12 @@
       cantonFilter = cantonSelect.value;
     }
 
-    if (productSelect) {
-      const products = [...new Set(all.flatMap(row => row.products || []).filter(Boolean))]
-        .sort((a, b) => a.localeCompare(b, 'fr-CH'));
-      productSelect.innerHTML = products.map(product => `<option value="${html(product)}">${html(product)}</option>`).join('');
-      const requested = params.get('mapProduct') || mapProduct || '';
-      if (products.length) {
-        productSelect.value = products.includes(requested) ? requested : products[0];
-        mapProduct = productSelect.value;
-      }
-    }
-
     if (viewSelect) {
       const requested = params.get('mapMode');
       const perspective = params.get('mapPerspective');
-      viewSelect.value = perspective === 'factual' && ['integrator', 'software', 'product'].includes(requested)
+      viewSelect.value = perspective === 'factual' && ['integrator', 'software'].includes(requested)
         ? requested
-        : (mapPerspective === 'factual' && ['integrator', 'software', 'product'].includes(mapMode) ? mapMode : 'impact');
-      const productLabel = productSelect?.closest('.maplibre-product-filter');
-      if (productLabel) productLabel.hidden = viewSelect.value !== 'product';
+        : (mapPerspective === 'factual' && ['integrator', 'software'].includes(mapMode) ? mapMode : 'impact');
     }
   }
 
@@ -388,8 +358,7 @@
         integrator: commune?.integrator || '', software: commune?.software || '', erp: commune?.erp || '',
         products: (commune?.products || []).join(' · '),
         isInnosolv: commune?.software === 'innosolvcity',
-        hasEadmin: Boolean(commune?.products?.includes('eAdmin')),
-        productMatch: Boolean(commune?.products?.includes(mapProduct))
+        hasEadmin: Boolean(commune?.products?.includes('eAdmin'))
       },
       geometry: shapeGeometry
     };
@@ -450,7 +419,6 @@
 
   function fillColorExpression() {
     if (mapPerspective === 'impact') return ['case', ['==', ['get', 'isPrime'], true], '#1596e6', '#d8e1e6'];
-    if (mapMode === 'product') return ['case', ['==', ['get', 'productMatch'], true], '#36d494', '#50616e'];
     return paletteExpression(mapMode === 'software' ? 'software' : 'integrator', mapPalettes[mapMode]);
   }
 
@@ -775,11 +743,13 @@
   function syncViewSelection() {
     if (!viewSelect) return;
     const value = viewSelect.value;
-    if (value === 'impact') { mapPerspective = 'impact'; mapMode = 'integrator'; }
-    else { mapPerspective = 'factual'; mapMode = value; }
-    const productLabel = productSelect?.closest('.maplibre-product-filter');
-    if (productLabel) productLabel.hidden = value !== 'product';
-    if (value === 'product' && productSelect?.value) mapProduct = productSelect.value;
+    if (value === 'impact') {
+      mapPerspective = 'impact';
+      mapMode = 'integrator';
+    } else {
+      mapPerspective = 'factual';
+      mapMode = value === 'software' ? 'software' : 'integrator';
+    }
     syncStyle();
     fitActiveScope();
   }
@@ -790,8 +760,7 @@
   ensureStage();
   configureToolbar();
 
-  // Replace the historical global map entry point before the 1.1 state bridge
-  // loads. Existing deep links therefore activate MapLibre, never the SVG engine.
+  // Replace the historical global map entry point before the 1.1 state bridge loads.
   window.loadMap = ensureMapLibre;
   try { loadMap = ensureMapLibre; } catch (_) {}
 
