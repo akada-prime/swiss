@@ -3,7 +3,7 @@
 
 :root{
   --pc-kpi-accent:#6ec7ff;
-  --pc-kpi-label-lines:3;
+  --pc-kpi-label-lines:2;
   --pc-kpi-label-line-height:1.08;
   --pc-kpi-detail-line-height:1.18;
   --pc-territory-heading-height:48px;
@@ -148,20 +148,19 @@
 }
 
 /* Compact KPI contract.
-   The heading always reserves at most three lines so values share one baseline.
-   Short headings start at the top of that zone, and details sit against the
-   bottom edge. Necessary spare room therefore stays inside the content rhythm,
-   never as oversized padding against the card borders. */
+   Desktop reserves two heading lines: enough for the current labels without
+   creating a large title/value void. Narrow screens switch to three lines so
+   all four cards keep one shared value baseline even when labels wrap. */
 .stats-kpi:not(.stats-kpi-prime){
   display:grid;
   grid-template-rows:
     calc(var(--pc-kpi-label-lines) * 1em * var(--pc-kpi-label-line-height))
     auto
-    minmax(1em,1fr);
-  align-content:stretch;
-  row-gap:3px;
+    auto;
+  align-content:start;
+  row-gap:4px;
   min-height:0;
-  padding:8px 14px;
+  padding:9px 14px;
 }
 
 .stats-kpi:not(.stats-kpi-prime)>span{
@@ -172,13 +171,13 @@
 
 .stats-kpi:not(.stats-kpi-prime)>strong{
   margin:0;
-  align-self:center;
+  align-self:start;
   line-height:1;
 }
 
 .stats-kpi:not(.stats-kpi-prime)>small{
   margin:0;
-  align-self:end;
+  align-self:start;
   line-height:var(--pc-kpi-detail-line-height);
 }
 
@@ -197,7 +196,10 @@
 }
 
 @media(max-width:760px){
-  :root{--pc-territory-heading-height:46px}
+  :root{
+    --pc-kpi-label-lines:3;
+    --pc-territory-heading-height:46px;
+  }
 
   .stats-kpis{
     grid-template-columns:1fr 1fr;
