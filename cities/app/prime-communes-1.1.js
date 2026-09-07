@@ -25,7 +25,7 @@
 
   // First 1.5 plumbing step: transport/normalization/language scopes are owned
   // by DATA before any view-specific runtime starts.
-  loadScript('app/prime-communes-data-1.5.js?v=1', () => {
+  loadScript('app/prime-communes-data-1.5.js?v=2', () => {
     // Carte still loads before the state bridge so deep-linked map views resolve
     // to MapLibre, never to the retired SVG runtime.
     loadScript('app/prime-communes-maplibre-1.2.js?v=7', () => {
