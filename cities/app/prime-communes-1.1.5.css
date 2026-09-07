@@ -3,7 +3,7 @@
 
 /* Prime Communes 1.1 · stabilized visual layer */
 
-/* Table typography: one visual language across Métier / ERP / Modules. */
+/* Table typography: one visual language across Métier / ERP / Modules / Hébergeur. */
 .table-wrap th{
   font-size:11px;
   line-height:1.15;
@@ -64,9 +64,13 @@
   display:none;
 }
 
-.metier-cell,.erp-cell,.modules-cell{
+.metier-cell,.erp-cell,.modules-cell,.hosting-cell{
   vertical-align:middle;
   min-width:120px;
+}
+.hosting-cell{
+  color:#a9b5c5;
+  white-space:nowrap;
 }
 .modules-cell{
   min-height:57px;
@@ -108,11 +112,13 @@
   line-height:24px;
 }
 
-/* Logiciels toggle hides ERP + Modules only; Métier always remains visible. */
+/* Logiciels toggle hides ERP + Modules + Hébergeur; Métier always remains visible. */
 .table-wrap.logiciels-hidden .erp-cell,
 .table-wrap.logiciels-hidden .modules-cell,
+.table-wrap.logiciels-hidden .hosting-cell,
 .table-wrap.logiciels-hidden th[data-software-column="erp"],
-.table-wrap.logiciels-hidden th[data-software-column="modules"]{
+.table-wrap.logiciels-hidden th[data-software-column="modules"],
+.table-wrap.logiciels-hidden th[data-software-column="hosting"]{
   display:none;
 }
 .table-wrap.logiciels-hidden table{
