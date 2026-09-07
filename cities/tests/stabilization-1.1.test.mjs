@@ -81,6 +81,13 @@ test('production DB stabilization migration never writes business rows', async (
   assert.doesNotMatch(sql, /\bDELETE\s+FROM\s+public\."GemeindeProfil"/i);
 });
 
+test('public live projection remains readable without opening underlying business tables', async () => {
+  const sql = await read('supabase/migrations/20260907100418_restore_public_gemeinde_aktuell_projection.sql');
+  assert.match(sql, /ALTER VIEW public\."GemeindeAktuell"/);
+  assert.match(sql, /security_invoker = false/);
+  assert.doesNotMatch(sql, /GRANT SELECT ON public\."GemeindeProfil" TO anon/i);
+});
+
 test('current site loads one canonical runtime per view and no SVG map runtime', async () => {
   const html = await read('index.html');
   const loader = await read('app/prime-communes-1.1.js');
@@ -101,7 +108,7 @@ test('current site loads one canonical runtime per view and no SVG map runtime',
   assert.match(html, /id="roadmapView"/);
 });
 
-test('Carte 1.2 is MapLibre-only, preloads assets and exposes meaningful dimensions', async () => {
+test('Carte 1.2 is MapLibre-only, fits all Switzerland and exposes a national border', async () => {
   const js = await read('app/prime-communes-maplibre-1.2.js');
   const css = await read('app/prime-communes-maplibre-1.2.css');
   assert.match(js, /MAPLIBRE_VERSION = '6\.7\.0'/);
@@ -123,12 +130,16 @@ test('Carte 1.2 is MapLibre-only, preloads assets and exposes meaningful dimensi
   assert.match(js, /municipalities-line/);
   assert.match(js, /municipality-labels/);
   assert.match(js, /cantons-border/);
+  assert.match(js, /country-border-casing/);
+  assert.match(js, /country-border'/);
+  assert.match(js, /buildCountryBorderGeoJSON/);
   assert.match(js, /map\.setMaxBounds\(bounds\)/);
+  assert.match(js, /Math\.min\(zoomX, zoomY\)/);
+  assert.match(js, /map\.fitBounds\(countryBounds\(\)/);
   assert.match(js, /renderWorldCopies: false/);
   assert.match(js, /closeButton: false/);
   assert.match(js, /RASTER_URL = 'public\/swiss-base\.webp'/);
-  assert.match(js, /fitBounds\(romandieBounds\(\)/);
-  assert.match(css, /\.maplibre-stage\{[^}]*height:760px;min-height:760px/);
+  assert.match(css, /\.maplibre-stage\{[^}]*height:clamp\(820px,58vw,980px\);min-height:820px/);
   assert.match(css, /@media\(max-width:900px\)[\s\S]*\.maplibre-stage\{height:560px;min-height:560px\}/);
   assert.match(css, /maplibre-mini-map/);
   assert.match(css, /metric-swiss-base/);
