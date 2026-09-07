@@ -15,6 +15,7 @@
 }
 
 .stats-kpi{box-sizing:border-box}
+.stats-kpi>span{display:block}
 .stats-kpi>strong{color:var(--pc-kpi-accent)}
 
 /* Prime + innosolvcity hero */
@@ -173,7 +174,6 @@
 }
 
 .stats-kpi:not(.stats-kpi-prime)>span{
-  display:block;
   min-height:0;
   align-self:end;
   line-height:var(--pc-kpi-label-line-height);
