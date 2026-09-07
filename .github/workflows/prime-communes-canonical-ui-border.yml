@@ -9,6 +9,7 @@ on:
 permissions:
   contents: write
 
+# One-time canonicalization run; this workflow deletes itself after a green build.
 jobs:
   canonicalize:
     runs-on: ubuntu-latest
