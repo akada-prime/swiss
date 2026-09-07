@@ -1,43 +1,165 @@
-/* Prime Communes · Stats 1.2
-   Canonical Stats component rules. Scoped to Stats; no data behaviour. */
+/* Prime Communes · Stats
+   Canonical visual contract for Stats 1.5. No one-off KPI selectors. */
 
 :root{
   --pc-kpi-accent:#6ec7ff;
   --pc-kpi-label-lines:3;
-  --pc-kpi-label-line-height:1.25;
+  --pc-kpi-label-line-height:1.16;
   --pc-kpi-detail-lines:2;
-  --pc-kpi-detail-line-height:1.35;
-  --pc-territory-heading-height:52px;
+  --pc-kpi-detail-line-height:1.25;
+  --pc-territory-heading-height:48px;
 }
 
-/* One visual contract for every KPI card:
-   - labels may occupy 1, 2 or 3 lines;
-   - the value always begins on the same baseline;
-   - primary KPI values use the same Prime blue accent. */
-.stats-kpi{
+.stats-kpis{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+
+.stats-kpi{box-sizing:border-box}
+.stats-kpi>strong{color:var(--pc-kpi-accent)}
+
+/* Prime + innosolvcity hero */
+.stats-kpi-prime{
+  position:relative;
+  grid-column:1/-1;
+  min-height:205px;
+  padding:24px 28px;
+  overflow:hidden;
+}
+
+.stats-prime-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);
+  align-items:center;
+  gap:24px;
+}
+
+.stats-prime-copy{
+  position:relative;
+  z-index:2;
   display:flex;
   flex-direction:column;
+  align-items:flex-start;
+  min-width:0;
 }
 
-.stats-kpi>span{
-  display:block;
-  min-height:calc(var(--pc-kpi-label-lines) * 1em * var(--pc-kpi-label-line-height));
-  line-height:var(--pc-kpi-label-line-height);
+.stats-prime-eyebrow{
+  color:#8c9aaf;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.16em;
+  line-height:1.2;
+  text-transform:uppercase;
 }
 
-.stats-kpi>strong{
-  margin-top:10px;
+.stats-prime-copy>strong{
+  margin-top:12px;
   color:var(--pc-kpi-accent);
+  font-size:48px;
+  line-height:.98;
+  letter-spacing:-.05em;
 }
 
-.stats-kpi>small{
-  margin-top:6px;
-  line-height:var(--pc-kpi-detail-line-height);
+.stats-prime-copy>small{
+  margin-top:12px;
+  color:#aab7c8;
+  font-size:14px;
+  line-height:1.3;
 }
 
-/* The four compact KPI cards use a balanced three-zone grid. The heading and
-   detail zones are bounded, while the number stays on one stable baseline.
-   This keeps 1/2/3-line labels aligned without wasting vertical space. */
+.stats-prime-meta{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px 12px;
+  margin-top:11px;
+  color:#76869a;
+  font-size:10px;
+  line-height:1.25;
+}
+
+.stats-prime-meta span+span{
+  padding:6px 9px;
+  border:1px solid rgba(110,199,255,.2);
+  border-radius:999px;
+  color:#85d2ff;
+  background:rgba(19,118,183,.1);
+  font-weight:750;
+}
+
+.stats-prime-progress{
+  width:100%;
+  height:7px;
+  margin-top:15px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.055);
+}
+
+.stats-prime-progress i{
+  display:block;
+  width:0;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#168fe0,#6ec7ff,#7059f4);
+  box-shadow:0 0 14px rgba(67,168,239,.25);
+  transition:width .25s ease;
+}
+
+.stats-prime-visual{
+  position:relative;
+  z-index:1;
+  display:grid;
+  place-items:center;
+  min-height:150px;
+}
+
+.stats-prime-watermark{
+  position:absolute;
+  top:50%;
+  right:4%;
+  width:min(82%,330px);
+  max-height:135px;
+  object-fit:contain;
+  opacity:.055;
+  transform:translateY(-50%);
+  filter:grayscale(1) brightness(1.6);
+  pointer-events:none;
+}
+
+.stats-prime-map{
+  position:relative;
+  width:100%;
+  height:150px;
+}
+
+.stats-prime-map svg{
+  width:100%;
+  height:100%;
+  overflow:visible;
+}
+
+.stats-swiss-base{
+  fill:rgba(80,101,126,.18);
+  stroke:rgba(149,174,203,.36);
+  stroke-width:1300;
+  vector-effect:non-scaling-stroke;
+}
+
+.stats-swiss-scope{
+  fill:rgba(40,131,198,.15);
+  stroke:rgba(72,162,225,.18);
+  stroke-width:550;
+  vector-effect:non-scaling-stroke;
+}
+
+.stats-swiss-active{
+  fill:rgba(35,157,229,.88);
+  stroke:#6ec7ff;
+  stroke-width:700;
+  vector-effect:non-scaling-stroke;
+}
+
+/* Four compact KPIs: stable 3/1/2-line rhythm with much less empty height. */
 .stats-kpi:not(.stats-kpi-prime){
   display:grid;
   grid-template-rows:
@@ -45,52 +167,114 @@
     auto
     calc(var(--pc-kpi-detail-lines) * 1em * var(--pc-kpi-detail-line-height));
   align-content:center;
-  row-gap:8px;
-  min-height:148px;
-  padding-block:16px;
+  row-gap:5px;
+  min-height:128px;
+  padding:12px 16px;
 }
 
 .stats-kpi:not(.stats-kpi-prime)>span{
+  display:block;
   min-height:0;
   align-self:end;
+  line-height:var(--pc-kpi-label-line-height);
 }
 
-.stats-kpi:not(.stats-kpi-prime)>strong,
-.stats-kpi:not(.stats-kpi-prime)>small{
-  margin-top:0;
+.stats-kpi:not(.stats-kpi-prime)>strong{
+  margin:0;
+  align-self:center;
+  line-height:1;
 }
 
 .stats-kpi:not(.stats-kpi-prime)>small{
+  margin:0;
   align-self:start;
+  line-height:var(--pc-kpi-detail-line-height);
 }
 
-/* Territory cards use the same principle: title + commune count reserve only
-   the space required for at most three text lines. Percentages, bars and
-   details therefore align across each row without oversized empty zones. */
+/* Territory cards use the same bounded-heading principle. */
 .territory-comparison button>span{
   display:block;
   min-height:var(--pc-territory-heading-height);
 }
+.territory-comparison button>span>strong{line-height:1.15}
+.territory-comparison button>span>small{line-height:1.25}
+.territory-comparison button>b{margin-top:6px}
+.territory-comparison button>small{margin-top:6px}
 
-.territory-comparison button>span>strong{
-  line-height:1.2;
-}
-
-.territory-comparison button>span>small{
-  line-height:1.3;
-}
-
-.territory-comparison button>b{
-  margin-top:8px;
-}
-
-.territory-comparison button>small{
-  margin-top:7px;
+@media(max-width:1180px){
+  .stats-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 @media(max-width:760px){
-  .stats-kpi:not(.stats-kpi-prime){
-    min-height:144px;
-    padding-block:15px;
+  :root{--pc-territory-heading-height:46px}
+
+  .stats-kpis{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
   }
+
+  .stats-kpi-prime{
+    min-height:178px;
+    padding:18px 20px;
+  }
+
+  .stats-prime-hero{
+    grid-template-columns:minmax(0,1.18fr) minmax(115px,.82fr);
+    gap:8px;
+  }
+
+  .stats-prime-copy>strong{
+    margin-top:9px;
+    font-size:42px;
+  }
+
+  .stats-prime-copy>small{
+    margin-top:8px;
+    font-size:12px;
+  }
+
+  .stats-prime-meta{
+    display:block;
+    margin-top:7px;
+    font-size:9px;
+  }
+
+  .stats-prime-meta span{display:block}
+  .stats-prime-meta span+span{
+    display:inline-block;
+    margin-top:6px;
+    padding:5px 8px;
+  }
+
+  .stats-prime-progress{
+    height:6px;
+    margin-top:9px;
+  }
+
+  .stats-prime-visual,
+  .stats-prime-map{
+    min-height:118px;
+    height:118px;
+  }
+
+  .stats-prime-watermark{
+    right:-5%;
+    width:105%;
+    max-height:105px;
+  }
+
+  .stats-kpi:not(.stats-kpi-prime){
+    min-height:126px;
+    padding:10px 14px;
+    row-gap:4px;
+  }
+}
+
+@media(max-width:410px){
+  .stats-prime-hero{
+    grid-template-columns:minmax(0,1.28fr) minmax(96px,.72fr);
+  }
+  .stats-prime-copy>strong{font-size:38px}
+  .stats-prime-copy>small{font-size:11px}
+  .stats-prime-visual,.stats-prime-map{height:106px;min-height:106px}
 }
