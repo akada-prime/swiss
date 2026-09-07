@@ -13,6 +13,7 @@
   const scopeSelect = document.getElementById('statsScope');
   const metricButtons = [...document.querySelectorAll('[data-stats-metric]')];
   const thresholdButtons = [...document.querySelectorAll('[data-stats-threshold]')];
+  const statsTab = document.querySelector('[data-view="stats"]');
   if (!root || !hero || !window.PrimeCommunesData) return;
 
   let snapshot = null;
@@ -143,6 +144,7 @@
   scopeSelect?.addEventListener('change', queueRender);
   metricButtons.forEach(button => button.addEventListener('click', queueRender));
   thresholdButtons.forEach(button => button.addEventListener('click', queueRender));
+  statsTab?.addEventListener('click', queueRender);
 
   ensureHeroMarkup();
   window.PrimeCommunesData.whenReady().then(next => {
