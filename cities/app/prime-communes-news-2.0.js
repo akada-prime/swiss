@@ -45,13 +45,14 @@
           <span><strong>${escapeHtml(signal.municipality)}</strong><small>${escapeHtml(signal.canton)} · OFS ${Number(signal.bfsId)}</small></span><b>Ouvrir la fiche&nbsp;›</b>
         </button>
         <h3>${escapeHtml(signal.title)}</h3>
-        <p class="news-summary">${escapeHtml(signal.summary)}</p>
-        <div class="news-why"><span>Pourquoi c'est important</span><p>${escapeHtml(signal.why)}</p></div>
+        <div class="news-fact"><span>Fait public</span><p>${escapeHtml(signal.summary)}</p></div>
+        <div class="news-why"><span>Lecture de l'IA d'Axel</span><p>${escapeHtml(signal.why)}</p></div>
         <div class="news-tags">${tags}</div>
       </div>
       <aside class="news-card-proof">
         <span>Provenance</span><strong>${escapeHtml(signal.sourceType)}</strong>
         ${sourceMarkup(signal)}
+        <div class="news-update"><span>Mise à jour</span><b>${escapeHtml(signal.updatedBy || "IA d'Axel")}</b></div>
         <div><span>Confiance</span><b class="news-confidence news-confidence-${escapeHtml(signal.confidence)}"><i></i>${confidenceLabels[signal.confidence] || 'À vérifier'}</b></div>
       </aside>
     </article>`;
