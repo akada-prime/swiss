@@ -19,14 +19,17 @@
     document.body.append(script);
   };
 
+  loadStyle('app/prime-communes-1.1.5.css?v=5');
   loadStyle('app/prime-communes-stats-1.2.css?v=3');
-  loadStyle('app/prime-communes-maplibre-1.2.css?v=4');
+  loadStyle('app/prime-communes-maplibre-1.2.css?v=5');
 
   // Carte loads first so it owns the global loadMap entry point before the
-  // historical 1.1 state bridge restores a deep-linked map view.
-  loadScript('app/prime-communes-maplibre-1.2.js?v=4', () => {
+  // historical state/deep-link bridge restores a deep-linked map view.
+  loadScript('app/prime-communes-maplibre-1.2.js?v=5', () => {
     loadScript('app/prime-communes-1.1-base.js?v=2', () => {
-      loadScript('app/prime-communes-communes-1.2.js?v=1');
+      loadScript('app/prime-communes-communes-1.2.js?v=1', () => {
+        loadScript('app/prime-communes-roadmap-1.2.js?v=1');
+      });
     });
   });
 })();
