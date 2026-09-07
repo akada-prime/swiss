@@ -137,26 +137,27 @@
   width:100%;
   height:100%;
   overflow:visible;
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.18));
 }
 
 .stats-swiss-base{
   fill:rgba(80,101,126,.18);
   stroke:rgba(149,174,203,.36);
-  stroke-width:1300;
+  stroke-width:.85;
   vector-effect:non-scaling-stroke;
 }
 
 .stats-swiss-scope{
   fill:rgba(40,131,198,.15);
   stroke:rgba(72,162,225,.18);
-  stroke-width:550;
+  stroke-width:.3;
   vector-effect:non-scaling-stroke;
 }
 
 .stats-swiss-active{
   fill:rgba(35,157,229,.88);
   stroke:#6ec7ff;
-  stroke-width:700;
+  stroke-width:.45;
   vector-effect:non-scaling-stroke;
 }
 
