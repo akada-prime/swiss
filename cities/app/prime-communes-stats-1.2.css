@@ -4,8 +4,10 @@
 :root{
   --pc-kpi-accent:#6ec7ff;
   --pc-kpi-label-lines:3;
-  --pc-kpi-label-line-height:1.35;
-  --pc-territory-heading-height:64px;
+  --pc-kpi-label-line-height:1.25;
+  --pc-kpi-detail-lines:2;
+  --pc-kpi-detail-line-height:1.35;
+  --pc-territory-heading-height:52px;
 }
 
 /* One visual contract for every KPI card:
@@ -24,17 +26,47 @@
 }
 
 .stats-kpi>strong{
-  margin-top:12px;
+  margin-top:10px;
   color:var(--pc-kpi-accent);
 }
 
 .stats-kpi>small{
-  margin-top:7px;
+  margin-top:6px;
+  line-height:var(--pc-kpi-detail-line-height);
 }
 
-/* Territory cards use the same principle: the title + commune-count area has
-   a standard height, so percentages/bars/details align across each row even
-   when one label wraps and its neighbour does not. */
+/* The four compact KPI cards use a balanced three-zone grid. The heading and
+   detail zones are bounded, while the number stays on one stable baseline.
+   This keeps 1/2/3-line labels aligned without wasting vertical space. */
+.stats-kpi:not(.stats-kpi-prime){
+  display:grid;
+  grid-template-rows:
+    calc(var(--pc-kpi-label-lines) * 1em * var(--pc-kpi-label-line-height))
+    auto
+    calc(var(--pc-kpi-detail-lines) * 1em * var(--pc-kpi-detail-line-height));
+  align-content:center;
+  row-gap:8px;
+  min-height:148px;
+  padding-block:16px;
+}
+
+.stats-kpi:not(.stats-kpi-prime)>span{
+  min-height:0;
+  align-self:end;
+}
+
+.stats-kpi:not(.stats-kpi-prime)>strong,
+.stats-kpi:not(.stats-kpi-prime)>small{
+  margin-top:0;
+}
+
+.stats-kpi:not(.stats-kpi-prime)>small{
+  align-self:start;
+}
+
+/* Territory cards use the same principle: title + commune count reserve only
+   the space required for at most three text lines. Percentages, bars and
+   details therefore align across each row without oversized empty zones. */
 .territory-comparison button>span{
   display:block;
   min-height:var(--pc-territory-heading-height);
@@ -45,15 +77,20 @@
 }
 
 .territory-comparison button>span>small{
-  line-height:1.35;
+  line-height:1.3;
+}
+
+.territory-comparison button>b{
+  margin-top:8px;
+}
+
+.territory-comparison button>small{
+  margin-top:7px;
 }
 
 @media(max-width:760px){
-  :root{
-    --pc-territory-heading-height:72px;
-  }
-
-  .stats-kpi>span{
-    min-height:calc(var(--pc-kpi-label-lines) * 1em * var(--pc-kpi-label-line-height));
+  .stats-kpi:not(.stats-kpi-prime){
+    min-height:144px;
+    padding-block:15px;
   }
 }
