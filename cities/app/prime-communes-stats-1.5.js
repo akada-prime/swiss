@@ -54,7 +54,6 @@
         <div class="stats-prime-progress" aria-hidden="true"><i id="statsPrimeProgress"></i></div>
       </div>
       <div class="stats-prime-visual" aria-hidden="true">
-        <img class="stats-prime-watermark" src="public/prime-logo-negative.svg" alt="">
         <div class="stats-prime-map" id="statsPrimeMap"></div>
       </div>`;
   }
