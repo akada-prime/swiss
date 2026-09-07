@@ -15,13 +15,16 @@ test('Stats 1.5 hero is data-driven Prime + innosolvcity', async () => {
   assert.doesNotMatch(js, /\b63\b|\b64\b|420264|18\.8/);
 });
 
-test('Stats compact cards use one responsive bounded-label contract', async () => {
+test('Stats compact cards use one measured responsive label contract', async () => {
   const css = await read('app/prime-communes-stats-1.2.css');
-  assert.match(css, /--pc-kpi-label-lines:2/);
-  assert.match(css, /@media\(max-width:760px\)[\s\S]*?--pc-kpi-label-lines:3/);
-  assert.match(css, /grid-template-rows:[\s\S]*?var\(--pc-kpi-label-lines\)/);
+  const js = await read('app/prime-communes-stats-1.5.js');
+  assert.match(css, /--pc-kpi-label-height/);
+  assert.doesNotMatch(css, /--pc-kpi-label-lines/);
+  assert.match(css, /grid-template-rows:var\(--pc-kpi-label-height,auto\)/);
+  assert.match(css, /\.stats-kpi:not\(\.stats-kpi-prime\)>strong[\s\S]*?color:#f3f6fa/);
   assert.match(css, /align-content:start/);
   assert.match(css, /min-height:0/);
+  assert.match(js, /syncContextKpiLabelHeight/);
   assert.match(css, /stats-prime-progress/);
   assert.match(css, /stats-swiss-active/);
   assert.doesNotMatch(css, /stats-prime-watermark|nth-child|:has\(|!important/);
