@@ -20,7 +20,7 @@
   };
 
   loadStyle('app/prime-communes-1.1.5.css?v=8');
-  loadStyle('app/prime-communes-stats-1.2.css?v=10');
+  loadStyle('app/prime-communes-stats-1.2.css?v=11');
   loadStyle('app/prime-communes-maplibre-1.2.css?v=10');
 
   // DATA owns transport/normalization/language scopes before any view starts.
