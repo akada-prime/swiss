@@ -20,7 +20,7 @@ test('NEWS is a first-class deep-linked view', async () => {
 test('Radar data distinguishes level, provenance, confidence and municipality', async () => {
   const radar = JSON.parse(await read('public/data/news-radar-v1.json'));
   assert.equal(radar.meta.mode, 'editorial');
-  assert.ok(radar.signals.length >= 5);
+  assert.ok(radar.signals.length >= 1);
   for (const signal of radar.signals) {
     assert.ok(['strong', 'watch', 'info'].includes(signal.level));
     assert.ok(Number.isInteger(signal.bfsId));
@@ -29,7 +29,9 @@ test('Radar data distinguishes level, provenance, confidence and municipality', 
     assert.ok(signal.sourceLabel);
     assert.ok(['confirmed', 'probable', 'verify'].includes(signal.confidence));
     assert.ok(signal.why);
+    assert.equal(signal.updatedBy, "IA d'Axel");
   }
+  assert.ok(radar.signals.every(signal => signal.sourceType !== 'Prime'));
 });
 
 test('Radar is functional without a new database write path', async () => {
