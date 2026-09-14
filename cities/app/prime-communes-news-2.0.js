@@ -2,6 +2,7 @@
   'use strict';
 
   const DATA_URL = 'public/data/news-radar-v1.json';
+  const CHAT_URL = 'https://chatgpt.com/c/6a9ef456-9284-83ed-9f8b-5e32c1fdfcc3';
   const levelOrder = { strong: 0, watch: 1, info: 2 };
   const levelLabels = { strong: 'Signal fort', watch: 'À surveiller', info: 'Information' };
   const confidenceLabels = { confirmed: 'Confirmé', probable: 'Probable', verify: 'À vérifier' };
@@ -144,8 +145,8 @@ Commence uniquement par me présenter la sélection et ses sources pour validati
     const status = byId('newsRefreshStatus');
     try {
       await copyRefreshPrompt();
-      if (status) status.textContent = 'Prompt copié · ouverture de ChatGPT…';
-      window.setTimeout(() => window.location.assign('https://chatgpt.com/'), 450);
+      if (status) status.textContent = 'Prompt copié · ouverture de notre conversation…';
+      window.setTimeout(() => window.location.assign(CHAT_URL), 900);
     } catch (error) {
       console.error(error);
       if (status) status.textContent = 'Copie impossible · réessaie';
