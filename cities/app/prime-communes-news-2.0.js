@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const DATA_URL = 'public/data/news-radar-v1.json';
+  const DATA_URL = 'public/data/news-radar-v1.json?v=20260914-2';
   const CHAT_URL = 'https://chatgpt.com/c/6a9ef456-9284-83ed-9f8b-5e32c1fdfcc3';
   const levelOrder = { strong: 0, watch: 1, info: 2 };
   const levelLabels = { strong: 'Signal fort', watch: 'À surveiller', info: 'Information' };
