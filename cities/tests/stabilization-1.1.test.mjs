@@ -50,6 +50,14 @@ test('Natel header keeps all views and commune refresh reachable', async () => {
   assert.match(css, /min-width:116px!important/);
 });
 
+test('commune refresh never flashes in NEWS or other views', async () => {
+  const html = await read('index.html');
+  const bridge = await read('app/prime-communes-1.1-base.js');
+  assert.match(html, /id="syncReload"[^>]*hidden/);
+  assert.match(bridge, /byId\('syncReload'\)\.hidden = next !== 'communes'/);
+  assert.match(bridge, /\n  restoreFromUrl\(\);\n\}\)\(\);/);
+});
+
 test('row ranking belongs to commune identity on every viewport', async () => {
   const js = await read('app/prime-communes-communes-1.2.js');
   const css = await read('app/prime-communes-1.1.5.css');
