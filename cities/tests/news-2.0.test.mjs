@@ -40,8 +40,8 @@ test('Radar is functional without a new database write path', async () => {
   assert.match(html, /id="newsManualRefresh"/);
   assert.match(runtime, /fetch\(DATA_URL/);
   assert.match(runtime, /navigator\.clipboard\.writeText/);
-  assert.match(runtime, /https:\/\/chatgpt\.com\//);
-  assert.match(runtime, /window\.location\.assign/);
+  assert.match(runtime, /CHAT_URL = 'https:\/\/chatgpt\.com\/c\/6a9ef456-9284-83ed-9f8b-5e32c1fdfcc3'/);
+  assert.match(runtime, /window\.location\.assign\(CHAT_URL\)/);
   assert.doesNotMatch(runtime, /window\.open/);
   assert.match(runtime, /Ne modifie ni le dépôt ni le site avant mon « feu »/);
   assert.match(runtime, /data-news-level/);
