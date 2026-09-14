@@ -20,12 +20,16 @@ test('NEWS is a first-class deep-linked view', async () => {
 test('Radar data distinguishes level, provenance, confidence and municipality', async () => {
   const radar = JSON.parse(await read('public/data/news-radar-v1.json'));
   assert.equal(radar.meta.mode, 'editorial');
-  assert.ok(radar.signals.length >= 2);
+  assert.ok(radar.signals.length >= 3);
   assert.equal(radar.meta.updatedOn, '2026-09-14');
   const yverdon = radar.signals.find(signal => signal.id === 'yverdon-sey-normes-tic-2026');
   assert.equal(yverdon?.bfsId, 5938);
   assert.equal(yverdon?.level, 'strong');
   assert.match(yverdon?.sourceUrl || '', /yverdon-les-bains\.ch/);
+  const gland = radar.signals.find(signal => signal.id === 'gland-sit-qgis-cartolacote-2026');
+  assert.equal(gland?.level, 'watch');
+  assert.ok(gland?.tags.includes('Client Prime'));
+  assert.ok(gland?.tags.includes('À confirmer en interne'));
   for (const signal of radar.signals) {
     assert.ok(['strong', 'watch', 'info'].includes(signal.level));
     assert.ok(Number.isInteger(signal.bfsId));
@@ -49,6 +53,8 @@ test('Radar is functional without a new database write path', async () => {
   assert.match(runtime, /window\.location\.assign\(CHAT_URL\)/);
   assert.doesNotMatch(runtime, /window\.open/);
   assert.match(runtime, /Ne demande pas une validation supplémentaire/);
+  assert.match(runtime, /n'exclus jamais un signal uniquement parce que la commune est cliente Prime/);
+  assert.match(runtime, /publie-le avec une réserve explicite/);
   assert.doesNotMatch(runtime, /Ne modifie ni le dépôt ni le site avant mon « feu »/);
   assert.match(runtime, /REFRESH_REQUEST_KEY/);
   assert.match(runtime, /Radar actualisé ✓/);
