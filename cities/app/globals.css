@@ -252,3 +252,13 @@
   .map-impact{bottom:12px;width:calc(100% - 72px);max-width:280px}
   .table-wrap table{min-width:1170px}
 }
+
+.sync-state{cursor:pointer;transition:border-color .18s ease,background .18s ease,color .18s ease,transform .18s ease}
+.sync-state:disabled{cursor:wait}
+.sync-state[data-state="loading"] span{animation:sync-pulse .75s ease-in-out infinite alternate}
+.sync-state[data-state="success"]{color:#d8ffef;border-color:rgba(66,215,149,.5);background:rgba(31,139,99,.2);transform:translateY(-1px)}
+.sync-state[data-state="fallback"]{color:#ffe1a6;border-color:rgba(239,177,81,.45);background:rgba(151,99,23,.16)}
+.sync-state[data-state="fallback"] span{background:#efb151;box-shadow:0 0 10px #efb151}
+.sync-state[data-state="error"]{color:#ffc5ba;border-color:rgba(242,119,98,.45)}
+.sync-state[data-state="error"] span{background:#f27762;box-shadow:0 0 10px #f27762}
+@keyframes sync-pulse{to{opacity:.35;transform:scale(.7)}}
