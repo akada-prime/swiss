@@ -9,9 +9,24 @@
 <title>Prime Communes</title>
   <meta name="description" content="Observatoire du marché communal suisse par Prime technologies.">
   <link rel="icon" type="image/png" href="public/favicon-prime-communes.png?v=4">
+  <script>
+    (() => {
+      const requestedView = new URLSearchParams(window.location.search).get('view');
+      const initialView = ['communes', 'map', 'stats', 'news', 'roadmap'].includes(requestedView) ? requestedView : 'communes';
+      document.documentElement.dataset.initialView = initialView;
+    })();
+  </script>
   <link rel="stylesheet" href="app/globals.css?v=17">
   <link rel="stylesheet" href="app/product-assets.css?v=5">
-<style>th.sortable{cursor:pointer;user-select:none}th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}</style>
+<style>
+html[data-initial-view]:not([data-initial-view="communes"]) #communesView{display:none!important}
+html[data-initial-view="map"] #mapView,
+html[data-initial-view="stats"] #statsView,
+html[data-initial-view="news"] #newsView,
+html[data-initial-view="roadmap"] #roadmapView{display:block!important}
+th.sortable{cursor:pointer;user-select:none}
+th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
+</style>
 </head>
 <body>
 <main class="app-shell">
@@ -355,6 +370,6 @@ $('statsScope').addEventListener('change',renderStats);document.querySelectorAll
 $('query').addEventListener('input',render);$('solution').addEventListener('change',render);$('district').addEventListener('change',render);$('canton').addEventListener('change',()=>{$('district').value='';updateDistrictOptions();render()});$('primeOnly').onclick=()=>{primeOnly=!primeOnly;$('primeOnly').classList.toggle('on',primeOnly);render()};$('eadminOnly').onclick=()=>{eadminOnly=!eadminOnly;$('eadminOnly').classList.toggle('on',eadminOnly);$('eadminOnly').classList.toggle('eadmin-on',eadminOnly);render()};$('districtsToggle').onclick=()=>{districtsMode=!districtsMode;$('districtsToggle').classList.toggle('on',districtsMode);render()};document.querySelectorAll('.market-toggle').forEach(button=>button.onclick=()=>{marketOnly=marketOnly===button.dataset.market?'':button.dataset.market;document.querySelectorAll('.market-toggle').forEach(x=>x.classList.toggle('on',x.dataset.market===marketOnly));render()});$('issuesOnly').onclick=()=>{issuesOnly=!issuesOnly;$('issuesOnly').classList.toggle('on',issuesOnly);$('issuesOnly').classList.toggle('warning',issuesOnly);render()};$('issuesCard').onclick=()=>{ofsMode=!ofsMode; if(!ofsMode)issuesOnly=false; $('issuesOnly').hidden=!ofsMode; $('issuesCard').classList.toggle('ofs-active',ofsMode); $('ofsLabel').textContent=ofsMode?$('issues').textContent:'Ouvrir'; $('ofsCopy').textContent=ofsMode?'Revenir à la vue de marché':'Afficher les statuts Delimo'; $('ofsArrow').textContent=ofsMode?'←':'→'; render()};$('reset').onclick=()=>{$('query').value='';$('canton').value='Tous';$('district').value='';$('solution').value='Tous';primeOnly=eadminOnly=issuesOnly=false;marketOnly='';updateDistrictOptions();document.querySelectorAll('.filter-toggle').forEach(x=>{if(x.id!=='districtsToggle')x.classList.remove('on','warning')});render()};$('syncReload').onclick=loadData;$('exportBtn').onclick=()=>{const rows=filtered(),withDistrict=districtsMode,header=['Nom','Client Prime','Canton',...(withDistrict?['District']:[]),'Population','Intégrateur','Métier','ERP','Modules'],lines=[header.join('\t'),...rows.map(x=>[x.name,x.isPrime?'Oui':'Non',x.canton,...(withDistrict?[x.district]:[]),x.expectedPopulation,x.integrator,x.software,x.erp,(x.products||[]).join(' | ')].join('\t'))];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/tab-separated-values'}));a.download='communes.tsv';a.click()};
 document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('newsView').hidden=view!=='news';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
 </script>
-<script src="app/prime-communes-1.1.js?v=5"></script>
+<script src="app/prime-communes-1.1.js?v=6"></script>
 </body>
 </html>
