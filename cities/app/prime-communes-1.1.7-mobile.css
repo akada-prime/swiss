@@ -243,3 +243,10 @@
     margin:0 8px 0 0!important;
   }
 }
+
+@media(max-width:680px){
+  .sync-state[data-state="loading"] b::after{content:"Actualisation…"}
+  .sync-state[data-state="success"] b::after{content:"À jour ✓"}
+  .sync-state[data-state="fallback"] b::after{content:"Copie locale"}
+  .sync-state[data-state="error"] b::after{content:"Erreur"}
+}
