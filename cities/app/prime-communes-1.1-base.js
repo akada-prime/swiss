@@ -246,6 +246,7 @@
     byId('newsView').hidden = next !== 'news';
     byId('roadmapView').hidden = next !== 'roadmap';
     byId('syncReload').hidden = next !== 'communes';
+    document.documentElement.removeAttribute('data-initial-view');
     if (next === 'map') loadMap().then(restoreMapUi);
     if (next === 'stats') renderStats();
     if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
