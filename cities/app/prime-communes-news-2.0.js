@@ -35,6 +35,7 @@ Règles impératives :
 - sépare strictement le fait public de la lecture de l'IA d'Axel ;
 - ne transforme jamais une hypothèse en fait ;
 - exclue les projets Prime déjà devisés, gagnés, prestés ou payés ;
+- n'exclus jamais un signal uniquement parce que la commune est cliente Prime : si son statut commercial interne est inconnu, publie-le avec les tags « Client Prime » et « À confirmer en interne » ;
 - privilégie peu de signaux solides plutôt qu'une longue liste ;
 - limite la recherche et l'analyse au nécessaire pour une veille sobre ;
 - ne supprime un signal existant que s'il est devenu obsolète, erroné ou non actionnable.
@@ -44,7 +45,7 @@ Signaux actuellement publiés :
 
 Pour chaque signal retenu, renseigne : niveau, date, commune et canton, titre, fait public, lecture de l'IA d'Axel, source primaire avec URL, confiance et tags.
 
-Exécute directement la mise à jour : modifie le JSON, adapte les tests si nécessaire, vérifie le site puis publie. Ne demande pas une validation supplémentaire. Si le statut commercial Prime d'un signal est ambigu, ne le publie pas et poursuis avec les autres signaux solides. À la fin, résume brièvement ce qui a été publié et ce qui a été écarté.`;
+Exécute directement la mise à jour : modifie le JSON, adapte les tests si nécessaire, vérifie le site puis publie. Ne demande pas une validation supplémentaire. Si le statut commercial Prime d'un signal est inconnu, publie-le avec une réserve explicite. Écarte-le uniquement lorsqu'une information interne ou publique confirme qu'il est déjà devisé, attribué, gagné, livré ou payé. À la fin, résume brièvement ce qui a été publié et ce qui a été écarté.`;
   }
 
   async function copyRefreshPrompt() {
