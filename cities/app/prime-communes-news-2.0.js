@@ -17,6 +17,7 @@
   let signals = [];
   let radarMeta = {};
   let activeLevel = 'all';
+  const REFRESH_REQUEST_KEY = 'primeCommunesNewsRefreshRequest';
 
   function refreshPrompt() {
     const lastUpdate = radarMeta.updatedOn || 'la dernière publication du Radar';
@@ -41,9 +42,9 @@ Règles impératives :
 Signaux actuellement publiés :
 - ${currentSignals}
 
-Pour chaque proposition, donne : niveau, date, commune et canton, titre, fait public, lecture de l'IA d'Axel, source primaire avec URL, confiance et tags.
+Pour chaque signal retenu, renseigne : niveau, date, commune et canton, titre, fait public, lecture de l'IA d'Axel, source primaire avec URL, confiance et tags.
 
-Commence uniquement par me présenter la sélection et ses sources pour validation. Ne modifie ni le dépôt ni le site avant mon « feu ». Après validation, mets à jour le JSON, les tests si nécessaire, puis publie.`;
+Exécute directement la mise à jour : modifie le JSON, adapte les tests si nécessaire, vérifie le site puis publie. Ne demande pas une validation supplémentaire. Si le statut commercial Prime d'un signal est ambigu, ne le publie pas et poursuis avec les autres signaux solides. À la fin, résume brièvement ce qui a été publié et ce qui a été écarté.`;
   }
 
   async function copyRefreshPrompt() {
@@ -130,8 +131,23 @@ Commence uniquement par me présenter la sélection et ses sources pour validati
       const data = await response.json();
       radarMeta = data.meta || {};
       signals = Array.isArray(data.signals) ? data.signals : [];
-      if (byId('newsRefreshStatus') && radarMeta.updatedOn) {
-        byId('newsRefreshStatus').textContent = `Dernière veille · ${formatDate(radarMeta.updatedOn)}`;
+      const status = byId('newsRefreshStatus');
+      const refreshButton = byId('newsManualRefresh');
+      let request = null;
+      try {
+        request = JSON.parse(localStorage.getItem(REFRESH_REQUEST_KEY) || 'null');
+      } catch {
+        localStorage.removeItem(REFRESH_REQUEST_KEY);
+      }
+      const changedAfterRequest = request && (
+        radarMeta.updatedOn !== request.updatedOn || signals.length !== request.signalCount
+      );
+      if (status && changedAfterRequest) {
+        status.textContent = `Radar actualisé ✓ · ${signals.length} signal${signals.length > 1 ? 's' : ''}`;
+        refreshButton?.classList.add('is-success');
+        localStorage.removeItem(REFRESH_REQUEST_KEY);
+      } else if (status && radarMeta.updatedOn) {
+        status.textContent = `Dernière veille · ${formatDate(radarMeta.updatedOn)}`;
       }
       render();
     } catch (error) {
@@ -144,8 +160,14 @@ Commence uniquement par me présenter la sélection et ses sources pour validati
   byId('newsManualRefresh')?.addEventListener('click', async () => {
     const status = byId('newsRefreshStatus');
     try {
+      localStorage.setItem(REFRESH_REQUEST_KEY, JSON.stringify({
+        updatedOn: radarMeta.updatedOn || null,
+        signalCount: signals.length,
+        requestedAt: new Date().toISOString()
+      }));
       await copyRefreshPrompt();
-      if (status) status.textContent = 'Prompt copié · ouverture de notre conversation…';
+      byId('newsManualRefresh')?.classList.add('is-launching');
+      if (status) status.textContent = 'Prompt copié · mise à jour lancée…';
       window.setTimeout(() => window.location.assign(CHAT_URL), 900);
     } catch (error) {
       console.error(error);
