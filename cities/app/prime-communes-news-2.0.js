@@ -14,7 +14,53 @@
   });
 
   let signals = [];
+  let radarMeta = {};
   let activeLevel = 'all';
+
+  function refreshPrompt() {
+    const lastUpdate = radarMeta.updatedOn || 'la dernière publication du Radar';
+    const currentSignals = signals.length
+      ? signals.map(signal => `${signal.municipality} — ${signal.title} (${signal.id})`).join('\n- ')
+      : 'aucun';
+    return `Mets à jour le Radar communal NEWS! du site Prime Communes.
+
+Inspecte d'abord la version actuelle dans le dépôt akada-prime/swiss, notamment cities/public/data/news-radar-v1.json. La dernière veille éditoriale indiquée est le ${lastUpdate}.
+
+Cherche des faits publics nouveaux ou toujours actionnables concernant les communes suisses romandes : budgets votés ou proposés, crédits d'étude, planifications financières, stratégies numériques, préavis, messages municipaux, nominations ou départs clés, mutualisations, changements réglementaires et appels d'offres à venir. Le but est de détecter un projet possible avant qu'il soit déjà gagné, livré ou fêté.
+
+Règles impératives :
+- chaque signal repose sur une source publique primaire, datée et accessible ;
+- sépare strictement le fait public de la lecture de l'IA d'Axel ;
+- ne transforme jamais une hypothèse en fait ;
+- exclue les projets Prime déjà devisés, gagnés, prestés ou payés ;
+- privilégie peu de signaux solides plutôt qu'une longue liste ;
+- limite la recherche et l'analyse au nécessaire pour une veille sobre ;
+- ne supprime un signal existant que s'il est devenu obsolète, erroné ou non actionnable.
+
+Signaux actuellement publiés :
+- ${currentSignals}
+
+Pour chaque proposition, donne : niveau, date, commune et canton, titre, fait public, lecture de l'IA d'Axel, source primaire avec URL, confiance et tags.
+
+Commence uniquement par me présenter la sélection et ses sources pour validation. Ne modifie ni le dépôt ni le site avant mon « feu ». Après validation, mets à jour le JSON, les tests si nécessaire, puis publie.`;
+  }
+
+  async function copyRefreshPrompt() {
+    const prompt = refreshPrompt();
+    try {
+      await navigator.clipboard.writeText(prompt);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = prompt;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.append(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      textarea.remove();
+    }
+  }
 
   function filteredSignals() {
     const needle = byId('newsQuery')?.value.trim().toLocaleLowerCase('fr-CH') || '';
@@ -81,7 +127,11 @@
       const response = await fetch(DATA_URL, { cache: 'no-store' });
       if (!response.ok) throw new Error(`Radar ${response.status}`);
       const data = await response.json();
+      radarMeta = data.meta || {};
       signals = Array.isArray(data.signals) ? data.signals : [];
+      if (byId('newsRefreshStatus') && radarMeta.updatedOn) {
+        byId('newsRefreshStatus').textContent = `Dernière veille · ${formatDate(radarMeta.updatedOn)}`;
+      }
       render();
     } catch (error) {
       console.error(error);
@@ -90,6 +140,22 @@
   }
 
   byId('newsQuery')?.addEventListener('input', render);
+  byId('newsManualRefresh')?.addEventListener('click', async () => {
+    const status = byId('newsRefreshStatus');
+    const chat = window.open('https://chatgpt.com/', '_blank', 'noopener,noreferrer');
+    try {
+      await copyRefreshPrompt();
+      if (status) status.textContent = 'Prompt copié · colle-le dans ChatGPT';
+      window.setTimeout(() => {
+        if (status) status.textContent = radarMeta.updatedOn
+          ? `Dernière veille · ${formatDate(radarMeta.updatedOn)}`
+          : 'Prompt de veille prêt à copier';
+      }, 5000);
+    } catch (error) {
+      console.error(error);
+      if (status) status.textContent = chat ? 'Copie impossible · ChatGPT est ouvert' : 'Copie impossible · réessaie';
+    }
+  });
   document.querySelectorAll('[data-news-level]').forEach(button => {
     button.addEventListener('click', () => {
       activeLevel = button.dataset.newsLevel || 'all';
