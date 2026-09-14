@@ -50,6 +50,15 @@ test('Natel header keeps all views and commune refresh reachable', async () => {
   assert.match(css, /min-width:116px!important/);
 });
 
+test('deep-linked views are selected before the first paint', async () => {
+  const html = await read('index.html');
+  const bridge = await read('app/prime-communes-1.1-base.js');
+  assert.match(html, /document\.documentElement\.dataset\.initialView = initialView/);
+  assert.match(html, /data-initial-view="news"\] #newsView/);
+  assert.match(html, /data-initial-view\]:not\(\[data-initial-view="communes"\]\) #communesView/);
+  assert.match(bridge, /removeAttribute\('data-initial-view'\)/);
+});
+
 test('commune refresh never flashes in NEWS or other views', async () => {
   const html = await read('index.html');
   const bridge = await read('app/prime-communes-1.1-base.js');
