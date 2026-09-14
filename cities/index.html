@@ -125,7 +125,12 @@
       <section class="news-panel" aria-label="Radar communal">
         <header class="news-panel-heading">
           <div><p class="eyebrow">Radar communal · 2.0.1</p><h2>Les signaux du territoire</h2></div>
-          <div class="news-radar-state"><span></span><b>Veille de l'IA d'Axel</b><small>Sélection humaine · consommation minimale</small></div>
+          <div class="news-radar-actions">
+            <div class="news-radar-state"><span></span><b>Veille de l'IA d'Axel</b><small>Sélection humaine · consommation minimale</small></div>
+            <button class="news-refresh-button" id="newsManualRefresh" type="button">
+              <span aria-hidden="true">↻</span><b>MÀJ avec ChatGPT</b><small id="newsRefreshStatus">Prompt de veille prêt à copier</small>
+            </button>
+          </div>
         </header>
         <div class="news-kpis" aria-label="Synthèse du Radar">
           <article class="news-kpi news-kpi-hot"><span>Signaux forts</span><strong id="newsStrongCount">—</strong><small>faits publics à qualifier</small></article>
