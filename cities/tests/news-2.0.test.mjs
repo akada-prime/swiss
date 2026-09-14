@@ -35,8 +35,13 @@ test('Radar data distinguishes level, provenance, confidence and municipality', 
 });
 
 test('Radar is functional without a new database write path', async () => {
+  const html = await read('index.html');
   const runtime = await read('app/prime-communes-news-2.0.js');
+  assert.match(html, /id="newsManualRefresh"/);
   assert.match(runtime, /fetch\(DATA_URL/);
+  assert.match(runtime, /navigator\.clipboard\.writeText/);
+  assert.match(runtime, /https:\/\/chatgpt\.com\//);
+  assert.match(runtime, /Ne modifie ni le dépôt ni le site avant mon « feu »/);
   assert.match(runtime, /data-news-level/);
   assert.match(runtime, /data-news-bfs/);
   assert.match(runtime, /openDrawer\(municipality\)/);
