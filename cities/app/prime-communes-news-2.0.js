@@ -142,18 +142,13 @@ Commence uniquement par me présenter la sélection et ses sources pour validati
   byId('newsQuery')?.addEventListener('input', render);
   byId('newsManualRefresh')?.addEventListener('click', async () => {
     const status = byId('newsRefreshStatus');
-    const chat = window.open('https://chatgpt.com/', '_blank', 'noopener,noreferrer');
     try {
       await copyRefreshPrompt();
-      if (status) status.textContent = 'Prompt copié · colle-le dans ChatGPT';
-      window.setTimeout(() => {
-        if (status) status.textContent = radarMeta.updatedOn
-          ? `Dernière veille · ${formatDate(radarMeta.updatedOn)}`
-          : 'Prompt de veille prêt à copier';
-      }, 5000);
+      if (status) status.textContent = 'Prompt copié · ouverture de ChatGPT…';
+      window.setTimeout(() => window.location.assign('https://chatgpt.com/'), 450);
     } catch (error) {
       console.error(error);
-      if (status) status.textContent = chat ? 'Copie impossible · ChatGPT est ouvert' : 'Copie impossible · réessaie';
+      if (status) status.textContent = 'Copie impossible · réessaie';
     }
   });
   document.querySelectorAll('[data-news-level]').forEach(button => {
