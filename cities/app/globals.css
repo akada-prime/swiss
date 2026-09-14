@@ -262,3 +262,10 @@
 .sync-state[data-state="error"]{color:#ffc5ba;border-color:rgba(242,119,98,.45)}
 .sync-state[data-state="error"] span{background:#f27762;box-shadow:0 0 10px #f27762}
 @keyframes sync-pulse{to{opacity:.35;transform:scale(.7)}}
+
+@media(max-width:680px){
+  .sync-state[data-state="loading"] b::after{content:"Actualisation…"!important}
+  .sync-state[data-state="success"] b::after{content:"À jour ✓"!important}
+  .sync-state[data-state="fallback"] b::after{content:"Copie locale"!important}
+  .sync-state[data-state="error"] b::after{content:"Erreur"!important}
+}
