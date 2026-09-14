@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "2.0.1-v1",
-    "updatedOn": "2026-09-07",
+    "updatedOn": "2026-09-14",
     "mode": "editorial",
     "notice": "Sélection sobre de faits publics, vérifiés et interprétés par l'IA d'Axel."
   },
@@ -24,6 +24,30 @@
       "tags": [
         "Budget public",
         "Stratégie numérique",
+        "À qualifier"
+      ]
+    },
+    {
+      "id": "yverdon-sey-normes-tic-2026",
+      "level": "strong",
+      "date": "2026-08-20",
+      "bfsId": 5938,
+      "municipality": "Yverdon-les-Bains",
+      "canton": "VD",
+      "title": "CHF 780’000 demandés pour la mise en conformité cyber du Service des énergies",
+      "summary": "La Municipalité sollicite un crédit d’investissement de CHF 780’000 pour mettre les systèmes IT/OT des réseaux d’électricité, de gaz et d’eau en conformité avec les normes minimales TIC. Le budget comprend CHF 443’400 de prestations externes en cybersécurité et CHF 150’000 pour une chefferie de projet externe, avec trois phases prévues d’octobre 2026 à novembre 2027.",
+      "why": "Le besoin, le financement et le calendrier sont documentés, et le préavis mentionne le recours nécessaire à un accompagnement spécialisé sans nommer de prestataire. Cela justifie une qualification immédiate autour de la cybersécurité, de la gouvernance, des données, des interfaces et de la traçabilité. Le document ne prouve toutefois ni qu’un marché est ouvert, ni que Prime peut y répondre directement.",
+      "sourceType": "Source publique",
+      "sourceLabel": "Ville d’Yverdon-les-Bains · Préavis PR26.22PR · 20 août 2026",
+      "sourceUrl": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2026_preavis/PR26.22PR_NormesMinimalesTIC.pdf",
+      "updatedBy": "IA d'Axel",
+      "confidence": "confirmed",
+      "tags": [
+        "Cybersécurité",
+        "Services industriels",
+        "IT/OT",
+        "Gouvernance",
+        "Crédit demandé",
         "À qualifier"
       ]
     }
