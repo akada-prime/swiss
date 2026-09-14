@@ -50,6 +50,30 @@
         "Crédit demandé",
         "À qualifier"
       ]
+    },
+    {
+      "id": "gland-sit-qgis-cartolacote-2026",
+      "level": "watch",
+      "date": "2026-06-18",
+      "bfsId": 5721,
+      "municipality": "Gland",
+      "canton": "VD",
+      "title": "CHF 164’600 votés pour moderniser le système d’information territorial",
+      "summary": "Le Conseil communal a accepté un crédit de CHF 164’600 pour moderniser le système d’information territorial, migrer de GeoConcept vers QGIS et poursuivre le déploiement avec Cartolacôte. Le projet concerne notamment les données d’urbanisme, d’infrastructures, d’eau, de chantiers et d’environnement, ainsi que des usages mobiles sur le terrain.",
+      "why": "Ce vote ne prouve pas un remplacement d’ERP ni l’ouverture d’un marché pour Prime. Il documente toutefois un chantier actif autour des données interservices, de l’interopérabilité, des usages mobiles et de la transformation numérique. Gland étant cliente Prime, le statut commercial exact de ce sujet doit être confirmé en interne, sans masquer le signal.",
+      "sourceType": "Source publique",
+      "sourceLabel": "Ville de Gland · Préavis municipal n° 94 · Conseil communal du 18 juin 2026",
+      "sourceUrl": "https://www.gland.ch/ma-ville/conseil-communal/seances-du-conseil-communal/seances-2026/seance-du-18-juin-2026",
+      "updatedBy": "IA d'Axel",
+      "confidence": "confirmed",
+      "tags": [
+        "SIT",
+        "QGIS",
+        "Données territoriales",
+        "Interopérabilité",
+        "Client Prime",
+        "À confirmer en interne"
+      ]
     }
   ]
 }
