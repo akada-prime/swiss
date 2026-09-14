@@ -40,7 +40,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       <button class="view-tab news-nav-tab" data-view="news">NEWS!<span class="news-nav-dot" aria-hidden="true"></span></button>
       <button class="view-tab" data-view="roadmap">Roadmap</button>
     </nav>
-    <button class="sync-state" id="syncReload" title="Recharger depuis Supabase" hidden><span></span><b id="syncText">Connexion à la base…</b></button>
+    <button class="sync-state" id="syncReload" title="Recharger depuis Supabase" hidden><span></span><b id="syncText" aria-live="polite">Connexion à la base…</b></button>
   </header>
   <section class="workspace">
     <div id="communesView">
@@ -141,10 +141,13 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         <header class="news-panel-heading">
           <div><p class="eyebrow">Radar communal · 2.0.1</p><h2>Les signaux du territoire</h2></div>
           <div class="news-radar-actions">
-            <div class="news-radar-state"><span></span><b>Veille de l'IA d'Axel</b><small>Sélection humaine · consommation minimale</small></div>
-            <button class="news-refresh-button" id="newsManualRefresh" type="button">
-              <span aria-hidden="true">↻</span><b>MÀJ avec ChatGPT</b><small id="newsRefreshStatus">Prompt de veille prêt à copier</small>
-            </button>
+            <div class="news-radar-state"><span></span><b>Veille de l'IA d'Axel</b><small>Sélection éditoriale · veille sobre</small></div>
+            <div class="news-refresh-stack">
+              <button class="news-refresh-button" id="newsManualRefresh" type="button">
+                <span aria-hidden="true">↻</span><b>MÀJ avec ChatGPT</b><small id="newsRefreshStatus" aria-live="polite">Prompt de veille prêt à copier</small>
+              </button>
+              <small class="news-energy-note">≈ 0,1–1 recharge d’iPhone par veille · ordre de grandeur</small>
+            </div>
           </div>
         </header>
         <div class="news-kpis" aria-label="Synthèse du Radar">
