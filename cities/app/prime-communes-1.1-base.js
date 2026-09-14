@@ -443,6 +443,5 @@
   const footerVersion = document.querySelector('.footer-meta span:first-child');
   if (footerVersion) footerVersion.textContent = 'Prime Communes · version 2.0.1';
 
-  if (all.length) restoreFromUrl();
-  else render();
+  restoreFromUrl();
 })();
