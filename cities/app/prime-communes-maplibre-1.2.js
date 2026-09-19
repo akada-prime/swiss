@@ -463,6 +463,10 @@
     return boundsFromBox(geometry?.meta?.viewBox || [2480000, -1305000, 360000, 260000]);
   }
 
+  function romandieBounds() {
+    return [[5.78, 45.72], [7.72, 47.32]];
+  }
+
   function countryBounds() {
     return boundsFromFeatures(cantonGeoJSON?.features) || swissBounds();
   }
@@ -490,7 +494,7 @@
   function fitCountryScope() {
     if (!map || !geometry) return;
     const mobile = window.matchMedia('(max-width:680px)').matches;
-    map.fitBounds(countryBounds(), { padding: mobile ? 10 : 18, duration: 380 });
+    map.fitBounds(mobile ? romandieBounds() : countryBounds(), { padding: mobile ? 12 : 18, duration: 380 });
   }
 
   function addLayers() {

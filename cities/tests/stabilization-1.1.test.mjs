@@ -14,6 +14,8 @@ test('1.1 state bridge keeps the minimal software view as the real default state
 
 test('software columns are controlled by one semantic class', async () => {
   const css = await read('app/prime-communes-1.1.5.css');
+  assert.match(css, /\.table-wrap\.logiciels-hidden \.ecosystem-start/);
+  assert.match(css, /\.table-wrap\.logiciels-hidden \.metier-cell/);
   assert.match(css, /\.table-wrap\.logiciels-hidden \.erp-cell/);
   assert.match(css, /\.table-wrap\.logiciels-hidden \.modules-cell/);
   assert.match(css, /\.table-wrap\.logiciels-hidden \.hosting-cell/);
@@ -40,6 +42,25 @@ test('mobile peer filters remain a strict two-column grid', async () => {
   for (const id of ['primeOnly', 'eadminOnly', 'districtsToggle', 'logicielsToggle']) {
     assert.match(css, new RegExp(`#${id}`));
   }
+});
+
+test('Territoire keeps language and district controls available but collapsed by default', async () => {
+  const html = await read('index.html');
+  const bridge = await read('app/prime-communes-1.1-base.js');
+  assert.match(html, /id="territoryFilters"[^>]*hidden/);
+  assert.match(html, /id="districtsToggle"[^>]*>Territoire<\/button>/);
+  assert.match(html, /data-market="Welsch"/);
+  assert.match(html, /data-market="Uf Tüütsch"/);
+  assert.match(html, /data-market="Ticino"/);
+  assert.match(bridge, /decorateTerritoryControls/);
+  assert.match(bridge, /validMarkets\.has\(params\.get\('market'\)\)/);
+});
+
+test('Systèmes and À surveiller use proper mobile buttons', async () => {
+  const bridge = await read('app/prime-communes-1.1-base.js');
+  const css = await read('app/prime-communes-1.1.7-mobile.css');
+  assert.match(bridge, /button\.textContent = 'Systèmes'/);
+  assert.match(css, /#logicielsToggle,[\s\S]*#issuesOnly\{/);
 });
 
 test('Natel header keeps all views and commune refresh reachable', async () => {
@@ -92,7 +113,8 @@ test('roadmap records stabilization and moves audit to technical 2.5', async () 
   assert.match(html, /Stabilisation 1\.1/);
   assert.match(html, /<span class="roadmap-version">2\.5<\/span>/);
   assert.match(html, /Audit trail et temporalité/);
-  assert.doesNotMatch(html, /<span class="roadmap-version">1\.5<\/span>/);
+  assert.match(html, /<span class="roadmap-version">1\.5<\/span>/);
+  assert.match(html, /Mettre en perspective/);
   assert.doesNotMatch(js, /items15|stage15/);
 });
 
@@ -141,7 +163,7 @@ test('current site loads one canonical runtime per view and no SVG map runtime',
   assert.match(html, /id="roadmapView"/);
 });
 
-test('Carte 1.2 is MapLibre-only, fits all Switzerland and uses the official national border', async () => {
+test('Carte 1.2 keeps Switzerland on desktop, opens Romandie on Natel and uses the official national border', async () => {
   const js = await read('app/prime-communes-maplibre-1.2.js');
   const css = await read('app/prime-communes-maplibre-1.2.css');
   assert.match(js, /MAPLIBRE_VERSION = '6\.7\.0'/);
@@ -170,7 +192,8 @@ test('Carte 1.2 is MapLibre-only, fits all Switzerland and uses the official nat
   assert.doesNotMatch(js, /buildCountryBorderGeoJSON/);
   assert.match(js, /map\.setMaxBounds\(bounds\)/);
   assert.match(js, /Math\.min\(zoomX, zoomY\)/);
-  assert.match(js, /map\.fitBounds\(countryBounds\(\)/);
+  assert.match(js, /function romandieBounds\(\)/);
+  assert.match(js, /mobile \? romandieBounds\(\) : countryBounds\(\)/);
   assert.match(js, /renderWorldCopies: false/);
   assert.match(js, /closeButton: false/);
   assert.match(js, /RASTER_URL = 'public\/swiss-base\.webp'/);

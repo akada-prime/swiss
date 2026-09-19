@@ -35,11 +35,23 @@ interprétation.
 - Stabilisation de la base Delivery, permissions resserrées et point de
   restauration GitHub.
 
-La 1.1 décrit l'état courant. Elle n'historise pas encore les changements.
+La 1.1 décrit le socle de données stabilisé. Elle n'historise pas encore les changements.
 
-## 2.0 — NEWS! · Faire parler les communes
+## 1.5 — Mettre en perspective · terminé
 
-### 2.0.1 — Radar communal · première version en cours
+- Carte et statistiques ont transformé le référentiel en lecture exploitable du marché.
+- Périmètres Suisse, Romandie, cantons, districts et marchés linguistiques.
+- Vue minimale par défaut, avec deux lectures complémentaires à la demande :
+  **Territoire** pour la langue et le district ; **Systèmes** pour l'écosystème IT.
+- Carte Natel centrée sur la Suisse romande tout en conservant le contexte suisse.
+- Liens partageables, filtres et export cohérents avec ces deux niveaux de lecture.
+
+Cette étape fonctionnelle est distincte de l'ancienne phase technique 1.5, dont
+tous les éléments restent conservés en 2.5.
+
+## 2.0 — NEWS! · Faire parler les communes · phase active
+
+### 2.0.1 — Radar communal · première version livrée, enrichissement actif
 
 - Nouvel onglet **NEWS!**.
 - Flux de signaux forts, éléments à surveiller et informations de marché.

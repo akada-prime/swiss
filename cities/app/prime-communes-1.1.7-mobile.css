@@ -22,7 +22,8 @@
   .filters #primeOnly,
   .filters #eadminOnly,
   .filters #districtsToggle,
-  .filters #logicielsToggle{
+  .filters #logicielsToggle,
+  .filters #issuesOnly{
     display:flex!important;
     align-items:center!important;
     justify-content:center!important;
@@ -111,7 +112,7 @@
 
   /* Same row identity as desktop; mobile only controls available width. */
   .table-wrap table{min-width:800px!important}
-  .table-wrap.logiciels-hidden table{min-width:770px!important}
+  .table-wrap.logiciels-hidden table{min-width:560px!important}
   .table-wrap .commune-heading,
   .table-wrap .commune-cell{
     width:214px!important;

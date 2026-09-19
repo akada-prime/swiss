@@ -68,8 +68,8 @@
     button.className = 'filter-toggle';
     button.id = 'logicielsToggle';
     button.type = 'button';
-    button.textContent = 'Logiciels';
-    button.title = 'Afficher / masquer les colonnes ERP et Modules';
+    button.textContent = 'Systèmes';
+    button.title = 'Afficher / masquer les informations IT';
     districts.insertAdjacentElement('afterend', button);
     button.addEventListener('click', () => {
       logicielsMode = !logicielsMode;
@@ -86,17 +86,30 @@
     const headings = [...wrap.querySelectorAll('thead th')];
     headings.forEach(th => {
       const label = th.textContent.trim().toLocaleLowerCase('fr-CH');
+      if (label === 'intégrateur') th.dataset.softwareColumn = 'integrator';
+      if (label === 'métier') th.dataset.softwareColumn = 'metier';
       if (label === 'erp') th.dataset.softwareColumn = 'erp';
       if (label === 'modules') th.dataset.softwareColumn = 'modules';
     });
     byId('logicielsToggle')?.classList.toggle('on', logicielsMode);
   }
 
-  // The original render rebuilds the table. Re-decorate after every render.
+  function decorateTerritoryControls() {
+    const controls = document.querySelector('.market-toggles');
+    if (controls) controls.hidden = !districtsMode;
+    const district = byId('districtFilter');
+    if (district) district.hidden = !(districtsMode && byId('canton')?.value !== 'Tous');
+    const button = byId('districtsToggle');
+    button?.classList.toggle('on', districtsMode);
+    button?.setAttribute('aria-expanded', String(districtsMode));
+  }
+
+  // The original render rebuilds the table. Re-decorate both optional readings.
   const baseRender = render;
-  render = function renderWithSoftwareColumns() {
+  render = function renderWithOptionalColumns() {
     baseRender();
     decorateSoftwareColumns();
+    decorateTerritoryControls();
   };
 
   const uniqueSorted = values => [...new Set(values.filter(Boolean))]
@@ -278,6 +291,7 @@
     if (byId('ofsArrow')) byId('ofsArrow').textContent = ofsMode ? '←' : '→';
     document.querySelectorAll('.market-toggle').forEach(button => button.classList.toggle('on', button.dataset.market === marketOnly));
     decorateSoftwareColumns();
+    decorateTerritoryControls();
   }
 
   function restoreStatsUi() {
@@ -312,15 +326,15 @@
     const params = new URLSearchParams(window.location.search);
 
     if (byId('query')) byId('query').value = params.get('q') || '';
+    marketOnly = validMarkets.has(params.get('market')) ? params.get('market') : '';
+    districtsMode = truthyParam(params.get('districts')) || Boolean(marketOnly) || Boolean(params.get('district'));
     setSelectIfAvailable('canton', params.get('canton'), 'Tous');
     updateDistrictOptions();
     setSelectIfAvailable('district', params.get('district'), '');
     setSelectIfAvailable('solution', params.get('solution'), 'Tous');
 
-    marketOnly = validMarkets.has(params.get('market')) ? params.get('market') : '';
     primeOnly = truthyParam(params.get('prime'));
     eadminOnly = truthyParam(params.get('eadmin'));
-    districtsMode = truthyParam(params.get('districts'));
     logicielsMode = truthyParam(params.get('logiciels'));
     ofsMode = truthyParam(params.get('ofs'));
     issuesOnly = ofsMode && truthyParam(params.get('issues'));

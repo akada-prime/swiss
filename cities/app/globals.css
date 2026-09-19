@@ -155,7 +155,7 @@
 .roadmap-intro-copy p{margin:0}
 .roadmap-intro-copy .eyebrow{margin-bottom:8px}
 .roadmap-intro-copy strong{display:block;margin-top:12px;color:#dce5ef;font-size:14px}
-.roadmap-journey{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:0 0 18px;padding:0;list-style:none}
+.roadmap-journey{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:0 0 18px;padding:0;list-style:none}
 .roadmap-journey li{position:relative;min-width:0;padding:17px 16px 16px;border:1px solid rgba(255,255,255,.075);border-radius:16px;background:rgba(255,255,255,.025)}
 .roadmap-journey li:not(:last-child):after{content:"→";position:absolute;z-index:2;top:50%;right:-10px;display:grid;place-items:center;width:12px;height:18px;color:#556477;background:#07111d;font-size:13px;transform:translateY(-50%)}
 .roadmap-journey span,.roadmap-journey strong{display:block}
