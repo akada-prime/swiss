@@ -69,7 +69,7 @@
     button.id = 'logicielsToggle';
     button.type = 'button';
     button.textContent = 'Systèmes';
-    button.title = 'Afficher / masquer les informations IT';
+    button.title = 'Afficher / masquer ERP, modules et hébergeur';
     districts.insertAdjacentElement('afterend', button);
     button.addEventListener('click', () => {
       logicielsMode = !logicielsMode;
@@ -86,8 +86,6 @@
     const headings = [...wrap.querySelectorAll('thead th')];
     headings.forEach(th => {
       const label = th.textContent.trim().toLocaleLowerCase('fr-CH');
-      if (label === 'intégrateur') th.dataset.softwareColumn = 'integrator';
-      if (label === 'métier') th.dataset.softwareColumn = 'metier';
       if (label === 'erp') th.dataset.softwareColumn = 'erp';
       if (label === 'modules') th.dataset.softwareColumn = 'modules';
     });

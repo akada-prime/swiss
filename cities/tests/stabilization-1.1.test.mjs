@@ -14,8 +14,8 @@ test('1.1 state bridge keeps the minimal software view as the real default state
 
 test('software columns are controlled by one semantic class', async () => {
   const css = await read('app/prime-communes-1.1.5.css');
-  assert.match(css, /\.table-wrap\.logiciels-hidden \.ecosystem-start/);
-  assert.match(css, /\.table-wrap\.logiciels-hidden \.metier-cell/);
+  assert.doesNotMatch(css, /\.table-wrap\.logiciels-hidden \.ecosystem-start/);
+  assert.doesNotMatch(css, /\.table-wrap\.logiciels-hidden \.metier-cell/);
   assert.match(css, /\.table-wrap\.logiciels-hidden \.erp-cell/);
   assert.match(css, /\.table-wrap\.logiciels-hidden \.modules-cell/);
   assert.match(css, /\.table-wrap\.logiciels-hidden \.hosting-cell/);
@@ -56,11 +56,15 @@ test('Territoire keeps language and district controls available but collapsed by
   assert.match(bridge, /validMarkets\.has\(params\.get\('market'\)\)/);
 });
 
-test('Systèmes and À surveiller use proper mobile buttons', async () => {
+test('Systèmes keeps Intégrateur and Métier visible while extended details stay optional', async () => {
   const bridge = await read('app/prime-communes-1.1-base.js');
-  const css = await read('app/prime-communes-1.1.7-mobile.css');
+  const desktop = await read('app/prime-communes-1.1.5.css');
+  const mobile = await read('app/prime-communes-1.1.7-mobile.css');
   assert.match(bridge, /button\.textContent = 'Systèmes'/);
-  assert.match(css, /#logicielsToggle,[\s\S]*#issuesOnly\{/);
+  assert.match(bridge, /ERP, modules et hébergeur/);
+  assert.doesNotMatch(desktop, /logiciels-hidden \.ecosystem-start/);
+  assert.doesNotMatch(desktop, /logiciels-hidden \.metier-cell/);
+  assert.match(mobile, /#logicielsToggle,[\s\S]*#issuesOnly\{/);
 });
 
 test('Natel header keeps all views and commune refresh reachable', async () => {
