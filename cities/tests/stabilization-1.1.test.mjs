@@ -132,6 +132,14 @@ test('Roadmap completed stages keep their colors, checks and one-line status bad
   assert.match(css, /\.roadmap-done\{[^}]*color:#7bddb7/);
 });
 
+test('legacy 1.1 stabilization cannot grey completed roadmap badges or journey colors', async () => {
+  const legacy = await read('app/prime-communes-1.1.6.css');
+  assert.match(legacy, /completed-11 \.roadmap-done\{[\s\S]*color:#7bddb7!important/);
+  assert.doesNotMatch(legacy, /completed-11 \.roadmap-done\{[\s\S]*?color:#9da8b4!important/);
+  assert.doesNotMatch(legacy, /journey-done strong\{color:#98a3b0!important/);
+  assert.doesNotMatch(legacy, /journey-done span\{color:#6e7b8e!important/);
+});
+
 test('Roadmap infrastructure is a real semantic item, never CSS pseudo-content', async () => {
   const html = await read('index.html');
   const css = await read('app/prime-communes-1.1.5.css');
