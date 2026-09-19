@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "version": "2.0.2-v1",
+    "updatedOn": "2026-09-19",
+    "mode": "editorial",
+    "notice": "Faits publics, mémoire Prime et lecture d’Axel restent trois couches distinctes."
+  },
+  "stories": [
+    {
+      "id": "avenches-le-noirmont-prime",
+      "bfsId": 5451,
+      "municipality": "Avenches",
+      "canton": "VD",
+      "counterpart": "Le Noirmont",
+      "counterpartCanton": "JU",
+      "kicker": "Une commune, une histoire · récit n° 1",
+      "title": "Avenches + Le Noirmont = Pr❤️me",
+      "standfirst": "Une ancienne capitale romaine, le centre national du cheval et une entreprise née dans les Franches-Montagnes : parfois, un projet informatique raconte beaucoup plus qu’un logiciel.",
+      "facts": [
+        {
+          "dateLabel": "Il y a plus de 2’000 ans",
+          "title": "Aventicum, capitale du territoire helvète",
+          "text": "Le Site et Musée romains d’Avenches présente Aventicum comme la capitale romaine du territoire helvète il y a plus de deux millénaires.",
+          "sourceId": "aventicum"
+        },
+        {
+          "dateLabel": "Depuis 1898",
+          "title": "Avenches devient un lieu national du cheval",
+          "text": "Le Haras national suisse a été fondé à Avenches en 1898. Agroscope le décrit aujourd’hui comme le centre de compétences de la Confédération pour les équidés.",
+          "sourceId": "haras"
+        },
+        {
+          "dateLabel": "Aujourd’hui",
+          "title": "Le Franches-Montagnes relie les deux territoires",
+          "text": "Le Haras a notamment pour tâche légale de préserver la diversité génétique de la race des Franches-Montagnes, en collaboration avec sa fédération suisse, elle aussi établie à Avenches.",
+          "sourceId": "haras"
+        }
+      ],
+      "primeFact": {
+        "label": "Ce que Prime sait",
+        "text": "Avenches est référencée comme cliente innosolvcity accompagnée par Prime. Le projet raconté par Prime réunit aussi tebicom pour la GED M-Files et AZ Informatique pour l’hébergement.",
+        "sourceLabel": "Base Prime Communes + publication Prime validée par Axel",
+        "confidence": "confirmé en interne"
+      },
+      "axelReading": {
+        "label": "La lecture d’Axel",
+        "text": "Avenches conserve la mémoire de l’Helvétie et veille sur le cheval Franches-Montagnes. Prime est née au Noirmont, au cœur du territoire qui a donné son nom à ce cheval. Le lien n’est donc pas un artifice publicitaire : le patrimoine d’Avenches et les racines de Prime se rencontrent réellement dans ce projet."
+      },
+      "angles": [
+        {
+          "id": "territoires",
+          "label": "Deux territoires",
+          "title": "D’Aventicum aux Franches-Montagnes",
+          "text": "Deux territoires que tout semble séparer se retrouvent autour d’un patrimoine suisse vivant, puis autour d’un même projet communal."
+        },
+        {
+          "id": "metiers",
+          "label": "À chacun son métier",
+          "title": "Trois expertises, une meilleure solution",
+          "text": "Prime, tebicom et AZ ne cherchent pas à tout faire : logiciel communal, GED et hébergement s’assemblent autour de la commune, chacun dans son métier."
+        },
+        {
+          "id": "sens",
+          "label": "Le sens du métier",
+          "title": "Un logiciel peut aussi transmettre une histoire",
+          "text": "La technologie devient intéressante lorsqu’elle relie des personnes, des savoir-faire et des territoires au lieu de simplement remplacer un outil."
+        }
+      ],
+      "deliverables": [
+        "Fiche communale",
+        "Publication LinkedIn",
+        "Introduction d’offre",
+        "Présentation client"
+      ],
+      "sources": [
+        {
+          "id": "aventicum",
+          "type": "Source publique",
+          "label": "État de Vaud · Site et Musée romains d’Avenches",
+          "url": "https://aventicum.org/fr"
+        },
+        {
+          "id": "haras",
+          "type": "Source publique",
+          "label": "Agroscope · Missions du Haras national suisse",
+          "url": "https://www.agroscope.admin.ch/agroscope/fr/home/themes/animaux-rente/cheval/haras-kontakte-besichtigungen/haras-kontakte-besichtigungen-kontakt-ueber-uns-aufgaben.html"
+        },
+        {
+          "id": "prime",
+          "type": "Source interne",
+          "label": "Base Prime Communes et publication Prime validée par Axel",
+          "url": ""
+        }
+      ]
+    }
+  ]
+}

@@ -63,7 +63,7 @@ tous les éléments restent conservés en 2.5.
 - À terme, croisement des données Prime avec le Web, les médias, les budgets,
   procès-verbaux, offres d'emploi, décisions et publications publiques.
 
-### 2.0.2 — Une commune, une histoire
+### 2.0.2 — Une commune, une histoire · première version livrée
 
 - Identité locale, histoire et faits distinctifs de la commune.
 - Lien humain, territorial ou historique avec Prime.
@@ -75,6 +75,15 @@ tous les éléments restent conservés en 2.5.
 
 Le récit Avenches — Aventicum, Haras national, Franches-Montagnes, Le Noirmont
 et Prime — constitue le modèle éditorial de référence.
+
+Première livraison :
+
+- récit affiché directement dans **NEWS!**, sous le Radar communal ;
+- chronologie fondée sur les sources officielles du Site et Musée romains
+  d'Avenches et d'Agroscope ;
+- fait Prime, sources publiques et lecture d'Axel visuellement séparés ;
+- trois angles éditoriaux sélectionnables et copiables ;
+- accès à la fiche communale d'Avenches et interface Natel dédiée.
 
 ### 2.0.3 — Actualités interprétées
 

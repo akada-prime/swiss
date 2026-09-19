@@ -169,6 +169,13 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         <div class="news-feed" id="newsFeed"><p class="news-loading">Lecture des premiers signaux…</p></div>
         <footer class="news-method"><strong>Règle éditoriale</strong><span>Un fait public vérifiable, séparé de la lecture de l'IA d'Axel. Aucun projet Prime déjà gagné ou livré.</span><strong>Plus tard en 2.5</strong><span>Le robot pourra détecter des sources ; la sélection, la vérification et la publication resteront sobres et maîtrisées.</span></footer>
       </section>
+      <section class="story-panel" aria-label="Une commune, une histoire">
+        <header class="story-panel-heading">
+          <div><p class="eyebrow">Une commune, une histoire · 2.0.2</p><h2>Quand un projet raconte le territoire</h2></div>
+          <p>Des faits vérifiés, la mémoire de Prime et une lecture humaine — jamais confondus.</p>
+        </header>
+        <div class="story-feed" id="newsStoryFeed"><p class="news-loading">Ouverture du premier récit…</p></div>
+      </section>
     </section>
     <section class="roadmap-view" id="roadmapView" hidden>
       <div class="roadmap-intro">
@@ -213,7 +220,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
           <header><span class="roadmap-version">2.0</span><div><p>NEWS</p><h2>Faire parler</h2></div></header>
           <div class="roadmap-items">
             <div><strong>NEWS · Radar communal</strong><span>Détecter et interpréter les actualités, décisions et indices qui annoncent une transformation communale.</span><small>2.0.1 · première version livrée · enrichissement actif</small></div>
-            <div><strong>Une commune, une histoire</strong><span>Raconter son identité, son histoire avec Prime et les liens humains ou territoriaux qui donnent du sens à notre métier.</span><small>2.0.2 · Avenches et le Franches-Montagnes comme récit de référence</small></div>
+            <div><strong>Une commune, une histoire</strong><span>Raconter son identité, son histoire avec Prime et les liens humains ou territoriaux qui donnent du sens à notre métier.</span><small>2.0.2 · premier récit Avenches–Le Noirmont livré</small></div>
             <div><strong>Actualités interprétées</strong><span>Expliquer ce qu'un fait change, quelles communes sont concernées et distinguer fait, déduction et lecture Prime.</span><small>2.0.3 · sources visibles et validation humaine</small></div>
             <div><strong>Qualification légère et forecast</strong><span>Responsable, prochaine action, probabilité, échéance et valeur estimée, reliés aux signaux qui les justifient.</span><small>Ancien point Leads et forecast conservé · sans recréer un CRM</small></div>
           </div>
@@ -247,7 +254,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   </section>
   <footer class="site-footer" aria-label="Informations légales et techniques">
     <div class="footer-meta">
-      <span>Prime Communes · version 2.0.1</span>
+      <span>Prime Communes · version 2.0.2</span>
       <span class="footer-confidential">Données confidentielles</span>
     </div>
     <div class="footer-legal">
@@ -399,6 +406,6 @@ $('statsScope').addEventListener('change',renderStats);document.querySelectorAll
 $('query').addEventListener('input',render);$('solution').addEventListener('change',render);$('district').addEventListener('change',render);$('canton').addEventListener('change',()=>{$('district').value='';updateDistrictOptions();render()});$('primeOnly').onclick=()=>{primeOnly=!primeOnly;$('primeOnly').classList.toggle('on',primeOnly);render()};$('eadminOnly').onclick=()=>{eadminOnly=!eadminOnly;$('eadminOnly').classList.toggle('on',eadminOnly);$('eadminOnly').classList.toggle('eadmin-on',eadminOnly);render()};$('districtsToggle').onclick=()=>{districtsMode=!districtsMode;if(!districtsMode){marketOnly='';$('district').value='';document.querySelectorAll('.market-toggle').forEach(x=>x.classList.remove('on'))}updateDistrictOptions();$('districtsToggle').classList.toggle('on',districtsMode);$('districtsToggle').setAttribute('aria-expanded',String(districtsMode));render()};document.querySelectorAll('.market-toggle').forEach(button=>button.onclick=()=>{marketOnly=marketOnly===button.dataset.market?'':button.dataset.market;document.querySelectorAll('.market-toggle').forEach(x=>x.classList.toggle('on',x.dataset.market===marketOnly));render()});$('issuesOnly').onclick=()=>{issuesOnly=!issuesOnly;$('issuesOnly').classList.toggle('on',issuesOnly);$('issuesOnly').classList.toggle('warning',issuesOnly);render()};$('issuesCard').onclick=()=>{ofsMode=!ofsMode; if(!ofsMode)issuesOnly=false; $('issuesOnly').hidden=!ofsMode; $('issuesCard').classList.toggle('ofs-active',ofsMode); $('ofsLabel').textContent=ofsMode?$('issues').textContent:'Ouvrir'; $('ofsCopy').textContent=ofsMode?'Revenir à la vue de marché':'Afficher les statuts Delimo'; $('ofsArrow').textContent=ofsMode?'←':'→'; render()};$('reset').onclick=()=>{$('query').value='';$('canton').value='Tous';$('district').value='';$('solution').value='Tous';primeOnly=eadminOnly=issuesOnly=districtsMode=false;marketOnly='';updateDistrictOptions();document.querySelectorAll('.filter-toggle').forEach(x=>x.classList.remove('on','warning'));render()};$('syncReload').onclick=()=>loadData(true);$('exportBtn').onclick=()=>{const rows=filtered(),withTerritory=districtsMode,header=['Nom','Client Prime','Canton',...(withTerritory?['Marché','District']:[]),'Population','Intégrateur','Métier','ERP','Modules'],lines=[header.join('\t'),...rows.map(x=>[x.name,x.isPrime?'Oui':'Non',x.canton,...(withTerritory?[x.market,x.district]:[]),x.expectedPopulation,x.integrator,x.software,x.erp,(x.products||[]).join(' | ')].join('\t'))];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/tab-separated-values'}));a.download='communes.tsv';a.click()};
 document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('newsView').hidden=view!=='news';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
 </script>
-<script src="app/prime-communes-1.1.js?v=10"></script>
+<script src="app/prime-communes-1.1.js?v=11"></script>
 </body>
 </html>

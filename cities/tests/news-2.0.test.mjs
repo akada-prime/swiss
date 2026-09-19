@@ -14,7 +14,35 @@ test('NEWS is a first-class deep-linked view', async () => {
   assert.match(bridge, /byId\('newsView'\)\.hidden = next !== 'news'/);
   assert.match(loader, /prime-communes-news-2\.0\.js/);
   assert.match(loader, /prime-communes-news-2\.0\.css/);
-  assert.match(html, /Prime Communes · version 2\.0\.1/);
+  assert.match(html, /Prime Communes · version 2\.0\.2/);
+});
+
+test('2.0.2 publishes a sourced story without mixing facts and interpretation', async () => {
+  const html = await read('index.html');
+  const runtime = await read('app/prime-communes-news-2.0.js');
+  const css = await read('app/prime-communes-news-2.0.css');
+  const data = JSON.parse(await read('public/data/news-stories-v1.json'));
+  assert.equal(data.meta.version, '2.0.2-v1');
+  assert.equal(data.meta.mode, 'editorial');
+  assert.match(html, /Une commune, une histoire · 2\.0\.2/);
+  assert.match(html, /id="newsStoryFeed"/);
+  assert.match(runtime, /STORY_URL = 'public\/data\/news-stories-v1\.json/);
+  assert.match(runtime, /data-story-angle/);
+  assert.match(runtime, /Angle copié ✓/);
+  assert.match(css, /\.story-reading-grid/);
+  assert.match(css, /@media\(max-width:680px\).*\.story-angle-tabs\{grid-template-columns:1fr\}/s);
+  const story = data.stories.find(item => item.id === 'avenches-le-noirmont-prime');
+  assert.equal(story?.bfsId, 5451);
+  assert.equal(story?.municipality, 'Avenches');
+  assert.equal(story?.counterpart, 'Le Noirmont');
+  assert.ok(story?.facts.length >= 3);
+  assert.ok(story?.angles.length >= 3);
+  assert.ok(story?.primeFact?.text);
+  assert.ok(story?.axelReading?.text);
+  const publicSources = story?.sources.filter(source => source.type === 'Source publique') || [];
+  assert.ok(publicSources.length >= 2);
+  assert.ok(publicSources.every(source => source.url.startsWith('https://')));
+  assert.ok(story?.facts.every(fact => publicSources.some(source => source.id === fact.sourceId)));
 });
 
 test('Radar data distinguishes level, provenance, confidence and municipality', async () => {
