@@ -161,10 +161,13 @@
 .roadmap-journey span,.roadmap-journey strong{display:block}
 .roadmap-journey span{margin-bottom:4px;color:#6e7b8e;font-size:11px;font-weight:800;letter-spacing:.08em}
 .roadmap-journey strong{overflow:hidden;color:#dce5ee;font-size:16px;letter-spacing:-.02em;text-overflow:ellipsis}
-.roadmap-journey .journey-done{opacity:.62;background:rgba(135,145,158,.06)}
-.roadmap-journey .journey-done strong{color:#98a3b0}
-.roadmap-journey .journey-know{border-color:rgba(42,148,222,.25);background:rgba(15,112,181,.11)}
+.roadmap-journey .journey-done{background:rgba(135,145,158,.06)}
+.roadmap-journey .journey-done strong{color:#b7c0ca}
+.roadmap-journey .journey-done::before{content:"✓";position:absolute;top:11px;right:12px;display:grid;place-items:center;width:20px;height:20px;border:1px solid rgba(93,211,166,.28);border-radius:50%;color:#6ed8ad;background:rgba(34,145,104,.14);font-size:11px;font-style:normal;font-weight:900;line-height:1}
+.roadmap-journey .journey-know{border-color:rgba(42,148,222,.34);background:rgba(15,112,181,.15)}
 .roadmap-journey .journey-know span,.roadmap-journey .journey-know strong{color:#72c4fb}
+.roadmap-journey .journey-bridge{border-color:rgba(54,184,154,.32);background:rgba(31,135,120,.13)}
+.roadmap-journey .journey-bridge span,.roadmap-journey .journey-bridge strong{color:#66d3bb}
 .roadmap-journey .journey-see{border-color:rgba(126,91,255,.24);background:rgba(100,74,207,.1)}
 .roadmap-journey .journey-see span,.roadmap-journey .journey-see strong{color:#a18bff}
 .roadmap-journey .journey-understand{border-color:rgba(54,184,154,.23);background:rgba(31,135,120,.09)}
@@ -181,6 +184,7 @@
 .roadmap-stage.history-stage:before{background:linear-gradient(90deg,#36b89a,#1780ce)}
 .roadmap-stage.ai-stage:before{background:linear-gradient(90deg,#ff5a32,#8d55ff)}
 .roadmap-stage>header{display:flex;align-items:center;gap:15px}
+.roadmap-stage>header>div{flex:1 1 auto;min-width:0}
 .roadmap-version{display:grid;place-items:center;flex:0 0 54px;height:54px;border:1px solid rgba(91,181,241,.22);border-radius:16px;color:#82caff;background:rgba(11,112,181,.16);font-size:16px;font-weight:760}
 .roadmap-stage header p{margin:0 0 4px;color:#6f7e91;font-size:10px;font-weight:750;letter-spacing:.14em;text-transform:uppercase}
 .roadmap-stage h2{margin:0;font-size:28px;letter-spacing:-.035em}
@@ -194,7 +198,7 @@
 .completed-stage:before{background:#758294;opacity:.45}
 .completed-stage .roadmap-version{border-color:rgba(166,176,188,.18);color:#a5afba;background:rgba(130,140,152,.09)}
 .completed-stage h2{color:#b7c0ca}
-.roadmap-done{margin-left:auto;padding:7px 10px;border:1px solid rgba(156,169,182,.18);border-radius:999px;color:#9da8b4;background:rgba(140,151,163,.07);font-size:9px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+.roadmap-done{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;margin-left:auto;padding:7px 10px;border:1px solid rgba(72,202,151,.24);border-radius:999px;color:#7bddb7;background:rgba(34,145,104,.11);font-size:9px;font-weight:800;line-height:1;letter-spacing:.11em;text-transform:uppercase;white-space:nowrap}
 .completed-items{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
 .completed-items span{padding:8px 11px;border:1px solid rgba(255,255,255,.055);border-radius:999px;color:#8995a2;background:rgba(3,7,13,.2);font-size:11px;font-weight:600}
 .roadmap-energy-note{margin:16px 2px 0;color:#5f6d80;font-size:10px;line-height:1.5}

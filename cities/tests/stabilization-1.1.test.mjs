@@ -122,6 +122,16 @@ test('roadmap records stabilization and moves audit to technical 2.5', async () 
   assert.doesNotMatch(js, /items15|stage15/);
 });
 
+test('Roadmap completed stages keep their colors, checks and one-line status badges', async () => {
+  const css = await read('app/globals.css');
+  assert.doesNotMatch(css, /journey-done\{opacity:/);
+  assert.match(css, /journey-done::before\{content:"✓"/);
+  assert.match(css, /journey-bridge\{border-color:/);
+  assert.match(css, /\.roadmap-done\{[^}]*display:inline-flex/);
+  assert.match(css, /\.roadmap-done\{[^}]*white-space:nowrap/);
+  assert.match(css, /\.roadmap-done\{[^}]*color:#7bddb7/);
+});
+
 test('Roadmap infrastructure is a real semantic item, never CSS pseudo-content', async () => {
   const html = await read('index.html');
   const css = await read('app/prime-communes-1.1.5.css');
