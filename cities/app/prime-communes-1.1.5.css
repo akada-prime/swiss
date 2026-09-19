@@ -265,30 +265,6 @@
   line-height:1.4;
 }
 
-/* Roadmap 1.1 completed state. */
-.roadmap-stage.completed-11,
-.roadmap-stage.completed-15{
-  border-color:rgba(83,191,150,.17);
-  background:linear-gradient(145deg,rgba(36,142,105,.09),rgba(255,255,255,.018));
-  opacity:.82;
-}
-.roadmap-stage.completed-11:before,
-.roadmap-stage.completed-15:before{
-  background:linear-gradient(90deg,#35ba91,#218ddc);
-}
-.roadmap-stage.completed-11 .roadmap-version,
-.roadmap-stage.completed-15 .roadmap-version{
-  border-color:rgba(72,202,151,.22);
-  color:#70d7ae;
-  background:rgba(34,145,104,.12);
-}
-.roadmap-stage.completed-11 .roadmap-done,
-.roadmap-stage.completed-15 .roadmap-done{
-  color:#7bddb7;
-  border-color:rgba(72,202,151,.22);
-  background:rgba(34,145,104,.10);
-}
-
 @media(max-width:680px){
   .drawer-edit-grid{grid-template-columns:1fr}
   .drawer-edit-grid .full-width{grid-column:auto}

@@ -61,45 +61,8 @@
   .filters #logicielsToggle{grid-column:1/-1}
 }
 
-/* Completed roadmap: 1.0 + 1.1 are both visually done. */
-.roadmap-journey li:first-child strong::after{content:' ✓'}
-.roadmap-grid>.completed-11{
-  grid-column:1/-1;
-  opacity:.72!important;
-  border-color:rgba(153,164,178,.11)!important;
-  background:linear-gradient(145deg,rgba(139,149,162,.065),rgba(139,149,162,.018))!important;
-  box-shadow:none!important;
-}
-.roadmap-grid>.completed-11:before{
-  background:#758294!important;
-  opacity:.45!important;
-}
-.roadmap-grid>.completed-11 .roadmap-version{
-  border-color:rgba(166,176,188,.18)!important;
-  color:#a5afba!important;
-  background:rgba(130,140,152,.09)!important;
-}
-.roadmap-grid>.completed-11 h2{color:#b7c0ca!important}
-.roadmap-grid>.completed-11 .roadmap-done{
-  color:#7bddb7!important;
-  border-color:rgba(72,202,151,.24)!important;
-  background:rgba(34,145,104,.11)!important;
-}
-.roadmap-grid>.completed-11 .roadmap-items{
-  grid-template-columns:repeat(4,minmax(0,1fr));
-}
-.roadmap-grid>.completed-11 .roadmap-items>div{
-  min-width:0;
-}
 /* Stats details remain readable. */
 .territory-comparison span>small,
 .territory-comparison button>small{font-size:11px!important;line-height:1.4}
 .stats-rank-label span{font-size:11px!important}
 .stats-rank>small{font-size:10.5px!important;line-height:1.4}
-
-@media(max-width:1050px){
-  .roadmap-grid>.completed-11 .roadmap-items{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media(max-width:680px){
-  .roadmap-grid>.completed-11 .roadmap-items{grid-template-columns:1fr}
-}

@@ -123,7 +123,7 @@ test('roadmap records stabilization and moves audit to technical 2.5', async () 
 });
 
 test('Roadmap completed stages keep their colors, checks and one-line status badges', async () => {
-  const css = await read('app/globals.css');
+  const css = await read('app/prime-communes-roadmap-2.0.css');
   assert.doesNotMatch(css, /journey-done\{opacity:/);
   assert.match(css, /journey-done::before\{content:"✓"/);
   assert.match(css, /journey-bridge\{border-color:/);
@@ -132,12 +132,15 @@ test('Roadmap completed stages keep their colors, checks and one-line status bad
   assert.match(css, /\.roadmap-done\{[^}]*color:#7bddb7/);
 });
 
-test('legacy 1.1 stabilization cannot grey completed roadmap badges or journey colors', async () => {
-  const legacy = await read('app/prime-communes-1.1.6.css');
-  assert.match(legacy, /completed-11 \.roadmap-done\{[\s\S]*color:#7bddb7!important/);
-  assert.doesNotMatch(legacy, /completed-11 \.roadmap-done\{[\s\S]*?color:#9da8b4!important/);
-  assert.doesNotMatch(legacy, /journey-done strong\{color:#98a3b0!important/);
-  assert.doesNotMatch(legacy, /journey-done span\{color:#6e7b8e!important/);
+test('Roadmap styling is canonical and absent from legacy stabilization layers', async () => {
+  const loader = await read('app/prime-communes-1.1.js');
+  const legacy = `${await read('app/globals.css')}\n${await read('app/prime-communes-1.1.5.css')}\n${await read('app/prime-communes-1.1.6.css')}`;
+  const css = await read('app/prime-communes-roadmap-2.0.css');
+  assert.match(loader, /prime-communes-roadmap-2\.0\.css/);
+  assert.doesNotMatch(legacy, /roadmap-|journey-/);
+  assert.doesNotMatch(css, /!important/);
+  assert.match(css, /\.completed-15\{/);
+  assert.match(css, /\.history-stage\.current\{/);
 });
 
 test('Roadmap infrastructure is a real semantic item, never CSS pseudo-content', async () => {
@@ -194,10 +197,11 @@ test('Carte 1.2 keeps Switzerland on desktop, opens Romandie on Natel and uses t
   assert.match(js, /rasterPreload\.src = RASTER_URL/);
   assert.match(js, /legacyStage\.remove\(\)/);
   assert.match(js, /window\.loadMap = ensureMapLibre/);
-  assert.match(js, /<option value="impact">Empreinte Prime<\/option>/);
-  assert.match(js, /<option value="integrator">Intégrateur<\/option>/);
-  assert.match(js, /<option value="software">Logiciel<\/option>/);
-  assert.doesNotMatch(js, /<option value="product">/);
+  assert.match(js, /data-map-view="impact"[^>]*>Empreinte Prime<\/button>/);
+  assert.match(js, /data-map-view="integrator"[^>]*>Intégrateur<\/button>/);
+  assert.match(js, /data-map-view="software"[^>]*>Logiciel<\/button>/);
+  assert.doesNotMatch(js, /<select id="mapViewFilter"/);
+  assert.match(css, /\.maplibre-view-buttons\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
   assert.doesNotMatch(js, /mapProductFilter/);
   assert.match(js, /mapLibreRomandieRatio/);
   assert.match(js, /mapLibreActiveRatio/);

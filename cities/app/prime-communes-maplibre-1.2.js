@@ -46,7 +46,8 @@
   let clickPopup = null;
   let loadingPromise = null;
   let selectedId = '';
-  let viewSelect = null;
+  let viewButtons = [];
+  let activeView = 'impact';
   let suggestionsBox = null;
   let suggestions = [];
   let suggestionIndex = -1;
@@ -167,26 +168,39 @@
     suggestionsBox.setAttribute('role', 'listbox');
     search.append(suggestionsBox);
 
-    const viewLabel = document.createElement('label');
-    viewLabel.className = 'maplibre-filter maplibre-view-filter';
-    viewLabel.innerHTML = `
+    const viewSwitch = document.createElement('div');
+    viewSwitch.className = 'maplibre-view-switch';
+    viewSwitch.setAttribute('role', 'group');
+    viewSwitch.setAttribute('aria-label', 'Choisir la lecture cartographique');
+    viewSwitch.innerHTML = `
       <span>Affichage</span>
-      <select id="mapViewFilter" aria-label="Choisir la lecture cartographique">
-        <option value="impact">Empreinte Prime</option>
-        <option value="integrator">Intégrateur</option>
-        <option value="software">Logiciel</option>
-      </select>`;
-    toolbar.append(viewLabel);
-    viewSelect = viewLabel.querySelector('select');
+      <div class="maplibre-view-buttons">
+        <button type="button" data-map-view="impact" aria-pressed="true">Empreinte Prime</button>
+        <button type="button" data-map-view="integrator" aria-pressed="false">Intégrateur</button>
+        <button type="button" data-map-view="software" aria-pressed="false">Logiciel</button>
+      </div>`;
+    toolbar.append(viewSwitch);
+    viewButtons = [...viewSwitch.querySelectorAll('[data-map-view]')];
+    setActiveView('impact');
 
     const params = new URLSearchParams(window.location.search);
     query.value = params.get('mq') || query.value || '';
 
     bindSearch();
-    viewSelect.addEventListener('change', () => {
+    viewButtons.forEach(button => button.addEventListener('click', () => {
+      setActiveView(button.dataset.mapView);
       syncViewSelection();
       closeSuggestions();
       syncMapUrl();
+    }));
+  }
+
+  function setActiveView(value) {
+    activeView = ['impact', 'integrator', 'software'].includes(value) ? value : 'impact';
+    viewButtons.forEach(button => {
+      const selected = button.dataset.mapView === activeView;
+      button.classList.toggle('active', selected);
+      button.setAttribute('aria-pressed', String(selected));
     });
   }
 
@@ -197,7 +211,7 @@
     if (mq) params.set('mq', mq); else params.delete('mq');
     params.delete('mapCanton');
     params.delete('mapProduct');
-    const view = viewSelect?.value || 'impact';
+    const view = activeView;
     if (view === 'impact') {
       params.delete('mapPerspective');
       params.delete('mapMode');
@@ -211,13 +225,13 @@
   }
 
   function syncToolbarFromUrl() {
-    if (!all.length || !viewSelect) return;
+    if (!all.length || !viewButtons.length) return;
     const params = new URLSearchParams(window.location.search);
     const requested = params.get('mapMode');
     const perspective = params.get('mapPerspective');
-    viewSelect.value = perspective === 'factual' && ['integrator', 'software'].includes(requested)
+    setActiveView(perspective === 'factual' && ['integrator', 'software'].includes(requested)
       ? requested
-      : (mapPerspective === 'factual' && ['integrator', 'software'].includes(mapMode) ? mapMode : 'impact');
+      : (mapPerspective === 'factual' && ['integrator', 'software'].includes(mapMode) ? mapMode : 'impact'));
   }
 
   function coverage(rows) {
@@ -729,8 +743,8 @@
   }
 
   function syncViewSelection() {
-    if (!viewSelect) return;
-    const value = viewSelect.value;
+    if (!viewButtons.length) return;
+    const value = activeView;
     if (value === 'impact') {
       mapPerspective = 'impact';
       mapMode = 'integrator';
