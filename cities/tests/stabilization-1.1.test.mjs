@@ -44,16 +44,35 @@ test('mobile peer filters remain a strict two-column grid', async () => {
   }
 });
 
-test('Territoire keeps language and district controls available but collapsed by default', async () => {
+test('language markets always filter while Territoire only reveals optional columns', async () => {
   const html = await read('index.html');
   const bridge = await read('app/prime-communes-1.1-base.js');
-  assert.match(html, /id="territoryFilters"[^>]*hidden/);
+  assert.doesNotMatch(html, /id="territoryFilters"[^>]*hidden/);
   assert.match(html, /id="districtsToggle"[^>]*>Territoire<\/button>/);
   assert.match(html, /data-market="Welsch"/);
   assert.match(html, /data-market="Uf Tüütsch"/);
   assert.match(html, /data-market="Ticino"/);
   assert.match(bridge, /decorateTerritoryControls/);
+  assert.match(bridge, /controls\.hidden = false/);
   assert.match(bridge, /validMarkets\.has\(params\.get\('market'\)\)/);
+  assert.doesNotMatch(bridge, /Boolean\(marketOnly\)/);
+});
+
+test('commune search ignores accents and iPhone form controls do not zoom', async () => {
+  const html = await read('index.html');
+  const mobile = await read('app/prime-communes-1.1.7-mobile.css');
+  assert.match(html, /normalizeSearchText/);
+  assert.match(html, /normalize\('NFD'\)/);
+  assert.match(html, /replace\(\/\[\\u0300-\\u036f\]\//);
+  assert.match(mobile, /\.filters input,[\s\S]*font-size:16px!important/);
+});
+
+test('commune save retries a stale key and keeps the open drawer in place', async () => {
+  const bridge = await read('app/prime-communes-1.1-base.js');
+  assert.match(bridge, /Ancienne clé refusée/);
+  assert.match(bridge, /Nouvelle clé · nouvel essai/);
+  assert.match(bridge, /Enregistré ✓/);
+  assert.doesNotMatch(bridge, /setTimeout\(\(\) => openDrawer\(refreshed\)/);
 });
 
 test('Systèmes keeps Intégrateur and Métier visible while extended details stay optional', async () => {
