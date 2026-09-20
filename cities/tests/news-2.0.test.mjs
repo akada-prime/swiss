@@ -14,7 +14,7 @@ test('NEWS is a first-class deep-linked view', async () => {
   assert.match(bridge, /byId\('newsView'\)\.hidden = next !== 'news'/);
   assert.match(loader, /prime-communes-news-2\.0\.js/);
   assert.match(loader, /prime-communes-news-2\.0\.css/);
-  assert.match(html, /prime-communes-1\.1\.js\?v=15/);
+  assert.match(html, /prime-communes-1\.1\.js\?v=16/);
   assert.match(loader, /prime-communes-1\.1-base\.js\?v=8/);
   assert.match(loader, /prime-communes-news-2\.0\.js\?v=10/);
   assert.match(loader, /prime-communes-news-2\.0\.css\?v=7/);
