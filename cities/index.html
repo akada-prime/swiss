@@ -279,7 +279,50 @@ const fmt=new Intl.NumberFormat('fr-CH'),pct=new Intl.NumberFormat('fr-CH',{mini
 const supplierChoices=['Abraxas','Axians','Ciges','Data','Epsitec','OBT','Ofisa','Prime','SIACG','SIEN','T2i','Talus']; const softwareChoices=['innosolvcity','Urbanus','Calvin','Citizen','ETIC','BDI','Crésus','Epsilon','Ruf'];
 const ERP_BY_METIER={ETIC:'Abacus',Urbanus:'Urbanus',Citizen:'Citizen',BDI:'BDI',Epsilon:'Epsilon','Crésus':'Crésus',Ruf:'Ruf',Calvin:'Opale'};
 const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const normalizeSearchText=value=>(window.PrimeCommunesData?.normalizeText?.(value)??String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr-CH').trim());
+const normalizeSearchText=value=>(window.PrimeCommunesData?.normalizeText?.(value)??String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('fr-CH').trim()).replace(/[’'._/\\-]+/g,' ').replace(/\s+/g,' ').trim();
+function isNearSearchToken(left,right){
+  if(!left||!right||Math.abs(left.length-right.length)>1)return false;
+  const rows=left.length+1,cols=right.length+1,matrix=Array.from({length:rows},(_,i)=>{const row=Array(cols).fill(0);row[0]=i;return row});
+  for(let j=0;j<cols;j++)matrix[0][j]=j;
+  for(let i=1;i<rows;i++)for(let j=1;j<cols;j++){
+    const cost=left[i-1]===right[j-1]?0:1;
+    matrix[i][j]=Math.min(matrix[i-1][j]+1,matrix[i][j-1]+1,matrix[i-1][j-1]+cost);
+    if(i>1&&j>1&&left[i-1]===right[j-2]&&left[i-2]===right[j-1])matrix[i][j]=Math.min(matrix[i][j],matrix[i-2][j-2]+1);
+  }
+  return matrix[left.length][right.length]<=1;
+}
+function communeSearchFields(x){return[
+  {label:'Commune',value:x.name||''},
+  {label:'Canton',value:x.canton||''},
+  {label:'Marché',value:x.market||''},
+  {label:'District',value:x.district||''},
+  {label:'Intégrateur',value:x.integrator||'À compléter'},
+  {label:'Métier',value:x.software||''},
+  {label:'ERP',value:x.erp||''},
+  {label:'Modules',value:(x.products||[]).join(' · ')},
+  {label:'Hébergeur',value:x.hosting||''},
+  {label:'Client',value:x.isPrime?'Client Prime':''},
+  {label:'Population',value:String(x.expectedPopulation||'')},
+  {label:'Notes',value:x.notes||''}
+]}
+function communeSearchMeta(x,query){
+  const q=normalizeSearchText(query),fields=communeSearchFields(x),name=normalizeSearchText(x.name);
+  if(!q)return{score:100,label:'Commune',value:x.name||''};
+  if(name===q)return{score:0,label:'Commune',value:x.name||''};
+  if(name.startsWith(q))return{score:1,label:'Commune',value:x.name||''};
+  if(name.split(/[^a-z0-9]+/).some(word=>word.startsWith(q)))return{score:2,label:'Commune',value:x.name||''};
+  if(name.includes(q))return{score:3,label:'Commune',value:x.name||''};
+  if(q.length>=4&&name.split(/[^a-z0-9]+/).some(word=>isNearSearchToken(word,q)))return{score:4,label:'Commune approchante',value:x.name||''};
+  for(let index=1;index<fields.length;index++){
+    const value=normalizeSearchText(fields[index].value);
+    if(!value)continue;
+    if(value===q)return{score:10+index,label:fields[index].label,value:fields[index].value};
+    if(value.startsWith(q))return{score:30+index,label:fields[index].label,value:fields[index].value};
+    if(value.includes(q))return{score:50+index,label:fields[index].label,value:fields[index].value};
+    if(/\d/.test(q)&&value.replace(/\s/g,'').includes(q.replace(/\s/g,'')))return{score:60+index,label:fields[index].label,value:fields[index].value};
+  }
+  return null;
+}
 const SUPABASE_URL='https://ozdvmllgxduzquiujcbg.supabase.co',SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHZtbGxneGR1enF1aXVqY2JnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NzkwNTIsImV4cCI6MjEwMzE1NTA1Mn0.mVT0_dqcpAzb3QxmC5xDmB8bq7RZrpDd5dpvnGKPaTw';
 const decodeEntities=value=>{const node=document.createElement('textarea');node.innerHTML=String(value??'');return node.value};
 function applyData(data,source){
@@ -322,7 +365,14 @@ async function loadData(manual=false){
 loadData().catch(e=>{$('syncText').textContent='Erreur de chargement';$('rows').innerHTML='<tr><td colspan="8">'+esc(e?.message||e)+'</td></tr>'});
 function fill(id,values){values.forEach(v=>$(id).insertAdjacentHTML('beforeend',`<option>${esc(v)}</option>`))}
 function updateDistrictOptions(){const previous=$('district').value,canton=$('canton').value,active=districtsMode&&canton!=='Tous';$('districtFilter').hidden=!active;if(!active){$('district').value='';$('district').innerHTML='<option value="">Tous les districts</option>';return}const districts=[...new Map(all.filter(x=>x.districtCode&&x.canton===canton).map(x=>[x.districtCode,{code:x.districtCode,label:x.district}])).values()].sort((a,b)=>a.label.localeCompare(b.label,'fr-CH',{sensitivity:'base'}));$('district').innerHTML='<option value="">Tous les districts</option>'+districts.map(x=>`<option value="${esc(x.code)}">${esc(x.label)}</option>`).join('');if(districts.some(x=>x.code===previous))$('district').value=previous}
-function filtered(){const q=normalizeSearchText($('query').value),exploring=Boolean(q||$('canton').value!=='Tous'||$('district').value||$('solution').value!=='Tous'||marketOnly||primeOnly||eadminOnly||issuesOnly);return all.filter(x=>(exploring||x.expectedPopulation>=10000)&&(!q||normalizeSearchText(`${x.name} ${x.canton} ${x.district} ${x.software} ${x.integrator} ${x.erp} ${(x.products||[]).join(' ')}`).includes(q))&&($('canton').value==='Tous'||x.canton===$('canton').value)&&(!$('district').value||x.districtCode===$('district').value)&&($('solution').value==='Tous'||(x.integrator+'|||'+x.software)===$('solution').value)&&(!marketOnly||x.market===marketOnly)&&(!primeOnly||x.isPrime)&&(!eadminOnly||x.products?.includes('eAdmin'))&&(!issuesOnly||x.deliveryStatus!=='accepted')).sort((a,b)=>{const c=sortKey==='population'?a.expectedPopulation-b.expectedPopulation:a.name.localeCompare(b.name,'fr-CH',{sensitivity:'base'});return sortDirection==='asc'?c:-c})}
+function filtered(){
+  const q=normalizeSearchText($('query').value),exploring=Boolean(q||$('canton').value!=='Tous'||$('district').value||$('solution').value!=='Tous'||marketOnly||primeOnly||eadminOnly||issuesOnly),scores=new Map();
+  const list=all.filter(x=>{
+    const search=q?communeSearchMeta(x,q):null;if(q&&!search)return false;if(search)scores.set(x.id,search.score);
+    return(exploring||x.expectedPopulation>=10000)&&($('canton').value==='Tous'||x.canton===$('canton').value)&&(!$('district').value||x.districtCode===$('district').value)&&($('solution').value==='Tous'||(x.integrator+'|||'+x.software)===$('solution').value)&&(!marketOnly||x.market===marketOnly)&&(!primeOnly||x.isPrime)&&(!eadminOnly||x.products?.includes('eAdmin'))&&(!issuesOnly||x.deliveryStatus!=='accepted')
+  });
+  return list.sort((a,b)=>{const relevance=q?(scores.get(a.id)-scores.get(b.id)):0;if(relevance)return relevance;const c=sortKey==='population'?a.expectedPopulation-b.expectedPopulation:a.name.localeCompare(b.name,'fr-CH',{sensitivity:'base'});return sortDirection==='asc'?c:-c})
+}
 function changeSort(key){if(sortKey===key)sortDirection=sortDirection==='asc'?'desc':'asc';else{sortKey=key;sortDirection=key==='population'?'desc':'asc'}render()}
 function renderModules(x){const modules=x.products||[],known=[];if(modules.includes('eAdmin'))known.push('<img class="module-mark eadmin-mark" src="public/eadmin-mark-negative.png" alt="eAdmin" title="eAdmin · guichet virtuel">');if(modules.includes('Clever.Tax'))known.push('<img class="module-mark clevertax-mark" src="public/clevertax-mark-negative.png?v=1" alt="Clever.Tax" title="Clever.Tax · KMS">');const other=modules.filter(name=>!['eAdmin','Clever.Tax'].includes(name)).map(name=>`<span class="module-chip">${esc(name)}</span>`);return [...known,...other].join('')}
 function renderSoftware(x){const software=String(x.software||'').trim();if(!software)return '<span class="empty">—</span>';const key=software.toLocaleLowerCase('fr-CH');if(key==='innosolvcity'||key==='innosolv')return '<img class="solution-mark innosolvcity-mark" src="public/assets/logos/innosolvcity.png?v=1" alt="innosolvcity" title="innosolvcity">';return esc(software)}
@@ -416,6 +466,6 @@ $('statsScope').addEventListener('change',renderStats);document.querySelectorAll
 $('query').addEventListener('input',render);$('solution').addEventListener('change',render);$('district').addEventListener('change',render);$('canton').addEventListener('change',()=>{$('district').value='';updateDistrictOptions();render()});$('primeOnly').onclick=()=>{primeOnly=!primeOnly;$('primeOnly').classList.toggle('on',primeOnly);render()};$('eadminOnly').onclick=()=>{eadminOnly=!eadminOnly;$('eadminOnly').classList.toggle('on',eadminOnly);$('eadminOnly').classList.toggle('eadmin-on',eadminOnly);render()};$('districtsToggle').onclick=()=>{districtsMode=!districtsMode;if(!districtsMode)$('district').value='';updateDistrictOptions();$('districtsToggle').classList.toggle('on',districtsMode);$('districtsToggle').setAttribute('aria-expanded',String(districtsMode));render()};document.querySelectorAll('.market-toggle').forEach(button=>button.onclick=()=>{marketOnly=marketOnly===button.dataset.market?'':button.dataset.market;document.querySelectorAll('.market-toggle').forEach(x=>x.classList.toggle('on',x.dataset.market===marketOnly));render()});$('issuesOnly').onclick=()=>{issuesOnly=!issuesOnly;$('issuesOnly').classList.toggle('on',issuesOnly);$('issuesOnly').classList.toggle('warning',issuesOnly);render()};$('issuesCard').onclick=()=>{ofsMode=!ofsMode; if(!ofsMode)issuesOnly=false; $('issuesOnly').hidden=!ofsMode; $('issuesCard').classList.toggle('ofs-active',ofsMode); $('ofsLabel').textContent=ofsMode?$('issues').textContent:'Ouvrir'; $('ofsCopy').textContent=ofsMode?'Revenir à la vue de marché':'Afficher les statuts Delimo'; $('ofsArrow').textContent=ofsMode?'←':'→'; render()};$('reset').onclick=()=>{$('query').value='';$('canton').value='Tous';$('district').value='';$('solution').value='Tous';primeOnly=eadminOnly=issuesOnly=districtsMode=false;marketOnly='';updateDistrictOptions();document.querySelectorAll('.filter-toggle').forEach(x=>x.classList.remove('on','warning'));render()};$('syncReload').onclick=()=>loadData(true);$('exportBtn').onclick=()=>{const rows=filtered(),withTerritory=districtsMode,header=['Nom','Client Prime','Canton',...(withTerritory?['Marché','District']:[]),'Population','Intégrateur','Métier','ERP','Modules'],lines=[header.join('\t'),...rows.map(x=>[x.name,x.isPrime?'Oui':'Non',x.canton,...(withTerritory?[x.market,x.district]:[]),x.expectedPopulation,x.integrator,x.software,x.erp,(x.products||[]).join(' | ')].join('\t'))];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/tab-separated-values'}));a.download='communes.tsv';a.click()};
 document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('newsView').hidden=view!=='news';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
 </script>
-<script src="app/prime-communes-1.1.js?v=14"></script>
+<script src="app/prime-communes-1.1.js?v=15"></script>
 </body>
 </html>
