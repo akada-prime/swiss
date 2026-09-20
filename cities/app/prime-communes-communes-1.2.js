@@ -210,6 +210,9 @@
     mobileInput.addEventListener('input', () => {
       sourceInput.value = mobileInput.value;
       sourceInput.dispatchEvent(new Event('input', { bubbles: true }));
+      // The desktop listener was registered before the mobile render wrapper.
+      // Refresh the visible overlay explicitly on every mobile keystroke.
+      renderMobileSearchResults();
     });
     mobileInput.addEventListener('keydown', event => {
       if (event.key === 'Escape') closeMobileSearch();
