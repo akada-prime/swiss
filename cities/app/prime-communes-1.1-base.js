@@ -94,7 +94,7 @@
 
   function decorateTerritoryControls() {
     const controls = document.querySelector('.market-toggles');
-    if (controls) controls.hidden = !districtsMode;
+    if (controls) controls.hidden = false;
     const district = byId('districtFilter');
     if (district) district.hidden = !(districtsMode && byId('canton')?.value !== 'Tous');
     const button = byId('districtsToggle');
@@ -148,9 +148,8 @@
     if (!button) return;
     let editKey = sessionStorage.getItem('primeCommunesEditKey') || '';
     if (!editKey) {
-      editKey = window.prompt('Clé d’édition Prime Communes 1.1') || '';
+      editKey = window.prompt('Clé d’édition Prime Communes') || '';
       if (!editKey) return;
-      sessionStorage.setItem('primeCommunesEditKey', editKey);
     }
 
     const selectedModules = [...document.querySelectorAll('input[name="drawerModule"]:checked')].map(input => input.value);
@@ -165,29 +164,45 @@
       p_notes: byId('drawerNotes')?.value || ''
     };
 
+    const send = key => fetch(`${SUPABASE_URL}/rest/v1/rpc/${EDIT_RPC}`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ ...payload, p_key: key })
+    });
+    const responseDetail = async response => ({
+      detail: await response.text(),
+      rejectedKey: response.status === 401 || response.status === 403
+    });
+
     button.disabled = true;
     saveStatus('Enregistrement…');
     try {
-      const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${EDIT_RPC}`, {
-        method: 'POST',
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
+      let response = await send(editKey);
       if (!response.ok) {
-        const detail = await response.text();
-        if (response.status === 401 || response.status === 403 || /clé|key|denied|forbidden/i.test(detail)) {
+        const failed = await responseDetail(response);
+        const rejectedKey = failed.rejectedKey || /clé|key|denied|forbidden/i.test(failed.detail);
+        if (rejectedKey) {
           sessionStorage.removeItem('primeCommunesEditKey');
+          const replacement = window.prompt('Ancienne clé refusée. Saisis la nouvelle clé d’édition :') || '';
+          if (!replacement) throw new Error('Clé d’édition requise');
+          editKey = replacement;
+          saveStatus('Nouvelle clé · nouvel essai…');
+          response = await send(editKey);
+          if (!response.ok) {
+            const retry = await responseDetail(response);
+            throw new Error(retry.detail || `Erreur ${response.status}`);
+          }
+        } else {
+          throw new Error(failed.detail || `Erreur ${response.status}`);
         }
-        throw new Error(detail || `Erreur ${response.status}`);
       }
-      saveStatus('Informations enregistrées ✓', 'success');
+      sessionStorage.setItem('primeCommunesEditKey', editKey);
       await loadData();
-      const refreshed = all.find(row => Number(row.id) === Number(x.id));
-      if (refreshed) setTimeout(() => openDrawer(refreshed), 120);
+      saveStatus(`Enregistré ✓ · ${new Date().toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' })}`, 'success');
     } catch (error) {
       console.error(error);
       saveStatus('Enregistrement impossible · vérifie la clé d’édition.', 'error');
@@ -325,7 +340,7 @@
 
     if (byId('query')) byId('query').value = params.get('q') || '';
     marketOnly = validMarkets.has(params.get('market')) ? params.get('market') : '';
-    districtsMode = truthyParam(params.get('districts')) || Boolean(marketOnly) || Boolean(params.get('district'));
+    districtsMode = truthyParam(params.get('districts')) || Boolean(params.get('district'));
     setSelectIfAvailable('canton', params.get('canton'), 'Tous');
     updateDistrictOptions();
     setSelectIfAvailable('district', params.get('district'), '');
