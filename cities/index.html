@@ -16,7 +16,7 @@
       document.documentElement.dataset.initialView = initialView;
     })();
   </script>
-  <link rel="stylesheet" href="app/globals.css?v=20">
+  <link rel="stylesheet" href="app/globals.css?v=21">
   <link rel="stylesheet" href="app/product-assets.css?v=5">
 <style>
 html[data-initial-view]:not([data-initial-view="communes"]) #communesView{display:none!important}
@@ -44,7 +44,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   </header>
   <section class="workspace">
     <div id="communesView">
-    <div class="intro-row"><div><h1>Les communes.<br><span>Enfin lisibles.</span></h1></div><div class="intro-summary"><p class="eyebrow">Marché suisse · Delimo P99</p><p class="intro-copy">Une vue unique du marché communal suisse : population, qualité des livraisons, logiciels et opportunités.</p><p class="intro-count"><strong id="headerCommuneCount">—</strong> communes, une seule vue</p></div></div>
+    <div class="intro-row view-intro"><div><h1>Les communes.<br><span>Enfin lisibles.</span></h1></div><div class="intro-summary view-intro-copy"><p class="eyebrow">Marché suisse · Delimo P99</p><p class="intro-copy">Une vue unique du marché communal suisse : population, qualité des livraisons, logiciels et opportunités.</p><p class="intro-count"><strong id="headerCommuneCount">—</strong> communes, une seule vue</p></div></div>
     <section class="kpi-grid">
       <article class="kpi-card hero-kpi"><div class="kpi-top"><span class="kpi-label">Population couverte</span><span class="kpi-country"><img class="swiss-mark" src="public/swiss-mark.svg" alt="Suisse"><span class="kpi-badge">100%</span></span></div><strong id="population">—</strong><p><span id="communeCount">—</span> communes</p><div class="sparkline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
       <article class="kpi-card"><div class="kpi-top"><span class="kpi-label">Communes ≥ 10’000</span><span class="kpi-badge" id="over10kShare">—</span></div><strong id="over10k">—</strong><p><span id="over10kPop">—</span> habitants · <span id="over10kPopShare">—</span> du pays</p></article>
@@ -67,9 +67,9 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
     </section>
     </div>
     <section class="map-view" id="mapView" hidden>
-      <div class="map-intro">
+      <div class="map-intro view-intro">
         <div><h1>La Romandie.<br><span>À portée de main.</span></h1></div>
-        <div class="map-intro-copy"><p class="eyebrow">Carte interactive · swissBOUNDARIES3D</p><p>Survolez le marché communal, repérez les forces en présence et ouvrez directement la fiche d’une commune.</p><strong><span id="mapCommuneCount">621</span> communes francophones · contexte suisse conservé</strong></div>
+        <div class="map-intro-copy view-intro-copy"><p class="eyebrow">Carte interactive · swissBOUNDARIES3D</p><p>Survolez le marché communal, repérez les forces en présence et ouvrez directement la fiche d’une commune.</p><strong><span id="mapCommuneCount">621</span> communes francophones · contexte suisse conservé</strong></div>
       </div>
       <section class="map-panel" id="mapPanel" aria-label="Carte interactive de la Suisse romande">
         <div class="map-toolbar">
@@ -103,9 +103,9 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       </section>
     </section>
     <section class="stats-view" id="statsView" hidden>
-      <div class="stats-intro">
+      <div class="stats-intro view-intro">
         <div><h1>Le marché.<br><span>Mis en perspective.</span></h1></div>
-        <div class="stats-intro-copy"><p class="eyebrow">Prime Communes · Statistiques 1.1</p><p>Mesurer notre présence en communes ou en habitants, puis comprendre qui occupe réellement les territoires qui comptent.</p><strong>Périmètre romand · Fribourg et Valais limités aux communes Welsch.</strong></div>
+        <div class="stats-intro-copy view-intro-copy"><p class="eyebrow">Prime Communes · Statistiques 1.1</p><p>Mesurer notre présence en communes ou en habitants, puis comprendre qui occupe réellement les territoires qui comptent.</p><strong>Périmètre romand · Fribourg et Valais limités aux communes Welsch.</strong></div>
       </div>
       <section class="stats-panel">
         <div class="stats-toolbar">
@@ -133,13 +133,10 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       </section>
     </section>
     <section class="news-view" id="newsView" hidden>
-      <aside class="news-beta-note" aria-label="Version bêta du Radar">
-        <strong>BÊTA</strong>
-        <span>Le Radar est encore en rodage : couverture, fraîcheur et pertinence peuvent varier. La source publique primaire reste la référence.</span>
-      </aside>
-      <div class="news-intro">
-        <div><p class="eyebrow">Prime Communes · NEWS! 2.0</p><h1>Ce qui bouge.<br><span>Avant que ça bouge.</span></h1></div>
-        <div class="news-intro-copy"><p>Des faits publics qui annoncent peut-être un projet communal — avant l'appel d'offres, avant le devis, avant que tout le monde le sache.</p><strong>Le Radar ne raconte pas les projets déjà gagnés par Prime. Il détecte ce qui mérite d'être qualifié maintenant.</strong></div>
+      <aside class="news-beta-note" aria-label="Information bêta"><strong>BÊTA</strong><span>Le Radar est encore en rodage : couverture, fraîcheur et pertinence peuvent varier. La source publique primaire reste la référence.</span></aside>
+      <div class="news-intro view-intro">
+        <div><h1>Ce qui bouge.<br><span>Avant que ça bouge.</span></h1></div>
+        <div class="news-intro-copy view-intro-copy"><p class="eyebrow">Prime Communes · NEWS! 2.0</p><p>Des faits publics qui annoncent peut-être un projet communal — avant l'appel d'offres, avant le devis, avant que tout le monde le sache.</p><strong>Le Radar ne raconte pas les projets déjà gagnés par Prime. Il détecte ce qui mérite d'être qualifié maintenant.</strong></div>
       </div>
       <section class="news-panel" aria-label="Radar communal">
         <header class="news-panel-heading">
@@ -191,9 +188,9 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       </section>
     </section>
     <section class="roadmap-view" id="roadmapView" hidden>
-      <div class="roadmap-intro">
+      <div class="roadmap-intro view-intro">
         <div><h1>La suite.<br><span>Déjà pensée.</span></h1></div>
-        <div class="roadmap-intro-copy"><p class="eyebrow">Prime Communes · Vision produit</p><p>Construire aujourd’hui les fondations nécessaires aux étages futurs, même si toutes les fonctions ne sont pas encore visibles.</p><strong>De l’observatoire au copilote du marché communal suisse.</strong></div>
+        <div class="roadmap-intro-copy view-intro-copy"><p class="eyebrow">Prime Communes · Vision produit</p><p>Construire aujourd’hui les fondations nécessaires aux étages futurs, même si toutes les fonctions ne sont pas encore visibles.</p><strong>De l’observatoire au copilote du marché communal suisse.</strong></div>
       </div>
       <ol class="roadmap-journey" aria-label="Trajectoire produit">
         <li class="journey-done"><span>1.0</span><strong>Rassembler</strong></li>
@@ -470,6 +467,6 @@ $('statsScope').addEventListener('change',renderStats);document.querySelectorAll
 $('query').addEventListener('input',render);$('solution').addEventListener('change',render);$('district').addEventListener('change',render);$('canton').addEventListener('change',()=>{$('district').value='';updateDistrictOptions();render()});$('primeOnly').onclick=()=>{primeOnly=!primeOnly;$('primeOnly').classList.toggle('on',primeOnly);render()};$('eadminOnly').onclick=()=>{eadminOnly=!eadminOnly;$('eadminOnly').classList.toggle('on',eadminOnly);$('eadminOnly').classList.toggle('eadmin-on',eadminOnly);render()};$('districtsToggle').onclick=()=>{districtsMode=!districtsMode;if(!districtsMode)$('district').value='';updateDistrictOptions();$('districtsToggle').classList.toggle('on',districtsMode);$('districtsToggle').setAttribute('aria-expanded',String(districtsMode));render()};document.querySelectorAll('.market-toggle').forEach(button=>button.onclick=()=>{marketOnly=marketOnly===button.dataset.market?'':button.dataset.market;document.querySelectorAll('.market-toggle').forEach(x=>x.classList.toggle('on',x.dataset.market===marketOnly));render()});$('issuesOnly').onclick=()=>{issuesOnly=!issuesOnly;$('issuesOnly').classList.toggle('on',issuesOnly);$('issuesOnly').classList.toggle('warning',issuesOnly);render()};$('issuesCard').onclick=()=>{ofsMode=!ofsMode; if(!ofsMode)issuesOnly=false; $('issuesOnly').hidden=!ofsMode; $('issuesCard').classList.toggle('ofs-active',ofsMode); $('ofsLabel').textContent=ofsMode?$('issues').textContent:'Ouvrir'; $('ofsCopy').textContent=ofsMode?'Revenir à la vue de marché':'Afficher les statuts Delimo'; $('ofsArrow').textContent=ofsMode?'←':'→'; render()};$('reset').onclick=()=>{$('query').value='';$('canton').value='Tous';$('district').value='';$('solution').value='Tous';primeOnly=eadminOnly=issuesOnly=districtsMode=false;marketOnly='';updateDistrictOptions();document.querySelectorAll('.filter-toggle').forEach(x=>x.classList.remove('on','warning'));render()};$('syncReload').onclick=()=>loadData(true);$('exportBtn').onclick=()=>{const rows=filtered(),withTerritory=districtsMode,header=['Nom','Client Prime','Canton',...(withTerritory?['Marché','District']:[]),'Population','Intégrateur','Métier','ERP','Modules'],lines=[header.join('\t'),...rows.map(x=>[x.name,x.isPrime?'Oui':'Non',x.canton,...(withTerritory?[x.market,x.district]:[]),x.expectedPopulation,x.integrator,x.software,x.erp,(x.products||[]).join(' | ')].join('\t'))];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/tab-separated-values'}));a.download='communes.tsv';a.click()};
 document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('newsView').hidden=view!=='news';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
 </script>
-<script src="app/prime-communes-1.1.js?v=18"></script>
+<script src="app/prime-communes-1.1.js?v=19"></script>
 </body>
 </html>

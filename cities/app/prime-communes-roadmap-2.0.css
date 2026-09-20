@@ -2,11 +2,6 @@
    Canonical Roadmap stylesheet. Historical visual patches live nowhere else. */
 
 .roadmap-view{padding-bottom:12px}
-.roadmap-intro{display:grid;grid-template-columns:minmax(420px,1fr) minmax(320px,470px);align-items:end;justify-content:space-between;gap:50px;margin-bottom:34px}
-.roadmap-intro-copy{padding:0 0 7px;color:#98a5b7;font-size:16px;line-height:1.65}
-.roadmap-intro-copy p{margin:0}
-.roadmap-intro-copy .eyebrow{margin-bottom:8px}
-.roadmap-intro-copy strong{display:block;margin-top:12px;color:#dce5ef;font-size:14px}
 
 .roadmap-journey{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:0 0 18px;padding:0;list-style:none}
 .roadmap-journey li{position:relative;min-width:0;padding:17px 16px 16px;border:1px solid rgba(255,255,255,.075);border-radius:16px;background:rgba(255,255,255,.025)}
@@ -79,16 +74,12 @@
   .roadmap-grid>.completed-11 .roadmap-items{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:900px){
-  .roadmap-intro{grid-template-columns:1fr}
-  .roadmap-intro-copy{max-width:600px}
   .roadmap-grid{grid-template-columns:1fr}
   .roadmap-journey{display:flex;overflow-x:auto;padding-bottom:5px;scroll-snap-type:x proximity;scrollbar-width:none}
   .roadmap-journey::-webkit-scrollbar{display:none}
   .roadmap-journey li{flex:0 0 150px;scroll-snap-align:start}
 }
 @media(max-width:680px){
-  .roadmap-intro{display:block;margin-bottom:26px}
-  .roadmap-intro-copy{margin-top:24px;font-size:14px}
   .roadmap-principle{grid-template-columns:1fr;gap:8px;padding:16px}
   .roadmap-stage{padding:18px;border-radius:19px}
   .roadmap-journey{margin-right:-16px}

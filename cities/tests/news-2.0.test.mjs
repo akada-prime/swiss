@@ -14,14 +14,28 @@ test('NEWS is a first-class deep-linked view', async () => {
   assert.match(bridge, /byId\('newsView'\)\.hidden = next !== 'news'/);
   assert.match(loader, /prime-communes-news-2\.0\.js/);
   assert.match(loader, /prime-communes-news-2\.0\.css/);
-  assert.match(html, /prime-communes-1\.1\.js\?v=18/);
+  assert.match(html, /prime-communes-1\.1\.js\?v=19/);
   assert.match(loader, /prime-communes-1\.1-base\.js\?v=8/);
   assert.match(loader, /prime-communes-news-2\.0\.js\?v=10/);
-  assert.match(loader, /prime-communes-news-2\.0\.css\?v=9/);
+  assert.match(loader, /prime-communes-news-2\.0\.css\?v=10/);
+  assert.match(loader, /prime-communes-roadmap-2\.0\.css\?v=2/);
   assert.match(html, /class="news-beta-note"/);
   assert.match(html, /La source publique primaire reste la référence/);
   assert.ok(html.indexOf('news-beta-note') < html.indexOf('news-intro'));
   assert.match(html, /Prime Communes · version 2\.0\.4/);
+});
+
+test('all five view headers share one responsive typography contract', async () => {
+  const html = await read('index.html');
+  const globals = await read('app/globals.css');
+  const news = await read('app/prime-communes-news-2.0.css');
+  const roadmap = await read('app/prime-communes-roadmap-2.0.css');
+  assert.equal((html.match(/view-intro"/g) || []).length, 5);
+  assert.equal((html.match(/view-intro-copy"/g) || []).length, 5);
+  assert.match(globals, /\.view-intro-copy\{[^}]*font-size:16px/);
+  assert.match(globals, /@media\(max-width:680px\)[\s\S]*\.view-intro-copy\{[^}]*font-size:16px/);
+  assert.doesNotMatch(news, /\.news-intro(?:-copy)?\s*\{/);
+  assert.doesNotMatch(roadmap, /\.roadmap-intro(?:-copy)?\s*\{/);
 });
 
 test('2.0.3 interprets every signal without blurring fact, deduction and Prime reading', async () => {
