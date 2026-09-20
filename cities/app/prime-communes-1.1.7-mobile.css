@@ -1,6 +1,16 @@
 /* Prime Communes 1.1.7 · polished mobile filter layout */
 
 @media(max-width:680px){
+  /* iOS zooms the whole page when a focused form control is smaller than 16px. */
+  .filters input,
+  .filters select,
+  .map-search input,
+  .drawer input:not([type="checkbox"]),
+  .drawer select,
+  .drawer textarea{
+    font-size:16px!important;
+  }
+
   .filters,
   .filters.districts-on{
     display:grid!important;
