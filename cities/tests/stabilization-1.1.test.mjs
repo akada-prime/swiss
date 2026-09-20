@@ -48,6 +48,8 @@ test('Delimo is a premium control mode, not a fourth statistic or ordinary filte
   const html = await read('index.html');
   const css = await read('app/product-assets.css');
   const bridge = await read('app/prime-communes-1.1-base.js');
+  assert.match(html, /product-assets\.css\?v=8/);
+  assert.match(bridge, /product-assets\.css\?v=8/);
   assert.match(html, /class="delimo-control" id="issuesCard"/);
   assert.match(html, /Outil de contrôle · Delimo/);
   assert.match(html, /id="ofsAction">Ouvrir le contrôle/);

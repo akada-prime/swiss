@@ -26,7 +26,7 @@
 
   // Refresh logo CSS after previous cached iterations.
   const productCss = document.querySelector('link[href*="product-assets.css"]');
-  if (productCss) productCss.href = 'app/product-assets.css?v=7';
+  if (productCss) productCss.href = 'app/product-assets.css?v=8';
 
   function abacusMark(extraClass = '') {
     return `<img class="solution-mark abacus-mark${extraClass ? ` ${extraClass}` : ''}" src="public/assets/logos/abacus.png?v=2" alt="Abacus" title="Abacus">`;
