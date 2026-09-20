@@ -14,7 +14,59 @@ test('NEWS is a first-class deep-linked view', async () => {
   assert.match(bridge, /byId\('newsView'\)\.hidden = next !== 'news'/);
   assert.match(loader, /prime-communes-news-2\.0\.js/);
   assert.match(loader, /prime-communes-news-2\.0\.css/);
-  assert.match(html, /Prime Communes · version 2\.0\.2/);
+  assert.match(html, /Prime Communes · version 2\.0\.4/);
+});
+
+test('2.0.3 interprets every signal without blurring fact, deduction and Prime reading', async () => {
+  const runtime = await read('app/prime-communes-news-2.0.js');
+  const css = await read('app/prime-communes-news-2.0.css');
+  const radar = JSON.parse(await read('public/data/news-radar-v1.json'));
+  const analysis = JSON.parse(await read('public/data/news-analysis-v1.json'));
+  assert.equal(analysis.meta.version, '2.0.4-v1');
+  assert.equal(analysis.meta.mode, 'human-validation');
+  assert.match(runtime, /ANALYSIS_URL = 'public\/data\/news-analysis-v1\.json/);
+  assert.match(runtime, /1 · Fait public/);
+  assert.match(runtime, /2 · Déduction documentée/);
+  assert.match(runtime, /3 · Lecture Prime/);
+  assert.match(runtime, /Communes.*Territoires.*Produits.*Intégrateurs/s);
+  assert.match(css, /\.news-proof-line/);
+  assert.match(css, /@media\(max-width:680px\).*\.news-affected\{grid-template-columns:1fr\}/s);
+  assert.deepEqual(
+    analysis.items.map(item => item.signalId).sort(),
+    radar.signals.map(signal => signal.id).sort()
+  );
+  for (const item of analysis.items) {
+    assert.ok(item.interpretation.change);
+    assert.ok(item.interpretation.deduction);
+    assert.ok(item.interpretation.primeReading);
+    for (const key of ['municipalities', 'territories', 'products', 'integrators']) {
+      assert.ok(Array.isArray(item.interpretation.affected[key]));
+      assert.ok(item.interpretation.affected[key].length >= 1);
+    }
+  }
+});
+
+test('2.0.4 keeps qualification lightweight, local and tied to its source signal', async () => {
+  const html = await read('index.html');
+  const runtime = await read('app/prime-communes-news-2.0.js');
+  const analysis = JSON.parse(await read('public/data/news-analysis-v1.json'));
+  assert.match(html, /Qualification légère · 2\.0\.4/);
+  assert.match(html, /id="newsForecastGross"/);
+  assert.match(html, /id="newsForecastWeighted"/);
+  assert.match(runtime, /QUALIFICATION_KEY/);
+  assert.match(runtime, /localStorage\.setItem\(QUALIFICATION_KEY/);
+  assert.match(runtime, /data-qualification-form/);
+  assert.match(runtime, /estimatedValue/);
+  assert.match(runtime, /probability/);
+  assert.doesNotMatch(runtime, /fetch\([^)]*qualification|rpc\/.*qualification/i);
+  for (const item of analysis.items) {
+    const proposal = item.qualificationProposal;
+    assert.ok(['to_qualify', 'watch', 'act', 'discard'].includes(proposal.decision));
+    assert.ok(proposal.nextAction);
+    assert.equal(proposal.probability, null);
+    assert.equal(proposal.estimatedValue, null);
+    assert.match(proposal.basis, /valider humainement/i);
+  }
 });
 
 test('2.0.2 publishes a sourced story without mixing facts and interpretation', async () => {

@@ -3,6 +3,7 @@
 
   const DATA_URL = 'public/data/news-radar-v1.json?v=20260914-2';
   const STORY_URL = 'public/data/news-stories-v1.json?v=20260919-1';
+  const ANALYSIS_URL = 'public/data/news-analysis-v1.json?v=20260920-1';
   const CHAT_URL = 'https://chatgpt.com/c/6a9ef456-9284-83ed-9f8b-5e32c1fdfcc3';
   const levelOrder = { strong: 0, watch: 1, info: 2 };
   const levelLabels = { strong: 'Signal fort', watch: 'Ã€ surveiller', info: 'Information' };
@@ -17,9 +18,11 @@
 
   let signals = [];
   let stories = [];
+  let analysisItems = [];
   let radarMeta = {};
   let activeLevel = 'all';
   const REFRESH_REQUEST_KEY = 'primeCommunesNewsRefreshRequest';
+  const QUALIFICATION_KEY = 'primeCommunesNewsQualificationsV1';
 
   function refreshPrompt() {
     const lastUpdate = radarMeta.updatedOn || 'la derniÃ¨re publication du Radar';
@@ -70,8 +73,12 @@ ExÃ©cute directement la mise Ã  jour : modifie le JSON, adapte les tests si nÃ©c
   function filteredSignals() {
     const needle = byId('newsQuery')?.value.trim().toLocaleLowerCase('fr-CH') || '';
     return signals.filter(signal => {
+      const interpretation = analysisItems.find(item => item.signalId === signal.id)?.interpretation || {};
+      const affected = interpretation.affected || {};
       const haystack = [signal.municipality, signal.canton, signal.title, signal.summary,
-        signal.why, signal.sourceLabel, ...(signal.tags || [])].join(' ').toLocaleLowerCase('fr-CH');
+        signal.why, signal.sourceLabel, interpretation.change, interpretation.deduction,
+        interpretation.primeReading, ...Object.values(affected).flat(), ...(signal.tags || [])]
+        .join(' ').toLocaleLowerCase('fr-CH');
       return (activeLevel === 'all' || signal.level === activeLevel) && (!needle || haystack.includes(needle));
     }).sort((a, b) => levelOrder[a.level] - levelOrder[b.level] || b.date.localeCompare(a.date));
   }
@@ -195,110 +202,99 @@ ExÃ©cute directement la mise Ã  jour : modifie le JSON, adapte les tests si nÃ©c
     }
   }
 
-  function signalCard(signal) {
-    const tags = (signal.tags || []).map(tag => `<span>${escapeHtml(tag)}</span>`).join('');
-    return `<article class="news-card news-card-${escapeHtml(signal.level)}">
-      <div class="news-card-rail" aria-hidden="true"></div>
-      <div class="news-card-main">
-        <header>
-          <span class="news-level news-level-${escapeHtml(signal.level)}"><i></i>${levelLabels[signal.level] || 'Information'}</span>
-          <time datetime="${escapeHtml(signal.date)}">${formatDate(signal.date)}</time>
-        </header>
-        <button class="news-municipality" data-news-bfs="${Number(signal.bfsId)}" title="Ouvrir la fiche de ${escapeHtml(signal.municipality)}">
-          <img src="public/cantons/${escapeHtml(signal.canton.toLowerCase())}.svg" alt="">
-          <span><strong>${escapeHtml(signal.municipality)}</strong><small>${escapeHtml(signal.canton)} Â· OFS ${Number(signal.bfsId)}</small></span><b>Ouvrir la fiche&nbsp;â€º</b>
-        </button>
-        <h3>${escapeHtml(signal.title)}</h3>
-        <div class="news-fact"><span>Fait public</span><p>${escapeHtml(signal.summary)}</p></div>
-        <div class="news-why"><span>Lecture de l'IA d'Axel</span><p>${escapeHtml(signal.why)}</p></div>
-        <div class="news-tags">${tags}</div>
+  function analysisFor(signalId) {
+    return analysisItems.find(item => item.signalId === signalId) || null;
+  }
+
+  function readQualifications() {
+    try {
+      return JSON.parse(localStorage.getItem(QUALIFICATION_KEY) || '{}') || {};
+    } catch {
+      localStorage.removeItem(QUALIFICATION_KEY);
+      return {};
+    }
+  }
+
+  function writeQualifications(value) {
+    localStorage.setItem(QUALIFICATION_KEY, JSON.stringify(value));
+  }
+
+  function qualificationFor(signalId) {
+    const proposal = analysisFor(signalId)?.qualificationProposal || {};
+    const saved = readQualifications()[signalId] || {};
+    return { ...proposal, ...saved, saved: Boolean(saved.savedAt) };
+  }
+
+  function money(value) {
+    return value > 0 ? new Intl.NumberFormat('fr-CH', {
+      style: 'currency', currency: 'CHF', maximumFractionDigits: 0
+    }).format(value) : 'Ã€ complÃ©ter';
+  }
+
+  function renderForecast() {
+    const drafts = signals.map(signal => qualificationFor(signal.id));
+    const saved = drafts.filter(item => item.saved);
+    const actions = saved.filter(item => item.decision === 'act');
+    const gross = saved.reduce((sum, item) => sum + (Number(item.estimatedValue) || 0), 0);
+    const weighted = saved.reduce((sum, item) => sum + ((Number(item.estimatedValue) || 0) * (Number(item.probability) || 0) / 100), 0);
+    if (byId('newsQualifiedCount')) byId('newsQualifiedCount').textContent = `${saved.length}/${signals.length}`;
+    if (byId('newsActionCount')) byId('newsActionCount').textContent = String(actions.length);
+    if (byId('newsForecastGross')) byId('newsForecastGross').textContent = money(gross);
+    if (byId('newsForecastWeighted')) byId('newsForecastWeighted').textContent = money(weighted);
+  }
+
+  function affectedMarkup(affected = {}) {
+    const groups = [
+      ['Communes', affected.municipalities],
+      ['Territoires', affected.territories],
+      ['Produits', affected.products],
+      ['IntÃ©grateurs', affected.integrators]
+    ];
+    return groups.map(([label, values]) => `<div><span>${label}</span><p>${(values || []).map(value => `<b>${escapeHtml(value)}</b>`).join('') || '<b>Non Ã©tabli</b>'}</p></div>`).join('');
+  }
+
+  function decisionOptions(selected) {
+    return [
+      ['to_qualify', 'Ã€ qualifier'], ['watch', 'Surveiller'], ['act', 'Agir'], ['discard', 'Ã‰carter']
+    ].map(([value, label]) => `<option value="${value}" ${selected === value ? 'selected' : ''}>${label}</option>`).join('');
+  }
+
+  function signalTools(signal) {
+    const item = analysisFor(signal.id);
+    if (!item) return '';
+    const interpretation = item.interpretation || {};
+    const qualification = qualificationFor(signal.id);
+    return `<div class="news-tools">
+      <div class="news-tool-buttons" role="group" aria-label="Approfondir ${escapeHtml(signal.municipality)}">
+        <button type="button" data-news-tool="impact" data-news-signal="${escapeHtml(signal.id)}" aria-expanded="false"><span>2.0.3</span> Comprendre l'impact</button>
+        <button type="button" data-news-tool="qualification" data-news-signal="${escapeHtml(signal.id)}" aria-expanded="false"><span>2.0.4</span> Qualifier ce signal</button>
       </div>
-      <aside class="news-card-proof">
-        <span>Provenance</span><strong>${escapeHtml(signal.sourceType)}</strong>
-        ${sourceMarkup(signal)}
-        <div class="news-update"><span>Mise Ã  jour</span><b>${escapeHtml(signal.updatedBy || "IA d'Axel")}</b></div>
-        <div><span>Confiance</span><b class="news-confidence news-confidence-${escapeHtml(signal.confidence)}"><i></i>${confidenceLabels[signal.confidence] || 'Ã€ vÃ©rifier'}</b></div>
-      </aside>
-    </article>`;
-  }
+      <section class="news-tool-panel news-impact-panel" data-news-panel="impact" data-news-signal="${escapeHtml(signal.id)}" hidden>
+        <header><div><span>ActualitÃ© interprÃ©tÃ©e Â· 2.0.3</span><strong>Ce que ce fait change</strong></div><small>Trois niveaux, jamais confondus</small></header>
+        <div class="news-proof-line">
+          <article class="is-fact"><span>1 Â· Fait public</span><p>${escapeHtml(signal.summary)}</p></article>
+          <article class="is-deduction"><span>2 Â· DÃ©duction documentÃ©e</span><p>${escapeHtml(interpretation.deduction)}</p></article>
+          <article class="is-prime"><span>3 Â· Lecture Prime</span><p>${escapeHtml(interpretation.primeReading)}</p></article>
+        </div>
+        <div class="news-change"><span>En clair</span><strong>${escapeHtml(interpretation.change)}</strong></div>
+        <div class="news-affected">${affectedMarkup(interpretation.affected)}</div>
+      </section>
+      <section class="news-tool-panel news-qualification-panel" data-news-panel="qualification" data-mõ×Kh‘éì¶»§q«^tÛÛ[H	Ô›Û\ÛÜpêH0­ÈZ\ÙH0è›İ\ˆ[˜ğêYx )‰ÎÂˆÚ[™İËœÙ][Y[İ]
 
-  function render() {
-    const list = filteredSignals();
-    if (byId('newsResultCount')) byId('newsResultCount').textContent = String(list.length);
-    if (byId('newsStrongCount')) byId('newsStrongCount').textContent = String(signals.filter(item => item.level === 'strong').length);
-    if (byId('newsWatchCount')) byId('newsWatchCount').textContent = String(signals.filter(item => item.level === 'watch').length);
-    if (byId('newsMunicipalityCount')) byId('newsMunicipalityCount').textContent = String(new Set(signals.map(item => item.bfsId)).size);
-    if (byId('newsSourceCount')) byId('newsSourceCount').textContent = String(new Set(signals.map(item => item.sourceLabel)).size);
-    const feed = byId('newsFeed');
-    if (!feed) return;
-    feed.innerHTML = list.length ? list.map(signalCard).join('') : '<div class="news-empty"><strong>Aucun signal dans cette vue.</strong><span>Essaie un autre niveau ou efface la recherche.</span></div>';
-    feed.querySelectorAll('[data-news-bfs]').forEach(button => {
-      button.addEventListener('click', () => {
-        const municipality = all.find(item => Number(item.id) === Number(button.dataset.newsBfs));
-        if (municipality && typeof openDrawer === 'function') openDrawer(municipality);
-      });
-    });
-  }
 
-  async function load() {
-    try {
-      const response = await fetch(DATA_URL, { cache: 'no-store' });
-      if (!response.ok) throw new Error(`Radar ${response.status}`);
-      const data = await response.json();
-      radarMeta = data.meta || {};
-      signals = Array.isArray(data.signals) ? data.signals : [];
-      const status = byId('newsRefreshStatus');
-      const refreshButton = byId('newsManualRefresh');
-      let request = null;
-      try {
-        request = JSON.parse(localStorage.getItem(REFRESH_REQUEST_KEY) || 'null');
-      } catch {
-        localStorage.removeItem(REFRESH_REQUEST_KEY);
-      }
-      const changedAfterRequest = request && (
-        radarMeta.updatedOn !== request.updatedOn || signals.length !== request.signalCount
-      );
-      if (status && changedAfterRequest) {
-        status.textContent = `Radar actualisÃ© âœ“ Â· ${signals.length} signal${signals.length > 1 ? 's' : ''}`;
-        refreshButton?.classList.add('is-success');
-        localStorage.removeItem(REFRESH_REQUEST_KEY);
-      } else if (status && radarMeta.updatedOn) {
-        status.textContent = `DerniÃ¨re veille Â· ${formatDate(radarMeta.updatedOn)}`;
-      }
-      render();
-    } catch (error) {
-      console.error(error);
-      if (byId('newsFeed')) byId('newsFeed').innerHTML = '<div class="news-empty"><strong>Le Radar ne peut pas Ãªtre chargÃ©.</strong><span>Les autres vues restent disponibles.</span></div>';
-    }
-  }
+HOˆÚ[™İË›ØØ][Û‹˜\ÜÚYÛŠÒUÕT“
+KL
+NÂˆHØ]Ú
+\œ›ÜŠHÂˆÛÛœÛÛK™\œ›ÜŠ\œ›ÜŠNÂˆYˆ
+İ]\ÊHİ]\Ë^ÛÛ[H	ĞÛÜYH[\ÜÜÚX›H0­È°êY\ÜØZYIÎÂˆBˆJNÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K[™]ÜË[]™[IÊK™›Ü‘XXÚ
+]ÛˆOˆÂˆ]Û‹˜Y]™[\İ[™\Š	ØÛXÚÉË
 
-  byId('newsQuery')?.addEventListener('input', render);
-  byId('newsManualRefresh')?.addEventListener('click', async () => {
-    const status = byId('newsRefreshStatus');
-    try {
-      localStorage.setItem(REFRESH_REQUEST_KEY, JSON.stringify({
-        updatedOn: radarMeta.updatedOn || null,
-        signalCount: signals.length,
-        requestedAt: new Date().toISOString()
-      }));
-      await copyRefreshPrompt();
-      byId('newsManualRefresh')?.classList.add('is-launching');
-      if (status) status.textContent = 'Prompt copiÃ© Â· mise Ã  jour lancÃ©eâ€¦';
-      window.setTimeout(() => window.location.assign(CHAT_URL), 900);
-    } catch (error) {
-      console.error(error);
-      if (status) status.textContent = 'Copie impossible Â· rÃ©essaie';
-    }
-  });
-  document.querySelectorAll('[data-news-level]').forEach(button => {
-    button.addEventListener('click', () => {
-      activeLevel = button.dataset.newsLevel || 'all';
-      document.querySelectorAll('[data-news-level]').forEach(item => item.classList.toggle('active', item === button));
-      render();
-    });
-  });
-
-  window.PrimeCommunesNews = { render, reload: load };
-  void load();
-  void loadStories();
-})();
+HOˆÂˆXİ]™S]™[H]Û‹™]\Ù]›™]ÜÓ]™[	Ø[	ÎÂˆØİ[Y[œ]Y\TÙ[XİÜ[
+	ÖÙ]K[™]ÜË[]™[IÊK™›Ü‘XXÚ
+][HOˆ][K˜Û\ÜÓ\İÙÙÛJ	ØXİ]™IË][HOOH]ÛŠJNÂˆ™[™\Š
+NÂˆJNÂˆJNÂ‚ˆÚ[™İË”š[YPÛÛ[][™\Ó™]ÜÈHÈ™[™\‹™[ØYˆØYNÂˆ›ÚYØY[˜[\Ú\Ê
+K[ŠØY
+NÂˆ›ÚYØYİÜšY\Ê
+NÂŸJJ
+NÂ

@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "version": "2.0.4-v1",
+    "updatedOn": "2026-09-20",
+    "mode": "human-validation",
+    "notice": "Les interprétations sont documentées. Les qualifications restent des brouillons locaux tant qu'elles ne sont pas validées et persistées dans l'infrastructure Prime."
+  },
+  "items": [
+    {
+      "signalId": "yverdon-sey-normes-tic-2026",
+      "interpretation": {
+        "change": "Le sujet passe d'un besoin général de cybersécurité à un chantier financé, séquencé et assorti de prestations externes explicitement prévues.",
+        "deduction": "Une phase de qualification peut commencer avant l'exécution complète du crédit. Le document permet d'interroger le périmètre, la gouvernance et les interfaces, mais ne démontre ni qu'un appel d'offres est ouvert ni que Prime est éligible.",
+        "primeReading": "Le signal mérite une discussion interne croisant services industriels, données et intégration. Aucun produit Prime ni rôle commercial n'est établi par la source.",
+        "affected": {
+          "municipalities": ["Yverdon-les-Bains"],
+          "territories": ["Nord vaudois"],
+          "products": ["Aucun produit Prime établi"],
+          "integrators": ["Non identifié dans la source"]
+        }
+      },
+      "qualificationProposal": {
+        "decision": "to_qualify",
+        "owner": "",
+        "nextAction": "Identifier en interne qui connaît le Service des énergies et qualifier le calendrier des prestations externes.",
+        "dueDate": "",
+        "probability": null,
+        "estimatedValue": null,
+        "currency": "CHF",
+        "basis": "Proposition de l'IA d'Axel à valider humainement."
+      }
+    },
+    {
+      "signalId": "monthey-strategie-numerique-2026",
+      "interpretation": {
+        "change": "La stratégie numérique n'est plus une intention abstraite : une enveloppe pluriannuelle est inscrite dans la planification financière communale.",
+        "deduction": "Le financement rend vraisemblable l'existence de plusieurs chantiers numériques, mais le document public ne précise pas lesquels, ni leur mode d'acquisition, ni leurs fournisseurs.",
+        "primeReading": "La bonne action n'est pas de supposer un remplacement d'ERP : il faut d'abord identifier les lots, les responsables, le calendrier et les sujets encore ouverts.",
+        "affected": {
+          "municipalities": ["Monthey"],
+          "territories": ["Chablais valaisan"],
+          "products": ["Aucun produit Prime établi"],
+          "integrators": ["Non identifié dans la source"]
+        }
+      },
+      "qualificationProposal": {
+        "decision": "to_qualify",
+        "owner": "",
+        "nextAction": "Obtenir le détail public ou relationnel de la stratégie numérique et distinguer les chantiers déjà attribués des besoins encore ouverts.",
+        "dueDate": "",
+        "probability": null,
+        "estimatedValue": null,
+        "currency": "CHF",
+        "basis": "Proposition de l'IA d'Axel à valider humainement."
+      }
+    },
+    {
+      "signalId": "gland-sit-qgis-cartolacote-2026",
+      "interpretation": {
+        "change": "Le système d'information territorial entre dans une phase de modernisation votée, avec migration technologique et usages interservices et mobiles documentés.",
+        "deduction": "Le chantier peut créer des besoins d'interopérabilité ou de données périphériques. La source ne montre toutefois pas qu'un autre marché est ouvert au-delà du périmètre SIT décrit.",
+        "primeReading": "Gland est cliente Prime : le signal reste visible, mais sa situation commerciale doit être vérifiée en interne avant toute action afin d'éviter de qualifier un travail déjà couvert.",
+        "affected": {
+          "municipalities": ["Gland"],
+          "territories": ["La Côte"],
+          "products": ["innosolvcity · contexte client seulement"],
+          "integrators": ["Cartolacôte · cité par le préavis"]
+        }
+      },
+      "qualificationProposal": {
+        "decision": "watch",
+        "owner": "",
+        "nextAction": "Confirmer avec l'équipe Prime si les interfaces ou données liées au SIT sont déjà connues, devisées ou couvertes.",
+        "dueDate": "",
+        "probability": null,
+        "estimatedValue": null,
+        "currency": "CHF",
+        "basis": "Proposition de l'IA d'Axel à valider humainement."
+      }
+    }
+  ]
+}

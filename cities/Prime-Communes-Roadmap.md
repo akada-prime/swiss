@@ -85,7 +85,7 @@ Première livraison :
 - trois angles éditoriaux sélectionnables et copiables ;
 - accès à la fiche communale d'Avenches et interface Natel dédiée.
 
-### 2.0.3 — Actualités interprétées
+### 2.0.3 — Actualités interprétées · première version livrée
 
 - Expliquer ce qu'une actualité change plutôt que recopier un lien.
 - Identifier les communes, produits, intégrateurs et territoires concernés.
@@ -93,7 +93,15 @@ Première livraison :
 - Faire naître une histoire depuis un événement, ou éclairer un signal grâce à
   l'histoire institutionnelle d'une région.
 
-### 2.0.4 — Qualification légère et forecast
+Première livraison :
+
+- bouton **Comprendre l'impact** sur chaque signal documenté ;
+- ligne de preuve séparant fait public, déduction documentée et lecture Prime ;
+- identification explicite des communes, territoires, produits et intégrateurs
+  concernés, y compris lorsqu'un lien n'est pas établi ;
+- recherche étendue aux interprétations, sans modifier le fait public source.
+
+### 2.0.4 — Qualification légère et forecast · première version livrée
 
 L'ancien point **Leads et forecast** est conservé mais replacé dans le contexte
 du Radar, sans recréer un CRM :
@@ -104,6 +112,15 @@ du Radar, sans recréer un CRM :
 - échéance ;
 - valeur estimée ;
 - lien vers les signaux et faits qui justifient la qualification.
+
+Première livraison :
+
+- bouton **Qualifier ce signal** directement relié à chaque actualité ;
+- décision, responsable, prochaine action, échéance, probabilité et valeur ;
+- cockpit calculant le forecast brut et pondéré ;
+- brouillons conservés uniquement dans le navigateur utilisé ;
+- aucune création de lead, écriture Supabase ou donnée métier validée ; la
+  persistance centrale, les droits et l'audit restent en 2.5.
 
 Estimation historique conservée : 14–28 h · 35–80 crédits.
 
