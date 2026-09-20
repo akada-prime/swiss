@@ -279,22 +279,185 @@ Ex√©cute directement la mise √† jour : modifie le JSON, adapte les tests si n√©c
         <div class="news-change"><span>En clair</span><strong>${escapeHtml(interpretation.change)}</strong></div>
         <div class="news-affected">${affectedMarkup(interpretation.affected)}</div>
       </section>
-      <section class="news-tool-panel news-qualification-panel" data-news-panel="qualification" data-mı◊KhëÈÏ∂ªßq´^t€€ù[ùH	‘õ€\€‹pÍH0≠»Z\ŸH0Ëõ›\à[òÍYx†)âŒ¬à⁄[ô›ÀúŸ][Y[›]
+      <section class="news-tool-panel news-qualification-panel" data-news-panel="qualification" data-news-signal="${escapeHtml(signal.id)}" hidden>
+        <header><div><span>Qualification l√©g√®re ¬∑ 2.0.4</span><strong>D√©cider de la prochaine action</strong></div><small>Brouillon sur cet appareil ¬∑ aucun CRM cr√©√©</small></header>
+        <form data-qualification-form="${escapeHtml(signal.id)}">
+          <label><span>D√©cision</span><select name="decision">${decisionOptions(qualification.decision)}</select></label>
+          <label><span>Responsable</span><input name="owner" value="${escapeHtml(qualification.owner || '')}" placeholder="√Ä attribuer"></label>
+          <label class="wide"><span>Prochaine action</span><textarea name="nextAction" rows="2">${escapeHtml(qualification.nextAction || '')}</textarea></label>
+          <label><span>√âch√©ance</span><input name="dueDate" type="date" value="${escapeHtml(qualification.dueDate || '')}"></label>
+          <label><span>Probabilit√©</span><div class="news-unit-input"><input name="probability" type="number" min="0" max="100" inputmode="numeric" value="${qualification.probability ?? ''}" placeholder="‚Äî"><b>%</b></div></label>
+          <label><span>Valeur estim√©e</span><div class="news-unit-input"><input name="estimatedValue" type="number" min="0" step="1000" inputmode="numeric" value="${qualification.estimatedValue ?? ''}" placeholder="‚Äî"><b>CHF</b></div></label>
+          <div class="news-qualification-actions wide"><button type="submit">Enregistrer sur cet appareil</button><button type="button" data-qualification-reset="${escapeHtml(signal.id)}">R√©initialiser</button><small data-qualification-status>${qualification.saved ? 'Brouillon enregistr√© ‚úì' : escapeHtml(qualification.basis || '')}</small></div>
+        </form>
+      </section>
+    </div>`;
+  }
 
+  function signalCard(signal) {
+    const tags = (signal.tags || []).map(tag => `<span>${escapeHtml(tag)}</span>`).join('');
+    return `<article class="news-card news-card-${escapeHtml(signal.level)}">
+      <div class="news-card-rail" aria-hidden="true"></div>
+      <div class="news-card-main">
+        <header>
+          <span class="news-level news-level-${escapeHtml(signal.level)}"><i></i>${levelLabels[signal.level] || 'Information'}</span>
+          <time datetime="${escapeHtml(signal.date)}">${formatDate(signal.date)}</time>
+        </header>
+        <button class="news-municipality" data-news-bfs="${Number(signal.bfsId)}" title="Ouvrir la fiche de ${escapeHtml(signal.municipality)}">
+          <img src="public/cantons/${escapeHtml(signal.canton.toLowerCase())}.svg" alt="">
+          <span><strong>${escapeHtml(signal.municipality)}</strong><small>${escapeHtml(signal.canton)} ¬∑ OFS ${Number(signal.bfsId)}</small></span><b>Ouvrir la fiche&nbsp;‚Ä∫</b>
+        </button>
+        <h3>${escapeHtml(signal.title)}</h3>
+        <div class="news-fact"><span>Fait public</span><p>${escapeHtml(signal.summary)}</p></div>
+        <div class="news-why"><span>Lecture de l'IA d'Axel</span><p>${escapeHtml(signal.why)}</p></div>
+        <div class="news-tags">${tags}</div>
+        ${signalTools(signal)}
+      </div>
+      <aside class="news-card-proof">
+        <span>Provenance</span><strong>${escapeHtml(signal.sourceType)}</strong>
+        ${sourceMarkup(signal)}
+        <div class="news-update"><span>Mise √† jour</span><b>${escapeHtml(signal.updatedBy || "IA d'Axel")}</b></div>
+        <div><span>Confiance</span><b class="news-confidence news-confidence-${escapeHtml(signal.confidence)}"><i></i>${confidenceLabels[signal.confidence] || '√Ä v√©rifier'}</b></div>
+      </aside>
+    </article>`;
+  }
 
-HOà⁄[ô›Àõÿÿ][€ãò\‹⁄Y€ä“U’Tì
-KL
-N¬àHÿ]⁄
-\úõ‹äH¬à€€ú€€Kô\úõ‹ä\úõ‹äN¬àYà
-›]\ H›]\Àù^€€ù[ùH	–€‹YH[\‹‹⁄XõH0≠»∞ÍY\‹ÿZYIŒ¬àBàJN¬àÿ›[Y[ùú]Y\ûTŸ[X›‹ê[
-	÷Ÿ]K[ô]‹À[]ô[I Kôõ‹ëXX⁄
-ù]€àOà¬àù]€ãòY]ô[ù\›[ô\ä	ÿ€X⁄…À
+  function render() {
+    const list = filteredSignals();
+    if (byId('newsResultCount')) byId('newsResultCount').textContent = String(list.length);
+    if (byId('newsStrongCount')) byId('newsStrongCount').textContent = String(signals.filter(item => item.level === 'strong').length);
+    if (byId('newsWatchCount')) byId('newsWatchCount').textContent = String(signals.filter(item => item.level === 'watch').length);
+    if (byId('newsMunicipalityCount')) byId('newsMunicipalityCount').textContent = String(new Set(signals.map(item => item.bfsId)).size);
+    if (byId('newsSourceCount')) byId('newsSourceCount').textContent = String(new Set(signals.map(item => item.sourceLabel)).size);
+    renderForecast();
+    const feed = byId('newsFeed');
+    if (!feed) return;
+    feed.innerHTML = list.length ? list.map(signalCard).join('') : '<div class="news-empty"><strong>Aucun signal dans cette vue.</strong><span>Essaie un autre niveau ou efface la recherche.</span></div>';
+    feed.querySelectorAll('[data-news-bfs]').forEach(button => {
+      button.addEventListener('click', () => {
+        const municipality = all.find(item => Number(item.id) === Number(button.dataset.newsBfs));
+        if (municipality && typeof openDrawer === 'function') openDrawer(municipality);
+      });
+    });
+    feed.querySelectorAll('[data-news-tool]').forEach(button => {
+      button.addEventListener('click', () => {
+        const card = button.closest('.news-card');
+        const panel = card?.querySelector(`[data-news-panel="${button.dataset.newsTool}"]`);
+        const opening = Boolean(panel?.hidden);
+        card?.querySelectorAll('[data-news-panel]').forEach(item => { item.hidden = true; });
+        card?.querySelectorAll('[data-news-tool]').forEach(item => {
+          item.classList.remove('active');
+          item.setAttribute('aria-expanded', 'false');
+        });
+        if (panel && opening) {
+          panel.hidden = false;
+          button.classList.add('active');
+          button.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+    feed.querySelectorAll('[data-qualification-form]').forEach(form => {
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const values = readQualifications();
+        values[form.dataset.qualificationForm] = {
+          decision: formData.get('decision'),
+          owner: String(formData.get('owner') || '').trim(),
+          nextAction: String(formData.get('nextAction') || '').trim(),
+          dueDate: formData.get('dueDate') || '',
+          probability: formData.get('probability') === '' ? null : Number(formData.get('probability')),
+          estimatedValue: formData.get('estimatedValue') === '' ? null : Number(formData.get('estimatedValue')),
+          currency: 'CHF',
+          savedAt: new Date().toISOString()
+        };
+        writeQualifications(values);
+        const status = form.querySelector('[data-qualification-status]');
+        if (status) status.textContent = 'Brouillon enregistr√© sur cet appareil ‚úì';
+        renderForecast();
+      });
+    });
+    feed.querySelectorAll('[data-qualification-reset]').forEach(button => {
+      button.addEventListener('click', () => {
+        const values = readQualifications();
+        delete values[button.dataset.qualificationReset];
+        writeQualifications(values);
+        render();
+      });
+    });
+  }
 
-HOà¬àX›]ôS]ô[Hù]€ãô]\Ÿ]õô]‹”]ô[	ÿ[	Œ¬àÿ›[Y[ùú]Y\ûTŸ[X›‹ê[
-	÷Ÿ]K[ô]‹À[]ô[I Kôõ‹ëXX⁄
-][HOà][Kò€\‹”\›ùŸŸ€J	ÿX›]ôIÀ][HOOHù]€äJN¬àô[ô\ä
-N¬àJN¬àJN¬Çà⁄[ô›Àîö[YP€€[][ô\”ô]‹»H»ô[ô\ãô[ÿYàÿYN¬àõ⁄YÿY[ò[\⁄\ 
-Kù[äÿY
-N¬àõ⁄YÿY›‹öY\ 
-N¬üJJ
-N¬
+  async function loadAnalysis() {
+    try {
+      const response = await fetch(ANALYSIS_URL, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Analyses ${response.status}`);
+      const data = await response.json();
+      analysisItems = Array.isArray(data.items) ? data.items : [];
+    } catch (error) {
+      console.error(error);
+      analysisItems = [];
+    }
+  }
+
+  async function load() {
+    try {
+      const response = await fetch(DATA_URL, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Radar ${response.status}`);
+      const data = await response.json();
+      radarMeta = data.meta || {};
+      signals = Array.isArray(data.signals) ? data.signals : [];
+      const status = byId('newsRefreshStatus');
+      const refreshButton = byId('newsManualRefresh');
+      let request = null;
+      try {
+        request = JSON.parse(localStorage.getItem(REFRESH_REQUEST_KEY) || 'null');
+      } catch {
+        localStorage.removeItem(REFRESH_REQUEST_KEY);
+      }
+      const changedAfterRequest = request && (
+        radarMeta.updatedOn !== request.updatedOn || signals.length !== request.signalCount
+      );
+      if (status && changedAfterRequest) {
+        status.textContent = `Radar actualis√© ‚úì ¬∑ ${signals.length} signal${signals.length > 1 ? 's' : ''}`;
+        refreshButton?.classList.add('is-success');
+        localStorage.removeItem(REFRESH_REQUEST_KEY);
+      } else if (status && radarMeta.updatedOn) {
+        status.textContent = `Derni√®re veille ¬∑ ${formatDate(radarMeta.updatedOn)}`;
+      }
+      render();
+    } catch (error) {
+      console.error(error);
+      if (byId('newsFeed')) byId('newsFeed').innerHTML = '<div class="news-empty"><strong>Le Radar ne peut pas √™tre charg√©.</strong><span>Les autres vues restent disponibles.</span></div>';
+    }
+  }
+
+  byId('newsQuery')?.addEventListener('input', render);
+  byId('newsManualRefresh')?.addEventListener('click', async () => {
+    const status = byId('newsRefreshStatus');
+    try {
+      localStorage.setItem(REFRESH_REQUEST_KEY, JSON.stringify({
+        updatedOn: radarMeta.updatedOn || null,
+        signalCount: signals.length,
+        requestedAt: new Date().toISOString()
+      }));
+      await copyRefreshPrompt();
+      byId('newsManualRefresh')?.classList.add('is-launching');
+      if (status) status.textContent = 'Prompt copi√© ¬∑ mise √† jour lanc√©e‚Ä¶';
+      window.setTimeout(() => window.location.assign(CHAT_URL), 900);
+    } catch (error) {
+      console.error(error);
+      if (status) status.textContent = 'Copie impossible ¬∑ r√©essaie';
+    }
+  });
+  document.querySelectorAll('[data-news-level]').forEach(button => {
+    button.addEventListener('click', () => {
+      activeLevel = button.dataset.newsLevel || 'all';
+      document.querySelectorAll('[data-news-level]').forEach(item => item.classList.toggle('active', item === button));
+      render();
+    });
+  });
+
+  window.PrimeCommunesNews = { render, reload: load };
+  void loadAnalysis().then(load);
+  void loadStories();
+})();
