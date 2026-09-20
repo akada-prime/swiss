@@ -14,17 +14,17 @@ test('NEWS is a first-class deep-linked view', async () => {
   assert.match(bridge, /byId\('newsView'\)\.hidden = next !== 'news'/);
   assert.match(loader, /prime-communes-news-2\.0\.js/);
   assert.match(loader, /prime-communes-news-2\.0\.css/);
-  assert.match(html, /prime-communes-1\.1\.js\?v=22/);
-  assert.match(loader, /prime-communes-1\.1-base\.js\?v=10/);
+  assert.match(html, /prime-communes-1\.1\.js\?v=23/);
+  assert.match(loader, /prime-communes-1\.1-base\.js\?v=11/);
   assert.match(loader, /prime-communes-news-2\.0\.js\?v=10/);
   assert.match(loader, /prime-communes-news-2\.0\.css\?v=11/);
-  assert.match(loader, /prime-communes-roadmap-2\.0\.css\?v=2/);
+  assert.match(loader, /prime-communes-roadmap-2\.0\.css\?v=3/);
   assert.match(html, /class="news-beta-note"/);
   assert.match(html, /class="news-nav-badge">BÊTA/);
   assert.doesNotMatch(html, /news-nav-dot/);
   assert.match(html, /La source publique primaire reste la référence/);
   assert.ok(html.indexOf('news-beta-note') < html.indexOf('news-intro'));
-  assert.match(html, /Prime Communes · version 2\.0\.4/);
+  assert.match(html, /Prime Communes · version 2\.0\.5/);
 });
 
 test('all five view headers share one responsive typography contract', async () => {
@@ -173,7 +173,8 @@ test('Radar is functional without a new database write path', async () => {
   assert.doesNotMatch(runtime, /SUPABASE|rpc\//i);
 });
 
-test('roadmap preserves old phases while making NEWS 2.0 current', async () => {
+test('roadmap preserves old phases while completing NEWS 2.0', async () => {
+  const html = await read('index.html');
   const roadmap = await read('Prime-Communes-Roadmap.md');
   for (const item of [
     'Qualification légère et forecast',
@@ -185,6 +186,11 @@ test('roadmap preserves old phases while making NEWS 2.0 current', async () => {
     'Carte et statistiques temporelles',
     'Collecte et intelligence Web'
   ]) assert.match(roadmap, new RegExp(item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  assert.match(roadmap, /2\.0 — NEWS! · Faire parler les communes · terminé/);
+  assert.match(roadmap, /2\.0\.5 — Portrait communal · livré/);
+  assert.match(html, /journey-understand journey-done/);
+  assert.match(html, /history-stage completed-20/);
+  assert.match(html, /<span class="roadmap-done">Terminé ✓<\/span>/);
 });
 
 test('commune refresh confirms fast updates on desktop and Natel', async () => {

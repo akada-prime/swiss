@@ -6,6 +6,131 @@
   // row number → canton flag → commune name.
   // Hosting belongs to the enriched Logiciels view, alongside ERP and Modules.
   const baseRender = render;
+  const WIKIPEDIA_API = 'https://fr.wikipedia.org/w/api.php';
+  const WIKIPEDIA_CACHE_KEY = 'primeCommunesWikipediaV1';
+  const WIKIPEDIA_CACHE_TTL = 30 * 24 * 60 * 60 * 1000;
+  const CANTON_NAMES = {
+    AG:'Argovie', AI:'Appenzell Rhodes-Intérieures', AR:'Appenzell Rhodes-Extérieures', BE:'Berne',
+    BL:'Bâle-Campagne', BS:'Bâle-Ville', FR:'Fribourg', GE:'Genève', GL:'Glaris', GR:'Grisons',
+    JU:'Jura', LU:'Lucerne', NE:'Neuchâtel', NW:'Nidwald', OW:'Obwald', SG:'Saint-Gall',
+    SH:'Schaffhouse', SO:'Soleure', SZ:'Schwytz', TG:'Thurgovie', TI:'Tessin', UR:'Uri',
+    VD:'Vaud', VS:'Valais', ZG:'Zoug', ZH:'Zurich'
+  };
+
+  function normalizeWikiText(value) {
+    return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('fr-CH');
+  }
+
+  function wikipediaCache() {
+    try { return JSON.parse(localStorage.getItem(WIKIPEDIA_CACHE_KEY) || '{}'); }
+    catch { return {}; }
+  }
+
+  function readWikipediaCache(commune) {
+    const item = wikipediaCache()[String(commune.id)];
+    return item && Date.now() - item.savedAt < WIKIPEDIA_CACHE_TTL ? item.data : null;
+  }
+
+  function writeWikipediaCache(commune, data) {
+    try {
+      const cache = wikipediaCache();
+      cache[String(commune.id)] = { savedAt: Date.now(), data };
+      localStorage.setItem(WIKIPEDIA_CACHE_KEY, JSON.stringify(cache));
+    } catch { /* A private browser may refuse storage; the portrait still works. */ }
+  }
+
+  function wikipediaCandidateScore(page, commune) {
+    if (!page?.extract || page.pageprops?.disambiguation !== undefined) return -1;
+    const title = normalizeWikiText(page.title);
+    const extract = normalizeWikiText(page.extract);
+    const name = normalizeWikiText(commune.name);
+    const canton = normalizeWikiText(CANTON_NAMES[commune.canton] || commune.canton);
+    const district = normalizeWikiText(commune.district);
+    const nameTokens = name.split(/[^a-z0-9]+/).filter(token => token.length > 2);
+    if (!nameTokens.every(token => `${title} ${extract}`.includes(token))) return -1;
+    const geographicMatch = (canton && extract.includes(canton)) || (district && extract.includes(district));
+    if (!geographicMatch) return -1;
+    let score = title === name ? 120 : title.startsWith(`${name} (`) ? 105 : title.includes(name) ? 75 : 30;
+    if (/commune|ville suisse|municipalite/.test(extract)) score += 30;
+    if (canton && extract.includes(canton)) score += 25;
+    if (district && extract.includes(district)) score += 15;
+    return score;
+  }
+
+  async function fetchWikipediaPortrait(commune) {
+    const cached = readWikipediaCache(commune);
+    if (cached) return cached;
+    const canton = CANTON_NAMES[commune.canton] || commune.canton || '';
+    const params = new URLSearchParams({
+      action: 'query', generator: 'search', gsrsearch: `"${commune.name}" commune ${canton}`,
+      gsrnamespace: '0', gsrlimit: '6', prop: 'extracts|pageimages|info|pageprops',
+      exintro: '1', explaintext: '1', exsentences: '5', piprop: 'thumbnail', pithumbsize: '720',
+      inprop: 'url', redirects: '1', format: 'json', formatversion: '2', origin: '*'
+    });
+    const response = await fetch(`${WIKIPEDIA_API}?${params}`);
+    if (!response.ok) throw new Error(`Wikipédia ${response.status}`);
+    const payload = await response.json();
+    const pages = payload?.query?.pages || [];
+    const ranked = pages.map(page => ({ page, score: wikipediaCandidateScore(page, commune) }))
+      .filter(item => item.score >= 0).sort((a, b) => b.score - a.score);
+    const page = ranked[0]?.page;
+    if (!page) throw new Error('Aucun article communal non ambigu');
+    const data = { title: page.title, extract: page.extract, url: page.fullurl, thumbnail: page.thumbnail?.source || '' };
+    writeWikipediaCache(commune, data);
+    return data;
+  }
+
+  function closeCommunePortrait() {
+    const root = document.getElementById('portraitRoot');
+    if (root) root.innerHTML = '';
+    document.documentElement.classList.remove('portrait-open');
+    document.body.classList.remove('portrait-open');
+  }
+
+  function portraitWikipediaMarkup(data) {
+    if (!data) return `<div class="portrait-wiki-fallback"><strong>Résumé Wikipédia indisponible</strong><p>Les faits Prime Communes restent affichés. Aucun article n’a été retenu plutôt que de risquer une confusion entre deux communes.</p></div>`;
+    return `<article class="portrait-wiki-card">
+      ${data.thumbnail ? `<img src="${esc(data.thumbnail)}" alt="Illustration de ${esc(data.title)} sur Wikipédia">` : ''}
+      <div><p>${esc(data.extract)}</p><a href="${esc(data.url)}" target="_blank" rel="noopener noreferrer">Lire sur Wikipédia ↗</a></div>
+    </article>`;
+  }
+
+  async function openCommunePortrait(commune) {
+    if (!commune) return;
+    const root = document.getElementById('portraitRoot');
+    if (!root) return;
+    const cantonName = CANTON_NAMES[commune.canton] || commune.canton || '—';
+    root.innerHTML = `<div class="portrait-backdrop">
+      <aside class="commune-portrait" role="dialog" aria-modal="true" aria-labelledby="portraitTitle">
+        <button class="portrait-close" type="button" aria-label="Fermer le portrait">×</button>
+        <header class="portrait-heading">
+          <img src="public/cantons/${esc(String(commune.canton || '').toLowerCase())}.svg" alt="">
+          <div><p>Portrait communal · 2.0.5</p><h2 id="portraitTitle">${esc(commune.name)}</h2><span>OFS ${esc(commune.id)}</span></div>
+        </header>
+        <dl class="portrait-facts">
+          <div><dt>Canton</dt><dd>${esc(cantonName)}</dd></div>
+          <div><dt>District</dt><dd>${esc(commune.district || '—')}</dd></div>
+          <div><dt>Population</dt><dd>${fmt.format(commune.expectedPopulation || 0)}</dd></div>
+          <div><dt>Marché</dt><dd>${esc(commune.market || '—')}</dd></div>
+        </dl>
+        <section class="portrait-public-context">
+          <div class="portrait-section-title"><div><span>Contexte public</span><h3>En quelques lignes</h3></div><span class="portrait-no-ai">Sans IA</span></div>
+          <div class="portrait-wikipedia" aria-live="polite"><div class="portrait-loading"><i></i><span>Lecture de Wikipédia à la demande…</span></div></div>
+          <p class="portrait-source">Source : Wikipédia · texte sous licence CC BY-SA. La source originale reste la référence.</p>
+        </section>
+      </aside>
+    </div>`;
+    document.documentElement.classList.add('portrait-open');
+    document.body.classList.add('portrait-open');
+    root.querySelector('.portrait-close').onclick = closeCommunePortrait;
+    root.querySelector('.portrait-backdrop').onclick = event => { if (event.target === event.currentTarget) closeCommunePortrait(); };
+    const target = root.querySelector('.portrait-wikipedia');
+    try { target.innerHTML = portraitWikipediaMarkup(await fetchWikipediaPortrait(commune)); }
+    catch (error) { console.warn('Prime Communes · portrait Wikipédia indisponible', error); target.innerHTML = portraitWikipediaMarkup(null); }
+  }
+
+  window.openCommunePortrait = openCommunePortrait;
+  window.addEventListener('keydown', event => { if (event.key === 'Escape' && document.body.classList.contains('portrait-open')) closeCommunePortrait(); });
 
   function decorateCommuneIdentity() {
     const table = document.querySelector('.table-wrap table');
@@ -42,10 +167,17 @@
         const identity = document.createElement('span');
         identity.className = 'commune-identity';
 
-        const rank = document.createElement('span');
+        const rank = document.createElement('button');
+        rank.type = 'button';
         rank.className = 'commune-rank';
         rank.textContent = String(rowIndex + 1);
-        rank.setAttribute('aria-label', `Ligne ${rowIndex + 1}`);
+        rank.title = `Découvrir ${commune.name}`;
+        rank.setAttribute('aria-label', `Découvrir le portrait de ${commune.name}`);
+        rank.addEventListener('click', event => {
+          event.preventDefault();
+          event.stopPropagation();
+          openCommunePortrait(commune);
+        });
 
         const flag = document.createElement('img');
         flag.className = 'commune-canton-flag';

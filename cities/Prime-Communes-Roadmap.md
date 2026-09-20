@@ -49,7 +49,7 @@ La 1.1 décrit le socle de données stabilisé. Elle n'historise pas encore les 
 Cette étape fonctionnelle est distincte de l'ancienne phase technique 1.5, dont
 tous les éléments restent conservés en 2.5.
 
-## 2.0 — NEWS! · Faire parler les communes · phase active
+## 2.0 — NEWS! · Faire parler les communes · terminé
 
 ### 2.0.1 — Radar communal · première version livrée, enrichissement actif
 
@@ -123,6 +123,18 @@ Première livraison :
   persistance centrale, les droits et l'audit restent en 2.5.
 
 Estimation historique conservée : 14–28 h · 35–80 crédits.
+
+### 2.0.5 — Portrait communal · livré
+
+- Le numéro de ligne ouvre un portrait public sans détourner le clic normal de
+  la fiche communale éditable.
+- Les faits déjà présents dans Prime Communes sont affichés immédiatement.
+- Le résumé et l'illustration Wikipédia ne sont chargés qu'à l'ouverture.
+- Le canton et le district servent à écarter les pages homonymes ou ambiguës.
+- La source, le lien vers l'article et la licence CC BY-SA restent visibles.
+- Sans article sûr, le portrait conserve les faits locaux et indique clairement
+  que le résumé Wikipédia est indisponible.
+- Aucun modèle d'IA ni nouvelle écriture de données n'est utilisé.
 
 ### Extensions fonctionnelles 2.x
 

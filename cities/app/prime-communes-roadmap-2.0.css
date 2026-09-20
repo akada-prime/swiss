@@ -55,6 +55,10 @@
 .completed-15:before{background:linear-gradient(90deg,#35b8cf,#218ddc);opacity:.62}
 .completed-15 .roadmap-version{border-color:rgba(70,196,218,.24);color:#67d2e5;background:rgba(23,129,155,.13)}
 .completed-15 h2{color:#c0ccd5}
+.completed-20{border-color:rgba(54,184,154,.18);background:linear-gradient(145deg,rgba(31,135,120,.085),rgba(255,255,255,.016));box-shadow:none;opacity:.76}
+.completed-20:before{background:linear-gradient(90deg,#36b89a,#1780ce);opacity:.62}
+.completed-20 .roadmap-version{border-color:rgba(72,202,151,.24);color:#70d7ae;background:rgba(34,145,104,.13)}
+.completed-20 h2{color:#c0ccd5}
 .history-stage.current{border-color:rgba(54,184,154,.24);background:linear-gradient(145deg,rgba(31,135,120,.12),rgba(255,255,255,.018))}
 .history-stage.current:before{background:linear-gradient(90deg,#36b89a,#1780ce)}
 .history-stage.current .roadmap-version{border-color:rgba(72,202,151,.28);color:#70d7ae;background:rgba(34,145,104,.14)}

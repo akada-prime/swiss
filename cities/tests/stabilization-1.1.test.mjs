@@ -36,6 +36,26 @@ test('hosting is appended after Modules by the canonical Communes view', async (
   assert.match(js, /normalizeEmptyCells/);
 });
 
+test('2.0.5 opens a sourced commune portrait from the row number without AI or eager loading', async () => {
+  const html = await read('index.html');
+  const js = await read('app/prime-communes-communes-1.2.js');
+  const css = await read('app/prime-communes-1.1.5.css');
+  assert.match(html, /id="portraitRoot"/);
+  assert.match(js, /const rank = document\.createElement\('button'\)/);
+  assert.match(js, /event\.stopPropagation\(\)/);
+  assert.match(js, /openCommunePortrait\(commune\)/);
+  assert.match(js, /https:\/\/fr\.wikipedia\.org\/w\/api\.php/);
+  assert.match(js, /origin: '\*'/);
+  assert.match(js, /WIKIPEDIA_CACHE_TTL/);
+  assert.match(js, /wikipediaCandidateScore/);
+  assert.match(js, /Aucun article communal non ambigu/);
+  assert.match(js, /Résumé Wikipédia indisponible/);
+  assert.match(js, /Sans IA/);
+  assert.doesNotMatch(js, /openai|chatgpt|anthropic/i);
+  assert.match(css, /\.portrait-backdrop\{/);
+  assert.match(css, /html\.portrait-open,body\.portrait-open\{overflow:hidden\}/);
+});
+
 test('mobile peer filters remain a strict two-column grid', async () => {
   const css = await read('app/prime-communes-1.1.7-mobile.css');
   assert.match(css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
@@ -179,6 +199,7 @@ test('Roadmap styling is canonical and absent from legacy stabilization layers',
   assert.doesNotMatch(legacy, /roadmap-|journey-/);
   assert.doesNotMatch(css, /!important/);
   assert.match(css, /\.completed-15\{/);
+  assert.match(css, /\.completed-20\{/);
   assert.match(css, /\.history-stage\.current\{/);
 });
 

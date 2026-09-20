@@ -34,6 +34,7 @@
   min-width:0;
 }
 .commune-rank{
+  appearance:none;
   display:grid;
   place-items:center;
   width:30px;
@@ -46,6 +47,16 @@
   font-weight:750;
   line-height:1;
   font-variant-numeric:tabular-nums;
+  font-family:inherit;
+  cursor:pointer;
+  transition:border-color .18s ease,color .18s ease,background .18s ease,transform .18s ease;
+}
+.commune-rank:hover,.commune-rank:focus-visible{
+  color:#bde5ff;
+  border-color:rgba(55,162,236,.48);
+  outline:none;
+  background:rgba(10,102,170,.17);
+  transform:translateY(-1px);
 }
 .table-wrap tbody tr:hover .commune-rank{
   color:#a8d9fb;
@@ -265,9 +276,85 @@
   line-height:1.4;
 }
 
+/* 2.0.5 · Portrait communal. Public context is fetched only after a rank click. */
+html.portrait-open,body.portrait-open{overflow:hidden}
+.portrait-backdrop{
+  position:fixed;
+  z-index:90;
+  inset:0;
+  display:flex;
+  justify-content:flex-end;
+  background:rgba(1,5,11,.7);
+  backdrop-filter:blur(8px);
+}
+.commune-portrait{
+  position:relative;
+  width:min(540px,100%);
+  height:100%;
+  overflow:auto;
+  padding:34px;
+  border-left:1px solid rgba(83,169,229,.2);
+  background:
+    radial-gradient(circle at 85% 8%,rgba(115,77,212,.17),transparent 34%),
+    radial-gradient(circle at 10% 35%,rgba(15,130,194,.14),transparent 32%),
+    #07101b;
+  box-shadow:-32px 0 90px rgba(0,0,0,.46);
+}
+.portrait-close{
+  position:absolute;
+  top:20px;
+  right:20px;
+  display:grid;
+  place-items:center;
+  width:42px;
+  height:42px;
+  padding:0;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:50%;
+  color:#c5d1df;
+  background:rgba(255,255,255,.045);
+  font:300 28px/1 Arial,sans-serif;
+  cursor:pointer;
+}
+.portrait-heading{display:flex;align-items:center;gap:18px;padding:28px 54px 26px 0}
+.portrait-heading>img{width:62px;height:62px;object-fit:contain;filter:drop-shadow(0 8px 15px rgba(0,0,0,.28))}
+.portrait-heading p{margin:0 0 6px;color:#6dbdf2;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.portrait-heading h2{margin:0;color:#f1f6fb;font-size:38px;line-height:1.02;letter-spacing:-.045em}
+.portrait-heading span{display:block;margin-top:7px;color:#78889c;font-size:11px}
+.portrait-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 22px}
+.portrait-facts>div{padding:13px 14px;border:1px solid rgba(255,255,255,.07);border-radius:13px;background:rgba(2,7,14,.34)}
+.portrait-facts dt{color:#65758a;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.portrait-facts dd{margin:5px 0 0;color:#c9d4df;font-size:13px;font-weight:650;line-height:1.35}
+.portrait-public-context{padding:20px;border:1px solid rgba(75,160,218,.18);border-radius:20px;background:rgba(8,18,30,.66)}
+.portrait-section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:16px}
+.portrait-section-title span{color:#6b7c91;font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.portrait-section-title h3{margin:4px 0 0;color:#e4ebf2;font-size:22px;letter-spacing:-.025em}
+.portrait-section-title .portrait-no-ai{padding:7px 9px;border:1px solid rgba(90,211,169,.24);border-radius:999px;color:#75d9b6;background:rgba(37,145,109,.1);white-space:nowrap}
+.portrait-loading{display:flex;align-items:center;gap:11px;min-height:104px;color:#8493a6;font-size:12px}
+.portrait-loading i{width:18px;height:18px;border:2px solid rgba(89,180,239,.2);border-top-color:#62bdf7;border-radius:50%;animation:portrait-spin .8s linear infinite}
+@keyframes portrait-spin{to{transform:rotate(360deg)}}
+.portrait-wiki-card{display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;align-items:start}
+.portrait-wiki-card>img{width:112px;height:112px;object-fit:cover;border-radius:13px;background:#111a26}
+.portrait-wiki-card p,.portrait-wiki-fallback p{margin:0;color:#aeb9c7;font-size:13px;line-height:1.62}
+.portrait-wiki-card a{display:inline-flex;margin-top:13px;color:#70c5fa;font-size:12px;font-weight:750;text-decoration:none}
+.portrait-wiki-card a:hover{text-decoration:underline}
+.portrait-wiki-fallback{padding:16px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(0,0,0,.18)}
+.portrait-wiki-fallback strong{display:block;margin-bottom:7px;color:#d7e0e9;font-size:13px}
+.portrait-source{margin:18px 0 0;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);color:#617085;font-size:9.5px;line-height:1.5}
+
 @media(max-width:680px){
   .drawer-edit-grid{grid-template-columns:1fr}
   .drawer-edit-grid .full-width{grid-column:auto}
   .drawer-module-grid{grid-template-columns:1fr}
   .stats-kpi small,.territory-comparison span>small,.territory-comparison button>small,.stats-rank>small{font-size:11px}
+  .commune-portrait{width:100%;padding:24px 18px 34px;border-left:0}
+  .portrait-close{top:15px;right:15px}
+  .portrait-heading{padding:22px 50px 22px 0}
+  .portrait-heading>img{width:54px;height:54px}
+  .portrait-heading h2{font-size:32px}
+  .portrait-facts{gap:7px}
+  .portrait-facts>div{padding:12px}
+  .portrait-public-context{padding:17px}
+  .portrait-wiki-card{grid-template-columns:1fr}
+  .portrait-wiki-card>img{width:100%;height:180px}
 }

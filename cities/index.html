@@ -209,7 +209,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         <li class="journey-done"><span>1.0</span><strong>Rassembler</strong></li>
         <li class="journey-know journey-done"><span>1.1</span><strong>Savoir</strong></li>
         <li class="journey-bridge journey-done"><span>1.5</span><strong>Mettre en perspective</strong></li>
-        <li class="journey-understand journey-current"><span>2.0</span><strong>Faire parler</strong></li>
+        <li class="journey-understand journey-done"><span>2.0</span><strong>Faire parler</strong></li>
         <li class="journey-see"><span>2.5</span><strong>Comprendre le temps</strong></li>
         <li class="journey-anticipate"><span>3.0</span><strong>Anticiper</strong></li>
       </ol>
@@ -239,13 +239,14 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
             <div><strong>Deux niveaux de lecture</strong><span>Territoire révèle les informations géographiques ; Systèmes révèle l’écosystème IT.</span><small>Vue minimale par défaut · détails à la demande</small></div>
           </div>
         </article>
-        <article class="roadmap-stage history-stage current">
-          <header><span class="roadmap-version">2.0</span><div><p>NEWS</p><h2>Faire parler</h2></div></header>
+        <article class="roadmap-stage history-stage completed-20">
+          <header><span class="roadmap-version">2.0</span><div><p>NEWS</p><h2>Faire parler</h2></div><span class="roadmap-done">Terminé ✓</span></header>
           <div class="roadmap-items">
             <div><strong>NEWS · Radar communal</strong><span>Détecter et interpréter les actualités, décisions et indices qui annoncent une transformation communale.</span><small>2.0.1 · première version livrée · enrichissement actif</small></div>
             <div><strong>Une commune, une histoire</strong><span>Raconter son identité, son histoire avec Prime et les liens humains ou territoriaux qui donnent du sens à notre métier.</span><small>2.0.2 · premier récit Avenches–Le Noirmont livré</small></div>
             <div><strong>Actualités interprétées</strong><span>Expliquer ce qu'un fait change, quelles communes sont concernées et distinguer fait, déduction et lecture Prime.</span><small>2.0.3 · livré dans chaque signal</small></div>
             <div><strong>Qualification légère et forecast</strong><span>Responsable, prochaine action, probabilité, échéance et valeur estimée, reliés aux signaux qui les justifient.</span><small>2.0.4 · cockpit local livré · persistance centrale en 2.5</small></div>
+            <div><strong>Portrait communal</strong><span>Ouvrir depuis le numéro de ligne un résumé public de la commune, complété à la demande par Wikipédia sans recours à l’IA.</span><small>2.0.5 · source et licence visibles · homonymes contrôlés · repli local sûr</small></div>
           </div>
         </article>
         <article class="roadmap-stage map-stage">
@@ -277,7 +278,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   </section>
   <footer class="site-footer" aria-label="Informations légales et techniques">
     <div class="footer-meta">
-      <span>Prime Communes · version 2.0.4</span>
+      <span>Prime Communes · version 2.0.5</span>
       <span class="footer-confidential">Données confidentielles</span>
     </div>
     <div class="footer-legal">
@@ -288,6 +289,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   </footer>
 </main>
 <div id="drawerRoot"></div>
+<div id="portraitRoot"></div>
 <script>
 const fmt=new Intl.NumberFormat('fr-CH'),pct=new Intl.NumberFormat('fr-CH',{minimumFractionDigits:1,maximumFractionDigits:1});let all=[],primeOnly=false,eadminOnly=false,issuesOnly=false,districtsMode=false,marketOnly='',ofsMode=false,sortKey='population',sortDirection='desc',mapGeometry=null,mapMode='integrator',mapPerspective='impact',mapProduct='eAdmin',mapViewBox=null,mapInitialViewBox=null,mapFullViewBox=null,mapDragging=false,mapMoved=false,statsMetric='population',statsThreshold=0;
 const supplierChoices=['Abraxas','Axians','Ciges','Data','Epsitec','OBT','Ofisa','Prime','SIACG','SIEN','T2i','Talus']; const softwareChoices=['innosolvcity','Urbanus','Calvin','Citizen','ETIC','BDI','Crésus','Epsilon','Ruf'];
@@ -480,6 +482,6 @@ $('statsScope').addEventListener('change',renderStats);document.querySelectorAll
 $('query').addEventListener('input',render);$('solution').addEventListener('change',render);$('district').addEventListener('change',render);$('canton').addEventListener('change',()=>{$('district').value='';updateDistrictOptions();render()});$('primeOnly').onclick=()=>{primeOnly=!primeOnly;$('primeOnly').classList.toggle('on',primeOnly);render()};$('eadminOnly').onclick=()=>{eadminOnly=!eadminOnly;$('eadminOnly').classList.toggle('on',eadminOnly);$('eadminOnly').classList.toggle('eadmin-on',eadminOnly);render()};$('districtsToggle').onclick=()=>{districtsMode=!districtsMode;if(!districtsMode)$('district').value='';updateDistrictOptions();$('districtsToggle').classList.toggle('on',districtsMode);$('districtsToggle').setAttribute('aria-expanded',String(districtsMode));render()};document.querySelectorAll('.market-toggle').forEach(button=>button.onclick=()=>{marketOnly=marketOnly===button.dataset.market?'':button.dataset.market;document.querySelectorAll('.market-toggle').forEach(x=>x.classList.toggle('on',x.dataset.market===marketOnly));render()});$('issuesOnly').onclick=()=>{issuesOnly=!issuesOnly;$('issuesOnly').classList.toggle('on',issuesOnly);$('issuesOnly').classList.toggle('warning',issuesOnly);render()};$('issuesCard').onclick=()=>{ofsMode=!ofsMode;if(!ofsMode)issuesOnly=false;$('issuesOnly').hidden=!ofsMode;$('issuesCard').classList.toggle('ofs-active',ofsMode);$('issuesCard').setAttribute('aria-pressed',String(ofsMode));$('ofsLabel').textContent=ofsMode?'Contrôle Delimo actif':'Qualité des livraisons';$('ofsCopy').textContent=ofsMode?'Les statuts OFS et erreurs EWID sont affichés dans le tableau.':'Afficher les statuts, erreurs EWID et commentaires OFS.';$('ofsCount').textContent=$('issues').textContent+' à surveiller';$('ofsAction').textContent=ofsMode?'Revenir au marché':'Ouvrir le contrôle';$('ofsArrow').textContent=ofsMode?'←':'→';render()};$('reset').onclick=()=>{$('query').value='';$('canton').value='Tous';$('district').value='';$('solution').value='Tous';primeOnly=eadminOnly=issuesOnly=districtsMode=false;marketOnly='';updateDistrictOptions();document.querySelectorAll('.filter-toggle').forEach(x=>x.classList.remove('on','warning'));render()};$('syncReload').onclick=()=>loadData(true);$('exportBtn').onclick=()=>{const rows=filtered(),withTerritory=districtsMode,header=['Nom','Client Prime','Canton',...(withTerritory?['Marché','District']:[]),'Population','Intégrateur','Métier','ERP','Modules'],lines=[header.join('\t'),...rows.map(x=>[x.name,x.isPrime?'Oui':'Non',x.canton,...(withTerritory?[x.market,x.district]:[]),x.expectedPopulation,x.integrator,x.software,x.erp,(x.products||[]).join(' | ')].join('\t'))];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/tab-separated-values'}));a.download='communes.tsv';a.click()};
 document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('newsView').hidden=view!=='news';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
 </script>
-<script src="app/prime-communes-1.1.js?v=22"></script>
+<script src="app/prime-communes-1.1.js?v=23"></script>
 </body>
 </html>

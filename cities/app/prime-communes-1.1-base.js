@@ -472,7 +472,7 @@
 
   // Roadmap 2.0 is now semantic HTML. Runtime mutation is intentionally retired.
   const footerVersion = document.querySelector('.footer-meta span:first-child');
-  if (footerVersion) footerVersion.textContent = 'Prime Communes · version 2.0.4';
+  if (footerVersion) footerVersion.textContent = 'Prime Communes · version 2.0.5';
 
   restoreFromUrl();
 })();
