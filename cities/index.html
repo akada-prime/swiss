@@ -16,8 +16,8 @@
       document.documentElement.dataset.initialView = initialView;
     })();
   </script>
-  <link rel="stylesheet" href="app/globals.css?v=21">
-  <link rel="stylesheet" href="app/product-assets.css?v=5">
+  <link rel="stylesheet" href="app/globals.css?v=22">
+  <link rel="stylesheet" href="app/product-assets.css?v=6">
 <style>
 html[data-initial-view]:not([data-initial-view="communes"]) #communesView{display:none!important}
 html[data-initial-view="map"] #mapView,
@@ -37,7 +37,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       <button class="view-tab active" data-view="communes">Communes</button>
       <button class="view-tab" data-view="map">Carte</button>
       <button class="view-tab" data-view="stats">Stats</button>
-      <button class="view-tab news-nav-tab" data-view="news">NEWS!<span class="news-nav-dot" aria-hidden="true"></span></button>
+      <button class="view-tab news-nav-tab" data-view="news">NEWS!<span class="news-nav-badge">BÊTA</span></button>
       <button class="view-tab" data-view="roadmap">Roadmap</button>
     </nav>
     <button class="sync-state" id="syncReload" title="Recharger depuis Supabase" hidden><span></span><b id="syncText" aria-live="polite">Connexion à la base…</b></button>
@@ -49,8 +49,21 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       <article class="kpi-card hero-kpi"><div class="kpi-top"><span class="kpi-label">Population couverte</span><span class="kpi-country"><img class="swiss-mark" src="public/swiss-mark.svg" alt="Suisse"><span class="kpi-badge">100%</span></span></div><strong id="population">—</strong><p><span id="communeCount">—</span> communes</p><div class="sparkline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
       <article class="kpi-card"><div class="kpi-top"><span class="kpi-label">Communes ≥ 10’000</span><span class="kpi-badge" id="over10kShare">—</span></div><strong id="over10k">—</strong><p><span id="over10kPop">—</span> habitants · <span id="over10kPopShare">—</span> du pays</p></article>
       <article class="kpi-card prime-card"><div class="kpi-top"><span class="kpi-label">Clients Prime</span><img class="prime-one" src="public/prime-one-negative.png?v=3" alt="Prime"></div><strong id="prime">—</strong><p><span id="primePop">—</span> habitants identifiés</p></article>
-      <button class="kpi-card alert-card" id="issuesCard"><span id="issues" hidden>—</span><span class="kpi-label">Contrôle OFS</span><strong id="ofsLabel">Ouvrir</strong><p><span id="ofsCopy">Afficher les statuts Delimo</span> <span id="ofsArrow">→</span></p></button>
     </section>
+    <button class="delimo-control" id="issuesCard" type="button" aria-pressed="false">
+      <span id="issues" hidden>—</span>
+      <span class="delimo-control-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="delimo-control-copy">
+        <span class="delimo-control-eyebrow">Outil de contrôle · Delimo</span>
+        <strong id="ofsLabel">Qualité des livraisons</strong>
+        <span id="ofsCopy">Afficher les statuts, erreurs EWID et commentaires OFS.</span>
+      </span>
+      <span class="delimo-control-action">
+        <span class="delimo-control-count" id="ofsCount">Chargement…</span>
+        <b id="ofsAction">Ouvrir le contrôle</b>
+        <span class="delimo-control-arrow" id="ofsArrow">→</span>
+      </span>
+    </button>
     <section class="data-panel">
       <div class="filters">
         <label class="search"><span>⌕</span><input id="query" placeholder="Rechercher une commune, un logiciel…"></label>
@@ -464,9 +477,9 @@ $('swissMap').addEventListener('pointermove',event=>{const path=event.target.clo
 $('swissMap').addEventListener('pointerup',event=>{const path=event.target.closest?.('.map-commune');mapDragging=false;$('swissMap').classList.remove('dragging');if(path&&!mapMoved)openDrawer(all.find(x=>String(x.id)===path.dataset.id))});$('swissMap').addEventListener('pointerleave',()=>{$('mapTooltip').hidden=true});
 $('mapZoomIn').onclick=()=>zoomMap(.72);$('mapZoomOut').onclick=()=>zoomMap(1.35);$('mapReset').onclick=()=>{mapViewBox=[...mapInitialViewBox];setMapView();$('mapQuery').value='';updateMapSearch()};
 $('statsScope').addEventListener('change',renderStats);document.querySelectorAll('[data-stats-metric]').forEach(button=>button.onclick=()=>{statsMetric=button.dataset.statsMetric;document.querySelectorAll('[data-stats-metric]').forEach(x=>x.classList.toggle('active',x===button));renderStats()});document.querySelectorAll('[data-stats-threshold]').forEach(button=>button.onclick=()=>{statsThreshold=Number(button.dataset.statsThreshold);document.querySelectorAll('[data-stats-threshold]').forEach(x=>x.classList.toggle('active',x===button));renderStats()});
-$('query').addEventListener('input',render);$('solution').addEventListener('change',render);$('district').addEventListener('change',render);$('canton').addEventListener('change',()=>{$('district').value='';updateDistrictOptions();render()});$('primeOnly').onclick=()=>{primeOnly=!primeOnly;$('primeOnly').classList.toggle('on',primeOnly);render()};$('eadminOnly').onclick=()=>{eadminOnly=!eadminOnly;$('eadminOnly').classList.toggle('on',eadminOnly);$('eadminOnly').classList.toggle('eadmin-on',eadminOnly);render()};$('districtsToggle').onclick=()=>{districtsMode=!districtsMode;if(!districtsMode)$('district').value='';updateDistrictOptions();$('districtsToggle').classList.toggle('on',districtsMode);$('districtsToggle').setAttribute('aria-expanded',String(districtsMode));render()};document.querySelectorAll('.market-toggle').forEach(button=>button.onclick=()=>{marketOnly=marketOnly===button.dataset.market?'':button.dataset.market;document.querySelectorAll('.market-toggle').forEach(x=>x.classList.toggle('on',x.dataset.market===marketOnly));render()});$('issuesOnly').onclick=()=>{issuesOnly=!issuesOnly;$('issuesOnly').classList.toggle('on',issuesOnly);$('issuesOnly').classList.toggle('warning',issuesOnly);render()};$('issuesCard').onclick=()=>{ofsMode=!ofsMode; if(!ofsMode)issuesOnly=false; $('issuesOnly').hidden=!ofsMode; $('issuesCard').classList.toggle('ofs-active',ofsMode); $('ofsLabel').textContent=ofsMode?$('issues').textContent:'Ouvrir'; $('ofsCopy').textContent=ofsMode?'Revenir à la vue de marché':'Afficher les statuts Delimo'; $('ofsArrow').textContent=ofsMode?'←':'→'; render()};$('reset').onclick=()=>{$('query').value='';$('canton').value='Tous';$('district').value='';$('solution').value='Tous';primeOnly=eadminOnly=issuesOnly=districtsMode=false;marketOnly='';updateDistrictOptions();document.querySelectorAll('.filter-toggle').forEach(x=>x.classList.remove('on','warning'));render()};$('syncReload').onclick=()=>loadData(true);$('exportBtn').onclick=()=>{const rows=filtered(),withTerritory=districtsMode,header=['Nom','Client Prime','Canton',...(withTerritory?['Marché','District']:[]),'Population','Intégrateur','Métier','ERP','Modules'],lines=[header.join('\t'),...rows.map(x=>[x.name,x.isPrime?'Oui':'Non',x.canton,...(withTerritory?[x.market,x.district]:[]),x.expectedPopulation,x.integrator,x.software,x.erp,(x.products||[]).join(' | ')].join('\t'))];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/tab-separated-values'}));a.download='communes.tsv';a.click()};
+$('query').addEventListener('input',render);$('solution').addEventListener('change',render);$('district').addEventListener('change',render);$('canton').addEventListener('change',()=>{$('district').value='';updateDistrictOptions();render()});$('primeOnly').onclick=()=>{primeOnly=!primeOnly;$('primeOnly').classList.toggle('on',primeOnly);render()};$('eadminOnly').onclick=()=>{eadminOnly=!eadminOnly;$('eadminOnly').classList.toggle('on',eadminOnly);$('eadminOnly').classList.toggle('eadmin-on',eadminOnly);render()};$('districtsToggle').onclick=()=>{districtsMode=!districtsMode;if(!districtsMode)$('district').value='';updateDistrictOptions();$('districtsToggle').classList.toggle('on',districtsMode);$('districtsToggle').setAttribute('aria-expanded',String(districtsMode));render()};document.querySelectorAll('.market-toggle').forEach(button=>button.onclick=()=>{marketOnly=marketOnly===button.dataset.market?'':button.dataset.market;document.querySelectorAll('.market-toggle').forEach(x=>x.classList.toggle('on',x.dataset.market===marketOnly));render()});$('issuesOnly').onclick=()=>{issuesOnly=!issuesOnly;$('issuesOnly').classList.toggle('on',issuesOnly);$('issuesOnly').classList.toggle('warning',issuesOnly);render()};$('issuesCard').onclick=()=>{ofsMode=!ofsMode;if(!ofsMode)issuesOnly=false;$('issuesOnly').hidden=!ofsMode;$('issuesCard').classList.toggle('ofs-active',ofsMode);$('issuesCard').setAttribute('aria-pressed',String(ofsMode));$('ofsLabel').textContent=ofsMode?'Contrôle Delimo actif':'Qualité des livraisons';$('ofsCopy').textContent=ofsMode?'Les statuts OFS et erreurs EWID sont affichés dans le tableau.':'Afficher les statuts, erreurs EWID et commentaires OFS.';$('ofsCount').textContent=$('issues').textContent+' à surveiller';$('ofsAction').textContent=ofsMode?'Revenir au marché':'Ouvrir le contrôle';$('ofsArrow').textContent=ofsMode?'←':'→';render()};$('reset').onclick=()=>{$('query').value='';$('canton').value='Tous';$('district').value='';$('solution').value='Tous';primeOnly=eadminOnly=issuesOnly=districtsMode=false;marketOnly='';updateDistrictOptions();document.querySelectorAll('.filter-toggle').forEach(x=>x.classList.remove('on','warning'));render()};$('syncReload').onclick=()=>loadData(true);$('exportBtn').onclick=()=>{const rows=filtered(),withTerritory=districtsMode,header=['Nom','Client Prime','Canton',...(withTerritory?['Marché','District']:[]),'Population','Intégrateur','Métier','ERP','Modules'],lines=[header.join('\t'),...rows.map(x=>[x.name,x.isPrime?'Oui':'Non',x.canton,...(withTerritory?[x.market,x.district]:[]),x.expectedPopulation,x.integrator,x.software,x.erp,(x.products||[]).join(' | ')].join('\t'))];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/tab-separated-values'}));a.download='communes.tsv';a.click()};
 document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('newsView').hidden=view!=='news';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
 </script>
-<script src="app/prime-communes-1.1.js?v=19"></script>
+<script src="app/prime-communes-1.1.js?v=21"></script>
 </body>
 </html>

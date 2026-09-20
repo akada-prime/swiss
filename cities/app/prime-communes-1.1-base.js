@@ -299,8 +299,11 @@
     byId('issuesOnly')?.classList.toggle('warning', issuesOnly);
     if (byId('issuesOnly')) byId('issuesOnly').hidden = !ofsMode;
     byId('issuesCard')?.classList.toggle('ofs-active', ofsMode);
-    if (byId('ofsLabel')) byId('ofsLabel').textContent = ofsMode ? byId('issues').textContent : 'Ouvrir';
-    if (byId('ofsCopy')) byId('ofsCopy').textContent = ofsMode ? 'Revenir à la vue de marché' : 'Afficher les statuts Delimo';
+    byId('issuesCard')?.setAttribute('aria-pressed', String(ofsMode));
+    if (byId('ofsLabel')) byId('ofsLabel').textContent = ofsMode ? 'Contrôle Delimo actif' : 'Qualité des livraisons';
+    if (byId('ofsCopy')) byId('ofsCopy').textContent = ofsMode ? 'Les statuts OFS et erreurs EWID sont affichés dans le tableau.' : 'Afficher les statuts, erreurs EWID et commentaires OFS.';
+    if (byId('ofsCount')) byId('ofsCount').textContent = `${byId('issues')?.textContent || '—'} à surveiller`;
+    if (byId('ofsAction')) byId('ofsAction').textContent = ofsMode ? 'Revenir au marché' : 'Ouvrir le contrôle';
     if (byId('ofsArrow')) byId('ofsArrow').textContent = ofsMode ? '←' : '→';
     document.querySelectorAll('.market-toggle').forEach(button => button.classList.toggle('on', button.dataset.market === marketOnly));
     decorateSoftwareColumns();

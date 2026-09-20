@@ -210,6 +210,7 @@
 }
 
 /* One header contract for Communes, Carte, Stats, NEWS! and Roadmap. */
+.workspace{padding-top:50px}
 .view-intro{display:grid;grid-template-columns:minmax(420px,1fr) minmax(320px,500px);align-items:end;gap:50px;margin-bottom:34px}
 .view-intro-copy{justify-self:end;width:100%;max-width:500px;padding:0 0 7px;color:#98a5b7;font-size:16px;line-height:1.65}
 .view-intro-copy>p{margin:0}
@@ -221,6 +222,7 @@
   .view-intro-copy{justify-self:start;max-width:600px}
 }
 @media(max-width:680px){
+  .workspace{padding-top:26px}
   .view-intro{display:block;margin-bottom:26px}
   .view-intro-copy{margin-top:24px;padding-bottom:0;font-size:16px}
 }

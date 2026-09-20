@@ -44,6 +44,24 @@ test('mobile peer filters remain a strict two-column grid', async () => {
   }
 });
 
+test('Delimo is a premium control mode, not a fourth statistic or ordinary filter', async () => {
+  const html = await read('index.html');
+  const css = await read('app/product-assets.css');
+  const bridge = await read('app/prime-communes-1.1-base.js');
+  assert.match(html, /class="delimo-control" id="issuesCard"/);
+  assert.match(html, /Outil de contrôle · Delimo/);
+  assert.match(html, /id="ofsAction">Ouvrir le contrôle/);
+  assert.doesNotMatch(html, /class="kpi-card alert-card"/);
+  const kpis = html.match(/<section class="kpi-grid">([\s\S]*?)<\/section>/)?.[1] || '';
+  assert.doesNotMatch(kpis, /issuesCard|delimo-control/);
+  assert.match(css, /\.kpi-grid\s*\{\s*grid-template-columns: 1\.35fr 1fr 1fr;/);
+  assert.match(css, /\.delimo-control\.ofs-active/);
+  assert.match(css, /@media \(max-width: 680px\)[\s\S]*\.delimo-control-action/);
+  assert.match(bridge, /setAttribute\('aria-pressed', String\(ofsMode\)\)/);
+  assert.match(bridge, /Revenir au marché/);
+  assert.match(bridge, /à surveiller/);
+});
+
 test('language markets always filter while Territoire only reveals optional columns', async () => {
   const html = await read('index.html');
   const bridge = await read('app/prime-communes-1.1-base.js');
