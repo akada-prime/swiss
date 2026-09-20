@@ -7,6 +7,7 @@
   // Hosting belongs to the enriched Logiciels view, alongside ERP and Modules.
   const baseRender = render;
   const WIKIPEDIA_API = 'https://fr.wikipedia.org/w/api.php';
+  const WIKIDATA_API = 'https://www.wikidata.org/w/api.php';
   const WIKIPEDIA_CACHE_KEY = 'primeCommunesWikipediaV1';
   const WIKIPEDIA_CACHE_TTL = 30 * 24 * 60 * 60 * 1000;
   const CANTON_NAMES = {
@@ -48,13 +49,28 @@
     const district = normalizeWikiText(commune.district);
     const nameTokens = name.split(/[^a-z0-9]+/).filter(token => token.length > 2);
     if (!nameTokens.every(token => `${title} ${extract}`.includes(token))) return -1;
-    const geographicMatch = (canton && extract.includes(canton)) || (district && extract.includes(district));
-    if (!geographicMatch) return -1;
     let score = title === name ? 120 : title.startsWith(`${name} (`) ? 105 : title.includes(name) ? 75 : 30;
     if (/commune|ville suisse|municipalite/.test(extract)) score += 30;
     if (canton && extract.includes(canton)) score += 25;
     if (district && extract.includes(district)) score += 15;
     return score;
+  }
+
+  async function wikipediaPageMatchingOFS(ranked, commune) {
+    const ids = [...new Set(ranked.map(item => item.page.pageprops?.wikibase_item).filter(Boolean))];
+    if (!ids.length) throw new Error('Aucun identifiant Wikidata communal');
+    const params = new URLSearchParams({
+      action: 'wbgetentities', ids: ids.join('|'), props: 'claims', format: 'json', origin: '*'
+    });
+    const response = await fetch(`${WIKIDATA_API}?${params}`);
+    if (!response.ok) throw new Error(`Wikidata ${response.status}`);
+    const entities = (await response.json())?.entities || {};
+    const expected = String(commune.id).replace(/\D/g, '');
+    return ranked.find(item => {
+      const entity = entities[item.page.pageprops?.wikibase_item];
+      const claims = entity?.claims?.P771 || [];
+      return claims.some(claim => String(claim?.mainsnak?.datavalue?.value || '').replace(/\D/g, '') === expected);
+    })?.page || null;
   }
 
   async function fetchWikipediaPortrait(commune) {
@@ -73,9 +89,9 @@
     const pages = payload?.query?.pages || [];
     const ranked = pages.map(page => ({ page, score: wikipediaCandidateScore(page, commune) }))
       .filter(item => item.score >= 0).sort((a, b) => b.score - a.score);
-    const page = ranked[0]?.page;
-    if (!page) throw new Error('Aucun article communal non ambigu');
-    const data = { title: page.title, extract: page.extract, url: page.fullurl, thumbnail: page.thumbnail?.source || '' };
+    const page = await wikipediaPageMatchingOFS(ranked, commune);
+    if (!page) throw new Error(`Aucun article correspondant à l’OFS ${commune.id}`);
+    const data = { title: page.title, extract: page.extract, url: page.fullurl, thumbnail: page.thumbnail?.source || '', ofs: String(commune.id), ofsVerified: true };
     writeWikipediaCache(commune, data);
     return data;
   }
@@ -89,7 +105,7 @@
 
   function portraitWikipediaMarkup(data) {
     if (!data) return `<div class="portrait-wiki-fallback"><strong>Résumé Wikipédia indisponible</strong><p>Les faits Prime Communes restent affichés. Aucun article n’a été retenu plutôt que de risquer une confusion entre deux communes.</p></div>`;
-    return `<article class="portrait-wiki-card">
+    return `<span class="portrait-ofs-match">OFS ${esc(data.ofs)} vérifié ✓</span><article class="portrait-wiki-card">
       ${data.thumbnail ? `<img src="${esc(data.thumbnail)}" alt="Illustration de ${esc(data.title)} sur Wikipédia">` : ''}
       <div><p>${esc(data.extract)}</p><a href="${esc(data.url)}" target="_blank" rel="noopener noreferrer">Lire sur Wikipédia ↗</a></div>
     </article>`;

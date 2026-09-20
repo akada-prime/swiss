@@ -45,10 +45,12 @@ test('2.0.5 opens a sourced commune portrait from the row number without AI or e
   assert.match(js, /event\.stopPropagation\(\)/);
   assert.match(js, /openCommunePortrait\(commune\)/);
   assert.match(js, /https:\/\/fr\.wikipedia\.org\/w\/api\.php/);
+  assert.match(js, /https:\/\/www\.wikidata\.org\/w\/api\.php/);
   assert.match(js, /origin: '\*'/);
   assert.match(js, /WIKIPEDIA_CACHE_TTL/);
   assert.match(js, /wikipediaCandidateScore/);
-  assert.match(js, /Aucun article communal non ambigu/);
+  assert.match(js, /claims\?\.P771/);
+  assert.match(js, /OFS .* vérifié/);
   assert.match(js, /Résumé Wikipédia indisponible/);
   assert.match(js, /Sans IA/);
   assert.doesNotMatch(js, /openai|chatgpt|anthropic/i);
@@ -68,11 +70,12 @@ test('Delimo is a premium control mode, not a fourth statistic or ordinary filte
   const html = await read('index.html');
   const css = await read('app/product-assets.css');
   const bridge = await read('app/prime-communes-1.1-base.js');
-  assert.match(html, /product-assets\.css\?v=8/);
-  assert.match(bridge, /product-assets\.css\?v=8/);
+  assert.match(html, /product-assets\.css\?v=9/);
+  assert.match(bridge, /product-assets\.css\?v=9/);
   assert.match(html, /class="delimo-control" id="issuesCard"/);
   assert.match(html, /Outil de contrôle · Delimo/);
   assert.match(html, /id="ofsAction">Ouvrir le contrôle/);
+  assert.match(html, /public\/assets\/delimo\/favicon\.ico/);
   assert.doesNotMatch(html, /class="kpi-card alert-card"/);
   const kpis = html.match(/<section class="kpi-grid">([\s\S]*?)<\/section>/)?.[1] || '';
   assert.doesNotMatch(kpis, /issuesCard|delimo-control/);

@@ -333,6 +333,7 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 .portrait-loading{display:flex;align-items:center;gap:11px;min-height:104px;color:#8493a6;font-size:12px}
 .portrait-loading i{width:18px;height:18px;border:2px solid rgba(89,180,239,.2);border-top-color:#62bdf7;border-radius:50%;animation:portrait-spin .8s linear infinite}
 @keyframes portrait-spin{to{transform:rotate(360deg)}}
+.portrait-ofs-match{display:inline-flex;margin:0 0 13px;padding:6px 9px;border:1px solid rgba(90,211,169,.2);border-radius:999px;color:#72d7b2;background:rgba(37,145,109,.09);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .portrait-wiki-card{display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;align-items:start}
 .portrait-wiki-card>img{width:112px;height:112px;object-fit:cover;border-radius:13px;background:#111a26}
 .portrait-wiki-card p,.portrait-wiki-fallback p{margin:0;color:#aeb9c7;font-size:13px;line-height:1.62}
