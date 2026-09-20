@@ -50,6 +50,7 @@ test('Natel gets a dedicated search surface while desktop keeps the compact tabl
   assert.match(runtime, /Toutes les colonnes · accents et petites fautes tolérées/);
   assert.match(runtime, /sourceInput\.dispatchEvent\(new Event\('input'/);
   assert.match(runtime, /openDrawer\(commune\)/);
+  assert.doesNotMatch(runtime, /\bbyId\(/);
   assert.match(css, /\.mobile-search-overlay\{display:none\}/);
   assert.match(css, /@media\(max-width:680px\)[\s\S]*\.mobile-search-overlay\{/);
   assert.match(css, /height:100dvh/);
