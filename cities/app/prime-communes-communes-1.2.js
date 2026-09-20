@@ -166,7 +166,8 @@
     document.documentElement.classList.add('mobile-search-open');
     document.body.classList.add('mobile-search-open');
     renderMobileSearchResults();
-    requestAnimationFrame(() => mobileInput.focus({ preventScroll: true }));
+    // iOS only opens the keyboard when focus stays inside the original tap.
+    mobileInput.focus({ preventScroll: true });
   }
 
   function buildMobileSearch() {
