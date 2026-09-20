@@ -129,7 +129,7 @@
   function renderMobileSearchResults() {
     if (!mobileSearchIsOpen()) return;
     const results = filtered();
-    const query = byId('query')?.value || '';
+    const query = document.getElementById('query')?.value || '';
     const count = mobileSearchOverlay.querySelector('[data-mobile-search-count]');
     const list = mobileSearchOverlay.querySelector('[data-mobile-search-results]');
     if (count) count.textContent = `${fmt.format(results.length)} résultat${results.length > 1 ? 's' : ''}`;
@@ -161,7 +161,7 @@
   function openMobileSearch() {
     if (!mobileMedia.matches || !mobileSearchOverlay) return;
     const mobileInput = mobileSearchOverlay.querySelector('input');
-    mobileInput.value = byId('query')?.value || '';
+    mobileInput.value = document.getElementById('query')?.value || '';
     mobileSearchOverlay.hidden = false;
     document.documentElement.classList.add('mobile-search-open');
     document.body.classList.add('mobile-search-open');
@@ -197,7 +197,7 @@
       <p class="mobile-search-limit" data-mobile-search-limit hidden>80 premiers résultats · précise ta recherche pour aller plus loin.</p>`;
     document.body.append(mobileSearchOverlay);
 
-    const sourceInput = byId('query');
+    const sourceInput = document.getElementById('query');
     const mobileInput = mobileSearchOverlay.querySelector('input');
     sourceInput?.addEventListener('pointerdown', event => {
       if (!mobileMedia.matches) return;
@@ -218,8 +218,8 @@
     mobileSearchOverlay.querySelectorAll('[data-mobile-market]').forEach(button => {
       button.onclick = () => document.querySelector(`#territoryFilters [data-market="${CSS.escape(button.dataset.mobileMarket)}"]`)?.click();
     });
-    mobileSearchOverlay.querySelector('[data-mobile-filter="prime"]').onclick = () => byId('primeOnly')?.click();
-    mobileSearchOverlay.querySelector('[data-mobile-filter="eadmin"]').onclick = () => byId('eadminOnly')?.click();
+    mobileSearchOverlay.querySelector('[data-mobile-filter="prime"]').onclick = () => document.getElementById('primeOnly')?.click();
+    mobileSearchOverlay.querySelector('[data-mobile-filter="eadmin"]').onclick = () => document.getElementById('eadminOnly')?.click();
     mobileSearchOverlay.querySelector('[data-mobile-search-results]').onclick = event => {
       const result = event.target.closest('[data-commune-id]');
       if (!result) return;
