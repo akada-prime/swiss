@@ -45,6 +45,7 @@ test('2.0.5 opens a sourced commune portrait from the row number without AI or e
   assert.match(js, /event\.stopPropagation\(\)/);
   assert.match(js, /openCommunePortrait\(commune\)/);
   assert.match(js, /row\.onclick = \(\) => openCommunePortrait\(commune\)/);
+  assert.match(js, /new MutationObserver/);
   assert.match(js, /class="portrait-edit"/);
   assert.match(js, /openDrawer\(commune\)/);
   assert.match(js, /Touchez une commune · portrait public/);
