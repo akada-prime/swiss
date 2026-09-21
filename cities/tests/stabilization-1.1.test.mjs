@@ -139,7 +139,7 @@ test('Systèmes keeps Intégrateur and Métier visible while extended details st
 
 test('Natel header keeps all views and commune refresh reachable', async () => {
   const css = await read('app/prime-communes-1.1.7-mobile.css');
-  assert.match(css, /grid-template-columns:1\.25fr \.8fr \.75fr \.9fr 1\.05fr/);
+  assert.match(css, /grid-template-columns:1\.22fr \.72fr \.72fr \.92fr 1\.02fr 1fr/);
   assert.match(css, /\.sync-state\[hidden\]\{display:none!important\}/);
   assert.match(css, /content:"MÀJ communes"/);
   assert.match(css, /min-width:116px!important/);
