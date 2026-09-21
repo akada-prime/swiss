@@ -1,5 +1,7 @@
 name: Prime Communes Radar
 
+# One-shot D-14 bootstrap trigger.
+
 
 on:
   push:
