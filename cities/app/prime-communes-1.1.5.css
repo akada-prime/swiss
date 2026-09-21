@@ -365,3 +365,57 @@ html.portrait-open,body.portrait-open{overflow:hidden}
   .portrait-wiki-card{grid-template-columns:1fr}
   .portrait-wiki-card>img{width:100%;height:180px}
 }
+
+
+/* 2.0.5 · result-line readability polish */
+.result-line #reset{
+  float:none;
+  min-height:32px;
+  margin-left:8px;
+  padding:0 11px;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:9px;
+  color:#c3cedc;
+  background:rgba(255,255,255,.055);
+  font-size:12px;
+  font-weight:700;
+  white-space:nowrap;
+  transition:border-color .16s ease,color .16s ease,background .16s ease,transform .16s ease;
+}
+.result-line #reset:hover,.result-line #reset:focus-visible{
+  color:#e7f3fb;
+  border-color:rgba(77,168,229,.38);
+  background:rgba(27,111,168,.12);
+  outline:none;
+}
+.result-line #reset:active{transform:translateY(1px)}
+.portrait-hint{
+  color:#93a3b7;
+  font-size:11.5px;
+  line-height:1.35;
+}
+.portrait-hint b{
+  width:23px;
+  height:23px;
+  color:#a9dcfb;
+  font-size:10px;
+}
+@media(max-width:680px){
+  .result-line{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    gap:9px 10px;
+  }
+  .result-line>span{min-width:0}
+  .result-line .result-export{justify-self:end}
+  .portrait-hint{
+    display:inline-flex;
+    grid-column:1/-1;
+    grid-row:2;
+    justify-self:start;
+    margin:0 0 1px 2px;
+    color:#8f9fb3;
+    font-size:11px;
+  }
+}
