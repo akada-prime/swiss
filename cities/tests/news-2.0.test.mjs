@@ -4,20 +4,27 @@ import { readFile } from 'node:fs/promises';
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
-test('NEWS is a first-class deep-linked view', async () => {
+test('Radar and Histoires are first-class deep-linked views', async () => {
   const html = await read('index.html');
   const bridge = await read('app/prime-communes-1.1-base.js');
   const loader = await read('app/prime-communes-1.1.js');
   assert.match(html, /data-view="news"/);
   assert.match(html, /id="newsView"/);
-  assert.match(bridge, /'communes', 'map', 'stats', 'news', 'roadmap'/);
+  assert.match(html, /data-view="stories"/);
+  assert.match(html, /id="storiesView"/);
+  assert.match(bridge, /'communes', 'map', 'stats', 'news', 'stories', 'roadmap'/);
   assert.match(bridge, /byId\('newsView'\)\.hidden = next !== 'news'/);
+  assert.match(bridge, /byId\('storiesView'\)\.hidden = next !== 'stories'/);
   assert.match(loader, /prime-communes-news-2\.0\.js/);
   assert.match(loader, /prime-communes-news-2\.0\.css/);
-  assert.match(html, /prime-communes-1\.1\.js\?v=29/);
-  assert.match(loader, /prime-communes-1\.1-base\.js\?v=12/);
-  assert.match(loader, /prime-communes-news-2\.0\.js\?v=11/);
-  assert.match(loader, /prime-communes-news-2\.0\.css\?v=12/);
+  assert.match(loader, /prime-communes-stories-2\.0\.js/);
+  assert.match(loader, /prime-communes-stories-2\.0\.css/);
+  assert.match(html, /prime-communes-1\.1\.js\?v=30/);
+  assert.match(loader, /prime-communes-1\.1-base\.js\?v=13/);
+  assert.match(loader, /prime-communes-news-2\.0\.js\?v=12/);
+  assert.match(loader, /prime-communes-news-2\.0\.css\?v=13/);
+  assert.match(loader, /prime-communes-stories-2\.0\.js\?v=1/);
+  assert.match(loader, /prime-communes-stories-2\.0\.css\?v=1/);
   assert.match(loader, /prime-communes-roadmap-2\.0\.css\?v=3/);
   assert.match(html, /class="news-beta-note"/);
   assert.match(html, /class="news-nav-badge">SOBRE/);
@@ -27,13 +34,13 @@ test('NEWS is a first-class deep-linked view', async () => {
   assert.match(html, /Prime Communes · version 2\.0\.5/);
 });
 
-test('all five view headers share one responsive typography contract', async () => {
+test('all six view headers share one responsive typography contract', async () => {
   const html = await read('index.html');
   const globals = await read('app/globals.css');
   const news = await read('app/prime-communes-news-2.0.css');
   const roadmap = await read('app/prime-communes-roadmap-2.0.css');
-  assert.equal((html.match(/view-intro"/g) || []).length, 5);
-  assert.equal((html.match(/view-intro-copy"/g) || []).length, 5);
+  assert.equal((html.match(/view-intro"/g) || []).length, 6);
+  assert.equal((html.match(/view-intro-copy"/g) || []).length, 6);
   assert.match(globals, /\.view-intro-copy\{[^}]*font-size:16px/);
   assert.match(globals, /@media\(max-width:680px\)[\s\S]*\.view-intro-copy\{[^}]*font-size:16px/);
   assert.doesNotMatch(news, /\.news-intro(?:-copy)?\s*\{/);
@@ -41,6 +48,7 @@ test('all five view headers share one responsive typography contract', async () 
   assert.match(globals, /\.workspace\{padding-top:50px\}/);
   assert.match(globals, /@media\(max-width:680px\)[\s\S]*\.workspace\{padding-top:26px\}/);
   assert.match(news, /\.news-nav-badge\{/);
+  assert.match(globals, /@media\(max-width:680px\)[\s\S]*\.view-tabs\{[^}]*overflow-x:auto/);
 });
 
 test('2.0.3 interprets every signal without blurring fact, deduction and Prime reading', async () => {
@@ -49,7 +57,7 @@ test('2.0.3 interprets every signal without blurring fact, deduction and Prime r
   const radar = JSON.parse(await read('public/data/news-radar-v1.json'));
   const analysis = JSON.parse(await read('public/data/news-analysis-v1.json'));
   assert.equal(analysis.meta.version, '2.0.4-v1');
-  assert.equal(analysis.meta.mode, 'human-validation');
+  assert.equal(analysis.meta.mode, 'radar-qualified');
   assert.match(runtime, /ANALYSIS_URL = 'public\/data\/news-analysis-v1\.json/);
   assert.match(runtime, /1 · Fait public/);
   assert.match(runtime, /2 · Déduction documentée/);
@@ -95,16 +103,24 @@ test('2.0.4 keeps qualification lightweight, local and tied to its source signal
   }
 });
 
-test('2.0.2 publishes a sourced story without mixing facts and interpretation', async () => {
+test('Histoires is standalone and Radar contains no story responsibility', async () => {
   const html = await read('index.html');
-  const runtime = await read('app/prime-communes-news-2.0.js');
-  const css = await read('app/prime-communes-news-2.0.css');
-  const data = JSON.parse(await read('public/data/news-stories-v1.json'));
+  const radarRuntime = await read('app/prime-communes-news-2.0.js');
+  const radarCss = await read('app/prime-communes-news-2.0.css');
+  const runtime = await read('app/prime-communes-stories-2.0.js');
+  const css = await read('app/prime-communes-stories-2.0.css');
+  const data = JSON.parse(await read('public/data/stories-v1.json'));
   assert.equal(data.meta.version, '2.0.2-v1');
   assert.equal(data.meta.mode, 'editorial');
-  assert.match(html, /Une commune, une histoire · 2\.0\.2/);
-  assert.match(html, /id="newsStoryFeed"/);
-  assert.match(runtime, /STORY_URL = 'public\/data\/news-stories-v1\.json/);
+  assert.match(html, /data-view="stories">Histoires/);
+  assert.match(html, /id="storiesView"/);
+  assert.match(html, /Histoires de communes/);
+  assert.match(html, /Radar! regarde devant\. Histoires regarde derrière\./);
+  assert.ok(html.indexOf('id="storiesView"') > html.indexOf('id="newsView"'));
+  assert.ok(html.indexOf('id="storiesView"') < html.indexOf('id="roadmapView"'));
+  assert.doesNotMatch(radarRuntime, /STORY_URL|storyCard|loadStories|storiesFeed|newsStoryFeed/);
+  assert.doesNotMatch(radarCss, /\.story-/);
+  assert.match(runtime, /STORY_URL = 'public\/data\/stories-v1\.json/);
   assert.match(runtime, /data-story-angle/);
   assert.match(runtime, /Angle copié ✓/);
   assert.match(css, /\.story-reading-grid/);
@@ -125,9 +141,9 @@ test('2.0.2 publishes a sourced story without mixing facts and interpretation', 
 
 test('Radar data distinguishes level, provenance, confidence and municipality', async () => {
   const radar = JSON.parse(await read('public/data/news-radar-v1.json'));
-  assert.equal(radar.meta.mode, 'editorial');
+  assert.equal(radar.meta.mode, 'radar-qualified');
   assert.ok(radar.signals.length >= 3);
-  assert.equal(radar.meta.updatedOn, '2026-09-14');
+  assert.equal(radar.meta.updatedOn, '2026-09-21');
   const yverdon = radar.signals.find(signal => signal.id === 'yverdon-sey-normes-tic-2026');
   assert.equal(yverdon?.bfsId, 5938);
   assert.equal(yverdon?.level, 'strong');
