@@ -12,7 +12,7 @@
   <script>
     (() => {
       const requestedView = new URLSearchParams(window.location.search).get('view');
-      const initialView = ['communes', 'map', 'stats', 'news', 'roadmap'].includes(requestedView) ? requestedView : 'communes';
+      const initialView = ['communes', 'map', 'stats', 'news', 'stories', 'roadmap'].includes(requestedView) ? requestedView : 'communes';
       document.documentElement.dataset.initialView = initialView;
     })();
   </script>
@@ -23,6 +23,7 @@ html[data-initial-view]:not([data-initial-view="communes"]) #communesView{displa
 html[data-initial-view="map"] #mapView,
 html[data-initial-view="stats"] #statsView,
 html[data-initial-view="news"] #newsView,
+html[data-initial-view="stories"] #storiesView,
 html[data-initial-view="roadmap"] #roadmapView{display:block!important}
 th.sortable{cursor:pointer;user-select:none}
 th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
@@ -38,6 +39,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       <button class="view-tab" data-view="map">Carte</button>
       <button class="view-tab" data-view="stats">Stats</button>
       <button class="view-tab news-nav-tab" data-view="news">Radar!<span class="news-nav-badge">SOBRE</span></button>
+      <button class="view-tab" data-view="stories">Histoires</button>
       <button class="view-tab" data-view="roadmap">Roadmap</button>
     </nav>
     <button class="sync-state" id="syncReload" title="Recharger depuis Supabase" hidden><span></span><b id="syncText" aria-live="polite">Connexion à la base…</b></button>
@@ -198,12 +200,18 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         <div class="news-feed" id="newsFeed"><p class="news-loading">Lecture des premiers signaux…</p></div>
         <footer class="news-method"><strong>Règle de preuve</strong><span>Un fait public vérifiable, séparé de la déduction documentée et de la lecture Prime. Aucun projet déjà gagné ou livré n’est présenté comme une opportunité.</span><strong>Règle de couverture</strong><span>« Surveillé » signifie contrôlé et mesurable. Une source inaccessible est une erreur, jamais un silence.</span></footer>
       </section>
-      <section class="story-panel" aria-label="Une commune, une histoire">
+    </section>
+    <section class="stories-view" id="storiesView" hidden>
+      <div class="stories-intro view-intro">
+        <div><h1>Des communes.<br><span>Des histoires.</span></h1></div>
+        <div class="stories-intro-copy view-intro-copy"><p class="eyebrow">Histoires de communes</p><p>Derrière les chiffres, les logiciels et les marchés, il y a des territoires qui se transforment. Quelques histoires pour comprendre comment une commune est devenue ce qu’elle est aujourd’hui.</p><strong>Radar! regarde devant. Histoires regarde derrière.</strong></div>
+      </div>
+      <section class="story-panel" aria-label="Histoires de communes">
         <header class="story-panel-heading">
           <div><p class="eyebrow">Une commune, une histoire · 2.0.2</p><h2>Quand un projet raconte le territoire</h2></div>
           <p>Des faits vérifiés, la mémoire de Prime et une lecture humaine — jamais confondus.</p>
         </header>
-        <div class="story-feed" id="newsStoryFeed"><p class="news-loading">Ouverture du premier récit…</p></div>
+        <div class="story-feed" id="storiesFeed"><p class="story-loading">Ouverture du premier récit…</p></div>
       </section>
     </section>
     <section class="roadmap-view" id="roadmapView" hidden>
@@ -246,7 +254,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
           </div>
         </article>
         <article class="roadmap-stage history-stage completed-20">
-          <header><span class="roadmap-version">2.0</span><div><p>RADAR!</p><h2>Faire parler</h2></div><span class="roadmap-done">Terminé ✓</span></header>
+          <header><span class="roadmap-version">2.0</span><div><p>Lecture active</p><h2>Faire parler</h2></div><span class="roadmap-done">Terminé ✓</span></header>
           <div class="roadmap-items">
             <div><strong>Radar communal</strong><span>Détecter mécaniquement les changements utiles, puis interpréter uniquement ce qui mérite une lecture métier.</span><small>2.0.1 · veille sobre · couverture mesurable</small></div>
             <div><strong>Une commune, une histoire</strong><span>Raconter son identité, son histoire avec Prime et les liens humains ou territoriaux qui donnent du sens à notre métier.</span><small>2.0.2 · premier récit Avenches–Le Noirmont livré</small></div>
@@ -284,7 +292,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   </section>
   <footer class="site-footer" aria-label="Informations légales et techniques">
     <div class="footer-meta">
-      <span class="footer-version">Prime Communes · version 2.0.5 <b class="footer-evolution">#456</b></span>
+      <span class="footer-version">Prime Communes · version 2.0.5 <b class="footer-evolution">#457</b></span>
       <span class="footer-confidential">Données confidentielles</span>
     </div>
     <div class="footer-legal">
@@ -486,8 +494,8 @@ $('swissMap').addEventListener('pointerup',event=>{const path=event.target.close
 $('mapZoomIn').onclick=()=>zoomMap(.72);$('mapZoomOut').onclick=()=>zoomMap(1.35);$('mapReset').onclick=()=>{mapViewBox=[...mapInitialViewBox];setMapView();$('mapQuery').value='';updateMapSearch()};
 $('statsScope').addEventListener('change',renderStats);document.querySelectorAll('[data-stats-metric]').forEach(button=>button.onclick=()=>{statsMetric=button.dataset.statsMetric;document.querySelectorAll('[data-stats-metric]').forEach(x=>x.classList.toggle('active',x===button));renderStats()});document.querySelectorAll('[data-stats-threshold]').forEach(button=>button.onclick=()=>{statsThreshold=Number(button.dataset.statsThreshold);document.querySelectorAll('[data-stats-threshold]').forEach(x=>x.classList.toggle('active',x===button));renderStats()});
 $('query').addEventListener('input',render);$('solution').addEventListener('change',render);$('district').addEventListener('change',render);$('canton').addEventListener('change',()=>{$('district').value='';updateDistrictOptions();render()});$('primeOnly').onclick=()=>{primeOnly=!primeOnly;$('primeOnly').classList.toggle('on',primeOnly);render()};$('eadminOnly').onclick=()=>{eadminOnly=!eadminOnly;$('eadminOnly').classList.toggle('on',eadminOnly);$('eadminOnly').classList.toggle('eadmin-on',eadminOnly);render()};$('districtsToggle').onclick=()=>{districtsMode=!districtsMode;if(!districtsMode)$('district').value='';updateDistrictOptions();$('districtsToggle').classList.toggle('on',districtsMode);$('districtsToggle').setAttribute('aria-expanded',String(districtsMode));render()};document.querySelectorAll('.market-toggle').forEach(button=>button.onclick=()=>{marketOnly=marketOnly===button.dataset.market?'':button.dataset.market;document.querySelectorAll('.market-toggle').forEach(x=>x.classList.toggle('on',x.dataset.market===marketOnly));render()});$('issuesOnly').onclick=()=>{issuesOnly=!issuesOnly;$('issuesOnly').classList.toggle('on',issuesOnly);$('issuesOnly').classList.toggle('warning',issuesOnly);render()};$('issuesCard').onclick=()=>{ofsMode=!ofsMode;if(!ofsMode)issuesOnly=false;$('issuesOnly').hidden=!ofsMode;$('issuesCard').classList.toggle('ofs-active',ofsMode);$('issuesCard').setAttribute('aria-pressed',String(ofsMode));$('ofsLabel').textContent=ofsMode?'Contrôle Delimo actif':'Qualité des livraisons';$('ofsCopy').textContent=ofsMode?'Les statuts OFS et erreurs EWID sont affichés dans le tableau.':'Afficher les statuts, erreurs EWID et commentaires OFS.';$('ofsCount').textContent=$('issues').textContent+' à surveiller';$('ofsAction').textContent=ofsMode?'Revenir au marché':'Ouvrir le contrôle';$('ofsArrow').textContent=ofsMode?'←':'→';render()};$('reset').onclick=()=>{$('query').value='';$('canton').value='Tous';$('district').value='';$('solution').value='Tous';primeOnly=eadminOnly=issuesOnly=districtsMode=false;marketOnly='';updateDistrictOptions();document.querySelectorAll('.filter-toggle').forEach(x=>x.classList.remove('on','warning'));render()};$('syncReload').onclick=()=>loadData(true);$('exportBtn').onclick=()=>{const rows=filtered(),withTerritory=districtsMode,header=['Nom','Client Prime','Canton',...(withTerritory?['Marché','District']:[]),'Population','Intégrateur','Métier','ERP','Modules'],lines=[header.join('\t'),...rows.map(x=>[x.name,x.isPrime?'Oui':'Non',x.canton,...(withTerritory?[x.market,x.district]:[]),x.expectedPopulation,x.integrator,x.software,x.erp,(x.products||[]).join(' | ')].join('\t'))];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/tab-separated-values'}));a.download='communes.tsv';a.click()};
-document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('newsView').hidden=view!=='news';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
+document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('newsView').hidden=view!=='news';$('storiesView').hidden=view!=='stories';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
 </script>
-<script src="app/prime-communes-1.1.js?v=29"></script>
+<script src="app/prime-communes-1.1.js?v=30"></script>
 </body>
 </html>
