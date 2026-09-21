@@ -19,8 +19,8 @@ test('Radar and Histoires are first-class deep-linked views', async () => {
   assert.match(loader, /prime-communes-news-2\.0\.css/);
   assert.match(loader, /prime-communes-stories-2\.0\.js/);
   assert.match(loader, /prime-communes-stories-2\.0\.css/);
-  assert.match(html, /prime-communes-1\.1\.js\?v=30/);
-  assert.match(loader, /prime-communes-1\.1-base\.js\?v=13/);
+  assert.match(html, /prime-communes-1\.1\.js\?v=31/);
+  assert.match(loader, /prime-communes-1\.1-base\.js\?v=14/);
   assert.match(loader, /prime-communes-news-2\.0\.js\?v=12/);
   assert.match(loader, /prime-communes-news-2\.0\.css\?v=13/);
   assert.match(loader, /prime-communes-stories-2\.0\.js\?v=1/);
@@ -32,6 +32,26 @@ test('Radar and Histoires are first-class deep-linked views', async () => {
   assert.match(html, /La source publique primaire reste la référence/);
   assert.ok(html.indexOf('news-beta-note') < html.indexOf('news-intro'));
   assert.match(html, /Prime Communes · version 2\.0\.5/);
+});
+
+test('mobile header, footer evolution and return-to-top stay usable before rebuild', async () => {
+  const html = await read('index.html');
+  const globals = await read('app/globals.css');
+  const mobile = await read('app/prime-communes-1.1.7-mobile.css');
+  const bridge = await read('app/prime-communes-1.1-base.js');
+  const layer = await read('app/prime-communes-1.1.5.css');
+  const loader = await read('app/prime-communes-1.1.js');
+
+  assert.match(html, /Prime Communes · version 2\.0\.5 · #460/);
+  assert.doesNotMatch(bridge, /footerVersion\.textContent/);
+  assert.match(html, /id="backToTop"/);
+  assert.match(globals, /\.back-to-top\{/);
+  assert.match(globals, /\.back-to-top\.is-visible\{/);
+  assert.match(bridge, /window\.scrollY > threshold/);
+  assert.match(bridge, /window\.scrollTo\(\{ top: 0, behavior:/);
+  assert.match(mobile, /grid-template-columns:1\.22fr \.72fr \.72fr \.92fr 1\.02fr 1fr/);
+  assert.match(layer, /prime-communes-1\.1\.7-mobile\.css\?v=13/);
+  assert.match(loader, /prime-communes-1\.1\.5\.css\?v=20/);
 });
 
 test('all six view headers share one responsive typography contract', async () => {
