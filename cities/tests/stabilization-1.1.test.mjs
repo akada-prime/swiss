@@ -44,6 +44,11 @@ test('2.0.5 opens a sourced commune portrait from the row number without AI or e
   assert.match(js, /const rank = document\.createElement\('button'\)/);
   assert.match(js, /event\.stopPropagation\(\)/);
   assert.match(js, /openCommunePortrait\(commune\)/);
+  assert.match(js, /row\.onclick = \(\) => openCommunePortrait\(commune\)/);
+  assert.match(js, /class="portrait-edit"/);
+  assert.match(js, /openDrawer\(commune\)/);
+  assert.match(js, /Touchez une commune · portrait public/);
+  assert.doesNotMatch(js, /closeMobileSearch\(\);\s*openCommunePortrait\(commune\)/);
   assert.match(js, /https:\/\/fr\.wikipedia\.org\/w\/api\.php/);
   assert.match(js, /https:\/\/www\.wikidata\.org\/w\/api\.php/);
   assert.match(js, /origin: '\*'/);
@@ -56,6 +61,8 @@ test('2.0.5 opens a sourced commune portrait from the row number without AI or e
   assert.doesNotMatch(js, /openai|chatgpt|anthropic/i);
   assert.match(css, /\.portrait-backdrop\{/);
   assert.match(css, /html\.portrait-open,body\.portrait-open\{overflow:hidden\}/);
+  assert.match(css, /\.portrait-hint\{/);
+  assert.match(css, /\.portrait-edit\{/);
 });
 
 test('mobile peer filters remain a strict two-column grid', async () => {

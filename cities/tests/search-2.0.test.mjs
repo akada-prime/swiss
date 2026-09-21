@@ -47,7 +47,7 @@ test('Natel gets a dedicated search surface while desktop keeps the compact tabl
   const css = await read('app/prime-communes-1.1.7-mobile.css');
   assert.match(runtime, /Recherche universelle des communes/);
   assert.match(runtime, /data-mobile-search-results/);
-  assert.match(runtime, /Toutes les colonnes · accents et petites fautes tolérées/);
+  assert.match(runtime, /Touchez une commune · portrait public/);
   assert.match(runtime, /sourceInput\.dispatchEvent\(new Event\('input'/);
   assert.match(runtime, /sourceInput\.dispatchEvent\(new Event\('input'[\s\S]{0,260}renderMobileSearchResults\(\)/);
   assert.match(runtime, /mobileInput\.focus\(\{ preventScroll: true \}\)/);

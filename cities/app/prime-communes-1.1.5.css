@@ -1,5 +1,5 @@
 @import url('./prime-communes-1.1.6.css?v=3');
-@import url('./prime-communes-1.1.7-mobile.css?v=11');
+@import url('./prime-communes-1.1.7-mobile.css?v=12');
 
 /* Prime Communes 1.1 · stabilized visual layer */
 
@@ -63,6 +63,8 @@
   border-color:rgba(55,162,236,.28);
   background:rgba(10,102,170,.10);
 }
+.portrait-hint{display:inline-flex;align-items:center;gap:7px;margin-left:auto;color:#718198;font-size:10px;font-weight:650;letter-spacing:.015em}
+.portrait-hint b{display:grid;place-items:center;width:21px;height:21px;border:1px solid rgba(55,162,236,.26);border-radius:7px;color:#8dcdf6;background:rgba(10,102,170,.1);font-size:9px}
 .commune-identity strong{
   min-width:0;
   margin:0;
@@ -280,7 +282,7 @@
 html.portrait-open,body.portrait-open{overflow:hidden}
 .portrait-backdrop{
   position:fixed;
-  z-index:90;
+  z-index:140;
   inset:0;
   display:flex;
   justify-content:flex-end;
@@ -342,8 +344,12 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 .portrait-wiki-fallback{padding:16px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(0,0,0,.18)}
 .portrait-wiki-fallback strong{display:block;margin-bottom:7px;color:#d7e0e9;font-size:13px}
 .portrait-source{margin:18px 0 0;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);color:#617085;font-size:9.5px;line-height:1.5}
+.portrait-edit{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;margin-top:14px;border:1px solid rgba(255,255,255,.075);border-radius:13px;color:#8190a3;background:rgba(255,255,255,.025);font-size:11px;font-weight:650;cursor:pointer}
+.portrait-edit:hover,.portrait-edit:focus-visible{color:#c5d9ea;border-color:rgba(83,169,229,.28);outline:none;background:rgba(19,103,161,.09)}
+.portrait-edit span{font-size:15px}
 
 @media(max-width:680px){
+  .portrait-hint{display:none}
   .drawer-edit-grid{grid-template-columns:1fr}
   .drawer-edit-grid .full-width{grid-column:auto}
   .drawer-module-grid{grid-template-columns:1fr}

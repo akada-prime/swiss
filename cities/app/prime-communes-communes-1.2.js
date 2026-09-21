@@ -134,12 +134,18 @@
           <div class="portrait-wikipedia" aria-live="polite"><div class="portrait-loading"><i></i><span>Lecture de Wikipédia à la demande…</span></div></div>
           <p class="portrait-source">Source : Wikipédia · texte sous licence CC BY-SA. La source originale reste la référence.</p>
         </section>
+        <button class="portrait-edit" type="button"><span aria-hidden="true">✎</span> Modifier les informations</button>
       </aside>
     </div>`;
     document.documentElement.classList.add('portrait-open');
     document.body.classList.add('portrait-open');
     root.querySelector('.portrait-close').onclick = closeCommunePortrait;
     root.querySelector('.portrait-backdrop').onclick = event => { if (event.target === event.currentTarget) closeCommunePortrait(); };
+    root.querySelector('.portrait-edit').onclick = () => {
+      closeCommunePortrait();
+      if (mobileSearchIsOpen()) closeMobileSearch();
+      openDrawer(commune);
+    };
     const target = root.querySelector('.portrait-wikipedia');
     try { target.innerHTML = portraitWikipediaMarkup(await fetchWikipediaPortrait(commune)); }
     catch (error) { console.warn('Prime Communes · portrait Wikipédia indisponible', error); target.innerHTML = portraitWikipediaMarkup(null); }
@@ -170,6 +176,9 @@
     bodyRows.forEach((row, rowIndex) => {
       const commune = all.find(item => String(item.id) === String(row.dataset.id));
       if (!commune) return;
+
+      row.title = `Consulter le portrait de ${commune.name}`;
+      row.onclick = () => openCommunePortrait(commune);
 
       const cells = [...row.children];
       const communeCell = cells[communeIndex];
@@ -340,7 +349,7 @@
       </div>
       <div class="mobile-search-summary">
         <strong data-mobile-search-count>0 résultat</strong>
-        <span>Toutes les colonnes · accents et petites fautes tolérées</span>
+        <span>Touchez une commune · portrait public</span>
       </div>
       <div class="mobile-search-results" data-mobile-search-results></div>
       <p class="mobile-search-limit" data-mobile-search-limit hidden>80 premiers résultats · précise ta recherche pour aller plus loin.</p>`;
@@ -377,8 +386,7 @@
       if (!result) return;
       const commune = all.find(item => String(item.id) === result.dataset.communeId);
       if (!commune) return;
-      closeMobileSearch();
-      openDrawer(commune);
+      openCommunePortrait(commune);
     };
     mobileMedia.addEventListener('change', event => { if (!event.matches) closeMobileSearch(); });
   }

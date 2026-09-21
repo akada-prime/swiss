@@ -126,8 +126,8 @@ Estimation historique conservée : 14–28 h · 35–80 crédits.
 
 ### 2.0.5 — Portrait communal · livré
 
-- Le numéro de ligne ouvre un portrait public sans détourner le clic normal de
-  la fiche communale éditable.
+- Un clic sur une commune, dans la liste ou la recherche Natel, ouvre son
+  portrait public ; la modification reste une action explicite dans ce portrait.
 - Les faits déjà présents dans Prime Communes sont affichés immédiatement.
 - Le résumé et l'illustration Wikipédia ne sont chargés qu'à l'ouverture.
 - Le canton et le district servent à écarter les pages homonymes ou ambiguës.
