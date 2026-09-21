@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "version": "radar-sources-v1",
+    "targetMunicipalities": 621,
+    "scope": "Suisse romande · périmètre Prime Communes",
+    "principle": "Détecter mécaniquement. Comprendre intelligemment. Calculer le moins possible.",
+    "note": "Une source centrale peut couvrir un domaine précis sans constituer une couverture documentaire complète de chaque commune."
+  },
+  "defaults": {
+    "timeoutMs": 12000,
+    "retries": 2,
+    "minDomainDelayMs": 400,
+    "keywords": [
+      "informatique",
+      "numérique",
+      "numerique",
+      "digital",
+      "logiciel",
+      "erp",
+      "cyber",
+      "système d'information",
+      "systeme d'information",
+      "gestion",
+      "population",
+      "habitants",
+      "contrôle des habitants",
+      "controle des habitants",
+      "rh",
+      "ressources humaines",
+      "finance",
+      "facturation",
+      "guichet",
+      "portail",
+      "dématérialisation",
+      "dematerialisation",
+      "interopérabilité",
+      "interoperabilite",
+      "données",
+      "donnees",
+      "migration",
+      "modernisation",
+      "automatisation",
+      "cloud",
+      "saas",
+      "application",
+      "crédit d'investissement",
+      "credit d'investissement"
+    ]
+  },
+  "sources": [
+    {
+      "id": "simap-romandie",
+      "label": "simap.ch · marchés publics romands",
+      "type": "simap-search",
+      "url": "https://www.simap.ch/api/publications/v2/project/project-search",
+      "respectRobots": false,
+      "scope": {
+        "kind": "procurement",
+        "targetMunicipalities": 621,
+        "cantons": [
+          "VD",
+          "GE",
+          "NE",
+          "JU",
+          "FR",
+          "VS",
+          "BE"
+        ]
+      },
+      "schedule": {
+        "baseHours": 24,
+        "maxHours": 72
+      }
+    },
+    {
+      "id": "yverdon-preavis",
+      "label": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "type": "html-index",
+      "url": "https://www.yverdon-les-bains.ch/vie-politique/conseil-communal/preavis-rapports-et-interventions",
+      "municipality": {
+        "bfsId": 5938,
+        "name": "Yverdon-les-Bains",
+        "canton": "VD"
+      },
+      "respectRobots": true,
+      "schedule": {
+        "baseHours": 48,
+        "maxHours": 168
+      }
+    },
+    {
+      "id": "gland-preavis",
+      "label": "Gland · rapports et préavis 2026",
+      "type": "html-index",
+      "url": "https://www.gland.ch/ma-ville/conseil-communal/rapports-et-preavis/2026",
+      "municipality": {
+        "bfsId": 5721,
+        "name": "Gland",
+        "canton": "VD"
+      },
+      "respectRobots": true,
+      "schedule": {
+        "baseHours": 48,
+        "maxHours": 168
+      }
+    },
+    {
+      "id": "monthey-conseil",
+      "label": "Monthey · ordres du jour du Conseil général",
+      "type": "html-index",
+      "url": "https://www.monthey.ch/N1403/dates-et-ordres-du-jour-des-seances-du-conseil-general.html?M=3837",
+      "municipality": {
+        "bfsId": 6153,
+        "name": "Monthey",
+        "canton": "VS"
+      },
+      "respectRobots": true,
+      "schedule": {
+        "baseHours": 48,
+        "maxHours": 168
+      }
+    }
+  ]
+}

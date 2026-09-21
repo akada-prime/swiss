@@ -1,0 +1,39 @@
+name: Prime Communes Radar
+
+on:
+  schedule:
+    - cron: '17 5 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prime-communes-radar
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    name: Deterministic source scan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cities
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Scan due sources
+        run: node scripts/radar-scan.mjs
+      - name: Persist only measured state
+        run: |
+          if git diff --quiet -- public/data/radar-state-v1.json public/data/radar-candidates-v1.json; then
+            echo "Radar unchanged; nothing to persist."
+            exit 0
+          fi
+          git config user.name "Prime Communes Radar"
+          git config user.email "radar@primetechnologies.ch"
+          git add public/data/radar-state-v1.json public/data/radar-candidates-v1.json
+          git commit -m "Radar: refresh deterministic source state"
+          git push

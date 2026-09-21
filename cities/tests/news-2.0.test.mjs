@@ -14,13 +14,13 @@ test('NEWS is a first-class deep-linked view', async () => {
   assert.match(bridge, /byId\('newsView'\)\.hidden = next !== 'news'/);
   assert.match(loader, /prime-communes-news-2\.0\.js/);
   assert.match(loader, /prime-communes-news-2\.0\.css/);
-  assert.match(html, /prime-communes-1\.1\.js\?v=28/);
+  assert.match(html, /prime-communes-1\.1\.js\?v=29/);
   assert.match(loader, /prime-communes-1\.1-base\.js\?v=12/);
-  assert.match(loader, /prime-communes-news-2\.0\.js\?v=10/);
-  assert.match(loader, /prime-communes-news-2\.0\.css\?v=11/);
+  assert.match(loader, /prime-communes-news-2\.0\.js\?v=11/);
+  assert.match(loader, /prime-communes-news-2\.0\.css\?v=12/);
   assert.match(loader, /prime-communes-roadmap-2\.0\.css\?v=3/);
   assert.match(html, /class="news-beta-note"/);
-  assert.match(html, /class="news-nav-badge">BÊTA/);
+  assert.match(html, /class="news-nav-badge">SOBRE/);
   assert.doesNotMatch(html, /news-nav-dot/);
   assert.match(html, /La source publique primaire reste la référence/);
   assert.ok(html.indexOf('news-beta-note') < html.indexOf('news-intro'));
@@ -163,8 +163,8 @@ test('Radar is functional without a new database write path', async () => {
   assert.match(runtime, /publie-le avec une réserve explicite/);
   assert.doesNotMatch(runtime, /Ne modifie ni le dépôt ni le site avant mon « feu »/);
   assert.match(runtime, /REFRESH_REQUEST_KEY/);
-  assert.match(runtime, /Radar actualisé ✓/);
-  assert.match(html, /0,1–1 recharge d’iPhone par veille/);
+  assert.match(runtime, /Aucun candidat · 0 appel IA nécessaire ✓/);
+  assert.match(html, /0 appel IA lorsqu’aucune nouveauté/);
   assert.match(html, /aria-live="polite"/);
   assert.match(runtime, /data-news-level/);
   assert.match(runtime, /data-news-bfs/);

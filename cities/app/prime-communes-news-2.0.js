@@ -4,6 +4,8 @@
   const DATA_URL = 'public/data/news-radar-v1.json?v=20260914-2';
   const STORY_URL = 'public/data/news-stories-v1.json?v=20260919-1';
   const ANALYSIS_URL = 'public/data/news-analysis-v1.json?v=20260920-1';
+  const RADAR_STATUS_URL = 'public/data/radar-state-v1.json?v=20260921-1';
+  const RADAR_CANDIDATES_URL = 'public/data/radar-candidates-v1.json?v=20260921-1';
   const CHAT_URL = 'https://chatgpt.com/c/6a9ef456-9284-83ed-9f8b-5e32c1fdfcc3';
   const levelOrder = { strong: 0, watch: 1, info: 2 };
   const levelLabels = { strong: 'Signal fort', watch: 'À surveiller', info: 'Information' };
@@ -20,37 +22,38 @@
   let stories = [];
   let analysisItems = [];
   let radarMeta = {};
+  let radarStatus = null;
+  let radarCandidates = [];
   let activeLevel = 'all';
   const REFRESH_REQUEST_KEY = 'primeCommunesNewsRefreshRequest';
   const QUALIFICATION_KEY = 'primeCommunesNewsQualificationsV1';
 
   function refreshPrompt() {
-    const lastUpdate = radarMeta.updatedOn || 'la dernière publication du Radar';
-    const currentSignals = signals.length
-      ? signals.map(signal => `${signal.municipality} — ${signal.title} (${signal.id})`).join('\n- ')
-      : 'aucun';
-    return `Mets à jour le Radar communal NEWS! du site Prime Communes.
-
-Inspecte d'abord la version actuelle dans le dépôt akada-prime/swiss, notamment cities/public/data/news-radar-v1.json. La dernière veille éditoriale indiquée est le ${lastUpdate}.
-
-Cherche des faits publics nouveaux ou toujours actionnables concernant les communes suisses romandes : budgets votés ou proposés, crédits d'étude, planifications financières, stratégies numériques, préavis, messages municipaux, nominations ou départs clés, mutualisations, changements réglementaires et appels d'offres à venir. Le but est de détecter un projet possible avant qu'il soit déjà gagné, livré ou fêté.
-
-Règles impératives :
-- chaque signal repose sur une source publique primaire, datée et accessible ;
-- sépare strictement le fait public de la lecture de l'IA d'Axel ;
-- ne transforme jamais une hypothèse en fait ;
-- exclue les projets Prime déjà devisés, gagnés, prestés ou payés ;
-- n'exclus jamais un signal uniquement parce que la commune est cliente Prime : si son statut commercial interne est inconnu, publie-le avec les tags « Client Prime » et « À confirmer en interne » ;
-- privilégie peu de signaux solides plutôt qu'une longue liste ;
-- limite la recherche et l'analyse au nécessaire pour une veille sobre ;
-- ne supprime un signal existant que s'il est devenu obsolète, erroné ou non actionnable.
-
-Signaux actuellement publiés :
-- ${currentSignals}
-
-Pour chaque signal retenu, renseigne : niveau, date, commune et canton, titre, fait public, lecture de l'IA d'Axel, source primaire avec URL, confiance et tags.
-
-Exécute directement la mise à jour : modifie le JSON, adapte les tests si nécessaire, vérifie le site puis publie. Ne demande pas une validation supplémentaire. Si le statut commercial Prime d'un signal est inconnu, publie-le avec une réserve explicite. Écarte-le uniquement lorsqu'une information interne ou publique confirme qu'il est déjà devisé, attribué, gagné, livré ou payé. À la fin, résume brièvement ce qui a été publié et ce qui a été écarté.`;
+    const pending = radarCandidates.filter(item => (item.status || 'pending') === 'pending');
+    const lines = pending.map(item => [
+      '- ' + (item.municipality || item.scopeLabel || 'Périmètre communal'),
+      item.title || item.url,
+      item.url ? 'Source: ' + item.url : '',
+      item.reason ? 'Détection mécanique: ' + item.reason : ''
+    ].filter(Boolean).join(' · '));
+    return [
+      'Analyse uniquement les candidats détectés mécaniquement par Radar! dans Prime Communes.',
+      '',
+      'Ne lance pas une veille générale du web. Ne cherche pas de nouvelles communes au hasard : la collecte est le rôle du Radar déterministe.',
+      'Pour chaque candidat ci-dessous, consulte la source primaire indiquée seulement si nécessaire, puis décide s’il mérite un signal Prime.',
+      '',
+      'Sépare strictement : fait public → déduction documentée → lecture Prime.',
+      'Ne transforme jamais une hypothèse en fait.',
+      'Exclus les projets déjà devisés, attribués, gagnés, livrés ou payés lorsqu’ils sont connus.',
+      "N'exclus jamais un signal uniquement parce que la commune est cliente Prime : publie-le avec une réserve explicite si son statut commercial est inconnu.",
+      'Ne demande pas une validation supplémentaire : si un candidat est solide et actionnable, mets à jour news-radar-v1.json et news-analysis-v1.json.',
+      'Après traitement, marque le candidat comme analyzed ou discarded dans radar-candidates-v1.json afin qu’il ne soit pas réanalysé.',
+      '',
+      'Candidats détectés (' + pending.length + ') :',
+      lines.length ? lines.join('\\n') : '- aucun',
+      '',
+      'À la fin, résume uniquement les candidats analysés, publiés ou écartés.'
+    ].join('\\n');
   }
 
   async function copyRefreshPrompt() {
@@ -68,6 +71,67 @@ Exécute directement la mise à jour : modifie le JSON, adapte les tests si néc
       document.execCommand('copy');
       textarea.remove();
     }
+  }
+
+  function setText(id, value) {
+    const node = byId(id);
+    if (node) node.textContent = value;
+  }
+
+  function renderRadarOperations() {
+    const coverage = radarStatus?.coverage || {};
+    const sourceHealth = radarStatus?.sources || {};
+    const detection = radarStatus?.detection || {};
+    const economy = radarStatus?.economy || {};
+    const analysis = radarStatus?.analysis || {};
+    const target = Number(coverage.targetMunicipalities || 621);
+    const direct = Number(coverage.directMunicipalities || 0);
+    const procurement = Number(coverage.procurementMunicipalities || 0);
+    const configured = Number(sourceHealth.configured || 0);
+    const active = Number(sourceHealth.active || 0);
+    const errors = Number(sourceHealth.error || 0);
+    const pending = radarCandidates.filter(item => (item.status || 'pending') === 'pending');
+
+    setText('radarCoverageCount', procurement + '/' + target);
+    setText('radarCoverageDetail', 'marchés publics · ' + direct + '/' + target + ' sources communales directes');
+    setText('radarSourceCount', active + '/' + configured);
+    setText('radarSourceDetail', errors ? errors + ' source' + (errors > 1 ? 's' : '') + ' en erreur' : 'aucune erreur connue');
+    setText('radarChangeCount', String(Number(detection.newDocuments || 0)));
+    setText('radarChangeDetail', Number(detection.changes || 0) + ' changement' + (Number(detection.changes || 0) > 1 ? 's' : '') + ' au dernier passage');
+    setText('radarCandidateCount', String(pending.length));
+    setText('radarPublishedCount', String(Number(analysis.published || signals.length || 0)));
+    setText('radarEconomyDetail',
+      Number(economy.requests || 0) + ' requêtes · ' +
+      Number(economy.notModified || 0) + ' réponses sans contenu · ' +
+      Number(economy.aiCalls || 0) + ' appel IA automatique');
+
+    const button = byId('newsManualRefresh');
+    const status = byId('newsRefreshStatus');
+    if (button) button.disabled = pending.length === 0;
+    if (status) {
+      if (pending.length) status.textContent = pending.length + ' candidat' + (pending.length > 1 ? 's' : '') + ' détecté' + (pending.length > 1 ? 's' : '') + ' · prêt' + (pending.length > 1 ? 's' : '') + ' à analyser';
+      else if (radarStatus?.meta?.generatedAt) status.textContent = 'Aucun candidat · 0 appel IA nécessaire ✓';
+      else status.textContent = 'Premier passage mécanique en attente';
+    }
+  }
+
+  async function loadRadarOperations() {
+    try {
+      const [statusResponse, candidatesResponse] = await Promise.all([
+        fetch(RADAR_STATUS_URL, { cache: 'no-store' }),
+        fetch(RADAR_CANDIDATES_URL, { cache: 'no-store' })
+      ]);
+      if (!statusResponse.ok) throw new Error('Radar status ' + statusResponse.status);
+      if (!candidatesResponse.ok) throw new Error('Radar candidates ' + candidatesResponse.status);
+      radarStatus = await statusResponse.json();
+      const candidateData = await candidatesResponse.json();
+      radarCandidates = Array.isArray(candidateData.items) ? candidateData.items : [];
+    } catch (error) {
+      console.error(error);
+      radarStatus = null;
+      radarCandidates = [];
+    }
+    renderRadarOperations();
   }
 
   function filteredSignals() {
@@ -325,11 +389,8 @@ Exécute directement la mise à jour : modifie le JSON, adapte les tests si néc
   function render() {
     const list = filteredSignals();
     if (byId('newsResultCount')) byId('newsResultCount').textContent = String(list.length);
-    if (byId('newsStrongCount')) byId('newsStrongCount').textContent = String(signals.filter(item => item.level === 'strong').length);
-    if (byId('newsWatchCount')) byId('newsWatchCount').textContent = String(signals.filter(item => item.level === 'watch').length);
-    if (byId('newsMunicipalityCount')) byId('newsMunicipalityCount').textContent = String(new Set(signals.map(item => item.bfsId)).size);
-    if (byId('newsSourceCount')) byId('newsSourceCount').textContent = String(new Set(signals.map(item => item.sourceLabel)).size);
     renderForecast();
+    renderRadarOperations();
     const feed = byId('newsFeed');
     if (!feed) return;
     feed.innerHTML = list.length ? list.map(signalCard).join('') : '<div class="news-empty"><strong>Aucun signal dans cette vue.</strong><span>Essaie un autre niveau ou efface la recherche.</span></div>';
@@ -406,24 +467,7 @@ Exécute directement la mise à jour : modifie le JSON, adapte les tests si néc
       const data = await response.json();
       radarMeta = data.meta || {};
       signals = Array.isArray(data.signals) ? data.signals : [];
-      const status = byId('newsRefreshStatus');
-      const refreshButton = byId('newsManualRefresh');
-      let request = null;
-      try {
-        request = JSON.parse(localStorage.getItem(REFRESH_REQUEST_KEY) || 'null');
-      } catch {
-        localStorage.removeItem(REFRESH_REQUEST_KEY);
-      }
-      const changedAfterRequest = request && (
-        radarMeta.updatedOn !== request.updatedOn || signals.length !== request.signalCount
-      );
-      if (status && changedAfterRequest) {
-        status.textContent = `Radar actualisé ✓ · ${signals.length} signal${signals.length > 1 ? 's' : ''}`;
-        refreshButton?.classList.add('is-success');
-        localStorage.removeItem(REFRESH_REQUEST_KEY);
-      } else if (status && radarMeta.updatedOn) {
-        status.textContent = `Dernière veille · ${formatDate(radarMeta.updatedOn)}`;
-      }
+      renderRadarOperations();
       render();
     } catch (error) {
       console.error(error);
@@ -434,21 +478,26 @@ Exécute directement la mise à jour : modifie le JSON, adapte les tests si néc
   byId('newsQuery')?.addEventListener('input', render);
   byId('newsManualRefresh')?.addEventListener('click', async () => {
     const status = byId('newsRefreshStatus');
+    const pending = radarCandidates.filter(item => (item.status || 'pending') === 'pending');
+    if (!pending.length) {
+      if (status) status.textContent = 'Aucun candidat · aucun appel IA lancé ✓';
+      return;
+    }
     try {
       localStorage.setItem(REFRESH_REQUEST_KEY, JSON.stringify({
-        updatedOn: radarMeta.updatedOn || null,
-        signalCount: signals.length,
+        candidateCount: pending.length,
         requestedAt: new Date().toISOString()
       }));
       await copyRefreshPrompt();
       byId('newsManualRefresh')?.classList.add('is-launching');
-      if (status) status.textContent = 'Prompt copié · mise à jour lancée…';
+      if (status) status.textContent = 'Candidats copiés · ouverture de l’analyse…';
       window.setTimeout(() => window.location.assign(CHAT_URL), 900);
     } catch (error) {
       console.error(error);
       if (status) status.textContent = 'Copie impossible · réessaie';
     }
   });
+
   document.querySelectorAll('[data-news-level]').forEach(button => {
     button.addEventListener('click', () => {
       activeLevel = button.dataset.newsLevel || 'all';
@@ -460,4 +509,5 @@ Exécute directement la mise à jour : modifie le JSON, adapte les tests si néc
   window.PrimeCommunesNews = { render, reload: load };
   void loadAnalysis().then(load);
   void loadStories();
+  void loadRadarOperations();
 })();

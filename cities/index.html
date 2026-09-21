@@ -37,7 +37,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       <button class="view-tab active" data-view="communes">Communes</button>
       <button class="view-tab" data-view="map">Carte</button>
       <button class="view-tab" data-view="stats">Stats</button>
-      <button class="view-tab news-nav-tab" data-view="news">NEWS!<span class="news-nav-badge">BÊTA</span></button>
+      <button class="view-tab news-nav-tab" data-view="news">Radar!<span class="news-nav-badge">SOBRE</span></button>
       <button class="view-tab" data-view="roadmap">Roadmap</button>
     </nav>
     <button class="sync-state" id="syncReload" title="Recharger depuis Supabase" hidden><span></span><b id="syncText" aria-live="polite">Connexion à la base…</b></button>
@@ -146,30 +146,36 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       </section>
     </section>
     <section class="news-view" id="newsView" hidden>
-      <aside class="news-beta-note" aria-label="Information bêta"><strong>BÊTA</strong><span>Le Radar est encore en rodage : couverture, fraîcheur et pertinence peuvent varier. La source publique primaire reste la référence.</span></aside>
+      <aside class="news-beta-note" aria-label="Sobriété numérique"><strong>SOBRIÉTÉ</strong><span>La veille privilégie les contrôles déterministes et les sources publiques structurées. L’IA n’est utilisée qu’en seconde lecture, lorsque son interprétation apporte une valeur réelle. La source publique primaire reste la référence.</span></aside>
       <div class="news-intro view-intro">
         <div><h1>Ce qui bouge.<br><span>Avant que ça bouge.</span></h1></div>
-        <div class="news-intro-copy view-intro-copy"><p class="eyebrow">Prime Communes · NEWS! 2.0</p><p>Des faits publics qui annoncent peut-être un projet communal — avant l'appel d'offres, avant le devis, avant que tout le monde le sache.</p><strong>Le Radar ne raconte pas les projets déjà gagnés par Prime. Il détecte ce qui mérite d'être qualifié maintenant.</strong></div>
+        <div class="news-intro-copy view-intro-copy"><p class="eyebrow">Veille sobre du marché communal</p><p>Prime Communes ne demande pas à l’IA de parcourir en permanence le web. Les sources sont surveillées avec les moyens les plus légers possibles ; l’IA intervient uniquement lorsqu’un changement mérite d’être compris, qualifié ou relié au marché Prime.</p><strong>Détecter mécaniquement. Comprendre intelligemment. Calculer le moins possible.</strong></div>
       </div>
       <section class="news-panel" aria-label="Radar communal">
         <header class="news-panel-heading">
-          <div><p class="eyebrow">Radar communal · 2.0.1</p><h2>Les signaux du territoire</h2></div>
+          <div><p class="eyebrow">Radar! · couverture mesurable</p><h2>Les signaux du territoire</h2></div>
           <div class="news-radar-actions">
-            <div class="news-radar-state"><span></span><b>Veille de l'IA d'Axel</b><small>Sélection éditoriale · veille sobre</small></div>
+            <div class="news-radar-state"><span></span><b>Surveillance mécanique</b><small>L’IA arrive uniquement après détection</small></div>
             <div class="news-refresh-stack">
               <button class="news-refresh-button" id="newsManualRefresh" type="button">
-                <span aria-hidden="true">↻</span><b>MÀJ avec ChatGPT</b><small id="newsRefreshStatus" aria-live="polite">Prompt de veille prêt à copier</small>
+                <span aria-hidden="true">↻</span><b>Analyser avec ChatGPT</b><small id="newsRefreshStatus" aria-live="polite">Lecture de la file de candidats…</small>
               </button>
-              <small class="news-energy-note">≈ 0,1–1 recharge d’iPhone par veille · ordre de grandeur</small>
+              <small class="news-energy-note">0 appel IA lorsqu’aucune nouveauté ne mérite d’être analysée</small>
             </div>
           </div>
         </header>
-        <div class="news-kpis" aria-label="Synthèse du Radar">
-          <article class="news-kpi news-kpi-hot"><span>Signaux forts</span><strong id="newsStrongCount">—</strong><small>faits publics à qualifier</small></article>
-          <article class="news-kpi"><span>À surveiller</span><strong id="newsWatchCount">—</strong><small>indices documentés</small></article>
-          <article class="news-kpi"><span>Communes concernées</span><strong id="newsMunicipalityCount">—</strong><small>reliées à la base OFS</small></article>
-          <article class="news-kpi"><span>Sources</span><strong id="newsSourceCount">—</strong><small>Prime et sources publiques</small></article>
+        <div class="news-kpis news-kpis-operations" aria-label="Mesure du Radar">
+          <article class="news-kpi news-kpi-hot"><span>Couverture</span><strong id="radarCoverageCount">—</strong><small id="radarCoverageDetail">sources communales directes</small></article>
+          <article class="news-kpi"><span>Sources</span><strong id="radarSourceCount">—</strong><small id="radarSourceDetail">état de santé</small></article>
+          <article class="news-kpi"><span>Détection</span><strong id="radarChangeCount">—</strong><small id="radarChangeDetail">nouveaux documents</small></article>
+          <article class="news-kpi"><span>Analyse IA</span><strong id="radarCandidateCount">—</strong><small>uniquement les candidats utiles</small></article>
+          <article class="news-kpi"><span>Publication</span><strong id="radarPublishedCount">—</strong><small>signaux vérifiés</small></article>
         </div>
+        <section class="news-sobriety" aria-label="Principe de sobriété numérique">
+          <div><span>Sobriété numérique</span><strong>Détecter mécaniquement. Comprendre intelligemment.</strong></div>
+          <p>Le Radar privilégie RSS, API, sitemaps, requêtes conditionnelles et empreintes de contenu. Une source inchangée n’est jamais envoyée à l’IA.</p>
+          <small id="radarEconomyDetail">Mesure de la sobriété en attente du premier passage.</small>
+        </section>
         <section class="news-forecast" aria-label="Forecast léger">
           <header><div><p class="eyebrow">Qualification légère · 2.0.4</p><h3>Le signal devient une décision.</h3></div><p>Un cockpit local, pas un CRM : rien n'est envoyé dans la base avant la future infrastructure 2.5.</p></header>
           <div>
@@ -190,7 +196,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         </div>
         <div class="news-result-line"><span><strong id="newsResultCount">0</strong> signaux</span><span>Triés par importance puis fraîcheur</span></div>
         <div class="news-feed" id="newsFeed"><p class="news-loading">Lecture des premiers signaux…</p></div>
-        <footer class="news-method"><strong>Règle éditoriale</strong><span>Un fait public vérifiable, séparé de la lecture de l'IA d'Axel. Aucun projet Prime déjà gagné ou livré.</span><strong>Plus tard en 2.5</strong><span>Le robot pourra détecter des sources ; la sélection, la vérification et la publication resteront sobres et maîtrisées.</span></footer>
+        <footer class="news-method"><strong>Règle de preuve</strong><span>Un fait public vérifiable, séparé de la déduction documentée et de la lecture Prime. Aucun projet déjà gagné ou livré n’est présenté comme une opportunité.</span><strong>Règle de couverture</strong><span>« Surveillé » signifie contrôlé et mesurable. Une source inaccessible est une erreur, jamais un silence.</span></footer>
       </section>
       <section class="story-panel" aria-label="Une commune, une histoire">
         <header class="story-panel-heading">
@@ -240,9 +246,9 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
           </div>
         </article>
         <article class="roadmap-stage history-stage completed-20">
-          <header><span class="roadmap-version">2.0</span><div><p>NEWS</p><h2>Faire parler</h2></div><span class="roadmap-done">Terminé ✓</span></header>
+          <header><span class="roadmap-version">2.0</span><div><p>RADAR!</p><h2>Faire parler</h2></div><span class="roadmap-done">Terminé ✓</span></header>
           <div class="roadmap-items">
-            <div><strong>NEWS · Radar communal</strong><span>Détecter et interpréter les actualités, décisions et indices qui annoncent une transformation communale.</span><small>2.0.1 · première version livrée · enrichissement actif</small></div>
+            <div><strong>Radar communal</strong><span>Détecter mécaniquement les changements utiles, puis interpréter uniquement ce qui mérite une lecture métier.</span><small>2.0.1 · veille sobre · couverture mesurable</small></div>
             <div><strong>Une commune, une histoire</strong><span>Raconter son identité, son histoire avec Prime et les liens humains ou territoriaux qui donnent du sens à notre métier.</span><small>2.0.2 · premier récit Avenches–Le Noirmont livré</small></div>
             <div><strong>Actualités interprétées</strong><span>Expliquer ce qu'un fait change, quelles communes sont concernées et distinguer fait, déduction et lecture Prime.</span><small>2.0.3 · livré dans chaque signal</small></div>
             <div><strong>Qualification légère et forecast</strong><span>Responsable, prochaine action, probabilité, échéance et valeur estimée, reliés aux signaux qui les justifient.</span><small>2.0.4 · cockpit local livré · persistance centrale en 2.5</small></div>
@@ -278,7 +284,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   </section>
   <footer class="site-footer" aria-label="Informations légales et techniques">
     <div class="footer-meta">
-      <span>Prime Communes · version 2.0.5 · #450</span>
+      <span>Prime Communes · version 2.0.5 · #451</span>
       <span class="footer-confidential">Données confidentielles</span>
     </div>
     <div class="footer-legal">
@@ -482,6 +488,6 @@ $('statsScope').addEventListener('change',renderStats);document.querySelectorAll
 $('query').addEventListener('input',render);$('solution').addEventListener('change',render);$('district').addEventListener('change',render);$('canton').addEventListener('change',()=>{$('district').value='';updateDistrictOptions();render()});$('primeOnly').onclick=()=>{primeOnly=!primeOnly;$('primeOnly').classList.toggle('on',primeOnly);render()};$('eadminOnly').onclick=()=>{eadminOnly=!eadminOnly;$('eadminOnly').classList.toggle('on',eadminOnly);$('eadminOnly').classList.toggle('eadmin-on',eadminOnly);render()};$('districtsToggle').onclick=()=>{districtsMode=!districtsMode;if(!districtsMode)$('district').value='';updateDistrictOptions();$('districtsToggle').classList.toggle('on',districtsMode);$('districtsToggle').setAttribute('aria-expanded',String(districtsMode));render()};document.querySelectorAll('.market-toggle').forEach(button=>button.onclick=()=>{marketOnly=marketOnly===button.dataset.market?'':button.dataset.market;document.querySelectorAll('.market-toggle').forEach(x=>x.classList.toggle('on',x.dataset.market===marketOnly));render()});$('issuesOnly').onclick=()=>{issuesOnly=!issuesOnly;$('issuesOnly').classList.toggle('on',issuesOnly);$('issuesOnly').classList.toggle('warning',issuesOnly);render()};$('issuesCard').onclick=()=>{ofsMode=!ofsMode;if(!ofsMode)issuesOnly=false;$('issuesOnly').hidden=!ofsMode;$('issuesCard').classList.toggle('ofs-active',ofsMode);$('issuesCard').setAttribute('aria-pressed',String(ofsMode));$('ofsLabel').textContent=ofsMode?'Contrôle Delimo actif':'Qualité des livraisons';$('ofsCopy').textContent=ofsMode?'Les statuts OFS et erreurs EWID sont affichés dans le tableau.':'Afficher les statuts, erreurs EWID et commentaires OFS.';$('ofsCount').textContent=$('issues').textContent+' à surveiller';$('ofsAction').textContent=ofsMode?'Revenir au marché':'Ouvrir le contrôle';$('ofsArrow').textContent=ofsMode?'←':'→';render()};$('reset').onclick=()=>{$('query').value='';$('canton').value='Tous';$('district').value='';$('solution').value='Tous';primeOnly=eadminOnly=issuesOnly=districtsMode=false;marketOnly='';updateDistrictOptions();document.querySelectorAll('.filter-toggle').forEach(x=>x.classList.remove('on','warning'));render()};$('syncReload').onclick=()=>loadData(true);$('exportBtn').onclick=()=>{const rows=filtered(),withTerritory=districtsMode,header=['Nom','Client Prime','Canton',...(withTerritory?['Marché','District']:[]),'Population','Intégrateur','Métier','ERP','Modules'],lines=[header.join('\t'),...rows.map(x=>[x.name,x.isPrime?'Oui':'Non',x.canton,...(withTerritory?[x.market,x.district]:[]),x.expectedPopulation,x.integrator,x.software,x.erp,(x.products||[]).join(' | ')].join('\t'))];const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/tab-separated-values'}));a.download='communes.tsv';a.click()};
 document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const view=button.dataset.view;document.querySelectorAll('.view-tab').forEach(tab=>tab.classList.toggle('active',tab===button));$('communesView').hidden=view!=='communes';$('mapView').hidden=view!=='map';$('statsView').hidden=view!=='stats';$('newsView').hidden=view!=='news';$('roadmapView').hidden=view!=='roadmap';$('syncReload').hidden=view!=='communes';if(view==='map')loadMap();if(view==='stats')renderStats();window.scrollTo({top:0,behavior:'smooth'})});
 </script>
-<script src="app/prime-communes-1.1.js?v=28"></script>
+<script src="app/prime-communes-1.1.js?v=29"></script>
 </body>
 </html>
