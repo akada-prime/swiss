@@ -1,6 +1,9 @@
 name: Prime Communes Radar
 
 on:
+  push:
+    paths:
+      - '.github/workflows/prime-communes-radar.yml'
   schedule:
     - cron: '17 5 * * 1-5'
   workflow_dispatch:
