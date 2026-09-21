@@ -8,7 +8,7 @@
 
   const byId = id => document.getElementById(id);
   const truthyParam = value => value === '1' || value === 'true';
-  const validViews = new Set(['communes', 'map', 'stats', 'news', 'roadmap']);
+  const validViews = new Set(['communes', 'map', 'stats', 'news', 'stories', 'roadmap']);
   const validSortKeys = new Set(['population', 'name']);
   const validDirections = new Set(['asc', 'desc']);
   const validMarkets = new Set(['Welsch', 'Uf Tüütsch', 'Ticino']);
@@ -270,6 +270,7 @@
     byId('mapView').hidden = next !== 'map';
     byId('statsView').hidden = next !== 'stats';
     byId('newsView').hidden = next !== 'news';
+    byId('storiesView').hidden = next !== 'stories';
     byId('roadmapView').hidden = next !== 'roadmap';
     byId('syncReload').hidden = next !== 'communes';
     document.documentElement.removeAttribute('data-initial-view');
