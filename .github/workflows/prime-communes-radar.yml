@@ -1,12 +1,8 @@
 name: Prime Communes Radar
 
-# One-shot D-14 bootstrap trigger · retry after branch sync.
 
 
 on:
-  push:
-    paths:
-      - '.github/workflows/prime-communes-radar.yml'
   schedule:
     - cron: '17 5 * * 1-5'
   workflow_dispatch:
@@ -30,8 +26,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Bootstrap D-14 once
-        run: node scripts/radar-scan.mjs --bootstrap-days=14
+      - name: Scan due sources
+        run: node scripts/radar-scan.mjs
       - name: Persist only measured state
         run: |
           if git diff --quiet -- public/data/radar-state-v1.json public/data/radar-candidates-v1.json; then
