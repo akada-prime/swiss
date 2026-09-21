@@ -22,13 +22,16 @@
   "detection": {
     "changes": 4,
     "newDocuments": 205,
-    "pendingCandidates": 14,
+    "pendingCandidates": 0,
     "bootstrapDays": 14,
     "bootstrapCandidates": 14
   },
   "analysis": {
-    "analyzed": 3,
-    "published": 3
+    "analyzed": 5,
+    "published": 5,
+    "candidateReviewed": 14,
+    "candidatePublished": 2,
+    "candidateDiscarded": 12
   },
   "economy": {
     "requests": 16,

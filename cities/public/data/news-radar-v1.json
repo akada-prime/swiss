@@ -1,9 +1,9 @@
 {
   "meta": {
     "version": "2.0.1-v1",
-    "updatedOn": "2026-09-14",
-    "mode": "editorial",
-    "notice": "Sélection sobre de faits publics, vérifiés et interprétés par l'IA d'Axel."
+    "updatedOn": "2026-09-21",
+    "mode": "radar-qualified",
+    "notice": "Faits publics détectés mécaniquement puis qualifiés par l'IA d'Axel ; fait, déduction et lecture Prime restent séparés."
   },
   "signals": [
     {
@@ -73,6 +73,54 @@
         "Interopérabilité",
         "Client Prime",
         "À confirmer en interne"
+      ]
+    },
+    {
+      "id": "biel-ia-partenariat-2026",
+      "level": "strong",
+      "date": "2026-09-17",
+      "bfsId": 371,
+      "municipality": "Biel/Bienne",
+      "canton": "BE",
+      "title": "Biel/Bienne cherche un partenaire IA à long terme",
+      "summary": "La Ville de Biel/Bienne a publié une procédure ouverte pour un partenaire technologique et de mise en œuvre en intelligence artificielle, gestion des données et systèmes d’information. Le premier projet vise une recherche assistée par IA pour les informations publiques ; d’autres cas d’usage, assistants et automatisations sont prévus. Le contrat est annoncé pour cinq ans, avec possibilité de prolongation de deux ans.",
+      "why": "Il s’agit d’un besoin numérique communal explicite et déjà mis en concurrence, avec une ambition de partenariat durable plutôt qu’un achat ponctuel. La source ne démontre toutefois ni un besoin ERP, ni l’éligibilité directe de Prime : il faut qualifier rapidement les exigences, le rôle possible d’un partenaire ou sous-traitant et l’intérêt stratégique pour Prime.",
+      "sourceType": "Source publique",
+      "sourceLabel": "Ville de Biel/Bienne · Informatik und Logistik · KI-Expertendienstleistungen · 17 septembre 2026",
+      "sourceUrl": "https://www.simap.ch/fr/?search=d39e0fcd-5033-41dc-84e6-7c5f0d9192f4",
+      "updatedBy": "IA d'Axel",
+      "confidence": "confirmed",
+      "tags": [
+        "IA",
+        "Données",
+        "Systèmes d’information",
+        "Appel d’offres ouvert",
+        "Partenariat long terme",
+        "À qualifier"
+      ]
+    },
+    {
+      "id": "meyrin-dechets-facturation-entreprises-2026",
+      "level": "watch",
+      "date": "2026-09-15",
+      "bfsId": 6630,
+      "municipality": "Meyrin",
+      "canton": "GE",
+      "title": "Meyrin met en concurrence la collecte et la facturation directe des déchets d’entreprises",
+      "summary": "La Ville de Meyrin a lancé une procédure ouverte pour une concession de collecte, transport, élimination et facturation des déchets urbains incinérables de quelque 400 entreprises, pour environ 1’140 tonnes par an. Le titulaire facturera directement les entreprises selon les tarifs arrêtés dans le marché ; le contrat est prévu pour quatre ans avec une option d’un an.",
+      "why": "La procédure documente un modèle communal de facturation directe à des entreprises, sujet proche des enjeux de données débiteurs, interfaces et facturation. Elle ne constitue cependant pas un marché logiciel : la facturation est intégrée à une concession de gestion des déchets. Le signal mérite donc une veille, pas une qualification commerciale automatique.",
+      "sourceType": "Source publique",
+      "sourceLabel": "Ville de Meyrin / Loyco SA · appel d’offres SIMAP · 15 septembre 2026",
+      "sourceUrl": "https://www.simap.ch/fr/?search=aed4983b-eb5a-496b-bd32-606c54eb3d61",
+      "updatedBy": "IA d'Axel",
+      "confidence": "confirmed",
+      "tags": [
+        "Déchets",
+        "Facturation directe",
+        "Entreprises",
+        "Concession",
+        "Interfaces",
+        "À surveiller"
       ]
     }
   ]

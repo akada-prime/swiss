@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-09-21T20:44:56.279Z",
-    "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
+    "generatedAt": "2026-09-21T20:58:00Z",
+    "notice": "14 candidats D-14 qualifiés : 2 publiés comme signaux Radar, 12 écartés ; aucun candidat ne reste en attente."
   },
   "items": [
     {
@@ -18,7 +18,12 @@
       "publicationDate": "2026-09-21",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : erp",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Restauration/catering pour Schutz und Rettung Bern ; le mot-clé « erp » est un faux positif lexical sans lien avec les systèmes Prime."
+      }
     },
     {
       "id": "ccf04f09a5af99a1ddd853662efec17e0e6055d11caa29d50f5172e3435c07c5",
@@ -33,7 +38,12 @@
       "publicationDate": "2026-09-21",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Assistance à maîtrise d’ouvrage / PMO d’un projet immobilier et de formation ; hors périmètre numérique communal Prime."
+      }
     },
     {
       "id": "b728c65a57571409778f049ba8c1484c9f96931ffeb8ea094a3cd47273a00d43",
@@ -48,7 +58,12 @@
       "publicationDate": "2026-09-21",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : automatisation",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Automatisation technique de bâtiment à Thoune ; pas une automatisation administrative ou logicielle."
+      }
     },
     {
       "id": "af4a4b547bf6f7088bab3c138bb8c493f95f560f423fcf0a06c17f2214ea04f9",
@@ -63,7 +78,12 @@
       "publicationDate": "2026-09-19",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Transformateurs / infrastructure énergétique ; faux positif « rh » sans lien métier Prime."
+      }
     },
     {
       "id": "2fdff685783fd857ccf69df8cbb9e24cf71128ef024255a05abcc3daca5a8471",
@@ -78,7 +98,12 @@
       "publicationDate": "2026-09-19",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Sujet RH potentiellement pertinent, mais adjudicateur ECA Vaud et non commune ; hors périmètre actuel de Prime Communes."
+      }
     },
     {
       "id": "81509938c102d2066b7e13c80869c114d483ddf310d078b39864c120e2164a2a",
@@ -93,7 +118,12 @@
       "publicationDate": "2026-09-18",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : modernisation",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Travaux de nettoyage dans un projet immobilier ; « modernisation » est un faux positif trop large."
+      }
     },
     {
       "id": "68577f07195a9db2149ae93aec59566821f8d8fac7af7cfdd790b7ad1319f121",
@@ -108,7 +138,12 @@
       "publicationDate": "2026-09-17",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Travaux électriques ferroviaires ; le mot-clé « finance » ne correspond pas au périmètre fonctionnel recherché."
+      }
     },
     {
       "id": "df224a36c67cd0db40936431808272a45b1ac2c7841ecbd5a8f0182cbdeb649a",
@@ -123,7 +158,13 @@
       "publicationDate": "2026-09-17",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "analyzed",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "analyzed",
+        "reason": "Ville de Biel/Bienne ; appel d’offres ouvert pour un partenaire IA, données et systèmes d’information sur plusieurs années.",
+        "signalId": "biel-ia-partenariat-2026"
+      }
     },
     {
       "id": "ed5217756108728b66b39152843ddcdc62fc020c45ba586c87978b2b60273ee8",
@@ -138,7 +179,12 @@
       "publicationDate": "2026-09-16",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : saas",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Renouvellement Nexthink de la Ville de Genève déjà attribué à E-SECURE ; opportunité close."
+      }
     },
     {
       "id": "5b22112376482d592948f41e3143f8707bd269347d32d9301ba4ff15c17adc88",
@@ -153,7 +199,12 @@
       "publicationDate": "2026-09-15",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Protection anticorrosion d’infrastructure hydraulique ; faux positif « rh »."
+      }
     },
     {
       "id": "dacb3ed24632cbc7896d045b325c7c2a6f58938bb1eb7ef9ed99f420125e4d05",
@@ -168,7 +219,12 @@
       "publicationDate": "2026-09-15",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Remplacement de vanne / infrastructure hydraulique ; faux positif « rh »."
+      }
     },
     {
       "id": "0098b6462b633de3ce4010146bb5b98799852f456b9b3153a9b5bf863db541ae",
@@ -183,7 +239,13 @@
       "publicationDate": "2026-09-15",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : facturation",
-      "status": "pending"
+      "status": "analyzed",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "analyzed",
+        "reason": "Ville de Meyrin ; procédure ouverte incluant explicitement la facturation directe des entreprises dans une concession déchets.",
+        "signalId": "meyrin-dechets-facturation-entreprises-2026"
+      }
     },
     {
       "id": "9918e36f590999055f1838bb84322150f65904cae17e03c0eccfa4642ffa9fea",
@@ -198,7 +260,12 @@
       "publicationDate": "2026-09-11",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Maintenance/licences Tungsten Kofax Capture du canton de Fribourg déjà attribuée à SmartWave ; hors périmètre communal et opportunité close."
+      }
     },
     {
       "id": "719ba00c0ac09b7a5d1d30e8ebe1634fce2ae1a07c31d7dce41a63ee9b69dfdb",
@@ -213,7 +280,12 @@
       "publicationDate": "2026-09-11",
       "bootstrapDays": 14,
       "reason": "bootstrap D-14 · mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "reviewedAt": "2026-09-21T20:58:00Z",
+      "review": {
+        "decision": "discarded",
+        "reason": "Maintenance IBM FileNet/SIGED du canton de Fribourg déjà attribuée ; hors périmètre communal et opportunité close."
+      }
     }
   ]
 }

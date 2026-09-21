@@ -1,9 +1,9 @@
 {
   "meta": {
     "version": "2.0.4-v1",
-    "updatedOn": "2026-09-20",
-    "mode": "human-validation",
-    "notice": "Les interprétations sont documentées. Les qualifications restent des brouillons locaux tant qu'elles ne sont pas validées et persistées dans l'infrastructure Prime."
+    "updatedOn": "2026-09-21",
+    "mode": "radar-qualified",
+    "notice": "Les interprétations proviennent uniquement de candidats détectés mécaniquement ; les candidats hors périmètre, déjà attribués ou sans lien commercial plausible sont écartés avant publication."
   },
   "items": [
     {
@@ -13,10 +13,18 @@
         "deduction": "Une phase de qualification peut commencer avant l'exécution complète du crédit. Le document permet d'interroger le périmètre, la gouvernance et les interfaces, mais ne démontre ni qu'un appel d'offres est ouvert ni que Prime est éligible.",
         "primeReading": "Le signal mérite une discussion interne croisant services industriels, données et intégration. Aucun produit Prime ni rôle commercial n'est établi par la source.",
         "affected": {
-          "municipalities": ["Yverdon-les-Bains"],
-          "territories": ["Nord vaudois"],
-          "products": ["Aucun produit Prime établi"],
-          "integrators": ["Non identifié dans la source"]
+          "municipalities": [
+            "Yverdon-les-Bains"
+          ],
+          "territories": [
+            "Nord vaudois"
+          ],
+          "products": [
+            "Aucun produit Prime établi"
+          ],
+          "integrators": [
+            "Non identifié dans la source"
+          ]
         }
       },
       "qualificationProposal": {
@@ -37,10 +45,18 @@
         "deduction": "Le financement rend vraisemblable l'existence de plusieurs chantiers numériques, mais le document public ne précise pas lesquels, ni leur mode d'acquisition, ni leurs fournisseurs.",
         "primeReading": "La bonne action n'est pas de supposer un remplacement d'ERP : il faut d'abord identifier les lots, les responsables, le calendrier et les sujets encore ouverts.",
         "affected": {
-          "municipalities": ["Monthey"],
-          "territories": ["Chablais valaisan"],
-          "products": ["Aucun produit Prime établi"],
-          "integrators": ["Non identifié dans la source"]
+          "municipalities": [
+            "Monthey"
+          ],
+          "territories": [
+            "Chablais valaisan"
+          ],
+          "products": [
+            "Aucun produit Prime établi"
+          ],
+          "integrators": [
+            "Non identifié dans la source"
+          ]
         }
       },
       "qualificationProposal": {
@@ -61,16 +77,90 @@
         "deduction": "Le chantier peut créer des besoins d'interopérabilité ou de données périphériques. La source ne montre toutefois pas qu'un autre marché est ouvert au-delà du périmètre SIT décrit.",
         "primeReading": "Gland est cliente Prime : le signal reste visible, mais sa situation commerciale doit être vérifiée en interne avant toute action afin d'éviter de qualifier un travail déjà couvert.",
         "affected": {
-          "municipalities": ["Gland"],
-          "territories": ["La Côte"],
-          "products": ["innosolvcity · contexte client seulement"],
-          "integrators": ["Cartolacôte · cité par le préavis"]
+          "municipalities": [
+            "Gland"
+          ],
+          "territories": [
+            "La Côte"
+          ],
+          "products": [
+            "innosolvcity · contexte client seulement"
+          ],
+          "integrators": [
+            "Cartolacôte · cité par le préavis"
+          ]
         }
       },
       "qualificationProposal": {
         "decision": "watch",
         "owner": "",
         "nextAction": "Confirmer avec l'équipe Prime si les interfaces ou données liées au SIT sont déjà connues, devisées ou couvertes.",
+        "dueDate": "",
+        "probability": null,
+        "estimatedValue": null,
+        "currency": "CHF",
+        "basis": "Proposition de l'IA d'Axel à valider humainement."
+      }
+    },
+    {
+      "signalId": "biel-ia-partenariat-2026",
+      "interpretation": {
+        "change": "Biel/Bienne passe d’une intention générale autour de l’IA à une procédure ouverte visant un partenaire technologique durable, avec un premier projet défini et des cas d’usage futurs explicitement prévus.",
+        "deduction": "Le besoin est déjà au stade de l’appel d’offres : l’enjeu n’est plus de détecter une intention, mais de vérifier rapidement les conditions de participation, les compétences exigées et la place possible d’un partenaire ou sous-traitant. La source ne montre pas qu’un ERP ou un produit Prime est recherché.",
+        "primeReading": "Le signal est stratégique pour une ville du périmètre romand et touche directement données, systèmes d’information, assistants et automatisation. Prime ne doit pas supposer qu’elle peut répondre seule ; une qualification interne et partenariale est nécessaire avant toute action.",
+        "affected": {
+          "municipalities": [
+            "Biel/Bienne"
+          ],
+          "territories": [
+            "Biel/Bienne · Jura bernois élargi"
+          ],
+          "products": [
+            "Aucun produit Prime établi",
+            "Intégration / données · contexte potentiel"
+          ],
+          "integrators": [
+            "Non identifié dans la source"
+          ]
+        }
+      },
+      "qualificationProposal": {
+        "decision": "to_qualify",
+        "owner": "",
+        "nextAction": "Lire les critères SIMAP et décider rapidement si Prime a un rôle direct, en consortium ou en sous-traitance avant l’échéance de remise des offres.",
+        "dueDate": "2026-10-27",
+        "probability": null,
+        "estimatedValue": null,
+        "currency": "CHF",
+        "basis": "Proposition de l'IA d'Axel à valider humainement."
+      }
+    },
+    {
+      "signalId": "meyrin-dechets-facturation-entreprises-2026",
+      "interpretation": {
+        "change": "Meyrin formalise dans une procédure ouverte une délégation de collecte et de traitement des déchets incluant explicitement la facturation directe aux entreprises concernées.",
+        "deduction": "Le document prouve un modèle opérationnel de facturation directe dans le domaine communal des déchets. Il ne prouve pas l’existence d’un lot logiciel séparé ni d’un besoin ERP ; le titulaire de la concession porte l’obligation de facturation.",
+        "primeReading": "Le signal est surtout utile comme benchmark métier pour les projets déchets et facturation. Une opportunité Prime n’existe que si les interfaces, données débiteurs ou outils de back-office sont séparés, sous-traités ou nécessitent une intégration municipale.",
+        "affected": {
+          "municipalities": [
+            "Meyrin"
+          ],
+          "territories": [
+            "Canton de Genève"
+          ],
+          "products": [
+            "Facturation / données débiteurs · contexte potentiel",
+            "Aucun produit Prime établi"
+          ],
+          "integrators": [
+            "Loyco SA · conseil en marchés publics, pas intégrateur technique établi"
+          ]
+        }
+      },
+      "qualificationProposal": {
+        "decision": "watch",
+        "owner": "",
+        "nextAction": "Identifier le système communal et les interfaces prévues pour les données entreprises et la facturation ; ne pas traiter la concession elle-même comme une opportunité logicielle Prime.",
         "dueDate": "",
         "probability": null,
         "estimatedValue": null,
