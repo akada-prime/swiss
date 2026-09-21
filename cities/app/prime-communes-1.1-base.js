@@ -472,8 +472,25 @@
   window.addEventListener('popstate', restoreFromUrl);
 
   // Roadmap 2.0 is now semantic HTML. Runtime mutation is intentionally retired.
-  const footerVersion = document.querySelector('.footer-meta span:first-child');
-  if (footerVersion) footerVersion.textContent = 'Prime Communes · version 2.0.5';
+  // The footer version/counter is authored in HTML and must not be overwritten at runtime.
+
+  const backToTop = byId('backToTop');
+  if (backToTop) {
+    let scrollFrame = 0;
+    const updateBackToTop = () => {
+      scrollFrame = 0;
+      const threshold = Math.max(420, window.innerHeight * 0.65);
+      backToTop.classList.toggle('is-visible', window.scrollY > threshold);
+    };
+    window.addEventListener('scroll', () => {
+      if (!scrollFrame) scrollFrame = window.requestAnimationFrame(updateBackToTop);
+    }, { passive: true });
+    backToTop.addEventListener('click', () => {
+      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+    });
+    updateBackToTop();
+  }
 
   restoreFromUrl();
 })();
