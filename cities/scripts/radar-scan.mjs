@@ -293,14 +293,20 @@ export async function runRadarScan() {
   const newCandidates = [];
   let changes = 0;
   let newDocuments = 0;
+  let checkedSources = 0;
 
   for (const source of registry.sources || []) {
     const result = await scanSource(source, sourceState[source.id] || {}, registry.defaults || {});
     sourceState[source.id] = result.state;
+    if (!result.skipped) checkedSources += 1;
     newCandidates.push(...result.candidates);
     changes += result.changes || 0;
     newDocuments += result.newDocuments || 0;
   }
+
+  // If every source is still inside its adaptive interval, this is a true no-op:
+  // preserve the last measured pass instead of replacing useful metrics with zeros.
+  if (checkedSources === 0) return previousState;
 
   const queueMap = new Map((queue.items || []).map(item => [item.id, item]));
   for (const item of newCandidates) if (!queueMap.has(item.id)) queueMap.set(item.id, item);
