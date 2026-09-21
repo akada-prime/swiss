@@ -24,7 +24,7 @@
   loadStyle('app/prime-communes-maplibre-1.2.css?v=11');
   loadStyle('app/prime-communes-news-2.0.css?v=11');
   loadStyle('app/prime-communes-roadmap-2.0.css?v=3');
-  loadStyle('app/prime-communes-desktop-2.0.css?v=1');
+  loadStyle('app/prime-communes-desktop-2.0.css?v=2');
 
   // DATA owns transport/normalization/language scopes before any view starts.
   loadScript('app/prime-communes-data-1.5.js?v=3', () => {

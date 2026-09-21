@@ -332,9 +332,11 @@ test('official national border is a stored swissBOUNDARIES3D 2026 geometry', asy
 test('desktop dark mode raises contrast without changing the Natel theme', async () => {
   const loader = await read('app/prime-communes-1.1.js');
   const css = await read('app/prime-communes-desktop-2.0.css');
-  assert.match(loader, /prime-communes-desktop-2\.0\.css\?v=1/);
+  assert.match(loader, /prime-communes-desktop-2\.0\.css\?v=2/);
   assert.ok(loader.indexOf('prime-communes-desktop-2.0.css') > loader.indexOf('prime-communes-roadmap-2.0.css'));
-  assert.match(css, /@media \(min-width:1101px\) and \(pointer:fine\)/);
+  assert.match(css, /@media \(min-width:1101px\)/);
+  assert.match(css, /@media \(min-width:1600px\)/);
+  assert.doesNotMatch(css, /pointer:fine/);
   assert.match(css, /prefers-contrast:more/);
   assert.doesNotMatch(css, /max-width:680px/);
 });
