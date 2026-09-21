@@ -19,7 +19,7 @@
     document.body.append(script);
   };
 
-  loadStyle('app/prime-communes-1.1.5.css?v=18');
+  loadStyle('app/prime-communes-1.1.5.css?v=19');
   loadStyle('app/prime-communes-stats-1.2.css?v=11');
   loadStyle('app/prime-communes-maplibre-1.2.css?v=11');
   loadStyle('app/prime-communes-news-2.0.css?v=11');
