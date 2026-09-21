@@ -33,7 +33,8 @@ export function extractHtmlLinks(html, baseUrl) {
       const url = new URL(decodeEntities(match[1]), baseUrl).href;
       if (!/^https?:/i.test(url) || seen.has(url)) continue;
       seen.add(url);
-      out.push({ id: sha256(url), url, title: stripTags(match[2]) || url });
+      const date = dateNearAnchor(html, match.index, re.lastIndex);
+      out.push({ id: sha256(url), url, title: stripTags(match[2]) || url, date: date ? date.toISOString().slice(0, 10) : '' });
     } catch {}
   }
   return out;
@@ -66,6 +67,32 @@ export function candidateReason(item, keywords = []) {
   const haystack = normalize([item.title, item.url, item.text].filter(Boolean).join(' '));
   const hit = keywords.find(keyword => haystack.includes(normalize(keyword)));
   return hit ? 'mot-clé déterministe : ' + hit : '';
+}
+const frenchMonths = {
+  janvier:0, fevrier:1, mars:2, avril:3, mai:4, juin:5,
+  juillet:6, aout:7, septembre:8, octobre:9, novembre:10, decembre:11
+};
+export function parseDocumentDate(value) {
+  const text = normalize(value);
+  let match = text.match(/\b(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})\b/);
+  if (match) return new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  match = text.match(/\b(\d{1,2})[./-](\d{1,2})[./-](20\d{2})\b/);
+  if (match) return new Date(Date.UTC(Number(match[3]), Number(match[2]) - 1, Number(match[1])));
+  match = text.match(/\b(\d{1,2})(?:er)?\s+(janvier|fevrier|mars|avril|mai|juin|juillet|aout|septembre|octobre|novembre|decembre)\s+(20\d{2})\b/);
+  if (match) return new Date(Date.UTC(Number(match[3]), frenchMonths[match[2]], Number(match[1])));
+  return null;
+}
+export function isWithinRecentWindow(value, days, at = new Date()) {
+  const date = value instanceof Date ? value : parseDocumentDate(value);
+  if (!date || Number.isNaN(date.getTime())) return false;
+  const end = Date.UTC(at.getUTCFullYear(), at.getUTCMonth(), at.getUTCDate(), 23, 59, 59, 999);
+  const start = end - Math.max(1, Number(days) || 1) * 86400_000;
+  return date.getTime() >= start && date.getTime() <= end;
+}
+function dateNearAnchor(html, start, end) {
+  const after = stripTags(html.slice(end, Math.min(html.length, end + 260)));
+  const before = stripTags(html.slice(Math.max(0, start - 260), start));
+  return parseDocumentDate(after) || parseDocumentDate(before);
 }
 export function nextIntervalHours(source, previous = {}, outcome = 'unchanged') {
   const base = Number(source.schedule?.baseHours || 48);
@@ -169,7 +196,7 @@ function scheduleState(source, previous, outcome, patch = {}) {
   const nextCheckAt = new Date(Date.now() + intervalHours * 3600_000).toISOString();
   return {...previous, ...patch, intervalHours, nextCheckAt};
 }
-function candidateFrom(source, item, reason) {
+function candidateFrom(source, item, reason, options = {}) {
   return {
     id: sha256(source.id + '|' + item.id),
     sourceId: source.id,
@@ -180,14 +207,17 @@ function candidateFrom(source, item, reason) {
     title: item.title || item.url,
     url: item.url || source.url,
     detectedAt: nowIso(),
-    reason,
+    publicationDate: item.date || null,
+    bootstrapDays: options.bootstrapDays || null,
+    reason: options.bootstrapDays ? 'bootstrap D-' + options.bootstrapDays + ' · ' + reason : reason,
     status: 'pending'
   };
 }
-async function scanListSource(source, previous, defaults) {
+async function scanListSource(source, previous, defaults, options = {}) {
   if (source.respectRobots !== false && !(await allowedByRobots(source.url, defaults))) throw new Error('robots_disallowed');
-  const response = await fetchWithRetry(source.url, {headers:conditionalHeaders(previous)}, defaults);
-  if (response.status === 304) {
+  const bootstrapDays = Number(options.bootstrapDays || 0);
+  const response = await fetchWithRetry(source.url, {headers:bootstrapDays ? {} : conditionalHeaders(previous)}, defaults);
+  if (response.status === 304 && !bootstrapDays) {
     stats.unchanged += 1;
     return { outcome:'unchanged', state:scheduleState(source, previous, 'unchanged', {status:'healthy', lastCheckAt:nowIso(), error:null}), candidates:[], changes:0, newDocuments:0 };
   }
@@ -195,7 +225,7 @@ async function scanListSource(source, previous, defaults) {
   const body = await response.text();
   stats.downloaded += 1;
   const fingerprint = sha256(body.replace(/\s+/g, ' '));
-  if (previous.fingerprint && previous.fingerprint === fingerprint) {
+  if (previous.fingerprint && previous.fingerprint === fingerprint && !bootstrapDays) {
     stats.unchanged += 1;
     return { outcome:'unchanged', state:scheduleState(source, previous, 'unchanged', {status:'healthy', lastCheckAt:nowIso(), lastSuccessAt:nowIso(), etag:response.headers.get('etag') || previous.etag || null, lastModified:response.headers.get('last-modified') || previous.lastModified || null, fingerprint, error:null}), candidates:[], changes:0, newDocuments:0 };
   }
@@ -205,8 +235,12 @@ async function scanListSource(source, previous, defaults) {
   else items = extractHtmlLinks(body, source.url);
   const seen = new Set(previous.seenIds || []);
   const baseline = !previous.fingerprint && !previous.lastSuccessAt;
-  const newItems = baseline ? [] : items.filter(item => !seen.has(item.id));
-  const candidates = newItems.map(item => ({item, reason:candidateReason(item, source.keywords || defaults.keywords || [])})).filter(entry => entry.reason).map(entry => candidateFrom(source, entry.item, entry.reason));
+  const bootstrapItems = bootstrapDays ? items.filter(item => isWithinRecentWindow(item.date, bootstrapDays)) : [];
+  const newItems = bootstrapDays ? bootstrapItems : (baseline ? [] : items.filter(item => !seen.has(item.id)));
+  const candidates = newItems
+    .map(item => ({item, reason:candidateReason(item, source.keywords || defaults.keywords || [])}))
+    .filter(entry => entry.reason)
+    .map(entry => candidateFrom(source, entry.item, entry.reason, {bootstrapDays}));
   const nextSeen = [...new Set([...(previous.seenIds || []), ...items.map(item => item.id)])].slice(-1500);
   return {
     outcome: baseline ? 'baseline' : 'changed',
@@ -224,8 +258,11 @@ function extractSimapProjects(body) {
   for (const key of ['projects','items','content','results','entries']) if (Array.isArray(body?.[key])) return body[key];
   return [];
 }
-async function scanSimap(source, previous, defaults) {
-  const since = previous.lastSuccessAt ? new Date(new Date(previous.lastSuccessAt).getTime() - 48 * 3600_000) : new Date(Date.now() - 7 * 86400_000);
+async function scanSimap(source, previous, defaults, options = {}) {
+  const bootstrapDays = Number(options.bootstrapDays || 0);
+  const since = bootstrapDays
+    ? new Date(Date.now() - bootstrapDays * 86400_000)
+    : (previous.lastSuccessAt ? new Date(new Date(previous.lastSuccessAt).getTime() - 48 * 3600_000) : new Date(Date.now() - 7 * 86400_000));
   const base = new URL(source.url);
   base.searchParams.set('lang', 'fr');
   base.searchParams.set('newestPublicationFrom', since.toISOString().slice(0,10));
@@ -252,12 +289,18 @@ async function scanSimap(source, previous, defaults) {
     const id = bestValue(project, ['projectId','id','uuid','publicationId']) || sha256(JSON.stringify(project));
     const title = bestValue(project, ['projectTitle','title','name','description']) || 'Projet simap ' + id;
     const text = flattenStrings(project).join(' ');
-    return {id:sha256('simap|' + id), title, text, url:'https://www.simap.ch/fr/?search=' + encodeURIComponent(id)};
+    const date = bestValue(project, ['newestPublicationDate','publicationDate','publishedAt','publicationFrom','publicationDateTime','date']);
+    return {id:sha256('simap|' + id), title, text, date, url:'https://www.simap.ch/fr/?search=' + encodeURIComponent(id)};
   });
   const seen = new Set(previous.seenIds || []);
   const baseline = !previous.lastSuccessAt;
-  const newItems = baseline ? [] : items.filter(item => !seen.has(item.id));
-  const candidates = newItems.map(item => ({item, reason:candidateReason(item, source.keywords || defaults.keywords || [])})).filter(entry => entry.reason).map(entry => candidateFrom(source, entry.item, entry.reason));
+  // SIMAP already applies newestPublicationFrom server-side during a bootstrap,
+  // so all returned entries are inside the requested historical window.
+  const newItems = bootstrapDays ? items : (baseline ? [] : items.filter(item => !seen.has(item.id)));
+  const candidates = newItems
+    .map(item => ({item, reason:candidateReason(item, source.keywords || defaults.keywords || [])}))
+    .filter(entry => entry.reason)
+    .map(entry => candidateFrom(source, entry.item, entry.reason, {bootstrapDays}));
   const nextSeen = [...new Set([...(previous.seenIds || []), ...items.map(item => item.id)])].slice(-5000);
   if (!newItems.length) stats.unchanged += 1;
   return {
@@ -268,10 +311,12 @@ async function scanSimap(source, previous, defaults) {
     newDocuments:newItems.length
   };
 }
-async function scanSource(source, previous, defaults) {
-  if (!sourceIsDue(source, previous)) return {skipped:true, state:previous, candidates:[], changes:0, newDocuments:0};
+async function scanSource(source, previous, defaults, options = {}) {
+  if (!options.bootstrapDays && !sourceIsDue(source, previous)) return {skipped:true, state:previous, candidates:[], changes:0, newDocuments:0};
   try {
-    return source.type === 'simap-search' ? await scanSimap(source, previous, defaults) : await scanListSource(source, previous, defaults);
+    return source.type === 'simap-search'
+      ? await scanSimap(source, previous, defaults, options)
+      : await scanListSource(source, previous, defaults, options);
   } catch (error) {
     return {
       outcome:'error',
@@ -283,7 +328,8 @@ async function scanSource(source, previous, defaults) {
 function unique(values) { return [...new Set(values.filter(value => value != null))]; }
 function healthy(state) { return state?.status === 'healthy' && Boolean(state.lastSuccessAt); }
 
-export async function runRadarScan() {
+export async function runRadarScan(options = {}) {
+  const bootstrapDays = Math.max(0, Number(options.bootstrapDays || 0));
   const registry = await readJson(dataPath('radar-sources-v1.json'), {meta:{targetMunicipalities:621}, defaults:{}, sources:[]});
   const previousState = await readJson(dataPath('radar-state-v1.json'), {sourceState:{}});
   const queue = await readJson(dataPath('radar-candidates-v1.json'), {items:[]});
@@ -296,7 +342,7 @@ export async function runRadarScan() {
   let checkedSources = 0;
 
   for (const source of registry.sources || []) {
-    const result = await scanSource(source, sourceState[source.id] || {}, registry.defaults || {});
+    const result = await scanSource(source, sourceState[source.id] || {}, registry.defaults || {}, {bootstrapDays});
     sourceState[source.id] = result.state;
     if (!result.skipped) checkedSources += 1;
     newCandidates.push(...result.candidates);
@@ -325,10 +371,18 @@ export async function runRadarScan() {
   const pending = states.filter(state => !state.lastCheckAt).length;
 
   const nextState = {
-    meta:{version:'radar-state-v1', generatedAt:nowIso(), mode:'deterministic-watch', notice:'Mesures issues du dernier passage mécanique. Une erreur de source n’est jamais comptée comme un silence.'},
+    meta:{
+      version:'radar-state-v1',
+      generatedAt:nowIso(),
+      mode:bootstrapDays ? 'bootstrap-' + bootstrapDays + 'd' : 'deterministic-watch',
+      bootstrapDays:bootstrapDays || null,
+      notice:bootstrapDays
+        ? 'Bootstrap historique ponctuel D-' + bootstrapDays + '. Les candidats restent soumis à la même qualification avant publication.'
+        : 'Mesures issues du dernier passage mécanique. Une erreur de source n’est jamais comptée comme un silence.'
+    },
     coverage:{targetMunicipalities:target, directConfigured, directMunicipalities:directHealthy, procurementMunicipalities},
     sources:{configured:(registry.sources || []).length, active, error:errors, pending, unchanged:stats.unchanged},
-    detection:{changes, newDocuments, pendingCandidates},
+    detection:{changes, newDocuments, pendingCandidates, bootstrapDays:bootstrapDays || null, bootstrapCandidates:newCandidates.length},
     analysis:{analyzed:(analysis.items || []).length, published:(radar.signals || []).length},
     economy:{requests:stats.requests, notModified:stats.notModified, unchanged:stats.unchanged, downloaded:stats.downloaded, aiCalls:0},
     sourceState
@@ -338,9 +392,15 @@ export async function runRadarScan() {
   return nextState;
 }
 
+function cliBootstrapDays(argv = process.argv.slice(2)) {
+  const inline = argv.find(arg => arg.startsWith('--bootstrap-days='));
+  if (inline) return Math.max(0, Number(inline.split('=')[1]) || 0);
+  const index = argv.indexOf('--bootstrap-days');
+  return index >= 0 ? Math.max(0, Number(argv[index + 1]) || 0) : 0;
+}
 const directRun = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (directRun) {
-  runRadarScan().then(state => {
+  runRadarScan({bootstrapDays:cliBootstrapDays()}).then(state => {
     console.log(JSON.stringify({coverage:state.coverage, sources:state.sources, detection:state.detection, economy:state.economy}, null, 2));
   }).catch(error => {
     console.error(error);

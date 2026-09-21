@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { candidateReason, extractHtmlLinks, nextIntervalHours, parseRss, parseSitemap, sourceIsDue } from '../scripts/radar-scan.mjs';
+import { candidateReason, extractHtmlLinks, isWithinRecentWindow, nextIntervalHours, parseDocumentDate, parseRss, parseSitemap, sourceIsDue } from '../scripts/radar-scan.mjs';
 
 const read = path => readFile(new URL('../' + path, import.meta.url), 'utf8');
 
@@ -43,6 +43,17 @@ test('deterministic prefilter selects relevant candidates without AI', () => {
   assert.equal(candidateReason({title:'Fête du village'}, ['logiciel','cyber']), '');
 });
 
+test('D-14 bootstrap understands dated municipal links without an AI pass', () => {
+  const links = extractHtmlLinks(
+    '<p>Préavis <a href="/p.pdf">Crédit pour logiciel communal</a> du 12 septembre 2026</p>',
+    'https://example.ch/list'
+  );
+  assert.equal(links[0].date, '2026-09-12');
+  assert.equal(parseDocumentDate('21 septembre 2026').toISOString().slice(0,10), '2026-09-21');
+  assert.equal(isWithinRecentWindow('2026-09-12', 14, new Date('2026-09-21T12:00:00Z')), true);
+  assert.equal(isWithinRecentWindow('2026-08-20', 14, new Date('2026-09-21T12:00:00Z')), false);
+});
+
 test('adaptive cadence slows stable sources and backs off on errors', () => {
   const source = {schedule:{baseHours:24,maxHours:168}};
   assert.equal(nextIntervalHours(source, {intervalHours:24}, 'changed'), 24);
@@ -59,12 +70,15 @@ test('scanner never invokes an AI service itself', async () => {
   assert.match(scanner, /if-modified-since/);
   assert.match(scanner, /robots\.txt/);
   assert.match(scanner, /lastItem/);
+  assert.match(scanner, /bootstrapDays/);
+  assert.match(scanner, /newestPublicationFrom/);
 });
 
-test('initial status refuses to claim coverage before the first successful scan', async () => {
+test('measured status only reports bounded, successfully measured coverage', async () => {
   const status = JSON.parse(await read('public/data/radar-state-v1.json'));
   assert.equal(status.coverage.targetMunicipalities, 621);
-  assert.equal(status.coverage.procurementMunicipalities, 0);
-  assert.equal(status.coverage.directMunicipalities, 0);
+  assert.ok(status.coverage.procurementMunicipalities <= status.coverage.targetMunicipalities);
+  assert.ok(status.coverage.directMunicipalities <= status.coverage.directConfigured);
+  assert.ok(status.sources.active <= status.sources.configured);
   assert.equal(status.economy.aiCalls, 0);
 });
