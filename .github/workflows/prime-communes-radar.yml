@@ -1,6 +1,6 @@
 name: Prime Communes Radar
 
-# One-shot D-14 bootstrap trigger.
+# One-shot D-14 bootstrap trigger · retry after branch sync.
 
 
 on:
