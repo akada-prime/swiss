@@ -149,7 +149,7 @@
 @media(max-width:760px){.stats-panel{padding:12px;border-radius:20px}.stats-toolbar{display:grid}.stats-toolbar label{width:100%;min-width:0}.stats-segment{width:100%}.stats-segment:last-child{margin:0}.stats-segment button{flex:1;padding-inline:6px}.stats-kpis{grid-template-columns:1fr}.stats-kpi{min-height:125px}.stats-story-grid,.stats-analysis-grid{grid-template-columns:1fr}.territory-comparison{display:flex;overflow-x:auto;margin-right:-22px;padding-right:22px;scroll-snap-type:x proximity}.territory-comparison button{flex:0 0 160px;scroll-snap-align:start}.stats-card{padding:17px}.stats-live{display:none}}
 
 @media(max-width:680px){
-  .topbar{gap:9px}.brand{width:104px}.view-tabs{margin-left:auto}.view-tab{padding:0 7px;font-size:11px}.sync-state{display:none}
+  .topbar{gap:9px;overflow:hidden}.brand{width:104px;flex:0 0 auto}.view-tabs{min-width:0;max-width:calc(100vw - 132px);margin-left:auto;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}.view-tabs::-webkit-scrollbar{display:none}.view-tab{flex:0 0 auto;padding:0 7px;font-size:11px}.sync-state{display:none}
   .intro-row{margin-bottom:28px}.intro-summary{margin-top:22px}.intro-summary .eyebrow{margin-bottom:8px}
 }
 
