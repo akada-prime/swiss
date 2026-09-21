@@ -1,5 +1,7 @@
 name: Prime Communes Radar
 
+# One-shot manual bootstrap enabled for the first measured pass.
+
 on:
   push:
     paths:
