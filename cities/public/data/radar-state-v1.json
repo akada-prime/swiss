@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "radar-state-v1",
-    "generatedAt": "2026-09-21T20:28:34.634Z",
+    "generatedAt": "2026-09-21T20:28:58.539Z",
     "mode": "deterministic-watch",
     "notice": "Mesures issues du dernier passage mécanique. Une erreur de source n’est jamais comptée comme un silence."
   },
@@ -16,7 +16,7 @@
     "active": 4,
     "error": 0,
     "pending": 0,
-    "unchanged": 1
+    "unchanged": 0
   },
   "detection": {
     "changes": 0,
@@ -28,10 +28,10 @@
     "published": 3
   },
   "economy": {
-    "requests": 15,
+    "requests": 0,
     "notModified": 0,
-    "unchanged": 1,
-    "downloaded": 12,
+    "unchanged": 0,
+    "downloaded": 0,
     "aiCalls": 0
   },
   "sourceState": {
