@@ -1,0 +1,96 @@
+/* Prime Communes · desktop dark mode
+   Large pointer-driven screens need more separation than the immersive Natel
+   layout. This final layer raises contrast without changing the mobile theme. */
+
+@media (min-width:1101px) and (pointer:fine){
+  :root{
+    --line:rgba(255,255,255,.145);
+    --muted:#a2aec0;
+    --pc-table-secondary:#b3bdcb;
+    --pc-table-empty:#8492a5;
+    --pc-card-line:rgba(255,255,255,.135);
+    --pc-card-bg:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.028));
+    --pc-field-bg:#0d1521;
+    --pc-muted:#9aa8ba;
+  }
+
+  .app-shell{background:linear-gradient(150deg,#091726 0%,#0a101b 34%,#0f0b17 69%,#170c09 100%)}
+  .ambient{opacity:.21}
+  .ambient-two{opacity:.12}
+  .topbar{border-bottom-color:rgba(255,255,255,.13);background:rgba(7,12,20,.84)}
+  .workspace{width:min(1580px,calc(100% - 72px))}
+  .site-footer{width:min(1540px,calc(100% - 72px));border-top-color:rgba(255,255,255,.11);color:#8290a3}
+
+  .view-tabs,.sync-state{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.045)}
+  .view-tab{color:#9ca8b9;font-size:13px}
+  .view-tab:hover{color:#edf3f9;background:rgba(255,255,255,.045)}
+  .view-tab.active{background:rgba(24,126,201,.27);box-shadow:inset 0 0 0 1px rgba(83,181,246,.28),0 7px 24px rgba(0,0,0,.13)}
+  .sync-state{color:#bdc7d3}
+
+  .view-intro-copy,.intro-copy{color:#b5c0cf}
+  .view-intro-copy>strong{color:#edf2f7}
+
+  .kpi-card,.stats-kpi,.maplibre-metric,.news-kpi,.roadmap-stage{
+    border-color:rgba(255,255,255,.14);
+    box-shadow:0 20px 58px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.025);
+  }
+  .kpi-card{background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.03))}
+  .hero-kpi{background:radial-gradient(circle at 90% 8%,rgba(23,130,226,.29),transparent 46%),linear-gradient(145deg,rgba(8,72,126,.46),rgba(255,255,255,.035))}
+  .prime-card{background:radial-gradient(circle at 92% 8%,rgba(118,83,255,.24),transparent 47%),linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.027))}
+  .kpi-label{color:#b2bdcc}
+  .kpi-card p{color:#97a4b6}
+
+  .delimo-control{border-color:rgba(255,255,255,.15);box-shadow:0 19px 52px rgba(0,0,0,.2),inset 0 1px rgba(255,255,255,.025)}
+  .delimo-control-copy>span:last-child{color:#9ba9ba}
+
+  .data-panel,.news-panel,.story-panel,.map-panel{
+    border-color:rgba(255,255,255,.14);
+    background:rgba(10,16,27,.88);
+    box-shadow:0 30px 76px rgba(0,0,0,.29),inset 0 1px rgba(255,255,255,.02);
+  }
+  .filters,.news-toolbar,.map-toolbar.maplibre-toolbar{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.045)}
+  .filters label,.filter-toggle,.market-toggles,.canton-district-group,.news-search,.news-filters,.maplibre-toolbar .map-search,.maplibre-view-switch{
+    border-color:rgba(255,255,255,.14);
+    background:#0d1521;
+    color:#a3afbf;
+  }
+  .filters input,.filters select,.news-search input{color:#f2f5f9;font-size:13px}
+  .filter-toggle{font-size:12.5px}
+  .filter-toggle:hover,.news-filters button:hover,.maplibre-view-buttons button:hover{border-color:rgba(87,180,241,.34);color:#e2edf6;background:rgba(31,118,178,.12)}
+
+  .result-line,.news-result-line{color:#8f9caf}
+  .portrait-hint{color:#8fa0b4}
+  .result-line .result-export{border-color:rgba(255,255,255,.13);background:rgba(255,255,255,.04);color:#adbac9}
+
+  .table-wrap{border-color:rgba(255,255,255,.13);background:rgba(5,10,18,.2)}
+  .table-wrap th{color:#9ba8ba;background:rgba(255,255,255,.055)}
+  .table-wrap td{border-top-color:rgba(255,255,255,.085);color:var(--pc-table-secondary)}
+  .table-wrap tbody tr:nth-child(even){background:rgba(255,255,255,.012)}
+  .table-wrap tbody tr:hover{background:rgba(30,126,194,.13)}
+  .table-wrap td strong{color:#f0f3f7}
+  .commune-rank{border-color:rgba(255,255,255,.13);color:#8fa1b6;background:rgba(255,255,255,.045)}
+
+  .news-card,.story-card,.news-forecast,.news-tool-panel,.roadmap-items>div{border-color:rgba(255,255,255,.12)}
+  .news-card{background:linear-gradient(135deg,rgba(255,255,255,.068),rgba(255,255,255,.022))}
+  .news-card-main time,.news-municipality small,.news-card-proof>span,.news-card-proof>div>span,.news-method,.story-fact p,.story-angle-copy p,.roadmap-items span{color:#9aa8ba}
+  .news-fact p,.news-why p{color:#bac5d2}
+  .news-beta-note{border-color:rgba(100,185,239,.25);color:#a7b5c6;background:rgba(26,104,158,.11)}
+
+  .roadmap-journey li{border-color:rgba(255,255,255,.13)}
+  .roadmap-journey .journey-done:not(.journey-current){opacity:.86}
+  .completed-stage,.roadmap-grid>.completed-11,.completed-15,.completed-20{opacity:.86}
+  .roadmap-principle{border-color:rgba(73,166,232,.3)}
+  .roadmap-principle p{color:#c6d0dc}
+  .completed-items span{border-color:rgba(255,255,255,.1);color:#a6b1bf}
+}
+
+@media (min-width:1101px) and (pointer:fine) and (prefers-contrast:more){
+  :root{
+    --line:rgba(255,255,255,.23);
+    --pc-table-secondary:#c9d1dc;
+    --pc-table-empty:#a0adbe;
+    --pc-card-line:rgba(255,255,255,.21);
+    --pc-muted:#b5c0cf;
+  }
+  .filters label,.filter-toggle,.market-toggles,.canton-district-group,.table-wrap,.table-wrap td{border-color:rgba(255,255,255,.2)}
+}
