@@ -419,3 +419,18 @@ html.portrait-open,body.portrait-open{overflow:hidden}
     font-size:11px;
   }
 }
+
+
+/* 2.0.5 · Wikipedia source readability */
+.portrait-source{
+  color:#8797aa;
+  font-size:11px;
+  line-height:1.55;
+}
+@media(max-width:680px){
+  .portrait-source{
+    color:#97a6b8;
+    font-size:11.5px;
+    line-height:1.6;
+  }
+}
