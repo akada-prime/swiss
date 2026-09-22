@@ -42,13 +42,53 @@ test('universal search ignores accents, accepts a small typo and covers every da
   assert.equal(runtime.communeSearchMeta(commune({}), "8'512").label, 'Population');
 });
 
-test('Natel and desktop search filter the same table before an explicit portrait click', async () => {
+test('Natel keeps the expanded search; selection returns to the normal commune list', async () => {
   const runtime = await read('app/prime-communes-communes-1.2.js');
   const shell = await read('app/core/runtime.js');
   const html = await read('index.html');
+  const css = await read('app/styles/responsive.css');
   assert.match(html, /id="query" type="search" enterkeyhint="search"/);
   assert.match(shell, /\$\('query'\)\.addEventListener\('input',render\)/);
   assert.match(runtime, /row\.onclick = \(\) => openCommunePortrait\(commune\)/);
-  assert.match(runtime, /event\.key !== 'Enter'/);
-  assert.doesNotMatch(runtime, /mobileSearchOverlay|openMobileSearch/);
+  assert.match(runtime, /function openMobileSearch\(\)/);
+  assert.match(css, /\.mobile-search-overlay\{/);
+  assert.match(runtime, /showCommuneInList\(commune, sourceInput\)/);
+  assert.doesNotMatch(runtime, /closeMobileSearch\(\);\s*openCommunePortrait\(commune\)/);
+});
+
+test('selecting a mobile search result filters the table and scrolls to its row without opening a portrait', async () => {
+  const runtime = await read('app/prime-communes-communes-1.2.js');
+  const start = runtime.indexOf('  function closeMobileSearch()');
+  const end = runtime.indexOf('  function openMobileSearch()', start);
+  assert.ok(start >= 0 && end > start);
+
+  let event, scroll, blurred = false;
+  let rows = [];
+  const overlay = { hidden: false, querySelector: () => ({ blur: () => { blurred = true; } }) };
+  const sourceInput = {
+    value: 'Del',
+    dispatchEvent(inputEvent) {
+      event = inputEvent;
+      rows = [{ dataset: { id: '6711' }, scrollIntoView: options => { scroll = options; } }];
+    }
+  };
+  const context = {
+    mobileSearchOverlay: overlay,
+    sourceInput,
+    document: {
+      documentElement: { classList: { remove() {} } },
+      body: { classList: { remove() {} } },
+      querySelectorAll: () => rows,
+      querySelector: () => { throw new Error('commune row missing from filtered table'); }
+    },
+    requestAnimationFrame: callback => callback(),
+    Event: class { constructor(type, options) { this.type = type; this.bubbles = options.bubbles; } }
+  };
+  vm.runInNewContext(`${runtime.slice(start, end)}\nshowCommuneInList({ id: 6711, name: 'Delémont' }, sourceInput);`, context);
+  assert.equal(sourceInput.value, 'Delémont');
+  assert.equal(event.type, 'input');
+  assert.equal(event.bubbles, true);
+  assert.equal(overlay.hidden, true);
+  assert.equal(blurred, true);
+  assert.equal(scroll.block, 'center');
 });

@@ -265,6 +265,150 @@
   .sync-state[data-state="error"] b::after{content:"Erreur"}
 }
 
+/* Mobile 2027 search surface. Desktop keeps the compact table filter. */
+.mobile-search-overlay{display:none}
+@media(max-width:680px){
+  html.mobile-search-open,
+  body.mobile-search-open{overflow:hidden;overscroll-behavior:none}
+  .mobile-search-overlay{
+    position:fixed;
+    inset:0;
+    z-index:120;
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    height:100dvh;
+    min-height:100%;
+    overflow:hidden;
+    color:#eef5fd;
+    background:
+      radial-gradient(circle at 12% -8%,rgba(25,139,218,.22),transparent 34%),
+      radial-gradient(circle at 100% 54%,rgba(202,62,41,.09),transparent 42%),
+      #070b12;
+  }
+  .mobile-search-overlay[hidden]{display:none}
+  .mobile-search-header{
+    display:grid;
+    grid-template-columns:44px minmax(0,1fr);
+    gap:10px;
+    flex:0 0 auto;
+    padding:max(12px,env(safe-area-inset-top)) 14px 12px;
+    border-bottom:1px solid rgba(255,255,255,.075);
+    background:rgba(6,10,17,.9);
+    backdrop-filter:blur(20px);
+  }
+  .mobile-search-back{
+    display:grid;
+    place-items:center;
+    width:44px;
+    height:48px;
+    padding:0 0 3px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:14px;
+    color:#dce8f6;
+    background:rgba(255,255,255,.035);
+    font-size:34px;
+    font-weight:300;
+    line-height:1;
+  }
+  .mobile-search-header label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+    height:48px;
+    padding:0 13px;
+    border:1px solid rgba(71,166,231,.28);
+    border-radius:14px;
+    background:#0a111c;
+    box-shadow:inset 0 0 20px rgba(13,113,181,.08),0 0 0 3px rgba(10,102,170,.05);
+  }
+  .mobile-search-header label>span{color:#72bdef;font-size:24px;transform:rotate(-18deg)}
+  .mobile-search-header input{
+    width:100%;
+    min-width:0;
+    border:0;
+    outline:0;
+    color:#f3f7fb;
+    background:transparent;
+    font-size:16px;
+    line-height:1;
+  }
+  .mobile-search-header input::placeholder{color:#748297}
+  .mobile-search-scopes{
+    display:flex;
+    flex:0 0 auto;
+    gap:8px;
+    overflow-x:auto;
+    padding:11px 14px 10px;
+    scrollbar-width:none;
+    border-bottom:1px solid rgba(255,255,255,.055);
+  }
+  .mobile-search-scopes::-webkit-scrollbar{display:none}
+  .mobile-search-scopes button{
+    flex:0 0 auto;
+    min-height:38px;
+    padding:0 13px;
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:999px;
+    color:#8f9caf;
+    background:#0a101a;
+    font-size:12px;
+    white-space:nowrap;
+  }
+  .mobile-search-scopes button.active{
+    color:#d9f2ff;
+    border-color:rgba(61,170,237,.48);
+    background:rgba(10,111,181,.22);
+    box-shadow:inset 0 0 16px rgba(17,127,202,.11);
+  }
+  .mobile-search-summary{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:14px;
+    flex:0 0 auto;
+    padding:12px 16px 9px;
+  }
+  .mobile-search-summary strong{color:#dce9f6;font-size:13px}
+  .mobile-search-summary span{overflow:hidden;color:#66758a;font-size:10px;text-align:right;white-space:nowrap;text-overflow:ellipsis}
+  .mobile-search-results{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    padding:0 12px max(22px,env(safe-area-inset-bottom));
+  }
+  .mobile-search-result{
+    display:grid;
+    grid-template-columns:32px minmax(0,1fr) auto 18px;
+    align-items:center;
+    gap:11px;
+    width:100%;
+    min-height:78px;
+    margin:0 0 8px;
+    padding:12px;
+    border:1px solid rgba(255,255,255,.075);
+    border-radius:15px;
+    color:inherit;
+    background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+    text-align:left;
+  }
+  .mobile-search-result:active{border-color:rgba(61,170,237,.42);background:rgba(13,102,165,.16)}
+  .mobile-search-result>img:first-child{width:30px;height:30px;object-fit:contain;filter:drop-shadow(0 3px 8px rgba(0,0,0,.25))}
+  .mobile-search-result-main{display:block;min-width:0}
+  .mobile-search-result-main strong{display:block;overflow:hidden;color:#eef4fb;font-size:15px;line-height:1.2;text-overflow:ellipsis;white-space:nowrap}
+  .mobile-search-result-main small{display:block;overflow:hidden;margin-top:5px;color:#7d8b9f;font-size:11px;line-height:1.25;text-overflow:ellipsis;white-space:nowrap}
+  .mobile-search-result-main>span{display:flex;gap:7px;overflow:hidden;margin-top:7px;color:#9aabc0;font-size:11px;line-height:1.2;text-overflow:ellipsis;white-space:nowrap}
+  .mobile-search-result-main>span b{flex:0 0 auto;color:#65b9ed;font-size:9px;letter-spacing:.07em;text-transform:uppercase}
+  .mobile-search-prime{width:18px;height:27px;object-fit:contain}
+  .mobile-search-result>i{color:#587085;font-size:24px;font-style:normal;font-weight:300}
+  .mobile-search-empty{display:grid;gap:8px;margin:30px 8px;padding:28px 20px;border:1px dashed rgba(255,255,255,.12);border-radius:16px;text-align:center}
+  .mobile-search-empty strong{font-size:15px}.mobile-search-empty span{color:#75849a;font-size:12px;line-height:1.5}
+  .mobile-search-limit{flex:0 0 auto;margin:0;padding:9px 14px max(11px,env(safe-area-inset-bottom));color:#68778b;font-size:10px;text-align:center;background:#070b12}
+}
+
 /* Source consolidée: app/prime-communes-desktop-2.0.css */
 /* Prime Communes · desktop dark mode
    Large screens need more separation and density than the immersive Natel
