@@ -1,5 +1,16 @@
 # État de reprise — Prime Communes 2.0
 
+## Maintenance après intégration
+
+Le rebuild est intégré à `main` au commit `6c5428d` ; les consignes de branche
+ci-dessous décrivent le chantier historique, désormais clôturé.
+
+La branche `feature/communes-hosting-search` ajoute l'édition de l'hébergeur
+via une nouvelle fonction RPC à déployer avant le frontend, et fait filtrer la
+liste ordinaire par la recherche Natel. Vérifications locales : `npm run check`
+(61 tests) et `npm run build` réussis. La migration et la recette navigateur
+restent à valider avant mise en production.
+
 Dernière mise à jour : 2026-09-22 UTC
 
 ## Point sûr

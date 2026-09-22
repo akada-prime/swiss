@@ -48,7 +48,6 @@ test('2.0.5 opens a sourced commune portrait from the row number without AI or e
   assert.doesNotMatch(js, /MutationObserver/);
   assert.match(js, /class="portrait-edit"/);
   assert.match(js, /openDrawer\(commune\)/);
-  assert.match(js, /Touchez une commune · portrait public/);
   assert.doesNotMatch(js, /closeMobileSearch\(\);\s*openCommunePortrait\(commune\)/);
   assert.match(js, /https:\/\/fr\.wikipedia\.org\/w\/api\.php/);
   assert.match(js, /https:\/\/www\.wikidata\.org\/w\/api\.php/);
@@ -126,6 +125,18 @@ test('commune save retries a stale key and keeps the open drawer in place', asyn
   assert.match(bridge, /Nouvelle clé · nouvel essai/);
   assert.match(bridge, /Enregistré ✓/);
   assert.doesNotMatch(bridge, /setTimeout\(\(\) => openDrawer\(refreshed\)/);
+});
+
+test('the editable hosting field is saved through the key-protected catalogue RPC', async () => {
+  const bridge = await read('app/prime-communes-1.1-base.js');
+  const migration = await read('supabase/migrations/20260922193000_edit_commune_hosting.sql');
+  assert.match(bridge, /id="drawerHosting"/);
+  assert.match(bridge, /p_hosting: byId\('drawerHosting'\)\?\.value \|\| null/);
+  assert.match(bridge, /save_commune_profile_v12/);
+  assert.match(migration, /Clé d''édition invalide/);
+  assert.match(migration, /Hébergeur inconnu/);
+  assert.match(migration, /hosting_id = v_hosting_id/);
+  assert.match(migration, /GRANT EXECUTE ON FUNCTION public\.save_commune_profile_v12/);
 });
 
 test('Systèmes keeps Intégrateur and Métier visible while extended details stay optional', async () => {

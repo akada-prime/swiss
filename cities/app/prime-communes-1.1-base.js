@@ -12,7 +12,7 @@
   const validSortKeys = new Set(['population', 'name']);
   const validDirections = new Set(['asc', 'desc']);
   const validMarkets = new Set(['Welsch', 'Uf Tüütsch', 'Ticino']);
-  const EDIT_RPC = 'save_commune_profile_v11';
+  const EDIT_RPC = 'save_commune_profile_v12';
   let restoringUrlState = false;
   let logicielsMode = false;
 
@@ -148,6 +148,7 @@
       p_integrator: byId('drawerIntegrator')?.value || null,
       p_software: byId('drawerSoftware')?.value || null,
       p_erp: byId('drawerErp')?.value || null,
+      p_hosting: byId('drawerHosting')?.value || null,
       p_products: selectedModules,
       p_notes: byId('drawerNotes')?.value || ''
     };
@@ -205,6 +206,10 @@
     const integrators = uniqueSorted(all.map(row => row.integrator));
     const softwares = uniqueSorted(all.map(row => row.software));
     const erps = uniqueSorted(all.map(row => row.erp));
+    const hostings = uniqueSorted([
+      'On-premise', 'AZ', 'LogiONE', 'SIACG', 'Sysel', 'Yverdon',
+      ...all.map(row => row.hosting)
+    ]);
     const products = [...(x.products || [])];
     const cantonCode = String(x.canton || '').toLowerCase();
     const delivery = ofsMode ? `<section><h3>Livraison Delimo</h3><dl><div><dt>Population reçue</dt><dd>${fmt.format(x.receivedPopulation ?? 0)}</dd></div><div><dt>Erreur EWID</dt><dd>${x.ewidErrorRate?.toFixed(1) ?? '—'}%</dd></div><div><dt>EWID manquants</dt><dd>${x.missingEwid?.toFixed(1) ?? '—'}%</dd></div><div><dt>Version eCH</dt><dd>${esc(x.echVersion)}</dd></div></dl><p class="delivery-comment">${esc(x.comment)}</p></section>` : '';
@@ -232,6 +237,7 @@
           <label>Intégrateur<select id="drawerIntegrator">${optionList(integrators, x.integrator)}</select></label>
           <label>Métier<select id="drawerSoftware">${optionList(softwares, x.software)}</select></label>
           <label>ERP<select id="drawerErp">${optionList(erps, x.erp)}</select></label>
+          <label>Hébergeur<select id="drawerHosting">${optionList(hostings, x.hosting)}</select></label>
           <label class="full-width">Modules${moduleEditor(products)}</label>
           <label class="full-width">Notes<textarea id="drawerNotes" placeholder="Informations utiles…">${esc(x.notes)}</textarea></label>
         </div>
