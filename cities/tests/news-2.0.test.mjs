@@ -7,7 +7,8 @@ const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 test('Radar and Histoires are first-class deep-linked views', async () => {
   const html = await read('index.html');
   const bridge = await read('app/prime-communes-1.1-base.js');
-  const loader = await read('app/prime-communes-1.1.js');
+  const runtime = await read('app/main.js');
+  const styles = await read('app/styles/main.css');
   assert.match(html, /data-view="news"/);
   assert.match(html, /id="newsView"/);
   assert.match(html, /data-view="stories"/);
@@ -15,17 +16,12 @@ test('Radar and Histoires are first-class deep-linked views', async () => {
   assert.match(bridge, /'communes', 'map', 'stats', 'news', 'stories', 'roadmap'/);
   assert.match(bridge, /byId\('newsView'\)\.hidden = next !== 'news'/);
   assert.match(bridge, /byId\('storiesView'\)\.hidden = next !== 'stories'/);
-  assert.match(loader, /prime-communes-news-2\.0\.js/);
-  assert.match(loader, /prime-communes-news-2\.0\.css/);
-  assert.match(loader, /prime-communes-stories-2\.0\.js/);
-  assert.match(loader, /prime-communes-stories-2\.0\.css/);
-  assert.match(html, /prime-communes-1\.1\.js\?v=31/);
-  assert.match(loader, /prime-communes-1\.1-base\.js\?v=14/);
-  assert.match(loader, /prime-communes-news-2\.0\.js\?v=12/);
-  assert.match(loader, /prime-communes-news-2\.0\.css\?v=13/);
-  assert.match(loader, /prime-communes-stories-2\.0\.js\?v=1/);
-  assert.match(loader, /prime-communes-stories-2\.0\.css\?v=1/);
-  assert.match(loader, /prime-communes-roadmap-2\.0\.css\?v=3/);
+  assert.match(runtime, /prime-communes-news-2\.0\.js/);
+  assert.match(runtime, /prime-communes-stories-2\.0\.js/);
+  assert.match(styles, /prime-communes-news-2\.0\.css/);
+  assert.match(styles, /prime-communes-stories-2\.0\.css/);
+  assert.match(styles, /prime-communes-roadmap-2\.0\.css/);
+  assert.match(html, /type="module" src="app\/main\.js"/);
   assert.match(html, /class="news-beta-note"/);
   assert.match(html, /class="news-nav-badge">SOBRE/);
   assert.doesNotMatch(html, /news-nav-dot/);
@@ -40,7 +36,7 @@ test('mobile header, footer evolution and return-to-top stay usable before rebui
   const mobile = await read('app/prime-communes-1.1.7-mobile.css');
   const bridge = await read('app/prime-communes-1.1-base.js');
   const layer = await read('app/prime-communes-1.1.5.css');
-  const loader = await read('app/prime-communes-1.1.js');
+  const styles = await read('app/styles/main.css');
 
   assert.match(html, /Prime Communes · version 2\.0\.5 · #460/);
   assert.doesNotMatch(bridge, /footerVersion\.textContent/);
@@ -50,8 +46,9 @@ test('mobile header, footer evolution and return-to-top stay usable before rebui
   assert.match(bridge, /window\.scrollY > threshold/);
   assert.match(bridge, /window\.scrollTo\(\{ top: 0, behavior:/);
   assert.match(mobile, /grid-template-columns:1\.22fr \.72fr \.72fr \.92fr 1\.02fr 1fr/);
-  assert.match(layer, /prime-communes-1\.1\.7-mobile\.css\?v=13/);
-  assert.match(loader, /prime-communes-1\.1\.5\.css\?v=20/);
+  assert.doesNotMatch(layer, /@import/);
+  assert.match(styles, /prime-communes-1\.1\.7-mobile\.css/);
+  assert.match(styles, /prime-communes-1\.1\.5\.css/);
 });
 
 test('all six view headers share one responsive typography contract', async () => {
@@ -230,12 +227,12 @@ test('roadmap preserves old phases while completing NEWS 2.0', async () => {
 });
 
 test('commune refresh confirms fast updates on desktop and Natel', async () => {
-  const html = await read('index.html');
+  const runtime = await read('app/main.js');
   const css = await read('app/globals.css');
-  assert.match(html, /loadData\(manual=false\)/);
-  assert.match(html, /À jour ✓ · /);
-  assert.match(html, /sync\.dataset\.state='success'/);
-  assert.match(html, /\$\('syncReload'\)\.onclick=\(\)=>loadData\(true\)/);
+  assert.match(runtime, /loadData\(manual=false\)/);
+  assert.match(runtime, /À jour ✓ · /);
+  assert.match(runtime, /sync\.dataset\.state='success'/);
+  assert.match(runtime, /\$\('syncReload'\)\.onclick=\(\)=>loadData\(true\)/);
   assert.match(css, /sync-state\[data-state="loading"\]/);
   assert.match(css, /sync-state\[data-state="success"\]/);
   assert.match(css, /content:"À jour ✓"!important/);

@@ -6,12 +6,12 @@ import { readFile } from 'node:fs/promises';
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
 async function searchRuntime() {
-  const html = await read('index.html');
-  const start = html.indexOf('const normalizeSearchText');
-  const end = html.indexOf('const SUPABASE_URL', start);
+  const runtime = await read('app/main.js');
+  const start = runtime.indexOf('const normalizeSearchText');
+  const end = runtime.indexOf('const SUPABASE_URL', start);
   assert.ok(start >= 0 && end > start, 'search runtime must remain independently testable');
   const context = { window: { PrimeCommunesData: null } };
-  vm.runInNewContext(html.slice(start, end), context);
+  vm.runInNewContext(runtime.slice(start, end), context);
   return context;
 }
 

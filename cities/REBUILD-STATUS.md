@@ -22,9 +22,18 @@ Dernière mise à jour : 2026-09-22 UTC
 
 ## Étape active
 
-1. Remplacer le runtime historique et ses patchs par des modules directs.
-2. Reconstruire la cascade CSS par couches.
+1. Séparer l’entrée bundlée en modules de responsabilités et supprimer les anciens patchs.
+2. Reconstruire la cascade CSS par couches et retirer les fichiers chronologiques.
 3. Compléter les tests de non-régression, puis refaire la recette complète.
+
+## Jalon applicatif courant
+
+- `index.html` ne contient plus le runtime métier historique inline.
+- Une seule entrée ES module : `app/main.js`.
+- Une seule entrée de styles : `app/styles/main.css`.
+- Le chargeur dynamique et ses versions de cache dispersées ne sont plus exécutés.
+- `npm run check` : 55/55.
+- `npm run build` : réussi, sans avertissement de script non bundlé.
 
 ## Reprise après interruption
 

@@ -77,8 +77,10 @@ test('mobile peer filters remain a strict two-column grid', async () => {
 test('Delimo is a premium control mode, not a fourth statistic or ordinary filter', async () => {
   const html = await read('index.html');
   const css = await read('app/product-assets.css');
+  const styles = await read('app/styles/main.css');
   const bridge = await read('app/prime-communes-1.1-base.js');
-  assert.match(html, /product-assets\.css\?v=9/);
+  assert.match(html, /app\/styles\/main\.css/);
+  assert.match(styles, /product-assets\.css/);
   assert.match(bridge, /product-assets\.css\?v=9/);
   assert.match(html, /class="delimo-control" id="issuesCard"/);
   assert.match(html, /Outil de contrôle · Delimo/);
@@ -110,11 +112,11 @@ test('language markets always filter while Territoire only reveals optional colu
 });
 
 test('commune search ignores accents and iPhone form controls do not zoom', async () => {
-  const html = await read('index.html');
+  const runtime = await read('app/main.js');
   const mobile = await read('app/prime-communes-1.1.7-mobile.css');
-  assert.match(html, /normalizeSearchText/);
-  assert.match(html, /normalize\('NFD'\)/);
-  assert.match(html, /replace\(\/\[\\u0300-\\u036f\]\//);
+  assert.match(runtime, /normalizeSearchText/);
+  assert.match(runtime, /normalize\('NFD'\)/);
+  assert.match(runtime, /replace\(\/\[\\u0300-\\u036f\]\//);
   assert.match(mobile, /\.filters input,[\s\S]*font-size:16px!important/);
 });
 
@@ -240,18 +242,17 @@ test('public live projection remains readable without opening underlying busines
 
 test('current site loads one canonical runtime per view and no SVG map runtime', async () => {
   const html = await read('index.html');
-  const loader = await read('app/prime-communes-1.1.js');
-  assert.match(html, /<script src="app\/prime-communes-1\.1\.js\?v=\d+"><\/script>/);
-  assert.match(loader, /prime-communes-1\.1-base\.js/);
-  assert.match(loader, /prime-communes-communes-1\.2\.js/);
-  assert.match(loader, /prime-communes-roadmap-1\.2\.js/);
-  assert.match(loader, /prime-communes-maplibre-1\.2\.js\?v=\d+/);
-  assert.match(loader, /prime-communes-1\.1\.5\.css\?v=\d+/);
-  assert.match(loader, /prime-communes-stats-1\.2\.css\?v=\d+/);
-  assert.match(loader, /prime-communes-maplibre-1\.2\.css\?v=\d+/);
-  assert.doesNotMatch(loader, /prime-communes-map-1\.1\.js/);
-  assert.doesNotMatch(loader, /prime-communes-map-1\.1\.css/);
-  assert.doesNotMatch(loader, /stats-fix\.css|visual-fix\.css|MutationObserver|ensureLegacyMapProduct/);
+  const runtime = await read('app/main.js');
+  const styles = await read('app/styles/main.css');
+  assert.match(html, /<script type="module" src="app\/main\.js"><\/script>/);
+  assert.equal((html.match(/<script type="module"/g) || []).length, 1);
+  assert.match(runtime, /prime-communes-maplibre-1\.2\.js/);
+  assert.match(runtime, /prime-communes-communes-1\.2\.js/);
+  assert.match(runtime, /prime-communes-news-2\.0\.js/);
+  assert.match(runtime, /prime-communes-stories-2\.0\.js/);
+  assert.match(styles, /prime-communes-maplibre-1\.2\.css/);
+  assert.match(styles, /prime-communes-stats-1\.2\.css/);
+  assert.doesNotMatch(html, /prime-communes-1\.1\.js|const fmt=/);
   assert.match(html, /id="communesView"/);
   assert.match(html, /id="mapView"/);
   assert.match(html, /id="statsView"/);
