@@ -228,11 +228,16 @@ test('roadmap preserves old phases while completing NEWS 2.0', async () => {
 
 test('commune refresh confirms fast updates on desktop and Natel', async () => {
   const runtime = await read('app/core/runtime.js');
+  const data = await read('app/prime-communes-data-1.5.js');
   const css = await read('app/globals.css');
   assert.match(runtime, /loadData\(manual=false\)/);
   assert.match(runtime, /À jour ✓ · /);
   assert.match(runtime, /sync\.dataset\.state='success'/);
   assert.match(runtime, /\$\('syncReload'\)\.onclick=\(\)=>loadData\(true\)/);
+  assert.match(data, /async function reload\(manual = false\)/);
+  assert.match(data, /reload\(true\)\.catch/);
+  assert.match(data, /syncButton\.dataset\.state = 'loading'/);
+  assert.match(data, /À jour ✓/);
   assert.match(css, /sync-state\[data-state="loading"\]/);
   assert.match(css, /sync-state\[data-state="success"\]/);
   assert.match(css, /content:"À jour ✓"/);

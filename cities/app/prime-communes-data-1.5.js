@@ -219,18 +219,36 @@
     }
   }
 
-  async function reload() {
+  async function reload(manual = false) {
     const syncText = byId('syncText');
+    const syncButton = byId('syncReload');
+    const started = performance.now();
+    if (syncButton) {
+      syncButton.dataset.state = 'loading';
+      syncButton.disabled = true;
+    }
     if (syncText) syncText.textContent = 'Actualisation…';
     try {
       const result = await load();
       applyPayload(result.data, result.source);
+      if (syncButton) syncButton.dataset.state = manual
+        ? (result.source === 'base live' ? 'success' : 'fallback')
+        : 'ready';
+      if (manual && syncText) {
+        const seconds = Math.max(.1, (performance.now() - started) / 1000).toFixed(1).replace('.', ',');
+        syncText.textContent = result.source === 'base live'
+          ? `À jour ✓ · ${result.data.municipalities.length.toLocaleString('fr-CH')} communes · ${seconds} s`
+          : 'Copie locale chargée · base indisponible';
+      }
       return result;
     } catch (error) {
+      if (syncButton) syncButton.dataset.state = 'error';
       if (syncText) syncText.textContent = 'Erreur de chargement';
       const rowsNode = byId('rows');
       if (rowsNode) rowsNode.innerHTML = `<tr><td colspan="9">${String(error?.message || error)}</td></tr>`;
       throw error;
+    } finally {
+      if (syncButton) syncButton.disabled = false;
     }
   }
 
@@ -265,7 +283,7 @@
   } catch (_) {}
 
   const reloadButton = byId('syncReload');
-  if (reloadButton) reloadButton.onclick = () => reload().catch(() => {});
+  if (reloadButton) reloadButton.onclick = () => reload(true).catch(() => {});
 
   // mapProduct belonged to the retired SVG/product map. DATA no longer writes it,
   // so it can leave the DOM before MapLibre retires the rest of the legacy controls.
