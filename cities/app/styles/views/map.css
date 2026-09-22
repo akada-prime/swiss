@@ -71,7 +71,7 @@
 
 /* Loading is deliberately map-like, never a white/grey flash. The raster is
    prefetched by JS and reused here as a low-contrast preview while MapLibre starts. */
-.maplibre-loading{position:absolute;z-index:5;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;color:#bdc9d3;background:linear-gradient(rgba(20,34,44,.82),rgba(20,34,44,.82)),url('../public/swiss-base.webp') center/cover no-repeat,#26343f;font-size:12px;opacity:1;transition:opacity .18s ease}
+.maplibre-loading{position:absolute;z-index:5;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;color:#bdc9d3;background-color:#26343f;background-position:center;background-size:cover;background-repeat:no-repeat;font-size:12px;opacity:1;transition:opacity .18s ease}
 .maplibre-loading.is-revealing{opacity:0;pointer-events:none}
 .maplibre-loading[hidden]{display:none}
 .maplibre-loading span{width:9px;height:9px;border-radius:50%;background:#32c989;box-shadow:0 0 16px rgba(50,201,137,.45);animation:maplibre-pulse 1s ease-in-out infinite alternate}
@@ -123,4 +123,3 @@
   #primeMapLibre .maplibregl-ctrl-top-right{top:9px;right:9px}
   #primeMapLibre .maplibregl-ctrl-group button{width:40px;height:40px}
 }
-

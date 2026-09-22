@@ -58,3 +58,13 @@ test('deep-link flash guard, footer counter and global back-to-top remain explic
   assert.match(html, /Prime Communes · version 2\.0\.5 · #460/);
   assert.match(html, /id="backToTop"/);
 });
+
+test('view assets remain resolvable after stylesheet consolidation', async () => {
+  const map = await read('app/styles/views/map.css');
+  const runtime = await read('app/prime-communes-maplibre-1.2.js');
+  const vite = await read('vite.config.ts');
+  assert.match(vite, /base: "\.\/"/);
+  assert.match(runtime, /import\.meta\.env\?\.BASE_URL \|\| 'public\/'/);
+  assert.match(runtime, /style\.backgroundImage/);
+  assert.doesNotMatch(map, /url\([^)]*public\//);
+});

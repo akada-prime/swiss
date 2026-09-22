@@ -5,72 +5,108 @@ Dernière mise à jour : 2026-09-22 UTC
 ## Point sûr
 
 - Branche locale et distante : `rebuild/prime-communes-2.0`
-- Baseline : `b327d57126cf5dd8d5291ff1487d9af21a9c8cb9`
-- `main` : intact
-- Merge automatique : aucun
-- Dernier jalon distant garanti avant le lot CSS : `0e11dcc785422a5f70f2bceda1b7b146b7e66703`
+- Baseline `main` : `b327d57126cf5dd8d5291ff1487d9af21a9c8cb9`
+- Checkpoint applicatif et CSS déjà publié :
+  `09b1328cf334bddd32f0621c68879ccdd32784de`
+- Le commit qui contient ce document est le checkpoint final de clôture.
+- `main` est intact ; aucun merge automatique n'a été effectué.
 
-## Validé avant rebuild
+## État du chantier
 
-- Lecture intégrale du cahier des charges et inventaire du dépôt terminés.
-- `npm ci` terminé.
-- Baseline : `npm run check` réussi, 55/55 tests.
-- Baseline : `npm run build` réussi.
-- Inspection complète des runtimes, styles, tests, workflows, données publiques et scanner Radar.
-- Recette baseline terminée aux six largeurs ; constats consignés dans `docs/rebuild-baseline.md`.
-- Architecture cible figée dans `docs/rebuild-baseline.md`.
+Le rebuild est terminé et prêt pour inspection humaine. Aucun nouveau chantier
+CSS ou JavaScript n'est ouvert.
 
-## Étape active
+- `app/main.js` est l'unique entrée JavaScript produit et importe explicitement
+  le shell, DATA et les six vues.
+- `app/core/runtime.js` isole le shell et la compatibilité requise par les
+  runtimes historiques conservés.
+- `app/styles/main.css` est l'unique entrée CSS.
+- La cascade est organisée selon les quatre responsabilités du cahier des
+  charges : fondations, composants, vues et responsive.
+- Les douze anciennes feuilles chronologiques ou de compensation ont été
+  supprimées après consolidation.
+- Les occurrences de `!important` passent de 184 à 3, toutes justifiées.
+- Les six onglets restent accessibles sur Natel dans une grille 3 × 2.
+- Les données, Supabase, les six vues, les workflows et l'identité visuelle sont
+  conservés.
 
-1. Publier le checkpoint de consolidation CSS déjà validé par tests et build.
-2. Refaire la matrice visuelle sur le SHA CSS immuable, en priorité Communes et Carte.
-3. Terminer la recette des états restants, la documentation, le playbook et le rapport avant merge.
+## Correction finale du raster Carte
 
-## Jalon applicatif courant
+Le premier build de clôture a révélé un chemin CSS hérité vers
+`swiss-base.webp`, devenu invalide après le déplacement de la feuille Carte.
 
-- `index.html` ne contient plus le runtime métier historique inline.
-- Une seule entrée ES module : `app/main.js`, réduite à un graphe d’imports explicite.
-- Le shell partagé vit dans `app/core/runtime.js` ; données, carte, Stats, Communes, Radar!, Histoires et Roadmap conservent chacun leur module.
-- L’ancien chargeur dynamique `app/prime-communes-1.1.js` est supprimé.
-- Le chargement CSS runtime historique et le `MutationObserver` réparateur Communes sont supprimés.
-- La première recette du graphe modulaire a détecté puis corrigé les liaisons manquantes des décorateurs `renderModules` / `renderErp` ; une barrière de test couvre désormais le contrat.
-- La recette Natel a aussi détecté la perte du retour visuel de l’actualisation manuelle dans la couche DATA 1.5 ; les états chargement, succès, fallback et erreur sont de nouveau possédés par cette couche.
-- Une seule entrée de styles : `app/styles/main.css`.
-- La cascade chronologique a été remplacée par quatre responsabilités : `foundation.css`, `components.css`, `views/*.css` et `responsive.css`. `product-assets.css` reste un sous-ensemble technique des composants.
-- Les douze anciennes feuilles chronologiques ou de compensation ont été supprimées après consolidation.
-- Le chargeur dynamique et ses versions de cache dispersées ne sont plus exécutés.
-- La couche finale `app/styles/responsive.css` possède les règles de lisibilité et de navigation Natel.
-- Les déclarations prioritaires passent de 184 à 3 au total : une pour le contrat natif `[hidden]`, deux pour la garde anti-flash initiale.
-- Les six onglets restent visibles sur Natel dans une grille 3 × 2.
-- `npm run check` : 59/59, avec contrôle syntaxique de tous les modules.
-- `npm run build` : réussi, sans avertissement de script non bundlé.
+- `vite.config.ts` utilise une base relative (`./`) pour rendre la sortie
+  déployable sous un sous-chemin.
+- Le runtime Carte résout le raster depuis `import.meta.env.BASE_URL`, avec le
+  repli source `public/`.
+- `styles/views/map.css` ne porte plus de chemin relatif fragile.
+- La sortie contient `dist/swiss-base.webp` et le bundle référence
+  `./swiss-base.webp`.
+- Une barrière de test protège ce contrat.
 
-## Recette navigateur déjà acquise
+## Contrôles finaux
 
-- Checkpoint modulaire `d5a00de374267e6c9f2b3e219f4e1bbbffc58ac9` : six largeurs réelles (360, 430, 768, 1 366, 1 920 et 2 560 px), six onglets visibles sans collision ni débordement global.
-- Communes : recherche, aucun résultat, reset, filtre Client Prime, contrôle Delimo, portrait Wikipédia, passage à la modification et retour en haut validés.
-- Natel : recherche dédiée, navigation des six vues et retour en haut validés.
-- Deep-link Histoires, refresh, Retour et Suivant navigateur validés.
-- Checkpoint `0e11dcc785422a5f70f2bceda1b7b146b7e66703` : actualisation Natel revalidée avec états `loading` puis `success` et 2 110 communes.
-- Aucune erreur applicative console sur ces parcours. Les erreurs de l’extension du navigateur ont été exclues comme externes à l’application.
-- Limite d’environnement : le navigateur distant ne fournit pas WebGL2 ; Carte affiche correctement son état d’erreur MapLibre, mais le rendu WebGL final devra être confirmé dans un navigateur matériel.
+- `git diff --check` : réussi.
+- `npm run check` : 60/60 tests réussis.
+- `npm run build` : réussi, 16 modules transformés.
+- Sortie de clôture : HTML 35,15 kB (gzip 12,37 kB), CSS 131,60 kB
+  (gzip 36,01 kB), JavaScript 113,18 kB (gzip 34,96 kB).
+- Aucun avertissement de ressource non résolue. L'avertissement npm relatif à
+  `http-proxy` appartient uniquement à l'environnement d'exécution.
 
-## Validation propre au lot CSS
+## Recette visuelle et fonctionnelle acquise
 
-- `npm run check` : 59/59 après suppression de toutes les anciennes feuilles.
-- `npm run build` : réussi avec 16 modules transformés.
-- Sortie : CSS 131,58 kB (gzip 36,02 kB), JavaScript 113,02 kB (gzip 34,89 kB).
-- `!important` : 3 occurrences au total, inchangé (une dans la cascade, deux dans la garde anti-flash HTML).
-- La recette navigateur du nouveau SHA CSS est la prochaine opération obligatoire ; elle n’est pas encore déclarée acquise.
+La recette post-CSS du checkpoint `09b1328c` a été menée aux six largeurs
+réelles : 360 × 780, 430 × 932, 768 × 1 024, 1 366 × 768,
+1 920 × 1 080 et 2 560 × 1 440.
 
-## Reprise après interruption
+- Six onglets et six vues contrôlés sur Natel et desktop, sans collision ni
+  débordement global.
+- Recherche Lausanne, état vide, réinitialisation, filtre Clients Prime
+  (74 résultats) et contrôle Delimo validés.
+- Portrait Zürich, correspondance OFS 261, Wikipédia et passage à la
+  modification validés.
+- Actualisation manuelle et états `loading`, `success`, `fallback` et `error`
+  couverts ; succès observé avec 2 110 communes.
+- Scroll profond, retour en haut, deep-links, refresh, Retour/Suivant et
+  navigation des six vues validés.
+- Carte : interface, données et état d'échec WebGL2 contrôlé.
+- Aucune erreur applicative console sur ces parcours hors état MapLibre/WebGL2 ;
+  les messages d'extension navigateur ont été identifiés comme externes.
 
-Vérifier d’abord :
+## Documentation finale
+
+- `docs/architecture-design.md` : architecture, responsabilités et règles
+  d'extension.
+- `docs/rebuild-playbook.md` : commandes, matrice de recette et procédure de
+  reprise.
+- `docs/rebuild-report.md` : rapport avant/après, suppressions, validations,
+  différences et risques.
+- `docs/rebuild-baseline.md` : preuve et architecture cible de la baseline.
+- `AGENTS.md` : règles locales pérennes pour les prochains travaux.
+
+## Limites connues
+
+- Le navigateur distant ne fournit pas WebGL2. Le fallback MapLibre est validé,
+  mais le rendu GPU doit être confirmé sur un navigateur matériel avant merge.
+- L'ancienne URL GitHub Pages répond 404 ; la recette a utilisé des URLs CDN
+  immuables basées sur les SHA.
+- `core/runtime.js` conserve une surface de compatibilité globale isolée et
+  testée ; elle ne doit pas être étendue.
+- MapLibre et ses glyphes restent des dépendances réseau externes.
+
+## Reprise ou inspection
 
 ```sh
 git branch --show-current
 git rev-parse HEAD
 git status --short --branch
+cd cities
+npm run check
+npm run build
 ```
 
-La branche attendue est `rebuild/prime-communes-2.0`. Ne pas rejouer l’audit, l’installation ou les 55 tests de baseline. Reprendre par la matrice visuelle du checkpoint CSS publié, puis seulement terminer la documentation et le rapport.
+La branche attendue est `rebuild/prime-communes-2.0`, propre et alignée sur son
+homologue distant. La prochaine action est une inspection humaine, complétée si
+possible par un contrôle Carte avec WebGL2 matériel. Ne pas rejouer l'audit ou
+la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.

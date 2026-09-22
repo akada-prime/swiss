@@ -5,6 +5,7 @@ import { defineConfig } from "vite";
 // Site-Creator/OpenAI hosting config, no Cloudflare worker and no React runtime
 // are required to reproduce the published 1.1 application.
 export default defineConfig({
+  base: "./",
   publicDir: "public",
   server: {
     host: "0.0.0.0",

@@ -9,7 +9,7 @@
   const MAPLIBRE_CSS = `https://unpkg.com/maplibre-gl@${MAPLIBRE_VERSION}/dist/maplibre-gl.css`;
   const GLYPHS_URL = 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf';
   const GEOMETRY_URL = 'public/data/swiss-map-v1.json';
-  const RASTER_URL = 'public/swiss-base.webp';
+  const RASTER_URL = `${import.meta.env?.BASE_URL || 'public/'}swiss-base.webp`;
   const COUNTRY_BORDER_URL = 'public/data/switzerland-border-2026.geojson';
   const ACTIVE_TERRITORIES = new Set(['JU', 'BE', 'VD', 'FR']);
   const ACTIVE_TERRITORY_LABEL = 'Jura · Berne · Vaud · Fribourg (romands)';
@@ -140,6 +140,8 @@
     stage.innerHTML = `
       <div id="primeMapLibre" aria-label="Carte interactive des communes suisses"></div>
       <div class="maplibre-loading" id="mapLibreLoading"><span></span>Chargement de la carte…</div>`;
+    stage.querySelector('#mapLibreLoading').style.backgroundImage =
+      `linear-gradient(rgba(20,34,44,.82),rgba(20,34,44,.82)),url("${RASTER_URL}")`;
     panel.append(stage);
     return stage;
   }

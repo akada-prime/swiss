@@ -295,7 +295,7 @@ test('Carte 1.2 keeps Switzerland on desktop, opens Romandie on Natel and uses t
   assert.match(js, /mobile \? romandieBounds\(\) : countryBounds\(\)/);
   assert.match(js, /renderWorldCopies: false/);
   assert.match(js, /closeButton: false/);
-  assert.match(js, /RASTER_URL = 'public\/swiss-base\.webp'/);
+  assert.match(js, /RASTER_URL = `\$\{import\.meta\.env\?\.BASE_URL \|\| 'public\/'\}swiss-base\.webp`/);
   assert.match(css, /\.maplibre-stage\{[^}]*height:clamp\(820px,58vw,980px\);min-height:820px/);
   assert.match(css, /@media\(max-width:900px\)[\s\S]*\.maplibre-stage\{height:560px;min-height:560px\}/);
   assert.match(css, /maplibre-mini-map/);
@@ -303,7 +303,7 @@ test('Carte 1.2 keeps Switzerland on desktop, opens Romandie on Natel and uses t
   assert.match(css, /metric-swiss-active/);
   assert.match(css, /maplibre-progress/);
   assert.match(css, /maplibre-loading/);
-  assert.match(css, /swiss-base\.webp/);
+  assert.match(js, /style\.backgroundImage[\s\S]*RASTER_URL/);
   assert.doesNotMatch(css, /!important/);
 });
 

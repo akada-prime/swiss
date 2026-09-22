@@ -29,13 +29,18 @@ Le produit actuellement publié est le dashboard statique `index.html`, complét
 - `app/core/runtime.js` : shell partagé et contrat de compatibilité ;
 - `app/prime-communes-data-1.5.js` : transport et normalisation des données ;
 - les modules `maplibre`, `stats`, `communes`, `news`, `stories` et `roadmap` : responsabilités propres aux six vues ;
-- `app/styles/main.css` : entrée unique de la cascade, terminée par le contrat 2.0 ;
+- `app/styles/main.css` : entrée unique de la cascade fondations → composants → vues → responsive ;
 - `public/` : données de fallback, carte et assets ;
 - `supabase/migrations/` : évolution de la base.
 
 Le prototype React/Next présent dans `app/*.tsx` n’est pas la source du dashboard actuellement publié. Il est conservé comme ancien prototype tant que la future migration vers l’infrastructure Prime n’a pas fixé la cible technique définitive.
 
-Voir [`STABILISATION-1.1.md`](./STABILISATION-1.1.md) pour le contrat de non-régression et les règles d’extension.
+Références techniques :
+
+- [`STABILISATION-1.1.md`](./STABILISATION-1.1.md) : contrat de non-régression fonctionnel ;
+- [`docs/architecture-design.md`](./docs/architecture-design.md) : responsabilités et grammaire visuelle ;
+- [`docs/rebuild-playbook.md`](./docs/rebuild-playbook.md) : maintenance, recette et reprise ;
+- [`docs/rebuild-report.md`](./docs/rebuild-report.md) : bilan concret du rebuild avant merge.
 
 ## Développement
 
