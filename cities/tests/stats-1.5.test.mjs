@@ -16,7 +16,7 @@ test('Stats 1.5 hero is data-driven Prime + innosolvcity', async () => {
 });
 
 test('Stats compact cards use one measured responsive label contract', async () => {
-  const css = await read('app/prime-communes-stats-1.2.css');
+  const css = await read('app/styles/views/stats.css');
   const js = await read('app/prime-communes-stats-1.5.js');
   assert.match(css, /--pc-kpi-label-height/);
   assert.doesNotMatch(css, /--pc-kpi-label-lines/);
@@ -34,5 +34,5 @@ test('application loader includes canonical Stats 1.5 runtime', async () => {
   const loader = await read('app/main.js');
   const styles = await read('app/styles/main.css');
   assert.match(loader, /prime-communes-stats-1\.5\.js/);
-  assert.match(styles, /prime-communes-stats-1\.2\.css/);
+  assert.match(styles, /views\/stats\.css/);
 });

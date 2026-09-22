@@ -1,13 +1,10 @@
 /* Prime Communes 2.0 — single deterministic style entry. */
-@import url('../globals.css');
-@import url('../product-assets.css');
-@import url('../prime-communes-1.1.6.css');
-@import url('../prime-communes-1.1.7-mobile.css');
-@import url('../prime-communes-1.1.5.css');
-@import url('../prime-communes-stats-1.2.css');
-@import url('../prime-communes-maplibre-1.2.css');
-@import url('../prime-communes-news-2.0.css');
-@import url('../prime-communes-stories-2.0.css');
-@import url('../prime-communes-roadmap-2.0.css');
-@import url('../prime-communes-desktop-2.0.css');
-@import url('./rebuild.css');
+@import url('./foundation.css');
+@import url('./components.css');
+@import url('./product-assets.css');
+@import url('./views/map.css');
+@import url('./views/stats.css');
+@import url('./views/radar.css');
+@import url('./views/stories.css');
+@import url('./views/roadmap.css');
+@import url('./responsive.css');

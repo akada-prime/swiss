@@ -18,9 +18,9 @@ test('Radar and Histoires are first-class deep-linked views', async () => {
   assert.match(bridge, /byId\('storiesView'\)\.hidden = next !== 'stories'/);
   assert.match(entry, /prime-communes-news-2\.0\.js/);
   assert.match(entry, /prime-communes-stories-2\.0\.js/);
-  assert.match(styles, /prime-communes-news-2\.0\.css/);
-  assert.match(styles, /prime-communes-stories-2\.0\.css/);
-  assert.match(styles, /prime-communes-roadmap-2\.0\.css/);
+  assert.match(styles, /views\/radar\.css/);
+  assert.match(styles, /views\/stories\.css/);
+  assert.match(styles, /views\/roadmap\.css/);
   assert.match(html, /type="module" src="app\/main\.js"/);
   assert.match(html, /class="news-beta-note"/);
   assert.match(html, /class="news-nav-badge">SOBRE/);
@@ -32,10 +32,10 @@ test('Radar and Histoires are first-class deep-linked views', async () => {
 
 test('mobile header, footer evolution and return-to-top stay usable before rebuild', async () => {
   const html = await read('index.html');
-  const globals = await read('app/globals.css');
-  const mobile = await read('app/prime-communes-1.1.7-mobile.css');
+  const globals = await read('app/styles/foundation.css');
+  const mobile = await read('app/styles/responsive.css');
   const bridge = await read('app/prime-communes-1.1-base.js');
-  const layer = await read('app/prime-communes-1.1.5.css');
+  const layer = await read('app/styles/components.css');
   const styles = await read('app/styles/main.css');
 
   assert.match(html, /Prime Communes · version 2\.0\.5 · #460/);
@@ -47,15 +47,15 @@ test('mobile header, footer evolution and return-to-top stay usable before rebui
   assert.match(bridge, /window\.scrollTo\(\{ top: 0, behavior:/);
   assert.match(mobile, /grid-template-columns:1\.22fr \.72fr \.72fr \.92fr 1\.02fr 1fr/);
   assert.doesNotMatch(layer, /@import/);
-  assert.match(styles, /prime-communes-1\.1\.7-mobile\.css/);
-  assert.match(styles, /prime-communes-1\.1\.5\.css/);
+  assert.match(styles, /responsive\.css/);
+  assert.match(styles, /components\.css/);
 });
 
 test('all six view headers share one responsive typography contract', async () => {
   const html = await read('index.html');
-  const globals = await read('app/globals.css');
-  const news = await read('app/prime-communes-news-2.0.css');
-  const roadmap = await read('app/prime-communes-roadmap-2.0.css');
+  const globals = await read('app/styles/foundation.css');
+  const news = await read('app/styles/views/radar.css');
+  const roadmap = await read('app/styles/views/roadmap.css');
   assert.equal((html.match(/view-intro"/g) || []).length, 6);
   assert.equal((html.match(/view-intro-copy"/g) || []).length, 6);
   assert.match(globals, /\.view-intro-copy\{[^}]*font-size:16px/);
@@ -70,7 +70,7 @@ test('all six view headers share one responsive typography contract', async () =
 
 test('2.0.3 interprets every signal without blurring fact, deduction and Prime reading', async () => {
   const runtime = await read('app/prime-communes-news-2.0.js');
-  const css = await read('app/prime-communes-news-2.0.css');
+  const css = await read('app/styles/views/radar.css');
   const radar = JSON.parse(await read('public/data/news-radar-v1.json'));
   const analysis = JSON.parse(await read('public/data/news-analysis-v1.json'));
   assert.equal(analysis.meta.version, '2.0.4-v1');
@@ -123,9 +123,9 @@ test('2.0.4 keeps qualification lightweight, local and tied to its source signal
 test('Histoires is standalone and Radar contains no story responsibility', async () => {
   const html = await read('index.html');
   const radarRuntime = await read('app/prime-communes-news-2.0.js');
-  const radarCss = await read('app/prime-communes-news-2.0.css');
+  const radarCss = await read('app/styles/views/radar.css');
   const runtime = await read('app/prime-communes-stories-2.0.js');
-  const css = await read('app/prime-communes-stories-2.0.css');
+  const css = await read('app/styles/views/stories.css');
   const data = JSON.parse(await read('public/data/stories-v1.json'));
   assert.equal(data.meta.version, '2.0.2-v1');
   assert.equal(data.meta.mode, 'editorial');
@@ -229,7 +229,7 @@ test('roadmap preserves old phases while completing NEWS 2.0', async () => {
 test('commune refresh confirms fast updates on desktop and Natel', async () => {
   const runtime = await read('app/core/runtime.js');
   const data = await read('app/prime-communes-data-1.5.js');
-  const css = await read('app/globals.css');
+  const css = await read('app/styles/foundation.css');
   assert.match(runtime, /loadData\(manual=false\)/);
   assert.match(runtime, /À jour ✓ · /);
   assert.match(runtime, /sync\.dataset\.state='success'/);

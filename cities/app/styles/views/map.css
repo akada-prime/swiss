@@ -1,3 +1,6 @@
+/* Prime Communes 2.0 — map.css. */
+
+/* Source consolidée: app/prime-communes-maplibre-1.2.css */
 /* Prime Communes · Carte 1.2
    Canonical Carte stylesheet. One professional component layer, no patch CSS.
    The raster colour treatment itself remains unchanged. */
@@ -120,3 +123,4 @@
   #primeMapLibre .maplibregl-ctrl-top-right{top:9px;right:9px}
   #primeMapLibre .maplibregl-ctrl-group button{width:40px;height:40px}
 }
+

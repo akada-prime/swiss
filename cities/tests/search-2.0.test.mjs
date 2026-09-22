@@ -44,7 +44,7 @@ test('universal search ignores accents, accepts a small typo and covers every da
 
 test('Natel gets a dedicated search surface while desktop keeps the compact table', async () => {
   const runtime = await read('app/prime-communes-communes-1.2.js');
-  const css = await read('app/prime-communes-1.1.7-mobile.css');
+  const css = await read('app/styles/responsive.css');
   assert.match(runtime, /Recherche universelle des communes/);
   assert.match(runtime, /data-mobile-search-results/);
   assert.match(runtime, /Touchez une commune · portrait public/);

@@ -21,8 +21,12 @@ test('rebuild owns one deterministic module graph and one style entry', async ()
   for (const binding of ['renderModules', 'renderErp', 'openDrawer', 'loadData', 'loadMap']) {
     assert.match(runtime, new RegExp(`${binding}: `));
   }
-  assert.match(styles, /rebuild\.css/);
-  assert.ok(styles.indexOf('rebuild.css') > styles.indexOf('prime-communes-desktop-2.0.css'));
+  for (const stylesheet of ['foundation.css', 'components.css', 'views/map.css', 'views/stats.css', 'views/radar.css', 'views/stories.css', 'views/roadmap.css', 'responsive.css']) {
+    assert.match(styles, new RegExp(stylesheet.replace('.', '\\.')));
+  }
+  assert.ok(styles.indexOf('foundation.css') < styles.indexOf('components.css'));
+  assert.ok(styles.indexOf('components.css') < styles.indexOf('views/map.css'));
+  assert.ok(styles.indexOf('views/roadmap.css') < styles.indexOf('responsive.css'));
 });
 
 test('important declarations are reduced to the documented hidden contract', async () => {
@@ -31,13 +35,13 @@ test('important declarations are reduced to the documented hidden contract', asy
   const sources = await Promise.all(cssFiles.map(async path => [path, await read(`app/${path}`)]));
   const declarations = sources.flatMap(([path, css]) =>
     [...css.matchAll(/!important/g)].map(() => path));
-  assert.deepEqual(declarations, ['styles/rebuild.css']);
-  assert.match(await read('app/styles/rebuild.css'), /\[hidden\] \{ display: none !important; \}/);
+  assert.deepEqual(declarations, ['styles/responsive.css']);
+  assert.match(await read('app/styles/responsive.css'), /\[hidden\] \{ display: none !important; \}/);
 });
 
 test('shared mobile controls keep a readable floor and six reachable tabs', async () => {
   const html = await read('index.html');
-  const css = await read('app/styles/rebuild.css');
+  const css = await read('app/styles/responsive.css');
   assert.equal((html.match(/class="view-tab(?: |")/g) || []).length, 6);
   assert.match(css, /--pc-type-min: 12px/);
   assert.match(css, /--pc-control-height: 40px/);

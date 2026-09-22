@@ -1,3 +1,6 @@
+/* Prime Communes 2.0 — stats.css. */
+
+/* Source consolidée: app/prime-communes-stats-1.2.css */
 /* Prime Communes · Stats
    Canonical visual contract for Stats 1.5. No one-off KPI selectors. */
 
@@ -262,3 +265,4 @@
   .stats-prime-copy>small{font-size:11px}
   .stats-prime-visual,.stats-prime-map{height:106px;min-height:106px}
 }
+

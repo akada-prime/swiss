@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import "./product-assets.css";
+import "./styles/foundation.css";
+import "./styles/product-assets.css";
 
 export const metadata: Metadata = {
   title: "Prime Communes",

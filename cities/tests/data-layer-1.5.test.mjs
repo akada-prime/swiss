@@ -42,7 +42,7 @@ test('retired map product control is no longer part of the data contract', async
 });
 
 test('Stats territory cards reserve one standard heading zone', async () => {
-  const css = await read('app/prime-communes-stats-1.2.css');
+  const css = await read('app/styles/views/stats.css');
   assert.match(css, /--pc-territory-heading-height:/);
   assert.match(css, /\.territory-comparison button>span/);
   assert.match(css, /min-height:var\(--pc-territory-heading-height\)/);

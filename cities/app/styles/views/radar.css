@@ -1,3 +1,6 @@
+/* Prime Communes 2.0 — radar.css. */
+
+/* Source consolidée: app/prime-communes-news-2.0.css */
 .news-nav-tab{position:relative}.news-nav-badge{position:absolute;right:3px;top:3px;padding:2px 4px;border:1px solid rgba(255,111,77,.34);border-radius:999px;color:#ff8064;background:rgba(118,38,22,.22);font-size:6px;font-weight:850;line-height:1;letter-spacing:.08em;box-shadow:0 0 10px rgba(255,89,53,.14)}
 .news-view{padding-bottom:12px}.news-panel{padding:20px;border:1px solid var(--line);border-radius:28px;background:rgba(7,11,19,.78);box-shadow:0 32px 80px rgba(0,0,0,.35)}
 .news-beta-note{display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:10px 14px;border:1px solid rgba(100,185,239,.16);border-radius:12px;color:#8494a8;background:rgba(26,104,158,.07);font-size:12px;line-height:1.45}.news-beta-note strong{flex:0 0 auto;padding:4px 7px;border:1px solid rgba(101,190,246,.28);border-radius:999px;color:#69bbee;font-size:9px;letter-spacing:.13em}.news-beta-note span{min-width:0}

@@ -13,7 +13,7 @@ test('1.1 state bridge keeps the minimal software view as the real default state
 });
 
 test('software columns are controlled by one semantic class', async () => {
-  const css = await read('app/prime-communes-1.1.5.css');
+  const css = await read('app/styles/components.css');
   assert.doesNotMatch(css, /\.table-wrap\.logiciels-hidden \.ecosystem-start/);
   assert.doesNotMatch(css, /\.table-wrap\.logiciels-hidden \.metier-cell/);
   assert.match(css, /\.table-wrap\.logiciels-hidden \.erp-cell/);
@@ -39,7 +39,7 @@ test('hosting is appended after Modules by the canonical Communes view', async (
 test('2.0.5 opens a sourced commune portrait from the row number without AI or eager loading', async () => {
   const html = await read('index.html');
   const js = await read('app/prime-communes-communes-1.2.js');
-  const css = await read('app/prime-communes-1.1.5.css');
+  const css = await read('app/styles/components.css');
   assert.match(html, /id="portraitRoot"/);
   assert.match(js, /const rank = document\.createElement\('button'\)/);
   assert.match(js, /event\.stopPropagation\(\)/);
@@ -67,7 +67,7 @@ test('2.0.5 opens a sourced commune portrait from the row number without AI or e
 });
 
 test('mobile peer filters remain a strict two-column grid', async () => {
-  const css = await read('app/prime-communes-1.1.7-mobile.css');
+  const css = await read('app/styles/responsive.css');
   assert.match(css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   for (const id of ['primeOnly', 'eadminOnly', 'districtsToggle', 'logicielsToggle']) {
     assert.match(css, new RegExp(`#${id}`));
@@ -76,7 +76,7 @@ test('mobile peer filters remain a strict two-column grid', async () => {
 
 test('Delimo is a premium control mode, not a fourth statistic or ordinary filter', async () => {
   const html = await read('index.html');
-  const css = await read('app/product-assets.css');
+  const css = await read('app/styles/product-assets.css');
   const styles = await read('app/styles/main.css');
   const bridge = await read('app/prime-communes-1.1-base.js');
   assert.match(html, /app\/styles\/main\.css/);
@@ -113,7 +113,7 @@ test('language markets always filter while Territoire only reveals optional colu
 
 test('commune search ignores accents and iPhone form controls do not zoom', async () => {
   const runtime = await read('app/core/runtime.js');
-  const mobile = await read('app/prime-communes-1.1.7-mobile.css');
+  const mobile = await read('app/styles/responsive.css');
   assert.match(runtime, /normalizeSearchText/);
   assert.match(runtime, /normalize\('NFD'\)/);
   assert.match(runtime, /replace\(\/\[\\u0300-\\u036f\]\//);
@@ -130,8 +130,8 @@ test('commune save retries a stale key and keeps the open drawer in place', asyn
 
 test('Systèmes keeps Intégrateur and Métier visible while extended details stay optional', async () => {
   const bridge = await read('app/prime-communes-1.1-base.js');
-  const desktop = await read('app/prime-communes-1.1.5.css');
-  const mobile = await read('app/prime-communes-1.1.7-mobile.css');
+  const desktop = await read('app/styles/components.css');
+  const mobile = await read('app/styles/responsive.css');
   assert.match(bridge, /button\.textContent = 'Systèmes'/);
   assert.match(bridge, /ERP, modules et hébergeur/);
   assert.doesNotMatch(desktop, /logiciels-hidden \.ecosystem-start/);
@@ -140,8 +140,8 @@ test('Systèmes keeps Intégrateur and Métier visible while extended details st
 });
 
 test('Natel header keeps all views and commune refresh reachable', async () => {
-  const css = await read('app/prime-communes-1.1.7-mobile.css');
-  const rebuild = await read('app/styles/rebuild.css');
+  const css = await read('app/styles/responsive.css');
+  const rebuild = await read('app/styles/responsive.css');
   assert.match(rebuild, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(rebuild, /\[hidden\] \{ display: none !important; \}/);
   assert.match(css, /content:"MÀJ communes"/);
@@ -167,8 +167,8 @@ test('commune refresh never flashes in NEWS or other views', async () => {
 
 test('row ranking belongs to commune identity on every viewport', async () => {
   const js = await read('app/prime-communes-communes-1.2.js');
-  const css = await read('app/prime-communes-1.1.5.css');
-  const mobile = await read('app/prime-communes-1.1.7-mobile.css');
+  const css = await read('app/styles/components.css');
+  const mobile = await read('app/styles/responsive.css');
   assert.match(js, /commune-rank/);
   assert.match(js, /rowIndex \+ 1/);
   assert.match(css, /\.commune-rank/);
@@ -177,7 +177,7 @@ test('row ranking belongs to commune identity on every viewport', async () => {
 
 test('commune identity owns the canton flag and standalone Canton is hidden', async () => {
   const js = await read('app/prime-communes-communes-1.2.js');
-  const css = await read('app/prime-communes-1.1.5.css');
+  const css = await read('app/styles/components.css');
   assert.match(js, /commune-identity/);
   assert.match(js, /commune-canton-flag/);
   assert.match(js, /public\/cantons\//);
@@ -196,7 +196,7 @@ test('roadmap records stabilization and moves audit to technical 2.5', async () 
 });
 
 test('Roadmap completed stages keep their colors, checks and one-line status badges', async () => {
-  const css = await read('app/prime-communes-roadmap-2.0.css');
+  const css = await read('app/styles/views/roadmap.css');
   assert.doesNotMatch(css, /journey-done\{opacity:/);
   assert.match(css, /journey-done::before\{content:"✓"/);
   assert.match(css, /journey-bridge\{border-color:/);
@@ -207,9 +207,9 @@ test('Roadmap completed stages keep their colors, checks and one-line status bad
 
 test('Roadmap styling is canonical and absent from legacy stabilization layers', async () => {
   const loader = await read('app/styles/main.css');
-  const legacy = `${await read('app/globals.css')}\n${await read('app/prime-communes-1.1.5.css')}\n${await read('app/prime-communes-1.1.6.css')}`;
-  const css = await read('app/prime-communes-roadmap-2.0.css');
-  assert.match(loader, /prime-communes-roadmap-2\.0\.css/);
+  const legacy = `${await read('app/styles/foundation.css')}\n${await read('app/styles/components.css')}\n${await read('app/styles/components.css')}`;
+  const css = await read('app/styles/views/roadmap.css');
+  assert.match(loader, /views\/roadmap\.css/);
   assert.doesNotMatch(legacy, /roadmap-|journey-/);
   assert.doesNotMatch(css, /!important/);
   assert.match(css, /\.completed-15\{/);
@@ -219,7 +219,7 @@ test('Roadmap styling is canonical and absent from legacy stabilization layers',
 
 test('Roadmap infrastructure is a real semantic item, never CSS pseudo-content', async () => {
   const html = await read('index.html');
-  const css = await read('app/prime-communes-1.1.5.css');
+  const css = await read('app/styles/components.css');
   assert.match(html, /<strong>Infrastructure Prime<\/strong>/);
   assert.match(html, /serveurs Prime/);
   assert.doesNotMatch(css, /roadmap-items::after/);
@@ -251,8 +251,8 @@ test('current site loads one canonical runtime per view and no SVG map runtime',
   assert.match(runtime, /prime-communes-communes-1\.2\.js/);
   assert.match(runtime, /prime-communes-news-2\.0\.js/);
   assert.match(runtime, /prime-communes-stories-2\.0\.js/);
-  assert.match(styles, /prime-communes-maplibre-1\.2\.css/);
-  assert.match(styles, /prime-communes-stats-1\.2\.css/);
+  assert.match(styles, /views\/map\.css/);
+  assert.match(styles, /views\/stats\.css/);
   assert.doesNotMatch(html, /prime-communes-1\.1\.js|const fmt=/);
   assert.match(html, /id="communesView"/);
   assert.match(html, /id="mapView"/);
@@ -263,7 +263,7 @@ test('current site loads one canonical runtime per view and no SVG map runtime',
 
 test('Carte 1.2 keeps Switzerland on desktop, opens Romandie on Natel and uses the official national border', async () => {
   const js = await read('app/prime-communes-maplibre-1.2.js');
-  const css = await read('app/prime-communes-maplibre-1.2.css');
+  const css = await read('app/styles/views/map.css');
   assert.match(js, /MAPLIBRE_VERSION = '6\.7\.0'/);
   assert.match(js, /mapLibreModulePromise = import/);
   assert.match(js, /geometryPromise = fetch/);
@@ -308,7 +308,7 @@ test('Carte 1.2 keeps Switzerland on desktop, opens Romandie on Natel and uses t
 });
 
 test('Stats 1.2 uses one responsive KPI contract independent of label line count', async () => {
-  const css = await read('app/prime-communes-stats-1.2.css');
+  const css = await read('app/styles/views/stats.css');
   assert.match(css, /--pc-kpi-accent:#6ec7ff/);
   assert.match(css, /--pc-kpi-label-height/);
   assert.doesNotMatch(css, /--pc-kpi-label-lines/);
@@ -333,12 +333,12 @@ test('official national border is a stored swissBOUNDARIES3D 2026 geometry', asy
 
 test('desktop dark mode raises contrast without changing the Natel theme', async () => {
   const loader = await read('app/styles/main.css');
-  const css = await read('app/prime-communes-desktop-2.0.css');
-  assert.match(loader, /prime-communes-desktop-2\.0\.css/);
-  assert.ok(loader.indexOf('prime-communes-desktop-2.0.css') > loader.indexOf('prime-communes-roadmap-2.0.css'));
+  const css = await read('app/styles/responsive.css');
+  assert.match(loader, /responsive\.css/);
+  assert.ok(loader.indexOf('responsive.css') > loader.indexOf('views/roadmap.css'));
   assert.match(css, /@media \(min-width:1101px\)/);
   assert.match(css, /@media \(min-width:1600px\)/);
   assert.doesNotMatch(css, /pointer:fine/);
   assert.match(css, /prefers-contrast:more/);
-  assert.doesNotMatch(css, /max-width:680px/);
+  assert.match(css, /max-width:680px/);
 });

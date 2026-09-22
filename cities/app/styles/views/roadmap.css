@@ -1,3 +1,6 @@
+/* Prime Communes 2.0 — roadmap.css. */
+
+/* Source consolidée: app/prime-communes-roadmap-2.0.css */
 /* Prime Communes · Roadmap 2.0
    Canonical Roadmap stylesheet. Historical visual patches live nowhere else. */
 
@@ -96,3 +99,4 @@
   .completed-items span{padding:7px 9px;font-size:10px}
   .roadmap-grid>.completed-11 .roadmap-items{grid-template-columns:1fr}
 }
+
