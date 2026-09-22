@@ -384,8 +384,6 @@
     mobileInput.addEventListener('input', () => {
       sourceInput.value = mobileInput.value;
       sourceInput.dispatchEvent(new Event('input', { bubbles: true }));
-      // The table and its result count use the same filters as this panel.
-      renderMobileSearchResults();
     });
     mobileInput.addEventListener('keydown', event => {
       if (event.key === 'Escape') closeMobileSearch();

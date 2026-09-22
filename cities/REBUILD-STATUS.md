@@ -6,12 +6,15 @@ Le rebuild et l'édition de l'hébergeur sont intégrés à `main` au commit
 `a03838c`. La migration d'édition de l'hébergeur a été installée en production.
 Les consignes de branche ci-dessous décrivent le chantier historique, clôturé.
 
-Correction en cours sur `fix/mobile-commune-search-list` : retour de la
+Correction de suivi sur `fix/commune-search-render` : retour de la
 recherche dédiée sur Natel, avec le champ en haut et les résultats dessous.
 Choisir un résultat filtre la liste normale sur la commune et fait défiler
 jusqu'à sa ligne ; seul un clic ultérieur sur cette ligne ouvre le portrait.
+La vérification en production a révélé que les événements de saisie utilisaient
+encore l'ancien rendu des lignes, ce qui rouvrait directement l'édition.
+Les événements utilisent désormais le rendu communal enrichi courant.
 Le desktop conserve son filtre direct. Aucun changement de données ou de SQL.
-Vérifications locales : `npm run check` (62 tests) et `npm run build` réussis.
+Vérifications locales : `npm run check` (63 tests) et `npm run build` réussis.
 
 Dernière mise à jour : 2026-09-22 UTC
 

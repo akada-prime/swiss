@@ -48,12 +48,27 @@ test('Natel keeps the expanded search; selection returns to the normal commune l
   const html = await read('index.html');
   const css = await read('app/styles/responsive.css');
   assert.match(html, /id="query" type="search" enterkeyhint="search"/);
-  assert.match(shell, /\$\('query'\)\.addEventListener\('input',render\)/);
+  assert.match(shell, /\$\('query'\)\.addEventListener\('input',\(\)=>render\(\)\)/);
   assert.match(runtime, /row\.onclick = \(\) => openCommunePortrait\(commune\)/);
   assert.match(runtime, /function openMobileSearch\(\)/);
   assert.match(css, /\.mobile-search-overlay\{/);
   assert.match(runtime, /showCommuneInList\(commune, sourceInput\)/);
   assert.doesNotMatch(runtime, /closeMobileSearch\(\);\s*openCommunePortrait\(commune\)/);
+});
+
+test('search inputs call the current enhanced renderer after the commune module loads', async () => {
+  const shell = await read('app/core/runtime.js');
+  const match = shell.match(/\$\('query'\)\.addEventListener\('input',\(\)=>render\(\)\)/);
+  assert.ok(match, 'input listener must resolve render at event time');
+  let listener, rendered = '';
+  const context = {
+    $: () => ({ addEventListener: (_type, callback) => { listener = callback; } }),
+    render: () => { rendered = 'base'; }
+  };
+  vm.runInNewContext(match[0], context);
+  context.render = () => { rendered = 'enhanced'; };
+  listener();
+  assert.equal(rendered, 'enhanced');
 });
 
 test('selecting a mobile search result filters the table and scrolls to its row without opening a portrait', async () => {
