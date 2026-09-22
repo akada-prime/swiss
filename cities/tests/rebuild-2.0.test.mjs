@@ -17,6 +17,10 @@ test('rebuild owns one deterministic module graph and one style entry', async ()
   }
   assert.doesNotMatch(await read('app/prime-communes-communes-1.2.js'), /MutationObserver/);
   assert.doesNotMatch(await read('app/prime-communes-1.1-base.js'), /createElement\(['"]link/);
+  const runtime = await read('app/core/runtime.js');
+  for (const binding of ['renderModules', 'renderErp', 'openDrawer', 'loadData', 'loadMap']) {
+    assert.match(runtime, new RegExp(`${binding}: `));
+  }
   assert.match(styles, /rebuild\.css/);
   assert.ok(styles.indexOf('rebuild.css') > styles.indexOf('prime-communes-desktop-2.0.css'));
 });

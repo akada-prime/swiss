@@ -33,6 +33,7 @@ Dernière mise à jour : 2026-09-22 UTC
 - Le shell partagé vit dans `app/core/runtime.js` ; données, carte, Stats, Communes, Radar!, Histoires et Roadmap conservent chacun leur module.
 - L’ancien chargeur dynamique `app/prime-communes-1.1.js` est supprimé.
 - Le chargement CSS runtime historique et le `MutationObserver` réparateur Communes sont supprimés.
+- La première recette du graphe modulaire a détecté puis corrigé les liaisons manquantes des décorateurs `renderModules` / `renderErp` ; une barrière de test couvre désormais le contrat.
 - Une seule entrée de styles : `app/styles/main.css`.
 - Le chargeur dynamique et ses versions de cache dispersées ne sont plus exécutés.
 - La couche finale `app/styles/rebuild.css` possède les règles de lisibilité et de navigation Natel.

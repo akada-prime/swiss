@@ -193,11 +193,26 @@ document.querySelectorAll('.view-tab').forEach(button=>button.onclick=()=>{const
 
 const sharedBindings = {
   all: [() => all, value => { all = value; }],
+  primeOnly: [() => primeOnly, value => { primeOnly = value; }],
+  eadminOnly: [() => eadminOnly, value => { eadminOnly = value; }],
   districtsMode: [() => districtsMode, value => { districtsMode = value; }],
+  marketOnly: [() => marketOnly, value => { marketOnly = value; }],
   issuesOnly: [() => issuesOnly, value => { issuesOnly = value; }],
   ofsMode: [() => ofsMode, value => { ofsMode = value; }],
+  sortKey: [() => sortKey, value => { sortKey = value; }],
+  sortDirection: [() => sortDirection, value => { sortDirection = value; }],
+  mapGeometry: [() => mapGeometry, value => { mapGeometry = value; }],
+  mapMode: [() => mapMode, value => { mapMode = value; }],
+  mapPerspective: [() => mapPerspective, value => { mapPerspective = value; }],
+  mapProduct: [() => mapProduct, value => { mapProduct = value; }],
+  mapViewBox: [() => mapViewBox, value => { mapViewBox = value; }],
+  mapInitialViewBox: [() => mapInitialViewBox, value => { mapInitialViewBox = value; }],
+  mapFullViewBox: [() => mapFullViewBox, value => { mapFullViewBox = value; }],
+  statsMetric: [() => statsMetric, value => { statsMetric = value; }],
   statsThreshold: [() => statsThreshold, value => { statsThreshold = value; }],
   render: [() => render, value => { render = value; }],
+  renderModules: [() => renderModules, value => { renderModules = value; }],
+  renderErp: [() => renderErp, value => { renderErp = value; }],
   openDrawer: [() => openDrawer, value => { openDrawer = value; }],
   loadData: [() => loadData, value => { loadData = value; }],
   loadMap: [() => loadMap, value => { loadMap = value; }],
@@ -220,9 +235,18 @@ Object.assign(window, {
     openPortrait: commune => openDrawer(commune)
   }),
   ERP_BY_METIER,
+  SUPABASE_URL,
+  SUPABASE_KEY,
+  closeDrawer,
+  communeSearchMeta,
   esc,
   filtered,
   fmt,
-  pct
+  impactInitialViewBox,
+  pct,
+  renderMap,
+  renderStats,
+  setMapView,
+  updateDistrictOptions,
+  updateMapSearch
 });
-
