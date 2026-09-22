@@ -17,15 +17,14 @@ Dernière mise à jour : 2026-09-22 UTC
 - Baseline : `npm run check` réussi, 55/55 tests.
 - Baseline : `npm run build` réussi.
 - Inspection complète des runtimes, styles, tests, workflows, données publiques et scanner Radar.
-- Recette desktop de la baseline immuable commencée ; constats consignés dans `docs/rebuild-baseline.md`.
+- Recette baseline terminée aux six largeurs ; constats consignés dans `docs/rebuild-baseline.md`.
+- Architecture cible figée dans `docs/rebuild-baseline.md`.
 
 ## Étape active
 
-1. Terminer la trace visuelle aux six largeurs avec `docs/visual-harness.html`.
-2. Figer l’architecture cible.
-3. Remplacer le runtime historique et ses patchs par des modules directs.
-4. Reconstruire la cascade CSS par couches.
-5. Compléter les tests de non-régression, puis refaire la recette complète.
+1. Remplacer le runtime historique et ses patchs par des modules directs.
+2. Reconstruire la cascade CSS par couches.
+3. Compléter les tests de non-régression, puis refaire la recette complète.
 
 ## Reprise après interruption
 

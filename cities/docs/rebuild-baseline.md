@@ -62,6 +62,19 @@ Observation desktop à 1 363 × 936 :
 - chargement initial visiblement vide avant hydratation, puis remplacement tardif des tirets ;
 - collisions/coupures de libellés observées dans la navigation et la barre de filtres à cette largeur.
 
+Matrice mesurée dans le navigateur :
+
+| Format | Viewport applicatif | Onglets visibles | Débordement global | Résultats | Police critique min. |
+|---|---:|---:|---:|---:|---:|
+| Natel étroit | 360 × 780 | 6 | 0 px | 175 | 10 px |
+| Natel large | 430 × 932 | 6 | 0 px | 175 | 10 px |
+| Tablette | 768 × 1 024 | 6 | 0 px | 175 | 10 px |
+| Laptop | 1 366 × 768 | 6 | 0 px | 175 | 10 px |
+| Desktop | 1 920 × 1 080 | 6 | 0 px | 175 | 10 px |
+| Grand écran | 2 560 × 1 440 | 6 | 0 px | 175 | 10 px |
+
+À chaque largeur, la mise à jour Communes, le footer `#460` et le retour en haut sont présents. Sur Natel 360 px, les six libellés sont tous dans le DOM mais se chevauchent visuellement dans la barre ; le rebuild doit conserver les six accès tout en supprimant cette collision. Le plancher typographique critique de 10 px constitue la valeur avant rebuild.
+
 Le harnais `docs/visual-harness.html` sert uniquement à la recette. Il impose au document applicatif une largeur réelle d’iframe, afin que les media queries et le JavaScript responsive s’exécutent dans la largeur testée sans modifier le produit.
 
 ## Architecture cible

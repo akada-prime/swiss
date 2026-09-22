@@ -15,6 +15,7 @@
   <script>
     const query = new URLSearchParams(location.search);
     const clamp = (value, minimum, maximum, fallback) => {
+      if (value === null || value === '') return fallback;
       const number = Number(value);
       return Number.isFinite(number) ? Math.min(maximum, Math.max(minimum, number)) : fallback;
     };
