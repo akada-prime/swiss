@@ -6,7 +6,7 @@ import { readFile } from 'node:fs/promises';
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
 async function searchRuntime() {
-  const runtime = await read('app/main.js');
+  const runtime = await read('app/core/runtime.js');
   const start = runtime.indexOf('const normalizeSearchText');
   const end = runtime.indexOf('const SUPABASE_URL', start);
   assert.ok(start >= 0 && end > start, 'search runtime must remain independently testable');

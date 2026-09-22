@@ -22,20 +22,23 @@ Dernière mise à jour : 2026-09-22 UTC
 
 ## Étape active
 
-1. Pousser le contrat CSS/responsive 2.0 et le valider visuellement.
-2. Séparer l’entrée bundlée en modules de responsabilités et supprimer les anciens patchs.
-3. Compléter la recette fonctionnelle des six vues et le rapport final.
+1. Pousser le graphe de modules et le valider sur le navigateur.
+2. Compléter la recette fonctionnelle des six vues et des états requis.
+3. Finaliser la documentation d’architecture et le rapport avant merge.
 
 ## Jalon applicatif courant
 
 - `index.html` ne contient plus le runtime métier historique inline.
-- Une seule entrée ES module : `app/main.js`.
+- Une seule entrée ES module : `app/main.js`, réduite à un graphe d’imports explicite.
+- Le shell partagé vit dans `app/core/runtime.js` ; données, carte, Stats, Communes, Radar!, Histoires et Roadmap conservent chacun leur module.
+- L’ancien chargeur dynamique `app/prime-communes-1.1.js` est supprimé.
+- Le chargement CSS runtime historique et le `MutationObserver` réparateur Communes sont supprimés.
 - Une seule entrée de styles : `app/styles/main.css`.
 - Le chargeur dynamique et ses versions de cache dispersées ne sont plus exécutés.
 - La couche finale `app/styles/rebuild.css` possède les règles de lisibilité et de navigation Natel.
 - Les déclarations prioritaires passent de 184 à 3 au total : une pour le contrat natif `[hidden]`, deux pour la garde anti-flash initiale.
 - Les six onglets restent visibles sur Natel dans une grille 3 × 2.
-- `npm run check` : 59/59.
+- `npm run check` : 59/59, avec contrôle syntaxique de tous les modules.
 - `npm run build` : réussi, sans avertissement de script non bundlé.
 
 ## Reprise après interruption

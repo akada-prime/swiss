@@ -5,12 +5,18 @@ import { readFile, readdir } from 'node:fs/promises';
 const root = new URL('../', import.meta.url);
 const read = path => readFile(new URL(path, root), 'utf8');
 
-test('rebuild owns one bundled runtime and one deterministic style entry', async () => {
+test('rebuild owns one deterministic module graph and one style entry', async () => {
   const html = await read('index.html');
+  const entry = await read('app/main.js');
   const styles = await read('app/styles/main.css');
   assert.equal((html.match(/<script type="module"/g) || []).length, 1);
   assert.equal((html.match(/app\/styles\/main\.css/g) || []).length, 1);
   assert.doesNotMatch(html, /prime-communes-1\.1\.js|const normalizeSearchText|const SUPABASE_URL/);
+  for (const module of ['core/runtime', 'data-1.5', 'maplibre-1.2', 'stats-1.5', 'communes-1.2', 'news-2.0', 'stories-2.0', 'roadmap-1.2']) {
+    assert.match(entry, new RegExp(module.replace('.', '\\.') + '\\.js'));
+  }
+  assert.doesNotMatch(await read('app/prime-communes-communes-1.2.js'), /MutationObserver/);
+  assert.doesNotMatch(await read('app/prime-communes-1.1-base.js'), /createElement\(['"]link/);
   assert.match(styles, /rebuild\.css/);
   assert.ok(styles.indexOf('rebuild.css') > styles.indexOf('prime-communes-desktop-2.0.css'));
 });
@@ -33,6 +39,7 @@ test('shared mobile controls keep a readable floor and six reachable tabs', asyn
   assert.match(css, /--pc-control-height: 40px/);
   assert.match(css, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(css, /\.view-tab \{[\s\S]*font-size: 12px/);
+  assert.match(css, /\.kpi-badge,[\s\S]*\.commune-rank \{[\s\S]*font-size: var\(--pc-type-min\)/);
   assert.match(css, /\.filters input,[\s\S]*font-size: 16px/);
 });
 

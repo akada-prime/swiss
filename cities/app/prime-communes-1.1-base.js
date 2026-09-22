@@ -16,18 +16,6 @@
   let restoringUrlState = false;
   let logicielsMode = false;
 
-  // Dedicated stabilization stylesheet. Historical CSS remains the base layer.
-  if (!document.querySelector('link[href*="prime-communes-1.1.5.css"]')) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'app/prime-communes-1.1.5.css?v=4';
-    document.head.append(link);
-  }
-
-  // Refresh logo CSS after previous cached iterations.
-  const productCss = document.querySelector('link[href*="product-assets.css"]');
-  if (productCss) productCss.href = 'app/product-assets.css?v=9';
-
   function abacusMark(extraClass = '') {
     return `<img class="solution-mark abacus-mark${extraClass ? ` ${extraClass}` : ''}" src="public/assets/logos/abacus.png?v=2" alt="Abacus" title="Abacus">`;
   }

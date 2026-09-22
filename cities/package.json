@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "node --test tests/*.test.mjs",
-    "lint": "node --check app/main.js && node --check tests/*.mjs && node --check scripts/*.mjs",
+    "lint": "node --check app/*.js && node --check app/core/*.js && node --check tests/*.mjs && node --check scripts/*.mjs",
     "check": "npm run lint && npm test"
   },
   "dependencies": {

@@ -401,19 +401,6 @@
 
   buildMobileSearch();
 
-  // The historic inline filters keep a reference to the original renderer.
-  // Observe row replacements so the consultation layer is restored whatever
-  // the order in which live data and view scripts finish loading.
-  const rowsRoot = document.getElementById('rows');
-  if (rowsRoot) {
-    new MutationObserver(() => {
-      if (!rowsRoot.querySelector('tr') || rowsRoot.querySelector('.commune-identity')) return;
-      decorateCommuneIdentity();
-      decorateHostingColumn();
-      normalizeEmptyCells();
-    }).observe(rowsRoot, { childList: true });
-  }
-
   // Apply the canonical layout immediately if the live data arrived before
   // this view module finished loading.
   if (all.length) render();

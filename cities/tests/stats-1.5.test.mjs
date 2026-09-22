@@ -31,7 +31,8 @@ test('Stats compact cards use one measured responsive label contract', async () 
 });
 
 test('application loader includes canonical Stats 1.5 runtime', async () => {
-  const loader = await read('app/prime-communes-1.1.js');
-  assert.match(loader, /prime-communes-stats-1\.5\.js\?v=\d+/);
-  assert.match(loader, /prime-communes-stats-1\.2\.css\?v=\d+/);
+  const loader = await read('app/main.js');
+  const styles = await read('app/styles/main.css');
+  assert.match(loader, /prime-communes-stats-1\.5\.js/);
+  assert.match(styles, /prime-communes-stats-1\.2\.css/);
 });

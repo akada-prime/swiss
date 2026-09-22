@@ -21,13 +21,15 @@ Fonctions livrées :
 
 Les données live sont lues depuis la vue Supabase `public."GemeindeAktuell"`. Une copie locale reste disponible uniquement comme fallback de lecture.
 
-## Architecture 1.1
+## Architecture 2.0
 
 Le produit actuellement publié est le dashboard statique `index.html`, complété par :
 
-- `app/globals.css` : socle visuel historique ;
-- `app/prime-communes-1.1.js` : comportement 1.1, édition et deep-linking ;
-- `app/prime-communes-1.1.5.css` et ses couches importées : stabilisation visuelle 1.1 ;
+- `app/main.js` : graphe ES module déterministe ;
+- `app/core/runtime.js` : shell partagé et contrat de compatibilité ;
+- `app/prime-communes-data-1.5.js` : transport et normalisation des données ;
+- les modules `maplibre`, `stats`, `communes`, `news`, `stories` et `roadmap` : responsabilités propres aux six vues ;
+- `app/styles/main.css` : entrée unique de la cascade, terminée par le contrat 2.0 ;
 - `public/` : données de fallback, carte et assets ;
 - `supabase/migrations/` : évolution de la base.
 

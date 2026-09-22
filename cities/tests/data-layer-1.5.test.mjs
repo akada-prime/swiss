@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
 test('DATA 1.5 loads before view runtimes and owns live transport', async () => {
-  const loader = await read('app/prime-communes-1.1.js');
+  const loader = await read('app/main.js');
   const data = await read('app/prime-communes-data-1.5.js');
 
   const dataIndex = loader.indexOf('prime-communes-data-1.5.js');

@@ -27,6 +27,15 @@
   font-size: var(--pc-type-min);
 }
 
+.kpi-badge,
+.delimo-control-eyebrow,
+.delimo-control-count,
+.results .portrait-hint,
+.results th,
+.commune-rank {
+  font-size: var(--pc-type-min);
+}
+
 .result-line #reset {
   float: none;
   margin-left: 9px;

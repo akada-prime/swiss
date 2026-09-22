@@ -7,7 +7,7 @@ const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 test('Radar and Histoires are first-class deep-linked views', async () => {
   const html = await read('index.html');
   const bridge = await read('app/prime-communes-1.1-base.js');
-  const runtime = await read('app/main.js');
+  const entry = await read('app/main.js');
   const styles = await read('app/styles/main.css');
   assert.match(html, /data-view="news"/);
   assert.match(html, /id="newsView"/);
@@ -16,8 +16,8 @@ test('Radar and Histoires are first-class deep-linked views', async () => {
   assert.match(bridge, /'communes', 'map', 'stats', 'news', 'stories', 'roadmap'/);
   assert.match(bridge, /byId\('newsView'\)\.hidden = next !== 'news'/);
   assert.match(bridge, /byId\('storiesView'\)\.hidden = next !== 'stories'/);
-  assert.match(runtime, /prime-communes-news-2\.0\.js/);
-  assert.match(runtime, /prime-communes-stories-2\.0\.js/);
+  assert.match(entry, /prime-communes-news-2\.0\.js/);
+  assert.match(entry, /prime-communes-stories-2\.0\.js/);
   assert.match(styles, /prime-communes-news-2\.0\.css/);
   assert.match(styles, /prime-communes-stories-2\.0\.css/);
   assert.match(styles, /prime-communes-roadmap-2\.0\.css/);
@@ -227,7 +227,7 @@ test('roadmap preserves old phases while completing NEWS 2.0', async () => {
 });
 
 test('commune refresh confirms fast updates on desktop and Natel', async () => {
-  const runtime = await read('app/main.js');
+  const runtime = await read('app/core/runtime.js');
   const css = await read('app/globals.css');
   assert.match(runtime, /loadData\(manual=false\)/);
   assert.match(runtime, /À jour ✓ · /);

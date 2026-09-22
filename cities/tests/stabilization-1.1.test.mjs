@@ -45,7 +45,7 @@ test('2.0.5 opens a sourced commune portrait from the row number without AI or e
   assert.match(js, /event\.stopPropagation\(\)/);
   assert.match(js, /openCommunePortrait\(commune\)/);
   assert.match(js, /row\.onclick = \(\) => openCommunePortrait\(commune\)/);
-  assert.match(js, /new MutationObserver/);
+  assert.doesNotMatch(js, /MutationObserver/);
   assert.match(js, /class="portrait-edit"/);
   assert.match(js, /openDrawer\(commune\)/);
   assert.match(js, /Touchez une commune · portrait public/);
@@ -81,7 +81,7 @@ test('Delimo is a premium control mode, not a fourth statistic or ordinary filte
   const bridge = await read('app/prime-communes-1.1-base.js');
   assert.match(html, /app\/styles\/main\.css/);
   assert.match(styles, /product-assets\.css/);
-  assert.match(bridge, /product-assets\.css\?v=9/);
+  assert.doesNotMatch(bridge, /createElement\(['"]link|product-assets\.css\?v=/);
   assert.match(html, /class="delimo-control" id="issuesCard"/);
   assert.match(html, /Outil de contrôle · Delimo/);
   assert.match(html, /id="ofsAction">Ouvrir le contrôle/);
@@ -112,7 +112,7 @@ test('language markets always filter while Territoire only reveals optional colu
 });
 
 test('commune search ignores accents and iPhone form controls do not zoom', async () => {
-  const runtime = await read('app/main.js');
+  const runtime = await read('app/core/runtime.js');
   const mobile = await read('app/prime-communes-1.1.7-mobile.css');
   assert.match(runtime, /normalizeSearchText/);
   assert.match(runtime, /normalize\('NFD'\)/);
@@ -206,7 +206,7 @@ test('Roadmap completed stages keep their colors, checks and one-line status bad
 });
 
 test('Roadmap styling is canonical and absent from legacy stabilization layers', async () => {
-  const loader = await read('app/prime-communes-1.1.js');
+  const loader = await read('app/styles/main.css');
   const legacy = `${await read('app/globals.css')}\n${await read('app/prime-communes-1.1.5.css')}\n${await read('app/prime-communes-1.1.6.css')}`;
   const css = await read('app/prime-communes-roadmap-2.0.css');
   assert.match(loader, /prime-communes-roadmap-2\.0\.css/);
@@ -332,9 +332,9 @@ test('official national border is a stored swissBOUNDARIES3D 2026 geometry', asy
 });
 
 test('desktop dark mode raises contrast without changing the Natel theme', async () => {
-  const loader = await read('app/prime-communes-1.1.js');
+  const loader = await read('app/styles/main.css');
   const css = await read('app/prime-communes-desktop-2.0.css');
-  assert.match(loader, /prime-communes-desktop-2\.0\.css\?v=2/);
+  assert.match(loader, /prime-communes-desktop-2\.0\.css/);
   assert.ok(loader.indexOf('prime-communes-desktop-2.0.css') > loader.indexOf('prime-communes-roadmap-2.0.css'));
   assert.match(css, /@media \(min-width:1101px\)/);
   assert.match(css, /@media \(min-width:1600px\)/);
