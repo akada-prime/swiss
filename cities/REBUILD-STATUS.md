@@ -2,14 +2,16 @@
 
 ## Maintenance après intégration
 
-Le rebuild est intégré à `main` au commit `6c5428d` ; les consignes de branche
-ci-dessous décrivent le chantier historique, désormais clôturé.
+Le rebuild et l'édition de l'hébergeur sont intégrés à `main` au commit
+`a03838c`. La migration d'édition de l'hébergeur a été installée en production.
+Les consignes de branche ci-dessous décrivent le chantier historique, clôturé.
 
-La branche `feature/communes-hosting-search` ajoute l'édition de l'hébergeur
-via une nouvelle fonction RPC à déployer avant le frontend, et fait filtrer la
-liste ordinaire par la recherche Natel. Vérifications locales : `npm run check`
-(61 tests) et `npm run build` réussis. La migration et la recette navigateur
-restent à valider avant mise en production.
+Correction en cours sur `fix/mobile-commune-search-list` : retour de la
+recherche dédiée sur Natel, avec le champ en haut et les résultats dessous.
+Choisir un résultat filtre la liste normale sur la commune et fait défiler
+jusqu'à sa ligne ; seul un clic ultérieur sur cette ligne ouvre le portrait.
+Le desktop conserve son filtre direct. Aucun changement de données ou de SQL.
+Vérifications locales : `npm run check` (62 tests) et `npm run build` réussis.
 
 Dernière mise à jour : 2026-09-22 UTC
 
