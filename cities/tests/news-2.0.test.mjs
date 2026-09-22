@@ -235,5 +235,5 @@ test('commune refresh confirms fast updates on desktop and Natel', async () => {
   assert.match(runtime, /\$\('syncReload'\)\.onclick=\(\)=>loadData\(true\)/);
   assert.match(css, /sync-state\[data-state="loading"\]/);
   assert.match(css, /sync-state\[data-state="success"\]/);
-  assert.match(css, /content:"À jour ✓"!important/);
+  assert.match(css, /content:"À jour ✓"/);
 });

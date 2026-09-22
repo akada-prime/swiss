@@ -26,7 +26,7 @@
 }
 
 .eadmin-on {
-  border-color: rgba(219, 29, 45, .55) !important;
+  border-color: rgba(219, 29, 45, .55) ;
 }
 
 .metier-cell,
@@ -279,3 +279,4 @@
 
   .delimo-control-count { grid-column: auto; margin: 0; }
 }
+

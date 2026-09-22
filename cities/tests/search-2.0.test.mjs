@@ -57,5 +57,5 @@ test('Natel gets a dedicated search surface while desktop keeps the compact tabl
   assert.match(css, /\.mobile-search-overlay\{display:none\}/);
   assert.match(css, /@media\(max-width:680px\)[\s\S]*\.mobile-search-overlay\{/);
   assert.match(css, /height:100dvh/);
-  assert.match(css, /font-size:16px!important/);
+  assert.match(css, /font-size:16px/);
 });

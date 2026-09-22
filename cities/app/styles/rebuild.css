@@ -1,0 +1,86 @@
+/* Rebuild 2.0 — final ownership layer.
+   Only the native [hidden] contract keeps a priority declaration. */
+:root {
+  --pc-type-min: 12px;
+  --pc-control-height: 40px;
+}
+
+[hidden] { display: none !important; }
+
+.view-tab,
+.filter-toggle,
+.result-export,
+.result-line #reset,
+.stats-segment button,
+.map-perspective button,
+.map-mode button {
+  min-height: 36px;
+}
+
+.portrait-hint,
+.site-footer,
+.map-source,
+.map-legend span,
+.stats-kpi small,
+.territory-comparison small,
+.stats-rank small {
+  font-size: var(--pc-type-min);
+}
+
+.result-line #reset {
+  float: none;
+  margin-left: 9px;
+}
+
+@media (max-width: 680px) {
+  .topbar {
+    min-height: 158px;
+    grid-template-rows: 48px 80px;
+  }
+
+  .view-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(2, 36px);
+    gap: 4px;
+    overflow: visible;
+  }
+
+  .view-tab {
+    min-width: 0;
+    min-height: 36px;
+    padding: 0 6px;
+    font-size: 12px;
+  }
+
+  .news-nav-badge { display: none; }
+
+  .sync-state {
+    min-width: 116px;
+    min-height: var(--pc-control-height);
+  }
+
+  .sync-state b::after,
+  .sync-state {
+    font-size: 12px;
+  }
+
+  .filters input,
+  .filters select,
+  .mobile-search-card input,
+  .drawer input,
+  .drawer select,
+  .drawer textarea {
+    font-size: 16px;
+  }
+
+  .filter-toggle,
+  .filters label,
+  .result-export,
+  .result-line #reset {
+    min-height: var(--pc-control-height);
+    font-size: 12px;
+  }
+
+  .site-footer { font-size: 12px; }
+}

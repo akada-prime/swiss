@@ -8,7 +8,7 @@ Dernière mise à jour : 2026-09-22 UTC
 - Baseline : `b327d57126cf5dd8d5291ff1487d9af21a9c8cb9`
 - `main` : intact
 - Merge automatique : aucun
-- Arbre métier : encore identique à la baseline
+- Dernier jalon distant avant ce lot : `8952b3fe4712f3641be433706296c28fc6b6e80f`
 
 ## Validé avant rebuild
 
@@ -22,9 +22,9 @@ Dernière mise à jour : 2026-09-22 UTC
 
 ## Étape active
 
-1. Séparer l’entrée bundlée en modules de responsabilités et supprimer les anciens patchs.
-2. Reconstruire la cascade CSS par couches et retirer les fichiers chronologiques.
-3. Compléter les tests de non-régression, puis refaire la recette complète.
+1. Pousser le contrat CSS/responsive 2.0 et le valider visuellement.
+2. Séparer l’entrée bundlée en modules de responsabilités et supprimer les anciens patchs.
+3. Compléter la recette fonctionnelle des six vues et le rapport final.
 
 ## Jalon applicatif courant
 
@@ -32,7 +32,10 @@ Dernière mise à jour : 2026-09-22 UTC
 - Une seule entrée ES module : `app/main.js`.
 - Une seule entrée de styles : `app/styles/main.css`.
 - Le chargeur dynamique et ses versions de cache dispersées ne sont plus exécutés.
-- `npm run check` : 55/55.
+- La couche finale `app/styles/rebuild.css` possède les règles de lisibilité et de navigation Natel.
+- Les déclarations prioritaires passent de 184 à 3 au total : une pour le contrat natif `[hidden]`, deux pour la garde anti-flash initiale.
+- Les six onglets restent visibles sur Natel dans une grille 3 × 2.
+- `npm run check` : 59/59.
 - `npm run build` : réussi, sans avertissement de script non bundlé.
 
 ## Reprise après interruption

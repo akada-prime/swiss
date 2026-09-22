@@ -117,7 +117,7 @@ test('commune search ignores accents and iPhone form controls do not zoom', asyn
   assert.match(runtime, /normalizeSearchText/);
   assert.match(runtime, /normalize\('NFD'\)/);
   assert.match(runtime, /replace\(\/\[\\u0300-\\u036f\]\//);
-  assert.match(mobile, /\.filters input,[\s\S]*font-size:16px!important/);
+  assert.match(mobile, /\.filters input,[\s\S]*font-size:16px/);
 });
 
 test('commune save retries a stale key and keeps the open drawer in place', async () => {
@@ -141,10 +141,11 @@ test('Systèmes keeps Intégrateur and Métier visible while extended details st
 
 test('Natel header keeps all views and commune refresh reachable', async () => {
   const css = await read('app/prime-communes-1.1.7-mobile.css');
-  assert.match(css, /grid-template-columns:1\.22fr \.72fr \.72fr \.92fr 1\.02fr 1fr/);
-  assert.match(css, /\.sync-state\[hidden\]\{display:none!important\}/);
+  const rebuild = await read('app/styles/rebuild.css');
+  assert.match(rebuild, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(rebuild, /\[hidden\] \{ display: none !important; \}/);
   assert.match(css, /content:"MÀJ communes"/);
-  assert.match(css, /min-width:116px!important/);
+  assert.match(rebuild, /min-width: 116px/);
 });
 
 test('deep-linked views are selected before the first paint', async () => {

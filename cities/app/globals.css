@@ -35,7 +35,7 @@
 .result-line .result-export{padding:7px 10px;border:1px solid rgba(255,255,255,.075);border-radius:9px;background:rgba(255,255,255,.025);color:#9aa7b9}
 .result-line .result-export:hover{color:#dce6f2;border-color:rgba(70,160,225,.35)}
 @media(max-width:680px){.intro-summary{margin-top:24px}.intro-summary .intro-copy{margin-top:0}.result-line{align-items:center}}
-[hidden]{display:none!important}
+[hidden]{display:none}
 @media(min-width:1101px){
   .filters,.filters.districts-on{display:flex;align-items:stretch;flex-wrap:nowrap;grid-template-columns:none}
   .filters .search{flex:1 1 260px;min-width:220px}
@@ -47,10 +47,10 @@
 
 /* Responsive explorer and contextual canton/district selector */
 .canton-district-group{display:flex;align-items:stretch;min-width:150px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:#090e18;overflow:hidden}
-.canton-district-group label{border:0!important;border-radius:0!important;background:transparent!important;min-width:0!important}
-.canton-district-group label+label{border-left:1px solid rgba(255,255,255,.075)!important}
-.canton-district-group .canton-filter{min-width:145px!important}
-.canton-district-group #districtFilter{min-width:175px!important}
+.canton-district-group label{border:0;border-radius:0;background:transparent;min-width:0}
+.canton-district-group label+label{border-left:1px solid rgba(255,255,255,.075)}
+.canton-district-group .canton-filter{min-width:145px}
+.canton-district-group #districtFilter{min-width:175px}
 .market-toggles .market-toggle,#primeOnly{white-space:nowrap}
 .table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 @media(min-width:1101px){
@@ -65,7 +65,7 @@
   .filters .market-toggles{grid-column:1/-1;width:100%;min-width:0}
   .market-toggles .market-toggle{flex:1;min-width:0;padding:0 5px;white-space:nowrap}
   .filters .canton-district-group{grid-column:1/-1;width:100%;min-width:0}
-  .canton-district-group .canton-filter,.canton-district-group #districtFilter{flex:1 1 50%;min-width:0!important}
+  .canton-district-group .canton-filter,.canton-district-group #districtFilter{flex:1 1 50%;min-width:0}
   .filters .solution-filter{grid-column:1/-1;min-width:0}
   .filters #primeOnly{grid-column:1/3}
   .filters #eadminOnly{grid-column:3/5}
@@ -214,10 +214,10 @@
 @keyframes sync-pulse{to{opacity:.35;transform:scale(.7)}}
 
 @media(max-width:680px){
-  .sync-state[data-state="loading"] b::after{content:"Actualisation…"!important}
-  .sync-state[data-state="success"] b::after{content:"À jour ✓"!important}
-  .sync-state[data-state="fallback"] b::after{content:"Copie locale"!important}
-  .sync-state[data-state="error"] b::after{content:"Erreur"!important}
+  .sync-state[data-state="loading"] b::after{content:"Actualisation…"}
+  .sync-state[data-state="success"] b::after{content:"À jour ✓"}
+  .sync-state[data-state="fallback"] b::after{content:"Copie locale"}
+  .sync-state[data-state="error"] b::after{content:"Erreur"}
 }
 
 /* One header contract for Communes, Carte, Stats, NEWS! and Roadmap. */
@@ -237,3 +237,4 @@
   .view-intro{display:block;margin-bottom:26px}
   .view-intro-copy{margin-top:24px;padding-bottom:0;font-size:16px}
 }
+
