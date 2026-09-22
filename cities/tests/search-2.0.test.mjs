@@ -42,20 +42,13 @@ test('universal search ignores accents, accepts a small typo and covers every da
   assert.equal(runtime.communeSearchMeta(commune({}), "8'512").label, 'Population');
 });
 
-test('Natel gets a dedicated search surface while desktop keeps the compact table', async () => {
+test('Natel and desktop search filter the same table before an explicit portrait click', async () => {
   const runtime = await read('app/prime-communes-communes-1.2.js');
-  const css = await read('app/styles/responsive.css');
-  assert.match(runtime, /Recherche universelle des communes/);
-  assert.match(runtime, /data-mobile-search-results/);
-  assert.match(runtime, /Touchez une commune · portrait public/);
-  assert.match(runtime, /sourceInput\.dispatchEvent\(new Event\('input'/);
-  assert.match(runtime, /sourceInput\.dispatchEvent\(new Event\('input'[\s\S]{0,260}renderMobileSearchResults\(\)/);
-  assert.match(runtime, /mobileInput\.focus\(\{ preventScroll: true \}\)/);
-  assert.doesNotMatch(runtime, /requestAnimationFrame\(\(\) => mobileInput\.focus/);
-  assert.match(runtime, /openDrawer\(commune\)/);
-  assert.doesNotMatch(runtime, /\bbyId\(/);
-  assert.match(css, /\.mobile-search-overlay\{display:none\}/);
-  assert.match(css, /@media\(max-width:680px\)[\s\S]*\.mobile-search-overlay\{/);
-  assert.match(css, /height:100dvh/);
-  assert.match(css, /font-size:16px/);
+  const shell = await read('app/core/runtime.js');
+  const html = await read('index.html');
+  assert.match(html, /id="query" type="search" enterkeyhint="search"/);
+  assert.match(shell, /\$\('query'\)\.addEventListener\('input',render\)/);
+  assert.match(runtime, /row\.onclick = \(\) => openCommunePortrait\(commune\)/);
+  assert.match(runtime, /event\.key !== 'Enter'/);
+  assert.doesNotMatch(runtime, /mobileSearchOverlay|openMobileSearch/);
 });
