@@ -263,6 +263,9 @@
 
   const mobileMedia = window.matchMedia('(max-width:680px)');
   let mobileSearchOverlay = null;
+  let mobileSearchPreviousFilters = null;
+  let mobileSearchSuspended = false;
+  let mobileSearchScopeTouched = null;
 
   function mobileSearchIsOpen() {
     return Boolean(mobileSearchOverlay && !mobileSearchOverlay.hidden);
@@ -316,6 +319,50 @@
     mobileSearchOverlay.querySelector('input')?.blur();
   }
 
+  function syncSearchFilterControls() {
+    document.querySelectorAll('.market-toggle').forEach(button => {
+      button.classList.toggle('on', button.dataset.market === marketOnly);
+    });
+    document.getElementById('primeOnly')?.classList.toggle('on', primeOnly);
+    document.getElementById('eadminOnly')?.classList.toggle('on', eadminOnly);
+    document.getElementById('eadminOnly')?.classList.toggle('eadmin-on', eadminOnly);
+    document.getElementById('issuesOnly')?.classList.toggle('on', issuesOnly);
+    document.getElementById('issuesOnly')?.classList.toggle('warning', issuesOnly);
+  }
+
+  function suspendMobileSearchFilters() {
+    if (mobileSearchSuspended) return;
+    mobileSearchSuspended = true;
+    document.getElementById('canton').value = 'Tous';
+    document.getElementById('solution').value = 'Tous';
+    marketOnly = mobileSearchScopeTouched.market ? marketOnly : '';
+    primeOnly = mobileSearchScopeTouched.prime ? primeOnly : false;
+    eadminOnly = mobileSearchScopeTouched.eadmin ? eadminOnly : false;
+    issuesOnly = false;
+    updateDistrictOptions();
+    syncSearchFilterControls();
+  }
+
+  function cancelMobileSearch() {
+    if (!mobileSearchIsOpen()) return;
+    const previous = mobileSearchPreviousFilters;
+    mobileSearchPreviousFilters = null;
+    closeMobileSearch();
+    if (!previous) return;
+    const sourceInput = document.getElementById('query');
+    document.getElementById('canton').value = previous.canton;
+    document.getElementById('solution').value = previous.solution;
+    marketOnly = previous.marketOnly;
+    primeOnly = previous.primeOnly;
+    eadminOnly = previous.eadminOnly;
+    issuesOnly = previous.issuesOnly;
+    updateDistrictOptions();
+    document.getElementById('district').value = previous.district;
+    syncSearchFilterControls();
+    sourceInput.value = previous.query;
+    sourceInput.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
   function scrollToCommuneRow(commune) {
     requestAnimationFrame(() => {
       const row = [...document.querySelectorAll('.table-wrap tbody tr')]
@@ -325,6 +372,7 @@
   }
 
   function showCommuneInList(commune, sourceInput) {
+    mobileSearchPreviousFilters = null;
     sourceInput.value = commune.name;
     sourceInput.dispatchEvent(new Event('input', { bubbles: true }));
     closeMobileSearch();
@@ -333,6 +381,17 @@
 
   function openMobileSearch() {
     if (!mobileMedia.matches || !mobileSearchOverlay) return;
+    if (!mobileSearchIsOpen()) {
+      mobileSearchPreviousFilters = {
+        query: document.getElementById('query')?.value || '',
+        canton: document.getElementById('canton').value,
+        district: document.getElementById('district').value,
+        solution: document.getElementById('solution').value,
+        marketOnly, primeOnly, eadminOnly, issuesOnly
+      };
+      mobileSearchSuspended = false;
+      mobileSearchScopeTouched = { market: false, prime: false, eadmin: false };
+    }
     const mobileInput = mobileSearchOverlay.querySelector('input');
     mobileInput.value = document.getElementById('query')?.value || '';
     mobileSearchOverlay.hidden = false;
@@ -382,23 +441,37 @@
       if (mobileMedia.matches) openMobileSearch();
     });
     mobileInput.addEventListener('input', () => {
+      if (mobileInput.value.trim()) suspendMobileSearchFilters();
       sourceInput.value = mobileInput.value;
       sourceInput.dispatchEvent(new Event('input', { bubbles: true }));
     });
     mobileInput.addEventListener('keydown', event => {
-      if (event.key === 'Escape') closeMobileSearch();
+      if (event.key === 'Escape') cancelMobileSearch();
       if (event.key === 'Enter') {
         event.preventDefault();
-        closeMobileSearch();
-        requestAnimationFrame(() => document.querySelector('.result-line')?.scrollIntoView({ block: 'start' }));
+        if (!mobileInput.value.trim()) cancelMobileSearch();
+        else {
+          mobileSearchPreviousFilters = null;
+          closeMobileSearch();
+          requestAnimationFrame(() => document.querySelector('.result-line')?.scrollIntoView({ block: 'start' }));
+        }
       }
     });
-    mobileSearchOverlay.querySelector('.mobile-search-back').onclick = closeMobileSearch;
+    mobileSearchOverlay.querySelector('.mobile-search-back').onclick = cancelMobileSearch;
     mobileSearchOverlay.querySelectorAll('[data-mobile-market]').forEach(button => {
-      button.onclick = () => document.querySelector(`#territoryFilters [data-market="${CSS.escape(button.dataset.mobileMarket)}"]`)?.click();
+      button.onclick = () => {
+        mobileSearchScopeTouched.market = true;
+        document.querySelector(`#territoryFilters [data-market="${CSS.escape(button.dataset.mobileMarket)}"]`)?.click();
+      };
     });
-    mobileSearchOverlay.querySelector('[data-mobile-filter="prime"]').onclick = () => document.getElementById('primeOnly')?.click();
-    mobileSearchOverlay.querySelector('[data-mobile-filter="eadmin"]').onclick = () => document.getElementById('eadminOnly')?.click();
+    mobileSearchOverlay.querySelector('[data-mobile-filter="prime"]').onclick = () => {
+      mobileSearchScopeTouched.prime = true;
+      document.getElementById('primeOnly')?.click();
+    };
+    mobileSearchOverlay.querySelector('[data-mobile-filter="eadmin"]').onclick = () => {
+      mobileSearchScopeTouched.eadmin = true;
+      document.getElementById('eadminOnly')?.click();
+    };
     mobileSearchOverlay.querySelector('[data-mobile-search-results]').onclick = event => {
       const result = event.target.closest('[data-commune-id]');
       if (!result) return;
@@ -406,7 +479,7 @@
       if (!commune) return;
       showCommuneInList(commune, sourceInput);
     };
-    mobileMedia.addEventListener('change', event => { if (!event.matches) closeMobileSearch(); });
+    mobileMedia.addEventListener('change', event => { if (!event.matches) cancelMobileSearch(); });
   }
 
   render = function renderCommunesView() {

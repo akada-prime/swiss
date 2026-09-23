@@ -107,3 +107,53 @@ test('selecting a mobile search result filters the table and scrolls to its row 
   assert.equal(blurred, true);
   assert.equal(scroll.block, 'center');
 });
+
+test('mobile search suspends inherited filters on typing and restores them on cancel', async () => {
+  const runtime = await read('app/prime-communes-communes-1.2.js');
+  const start = runtime.indexOf('  function syncSearchFilterControls()');
+  const end = runtime.indexOf('  function scrollToCommuneRow(', start);
+  assert.ok(start >= 0 && end > start);
+
+  const controls = Object.fromEntries(['query', 'canton', 'district', 'solution', 'primeOnly', 'eadminOnly', 'issuesOnly']
+    .map(id => [id, { value: '', classList: { toggle() {} } }]));
+  controls.query.value = 'ancien';
+  controls.canton.value = 'VD';
+  controls.district.value = '2222';
+  controls.solution.value = 'Prime|||innosolvcity';
+  let dispatched = 0, closed = 0;
+  controls.query.dispatchEvent = () => { dispatched++; };
+  const previous = {
+    query: 'ancien', canton: 'VD', district: '2222', solution: 'Prime|||innosolvcity',
+    marketOnly: 'Uf Tüütsch', primeOnly: true, eadminOnly: false, issuesOnly: true
+  };
+  const context = {
+    document: { getElementById: id => controls[id], querySelectorAll: () => [{ dataset: { market: 'Welsch' }, classList: { toggle() {} } }] },
+    mobileSearchPreviousFilters: previous,
+    mobileSearchSuspended: false,
+    mobileSearchScopeTouched: { market: true, prime: false, eadmin: false },
+    marketOnly: 'Welsch', primeOnly: true, eadminOnly: false, issuesOnly: true,
+    updateDistrictOptions() { if (controls.canton.value === 'Tous') controls.district.value = ''; },
+    mobileSearchIsOpen: () => true,
+    closeMobileSearch: () => { closed++; },
+    Event: class { constructor(type) { this.type = type; } }
+  };
+  vm.runInNewContext(`${runtime.slice(start, end)}\nsuspendMobileSearchFilters()`, context);
+  assert.equal(controls.canton.value, 'Tous');
+  assert.equal(controls.district.value, '');
+  assert.equal(controls.solution.value, 'Tous');
+  assert.equal(context.marketOnly, 'Welsch', 'quick filter chosen in search remains active');
+  assert.equal(context.primeOnly, false);
+  assert.equal(context.issuesOnly, false);
+
+  controls.query.value = 'Delémont';
+  vm.runInNewContext('cancelMobileSearch()', context);
+  assert.equal(controls.query.value, 'ancien');
+  assert.equal(controls.canton.value, 'VD');
+  assert.equal(controls.district.value, '2222');
+  assert.equal(controls.solution.value, 'Prime|||innosolvcity');
+  assert.equal(context.marketOnly, 'Uf Tüütsch');
+  assert.equal(context.primeOnly, true);
+  assert.equal(context.issuesOnly, true);
+  assert.equal(closed, 1);
+  assert.equal(dispatched, 1);
+});
