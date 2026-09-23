@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-09-21T20:58:00Z",
-    "notice": "14 candidats D-14 qualifiés : 2 publiés comme signaux Radar, 12 écartés ; aucun candidat ne reste en attente."
+    "generatedAt": "2026-09-23T09:59:35.971Z",
+    "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
     {
@@ -286,6 +286,96 @@
         "decision": "discarded",
         "reason": "Maintenance IBM FileNet/SIGED du canton de Fribourg déjà attribuée ; hors périmètre communal et opportunité close."
       }
+    },
+    {
+      "id": "50016db6999a1a6397355da058c66d0c69cbdffa35b27772a90fde4afa15814d",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "KW Ganterbach-Saltina - Erneuerung Zentrale Silliboden - Planung, Lieferung, Montage und Inbetriebsetzung elektromechanische Ausrüstung inkl. Energieableitung und leittechnische Ausrüstung",
+      "url": "https://www.simap.ch/fr/?search=cfd5cb24-d406-4ad5-8cff-85db6daee0c5",
+      "detectedAt": "2026-09-23T09:59:35.969Z",
+      "publicationDate": "2026-09-23",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "8144f03d9b9ed520cefdd69622a9375e14d7605918b025f39fff7ee0cb2ef9e4",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Zukunft Bahnhof Bern, Baustein 3b, 561 Bewachung/Sicherheitsdienst",
+      "url": "https://www.simap.ch/fr/?search=798a2c6b-be23-4517-9cf3-eeb0819bd31d",
+      "detectedAt": "2026-09-23T09:59:35.969Z",
+      "publicationDate": "2026-09-23",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "44511e0b451e759d2ed8eb43db43d353747180a1f496f55b5809e215ad96feb2",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Marktabklärung Bildung Werkgruppe Rohbau (Baumeister, Ingenieurholzbau, Holzsystembau, Fassadenbau)",
+      "url": "https://www.simap.ch/fr/?search=efdf4acd-7928-4bea-8def-46cd06665220",
+      "detectedAt": "2026-09-23T09:59:35.969Z",
+      "publicationDate": "2026-09-23",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "6465f524285b2f9be8d2d929cb5c2db40c7156bde389181d1d3c5d74e81ef149",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Stellwerkkabel",
+      "url": "https://www.simap.ch/fr/?search=1d2f0b8f-be3d-44e0-9290-33c5c56f4bf0",
+      "detectedAt": "2026-09-23T09:59:35.969Z",
+      "publicationDate": "2026-09-22",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "b08ee812af3d66f262959bacbc52c1112706776b7ab4b63028ea88d008d2766b",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Pumpspeicherwerk Grimsel 4, Los Panzerung Triebwasserweg und Los UW-Schützen",
+      "url": "https://www.simap.ch/fr/?search=cbc0a165-0e78-48e2-ae76-fbd2bda2ed04",
+      "detectedAt": "2026-09-23T09:59:35.969Z",
+      "publicationDate": "2026-09-22",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "34fcdc3c122b622ff1e4046a087815bfb9149e860318988d98ad1669f22cacfc",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Projektverfasser Bahnhof Marin Epagnier",
+      "url": "https://www.simap.ch/fr/?search=f0d7335f-c7a3-4f40-b6da-0ba2a18c58f7",
+      "detectedAt": "2026-09-23T09:59:35.969Z",
+      "publicationDate": "2026-09-22",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
     }
   ]
 }
