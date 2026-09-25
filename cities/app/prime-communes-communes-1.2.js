@@ -111,6 +111,26 @@
     </article>`;
   }
 
+  function portraitSystemMarkup(commune) {
+    const fields = [
+      ['Intégrateur', commune.integrator],
+      ['Solution métier', commune.software],
+      ['ERP', commune.erp],
+      ['Hébergement', commune.hosting],
+      ['Modules', (commune.products || []).filter(Boolean).join(' · ')],
+      ['Relation Prime', commune.isPrime ? 'Client Prime' : ''],
+      ['Statut commercial', commune.salesStatus !== 'none' ? commune.salesStatus : '']
+    ].filter(([, value]) => String(value ?? '').trim());
+    const notes = String(commune.notes || '').trim();
+    return `<section class="portrait-system">
+      <div class="portrait-section-title"><div><span>Profil communal</span><h3>Système communal</h3></div></div>
+      ${fields.length ? `<dl class="portrait-facts portrait-system-facts">${fields.map(([label, value]) =>
+        `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>` : ''}
+      ${notes ? `<div class="portrait-system-notes"><span>Notes</span><p>${esc(notes)}</p></div>` : ''}
+      ${!fields.length && !notes ? '<p class="portrait-system-empty">Aucune information système renseignée.</p>' : ''}
+    </section>`;
+  }
+
   async function openCommunePortrait(commune) {
     if (!commune) return;
     const root = document.getElementById('portraitRoot');
@@ -134,6 +154,7 @@
           <div class="portrait-wikipedia" aria-live="polite"><div class="portrait-loading"><i></i><span>Lecture de Wikipédia à la demande…</span></div></div>
           <p class="portrait-source">Source : Wikipédia · texte sous licence CC BY-SA. La source originale reste la référence.</p>
         </section>
+        ${portraitSystemMarkup(commune)}
         <button class="portrait-edit" type="button"><span aria-hidden="true">✎</span> Modifier les informations</button>
       </aside>
     </div>`;
