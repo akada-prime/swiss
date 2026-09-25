@@ -66,6 +66,27 @@ test('2.0.5 opens a sourced commune portrait from the row number without AI or e
   assert.match(css, /\.portrait-edit\{/);
 });
 
+test('the communal portrait shows known systems and multiline notes without empty fields', async () => {
+  const js = await read('app/prime-communes-communes-1.2.js');
+  const css = await read('app/styles/components.css');
+  const source = js.slice(js.indexOf('function portraitSystemMarkup('), js.indexOf('async function openCommunePortrait('));
+  const renderSystem = runInNewContext(`${source}\nportraitSystemMarkup`, {
+    esc: value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]))
+  });
+  const rich = renderSystem({ integrator: 'Prime', software: 'innosolvcity', erp: 'Abacus', hosting: 'AZ', products: ['eAdmin'], isPrime: true, notes: 'Ligne 1\n<script>alert(1)</script>' });
+  for (const value of ['Système communal', 'Prime', 'innosolvcity', 'Abacus', 'AZ', 'eAdmin', 'Client Prime', 'Ligne 1\n&lt;script&gt;']) assert.ok(rich.includes(value));
+  assert.ok(rich.indexOf('portrait-system-facts') < rich.indexOf('portrait-system-notes'));
+  const notesOnly = renderSystem({ products: [], notes: 'Information libre' });
+  assert.match(notesOnly, /portrait-system-notes/);
+  assert.doesNotMatch(notesOnly, /portrait-system-facts/);
+  const sparse = renderSystem({ products: [], salesStatus: 'none' });
+  assert.match(sparse, /Aucune information système renseignée/);
+  assert.doesNotMatch(sparse, /<dt>|portrait-system-notes/);
+  assert.ok(js.indexOf('portrait-wikipedia') < js.indexOf('${portraitSystemMarkup(commune)}'));
+  assert.match(css, /\.portrait-system-notes p\{[^}]*white-space:pre-wrap/);
+  assert.match(css, /@media\(max-width:680px\)[\s\S]*\.portrait-system\{padding:17px\}/);
+});
+
 test('mobile peer filters remain a strict two-column grid', async () => {
   const css = await read('app/styles/responsive.css');
   assert.match(css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
