@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { runInNewContext } from 'node:vm';
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
@@ -121,10 +122,59 @@ test('commune search ignores accents and iPhone form controls do not zoom', asyn
 
 test('commune save keeps the drawer editable after a rejected key and refreshes it after success', async () => {
   const bridge = await read('app/prime-communes-1.1-base.js');
+  const css = await read('app/styles/components.css');
+  const html = await read('index.html');
   assert.match(bridge, /Clé incorrecte · clique à nouveau sur Enregistrer/);
   assert.match(bridge, /openDrawer\(refreshed\)/);
   assert.match(bridge, /Enregistré ✓/);
+  const save = bridge.slice(bridge.indexOf('async function saveDrawerProfile('), bridge.indexOf('// Full editable non-OFS ecosystem.'));
+  assert.ok(save.indexOf("button.textContent = 'Enregistrement…'") < save.indexOf('let response = await send(editKey)'));
+  assert.ok(save.indexOf('syncUrl(false)') < save.indexOf('await loadData()'));
+  assert.match(save, /savedButton\.textContent = 'Enregistré ✓';\s*savedButton\.disabled = true/);
+  assert.match(save, /finally \{\s*button\.disabled = false;\s*button\.textContent = 'Enregistrer les informations'/);
+  assert.match(bridge, /addEventListener\('input', resetSaveButton\)/);
+  assert.match(bridge, /addEventListener\('change', resetSaveButton\)/);
+  assert.match(css, /\.save-button\[data-saved="true"\]\{cursor:default;opacity:1\}/);
+  assert.match(html, /<a href="\.\/" aria-label="Retour à l’accueil Prime Communes"><img src="public\/prime-logo-negative\.svg"/);
   assert.doesNotMatch(bridge, /setTimeout\(\(\) => openDrawer\(refreshed\)/);
+});
+
+test('a rejected save retains edits; a successful retry syncs filters before refreshing the selected commune', async () => {
+  const bridge = await read('app/prime-communes-1.1-base.js');
+  const save = bridge.slice(bridge.indexOf('async function saveDrawerProfile('), bridge.indexOf('// Full editable non-OFS ecosystem.'));
+  const originalButton = { disabled: false, textContent: 'Enregistrer les informations' };
+  const savedButton = { disabled: false, textContent: '', dataset: {} };
+  const hosting = { value: 'Ofisa' };
+  const nodes = {
+    drawerSave: originalButton, drawerHosting: hosting, drawerNotes: { value: 'Saisie conservée' },
+    drawerPrimeClient: { checked: false }, drawerIntegrator: { value: '' }, drawerSoftware: { value: '' }, drawerErp: { value: '' }
+  };
+  const values = new Map([['primeCommunesEditKey', 'bad-key']]);
+  const events = [];
+  let reply = 403;
+  const context = {
+    byId: id => nodes[id], document: { querySelectorAll: () => [], querySelector: selector => selector === '.drawer' ? { scrollTop: 0 } : null },
+    window: { scrollY: 0, scrollTo: () => {}, prompt: () => 'good-key' },
+    sessionStorage: { getItem: key => values.get(key), setItem: (key, value) => values.set(key, value), removeItem: key => values.delete(key) },
+    fetch: async () => ({ ok: reply === 200, status: reply, text: async () => 'invalid key' }),
+    SUPABASE_URL: 'https://example.invalid', SUPABASE_KEY: 'public', EDIT_RPC: 'save',
+    saveStatus: message => events.push(message), syncUrl: () => events.push('filters synced'),
+    loadData: async () => { events.push('data loaded'); context.all = [{ id: 42, hosting: 'Ofisa' }]; },
+    openDrawer: row => { events.push(`opened ${row.id}`); nodes.drawerSave = savedButton; context.document.querySelector = selector => selector === '.drawer' ? { scrollTop: 0 } : null; },
+    all: [], console: { error: () => {} }
+  };
+  const saveProfile = runInNewContext(`${save}\nsaveDrawerProfile`, context);
+  await saveProfile({ id: 42 });
+  assert.equal(hosting.value, 'Ofisa');
+  assert.equal(nodes.drawerNotes.value, 'Saisie conservée');
+  assert.equal(originalButton.textContent, 'Enregistrer les informations');
+  assert.equal(values.has('primeCommunesEditKey'), false);
+  reply = 200;
+  await saveProfile({ id: 42 });
+  assert.ok(events.indexOf('filters synced') < events.indexOf('data loaded'));
+  assert.ok(events.indexOf('data loaded') < events.indexOf('opened 42'));
+  assert.equal(savedButton.textContent, 'Enregistré ✓');
+  assert.equal(savedButton.disabled, true);
 });
 
 test('the editable hosting field is saved through the key-protected catalogue RPC', async () => {

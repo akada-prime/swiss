@@ -243,6 +243,7 @@
   cursor:wait;
   opacity:.62;
 }
+.save-button[data-saved="true"]{cursor:default;opacity:1}
 
 /* Stats detail text was too small on real screens. */
 .stats-kpi small{

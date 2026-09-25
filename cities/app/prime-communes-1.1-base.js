@@ -168,6 +168,7 @@
     });
 
     button.disabled = true;
+    button.textContent = 'Enregistrement…';
     saveStatus('Enregistrement…');
     try {
       let response = await send(editKey);
@@ -185,18 +186,30 @@
       }
       sessionStorage.setItem('primeCommunesEditKey', editKey);
       const scrollTop = document.querySelector('.drawer')?.scrollTop || 0;
+      const listScrollTop = window.scrollY;
+      const tableScrollLeft = document.querySelector('.table-wrap')?.scrollLeft || 0;
+      // The live data reload restores filters from the URL. Include the latest
+      // selection before it runs, even if its queued URL update has not fired.
+      syncUrl(false);
       await loadData();
       const refreshed = all.find(row => Number(row.id) === Number(x.id));
       if (refreshed) {
         openDrawer(refreshed);
         document.querySelector('.drawer').scrollTop = scrollTop;
+        const savedButton = byId('drawerSave');
+        savedButton.textContent = 'Enregistré ✓';
+        savedButton.disabled = true;
+        savedButton.dataset.saved = 'true';
       }
+      if (document.querySelector('.table-wrap')) document.querySelector('.table-wrap').scrollLeft = tableScrollLeft;
+      window.scrollTo(0, listScrollTop);
       saveStatus(`Enregistré ✓ · ${new Date().toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' })}`, 'success');
     } catch (error) {
       console.error(error);
       saveStatus(`Enregistrement impossible · ${error.message}`, 'error');
     } finally {
       button.disabled = false;
+      button.textContent = 'Enregistrer les informations';
     }
   }
 
@@ -251,6 +264,16 @@
       if (event.target === event.currentTarget) closeDrawer();
     };
     byId('drawerSave').onclick = () => saveDrawerProfile(x);
+    const resetSaveButton = () => {
+      const button = byId('drawerSave');
+      if (button?.disabled && button.textContent === 'Enregistré ✓') {
+        button.disabled = false;
+        button.textContent = 'Enregistrer les informations';
+        delete button.dataset.saved;
+      }
+    };
+    document.querySelector('.drawer-edit-grid').addEventListener('input', resetSaveButton);
+    document.querySelector('.drawer-edit-grid').addEventListener('change', resetSaveButton);
   };
 
   function currentView() {
