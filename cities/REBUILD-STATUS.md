@@ -2,6 +2,11 @@
 
 ## Maintenance après intégration
 
+2026-09-25 : séparation discrète entre les filtres de Communes et les boutons
+« Territoire » / « Systèmes ». Trait vertical sur grand écran, horizontal sur
+écran plus étroit ; aucune logique de filtre modifiée. `npm run check` (65 tests)
+et `npm run build` réussis.
+
 Le rebuild et l'édition de l'hébergeur sont intégrés à `main` au commit
 `a03838c`. La migration d'édition de l'hébergeur a été installée en production.
 Les consignes de branche ci-dessous décrivent le chantier historique, clôturé.

@@ -74,7 +74,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
           <label id="districtFilter" hidden><span>District</span><select id="district"><option value="">Tous les districts</option></select></label>
         </div>
         <label class="solution-filter"><span>Solution</span><select id="solution"><option value="Tous">Toutes</option></select></label>
-        <button class="filter-toggle" id="primeOnly">Clients&nbsp;Prime</button><button class="filter-toggle" id="eadminOnly">eAdmin</button><button class="filter-toggle" id="districtsToggle" aria-expanded="false" aria-controls="territoryFilters">Territoire</button><button class="filter-toggle" id="issuesOnly" hidden>À surveiller</button>
+        <button class="filter-toggle" id="primeOnly">Clients&nbsp;Prime</button><button class="filter-toggle" id="eadminOnly">eAdmin</button><span class="filters-separator" aria-hidden="true"></span><button class="filter-toggle" id="districtsToggle" aria-expanded="false" aria-controls="territoryFilters">Territoire</button><button class="filter-toggle" id="issuesOnly" hidden>À surveiller</button>
       </div>
       <div class="result-line"><span><strong id="resultCount">0</strong> résultats <button id="reset">Réinitialiser</button></span><small class="portrait-hint"><b>#</b> ouvre le portrait communal</small><button class="result-export" id="exportBtn">↓ Exporter (.tsv)</button></div>
       <div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="rows"></tbody></table><p class="table-limit" id="limit"></p></div>

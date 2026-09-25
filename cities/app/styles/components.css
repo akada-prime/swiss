@@ -488,6 +488,13 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 .module-chip{font-size:13px;line-height:24px}
 
 /* Logiciels must always be visible next to Districts on desktop and mobile. */
+.filters-separator{
+  align-self:center;
+  width:1px;
+  height:26px;
+  margin:0 3px;
+  background:rgba(255,255,255,.2);
+}
 #logicielsToggle{
   display:inline-flex;
   align-items:center;
@@ -504,4 +511,3 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 .territory-comparison button>small{font-size:11px;line-height:1.4}
 .stats-rank-label span{font-size:11px}
 .stats-rank>small{font-size:10.5px;line-height:1.4}
-

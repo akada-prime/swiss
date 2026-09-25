@@ -3,6 +3,15 @@
 /* Source consolidée: app/prime-communes-1.1.7-mobile.css */
 /* Prime Communes 1.1.7 · polished mobile filter layout */
 
+@media(max-width:1100px){
+  .filters .filters-separator{
+    grid-column:1/-1;
+    width:100%;
+    height:1px;
+    margin:3px 0;
+  }
+}
+
 @media(max-width:680px){
   /* iOS zooms the whole page when a focused form control is smaller than 16px. */
   .filters input,
@@ -615,4 +624,3 @@
 
   .site-footer { font-size: 12px; }
 }
-
