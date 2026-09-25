@@ -156,7 +156,7 @@ test('commune save keeps the drawer editable after a rejected key and refreshes 
   assert.match(bridge, /addEventListener\('input', resetSaveButton\)/);
   assert.match(bridge, /addEventListener\('change', resetSaveButton\)/);
   assert.match(css, /\.save-button\[data-saved="true"\]\{cursor:default;opacity:1\}/);
-  assert.match(html, /<a href="\.\/" aria-label="Retour à l’accueil Prime Communes"><img src="public\/prime-logo-negative\.svg"/);
+  assert.match(html, /<a href="\.\/" aria-label="Retour à l’accueil Prime Communes"><img src="public\/prime-communes-helvetia\.webp"/);
   assert.doesNotMatch(bridge, /setTimeout\(\(\) => openDrawer\(refreshed\)/);
 });
 

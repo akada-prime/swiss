@@ -8,6 +8,8 @@
   --pc-table-empty:#6f7d90;
 }
 
+.topbar .brand{display:block;border-radius:8px}
+
 /* Table typography: one visual language across Métier / ERP / Modules / Hébergeur. */
 .table-wrap th{
   font-size:11px;
