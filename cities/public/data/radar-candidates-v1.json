@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-09-24T10:02:00.885Z",
+    "generatedAt": "2026-09-25T10:12:10.601Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
@@ -1545,6 +1545,51 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "0749b7db5f239853d641c0f46b67620ab489853bb3b49488e8f2e84e3aa8d9db",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Remplacement de la plateforme éditique StreamServe",
+      "url": "https://www.simap.ch/fr/?search=abc10976-8930-42c4-8ede-6562baf6d4bd",
+      "detectedAt": "2026-09-25T10:12:10.598Z",
+      "publicationDate": "2026-09-25",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : numérique",
+      "status": "pending"
+    },
+    {
+      "id": "8e4e37a314a087dc27703a084c5fd2adb6038e3c89a32baa0ef4089eab612e70",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "BKS-2254 Durchführung der Erhebung 2028 und 2032 zur sozialen und wirtschaftlichen Lage der Studierenden (SSEE)",
+      "url": "https://www.simap.ch/fr/?search=080ba68c-9a8c-41f2-be2d-572eb0078dac",
+      "detectedAt": "2026-09-25T10:12:10.598Z",
+      "publicationDate": "2026-09-25",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "0c30e8d1ab95ac687aca5747874bff6a16ac4fbf18f88f09032c5b82008cebef",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Appel d'offres public pour la destruction sécurisée de supports de données numériques",
+      "url": "https://www.simap.ch/fr/?search=46f9a87e-9c3e-4930-a388-138dde3b8264",
+      "detectedAt": "2026-09-25T10:12:10.598Z",
+      "publicationDate": "2026-09-25",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : numérique",
       "status": "pending"
     }
   ]
