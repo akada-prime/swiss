@@ -157,3 +157,43 @@ test('mobile search suspends inherited filters on typing and restores them on ca
   assert.equal(closed, 1);
   assert.equal(dispatched, 1);
 });
+
+test('desktop search restores an incompatible filter on cancel, then commits global results on Enter', async () => {
+  const runtime = await read('app/prime-communes-communes-1.2.js');
+  const start = runtime.indexOf('  // Desktop uses the existing field and list.');
+  const end = runtime.indexOf('  // Apply the canonical layout immediately', start);
+  assert.ok(start >= 0 && end > start);
+  const events = {};
+  const input = { value: '', addEventListener(type, fn) { events[type] = fn; }, blur() {} };
+  const controls = {
+    query: input,
+    canton: { value: 'VD' },
+    district: { value: '' },
+    solution: { value: 'Tous' },
+    reset: { addEventListener() {} }
+  };
+  let renders = 0;
+  const context = {
+    document: { getElementById: id => controls[id] },
+    mobileMedia: { matches: false },
+    marketOnly: '', primeOnly: false, eadminOnly: false, issuesOnly: false,
+    updateDistrictOptions() { controls.district.value = ''; },
+    syncSearchFilterControls() {}, render() { renders++; }
+  };
+  vm.runInNewContext(runtime.slice(start, end), context);
+  events.focus();
+  assert.equal(controls.canton.value, 'VD');
+  input.value = 'D';
+  events.input();
+  assert.equal(controls.canton.value, 'Tous');
+  input.value = '';
+  events.input();
+  assert.equal(controls.canton.value, 'VD');
+  events.focus();
+  input.value = 'Delémont';
+  events.input();
+  events.keydown({ key: 'Enter' });
+  assert.equal(controls.canton.value, 'Tous');
+  assert.equal(input.value, 'Delémont');
+  assert.ok(renders >= 3);
+});

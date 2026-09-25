@@ -176,25 +176,25 @@
         const rejectedKey = failed.rejectedKey || /clé|key|denied|forbidden/i.test(failed.detail);
         if (rejectedKey) {
           sessionStorage.removeItem('primeCommunesEditKey');
-          const replacement = window.prompt('Ancienne clé refusée. Saisis la nouvelle clé d’édition :') || '';
-          if (!replacement) throw new Error('Clé d’édition requise');
-          editKey = replacement;
-          saveStatus('Nouvelle clé · nouvel essai…');
-          response = await send(editKey);
-          if (!response.ok) {
-            const retry = await responseDetail(response);
-            throw new Error(retry.detail || `Erreur ${response.status}`);
-          }
-        } else {
-          throw new Error(failed.detail || `Erreur ${response.status}`);
+          saveStatus('Clé incorrecte · clique à nouveau sur Enregistrer pour la ressaisir.', 'error');
+          return;
         }
+        let message = failed.detail;
+        try { message = JSON.parse(message).message || message; } catch (_) { /* Plain text response. */ }
+        throw new Error(message || `Erreur ${response.status}`);
       }
       sessionStorage.setItem('primeCommunesEditKey', editKey);
+      const scrollTop = document.querySelector('.drawer')?.scrollTop || 0;
       await loadData();
+      const refreshed = all.find(row => Number(row.id) === Number(x.id));
+      if (refreshed) {
+        openDrawer(refreshed);
+        document.querySelector('.drawer').scrollTop = scrollTop;
+      }
       saveStatus(`Enregistré ✓ · ${new Date().toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' })}`, 'success');
     } catch (error) {
       console.error(error);
-      saveStatus('Enregistrement impossible · vérifie la clé d’édition.', 'error');
+      saveStatus(`Enregistrement impossible · ${error.message}`, 'error');
     } finally {
       button.disabled = false;
     }
@@ -207,7 +207,7 @@
     const softwares = uniqueSorted(all.map(row => row.software));
     const erps = uniqueSorted(all.map(row => row.erp));
     const hostings = uniqueSorted([
-      'On-premise', 'AZ', 'LogiONE', 'SIACG', 'Sysel', 'Yverdon',
+      'On-premise', 'AZ', 'LogiONE', 'SIACG', 'Sysel', 'Yverdon', 'Ofisa',
       ...all.map(row => row.hosting)
     ]);
     const products = [...(x.products || [])];
@@ -433,6 +433,45 @@
   };
 
   injectLogicielsToggle();
+
+  // Export every matching row, with stable OFS identifiers and all live fields.
+  byId('exportBtn').onclick = () => {
+    const fields = [
+      ['#', (_row, index) => index + 1],
+      ['Num OFS', row => row.id],
+      ['Nom', row => row.name],
+      ['Canton', row => row.canton],
+      ['Client', row => row.isPrime ? 'Oui' : 'Non'],
+      ['Population', row => row.expectedPopulation],
+      ['Marché', row => row.market],
+      ['District', row => row.district],
+      ['Intégrateur', row => row.integrator],
+      ['Métier', row => row.software],
+      ['ERP', row => row.erp],
+      ['Modules', row => (row.products || []).join(' | ')],
+      ['Hébergeur', row => row.hosting],
+      ['Notes', row => row.notes],
+      ['Statut OFS', row => row.deliveryStatus],
+      ['Population reçue', row => row.receivedPopulation],
+      ['Date de réception', row => row.receivedOn],
+      ['Erreur EWID', row => row.ewidErrorRate],
+      ['EWID manquants', row => row.missingEwid],
+      ['Version eCH', row => row.echVersion],
+      ['Commentaire OFS', row => row.comment]
+    ];
+    const cell = value => {
+      const text = String(value ?? '').replace(/[\t\r\n]+/g, ' ').trim();
+      return /^[=+@-]/.test(text) && typeof value === 'string' ? `'${text}` : text;
+    };
+    const lines = [fields.map(([label]) => label).join('\t'),
+      ...filtered().map((row, index) => fields.map(([, value]) => cell(value(row, index))).join('\t'))];
+    const url = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/tab-separated-values;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'communes.tsv';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
 
   byId('query')?.addEventListener('input', () => syncAfterEvent(false));
   byId('mapQuery')?.addEventListener('input', () => syncAfterEvent(false));

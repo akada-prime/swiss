@@ -119,10 +119,10 @@ test('commune search ignores accents and iPhone form controls do not zoom', asyn
   assert.match(mobile, /\.filters input,[\s\S]*font-size:16px/);
 });
 
-test('commune save retries a stale key and keeps the open drawer in place', async () => {
+test('commune save keeps the drawer editable after a rejected key and refreshes it after success', async () => {
   const bridge = await read('app/prime-communes-1.1-base.js');
-  assert.match(bridge, /Ancienne clé refusée/);
-  assert.match(bridge, /Nouvelle clé · nouvel essai/);
+  assert.match(bridge, /Clé incorrecte · clique à nouveau sur Enregistrer/);
+  assert.match(bridge, /openDrawer\(refreshed\)/);
   assert.match(bridge, /Enregistré ✓/);
   assert.doesNotMatch(bridge, /setTimeout\(\(\) => openDrawer\(refreshed\)/);
 });
