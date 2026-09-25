@@ -492,6 +492,62 @@
 
   buildMobileSearch();
 
+  // Desktop uses the existing field and list. Keep its filters until typing
+  // starts, then allow Escape or clearing the query to restore them.
+  const desktopInput = document.getElementById('query');
+  let desktopPreviousFilters = null;
+  let desktopFocusFilters = null;
+  const desktopFilters = () => ({
+    query: desktopInput.value,
+    canton: document.getElementById('canton').value,
+    district: document.getElementById('district').value,
+    solution: document.getElementById('solution').value,
+    marketOnly, primeOnly, eadminOnly, issuesOnly
+  });
+  desktopInput?.addEventListener('focus', () => {
+    if (!mobileMedia.matches) desktopFocusFilters = desktopFilters();
+  });
+  desktopInput?.addEventListener('input', () => {
+    if (mobileMedia.matches) return;
+    if (desktopPreviousFilters && !desktopInput.value.trim()) {
+      const previous = desktopPreviousFilters;
+      desktopPreviousFilters = null;
+      desktopInput.value = previous.query;
+      document.getElementById('canton').value = previous.canton;
+      document.getElementById('solution').value = previous.solution;
+      marketOnly = previous.marketOnly;
+      primeOnly = previous.primeOnly;
+      eadminOnly = previous.eadminOnly;
+      issuesOnly = previous.issuesOnly;
+      updateDistrictOptions();
+      document.getElementById('district').value = previous.district;
+      syncSearchFilterControls();
+      render();
+    } else if (!desktopPreviousFilters && desktopInput.value.trim()) {
+      desktopPreviousFilters = desktopFocusFilters || desktopFilters();
+      document.getElementById('canton').value = 'Tous';
+      document.getElementById('solution').value = 'Tous';
+      marketOnly = '';
+      primeOnly = eadminOnly = issuesOnly = false;
+      updateDistrictOptions();
+      syncSearchFilterControls();
+      render();
+    }
+  });
+  desktopInput?.addEventListener('keydown', event => {
+    if (mobileMedia.matches) return;
+    if (event.key === 'Enter') desktopPreviousFilters = desktopFocusFilters = null;
+    if (event.key === 'Escape' && desktopPreviousFilters) {
+      event.preventDefault();
+      desktopInput.value = '';
+      desktopInput.dispatchEvent(new Event('input', { bubbles: true }));
+      desktopInput.blur();
+    }
+  });
+  document.getElementById('reset')?.addEventListener('click', () => {
+    desktopPreviousFilters = desktopFocusFilters = null;
+  });
+
   // Apply the canonical layout immediately if the live data arrived before
   // this view module finished loading.
   if (all.length) render();
