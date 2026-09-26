@@ -51,7 +51,9 @@ html[data-skin="helvetia"] {
   --skin-ambient-warm:transparent;
   --skin-hero:linear-gradient(90deg,#222e38,#ad252d);
   --skin-mobile-search:#f5f6f6;
-  --skin-metric-text:#176580;
+  --skin-metric-text:#862936;
+  --skin-metric-fill:linear-gradient(90deg,#ac3542,#7c3448);
+  --skin-logo-surface:#26313a;
 }
 html[data-skin="light"] {
   color-scheme:light;
@@ -198,6 +200,11 @@ html[data-skin="helvetia"] :is(.territory-comparison b,.kpi-badge,.stats-prime-m
 html[data-skin="helvetia"] :is(.kpi-badge,.stats-prime-meta span+span){background:var(--skin-tint);border-color:var(--skin-border-soft)}
 html[data-skin="helvetia"] .roadmap-journey li:not(:last-child):after{width:24px;height:28px;right:-16px;border-radius:50%;background:var(--skin-page);color:var(--skin-accent);font-size:19px}
 html[data-skin="helvetia"] .result-line>span{color:var(--skin-secondary)}
-html[data-skin="helvetia"] .result-line #resultCount{color:var(--skin-metric-text);border-color:var(--skin-border)}
+html[data-skin="helvetia"] .result-line #resultCount{color:var(--skin-secondary);border-color:var(--skin-border)}
 html[data-skin="helvetia"] .result-line #reset{color:var(--skin-accent);background:var(--skin-accent-soft);border-color:var(--skin-border)}
 html[data-skin="helvetia"] .result-line #reset:is(:hover,:focus-visible){color:var(--skin-focus);border-color:var(--skin-accent)}
+/* Coverage figures share one restrained accent; geographic shapes keep their own colours. */
+html[data-skin="helvetia"] :is(.stats-prime-copy>strong,.threshold-kpi strong,.maplibre-metric strong){color:var(--skin-metric-text)}
+html[data-skin="helvetia"] :is(.stats-prime-progress i,.territory-comparison em,.maplibre-progress i){background:var(--skin-metric-fill);box-shadow:none}
+/* These product assets are the official negative versions: give them a dark backing. */
+html[data-skin="helvetia"] :is(img.innosolvcity-mark,img.eadmin-mark){background:var(--skin-logo-surface);box-shadow:0 0 0 4px var(--skin-logo-surface);border-radius:2px}
