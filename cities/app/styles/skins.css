@@ -51,6 +51,7 @@ html[data-skin="helvetia"] {
   --skin-ambient-warm:transparent;
   --skin-hero:linear-gradient(90deg,#222e38,#ad252d);
   --skin-mobile-search:#f5f6f6;
+  --skin-metric-text:#176580;
 }
 html[data-skin="light"] {
   color-scheme:light;
@@ -180,3 +181,19 @@ html[data-skin="helvetia"] :is(.news-tool-buttons button.active,.news-filters bu
 html[data-skin="light"] :is(.news-tool-buttons button.active,.news-filters button.active,.story-angle-tabs button.active){background:var(--skin-accent-soft);border-color:var(--skin-accent);color:var(--skin-accent)}
 html[data-skin="helvetia"] :is(.filters option,.news-qualification-panel option),
 html[data-skin="light"] :is(.filters option,.news-qualification-panel option){background:var(--skin-control);color:var(--skin-text)}
+
+/* Helvetia Hell: readable neutral chrome and Prime figures on light surfaces.
+   Map geography and the meanings of business/status colours remain untouched. */
+html[data-skin="helvetia"] :is(.maplibre-view-buttons button,.stats-segment button){color:var(--skin-secondary)}
+html[data-skin="helvetia"] :is(.maplibre-view-buttons button:not(.active):hover,.maplibre-view-buttons button:not(.active):focus-visible){color:var(--skin-text);background:var(--skin-hover)}
+html[data-skin="helvetia"] .map-autocomplete strong{color:var(--skin-text)}
+html[data-skin="helvetia"] .map-autocomplete b{color:var(--skin-secondary)}
+html[data-skin="helvetia"] .map-autocomplete :is(button:hover,button.active){background:var(--skin-accent-soft)}
+html[data-skin="helvetia"] .view-intro-copy>strong{color:var(--skin-secondary)}
+html[data-skin="helvetia"] .stats-segment button.active{color:var(--skin-accent);background:var(--skin-accent-soft)}
+html[data-skin="helvetia"] :is(.kpi-label,.stats-kpi>span,.stats-prime-eyebrow){color:var(--skin-secondary)}
+html[data-skin="helvetia"] :is(.stats-kpi small,.stats-prime-meta,.territory-comparison span>small,.territory-comparison button>small,.stats-rank-label span,.stats-rank>small){color:var(--skin-secondary)}
+html[data-skin="helvetia"] :is(.territory-comparison button,.stats-segment){background:var(--skin-control);border-color:var(--skin-border-soft)}
+html[data-skin="helvetia"] :is(.territory-comparison b,.kpi-badge,.stats-prime-meta span+span){color:var(--skin-metric-text)}
+html[data-skin="helvetia"] :is(.kpi-badge,.stats-prime-meta span+span){background:var(--skin-tint);border-color:var(--skin-border-soft)}
+html[data-skin="helvetia"] .roadmap-journey li:not(:last-child):after{width:24px;height:28px;right:-16px;border-radius:50%;background:var(--skin-page);color:var(--skin-accent);font-size:19px}
