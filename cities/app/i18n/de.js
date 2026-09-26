@@ -247,6 +247,7 @@ export default {
   "page.245": "BFS-Daten · Delimo P99 ↗",
   "settings.trigger": "Einstellungen",
   "settings.close": "Schliessen",
+  "settings.appearanceAuto": "◐ Automatisch",
   "search.communeSoftware": "Gemeinde oder Software suchen…",
   "search.commune": "Gemeinde suchen…",
   "search.radar": "Gemeinde, Thema oder Quelle suchen…",
