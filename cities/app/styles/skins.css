@@ -54,6 +54,7 @@ html[data-skin="helvetia"] {
   --skin-metric-text:#862936;
   --skin-metric-fill:linear-gradient(90deg,#ac3542,#7c3448);
   --skin-logo-surface:#26313a;
+  --skin-accent-on-dark:#f0a6ae;
 }
 html[data-skin="light"] {
   color-scheme:light;
@@ -207,4 +208,14 @@ html[data-skin="helvetia"] .result-line #reset:is(:hover,:focus-visible){color:v
 html[data-skin="helvetia"] :is(.stats-prime-copy>strong,.threshold-kpi strong,.maplibre-metric strong){color:var(--skin-metric-text)}
 html[data-skin="helvetia"] :is(.stats-prime-progress i,.territory-comparison em,.maplibre-progress i){background:var(--skin-metric-fill);box-shadow:none}
 /* These product assets are the official negative versions: give them a dark backing. */
-html[data-skin="helvetia"] :is(img.innosolvcity-mark,img.eadmin-mark){background:var(--skin-logo-surface);box-shadow:0 0 0 4px var(--skin-logo-surface);border-radius:2px}
+html[data-skin="helvetia"] :is(img.innosolvcity-mark,img.eadmin-mark,img.clevertax-mark,img.abacus-mark,img.abacus-module-mark,img.proconcept-mark,img.prime-client-mark,img.drawer-prime-mark,img.prime-one){background:var(--skin-logo-surface);box-shadow:0 0 0 4px var(--skin-logo-surface);border-radius:2px}
+/* Historical bright blue UI accents follow Helvetia's restrained palette. */
+html[data-skin="helvetia"] :is(.client-pill,.portrait-hint b,.result-line #resultCount){color:var(--skin-metric-text);background:var(--skin-accent-soft);border-color:var(--skin-border)}
+html[data-skin="helvetia"] :is(.mobile-search-header label>span,.mobile-search-result-main>span b,.portrait-heading p,.portrait-wiki-card a,.roadmap-principle span,.roadmap-items small,.site-footer a:hover){color:var(--skin-metric-text)}
+html[data-skin="helvetia"] :is(.commune-rank:hover,.commune-rank:focus-visible,.table-wrap tbody tr:hover .commune-rank){color:var(--skin-accent);background:var(--skin-accent-soft);border-color:var(--skin-border)}
+html[data-skin="helvetia"] :is(.roadmap-journey .journey-know,.roadmap-journey .journey-bridge,.roadmap-journey .journey-see){background:var(--skin-card);border-color:var(--skin-border-soft)}
+html[data-skin="helvetia"] :is(.roadmap-journey .journey-know,.roadmap-journey .journey-bridge,.roadmap-journey .journey-see) :is(span,strong){color:var(--skin-text)}
+html[data-skin="helvetia"] :is(.roadmap-version,.completed-11 .roadmap-version,.completed-15 .roadmap-version,.map-stage .roadmap-version){color:var(--skin-metric-text);background:var(--skin-accent-soft);border-color:var(--skin-border-soft)}
+html[data-skin="helvetia"] :is(.completed-20 .roadmap-version,.history-stage.current .roadmap-version){color:#287057;background:#e8f3ed;border-color:#b9d8c8}
+html[data-skin="helvetia"] :is(.insight-card>strong,.map-impact p,.map-impact b,.map-tooltip small){color:var(--skin-accent-on-dark)}
+html[data-skin="helvetia"] .map-impact{border-color:var(--skin-metric-text);background:linear-gradient(135deg,#26313a,#372930)}
