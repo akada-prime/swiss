@@ -1,3 +1,4 @@
+import {t} from './core/i18n.js';
 (() => {
   'use strict';
 
@@ -104,30 +105,30 @@
   }
 
   function portraitWikipediaMarkup(data) {
-    if (!data) return `<div class="portrait-wiki-fallback"><strong>Résumé Wikipédia indisponible</strong><p>Les faits Prime Communes restent affichés. Aucun article n’a été retenu plutôt que de risquer une confusion entre deux communes.</p></div>`;
-    return `<span class="portrait-ofs-match">OFS ${esc(data.ofs)} vérifié ✓</span><article class="portrait-wiki-card">
-      ${data.thumbnail ? `<img src="${esc(data.thumbnail)}" alt="Illustration de ${esc(data.title)} sur Wikipédia">` : ''}
-      <div><p>${esc(data.extract)}</p><a href="${esc(data.url)}" target="_blank" rel="noopener noreferrer">Lire sur Wikipédia ↗</a></div>
+    if (!data) return `<div class="portrait-wiki-fallback"><strong>${t('communes.wikiFallback')}</strong><p>${t('communes.wikiFallbackDetail')}</p></div>`;
+    return `<span class="portrait-ofs-match">${t('communes.ofsMatched',{id:esc(data.ofs)})}</span><article class="portrait-wiki-card">
+      ${data.thumbnail ? `<img src="${esc(data.thumbnail)}" alt="${t('communes.illustration',{title:esc(data.title)})}">` : ''}
+      <div><p>${esc(data.extract)}</p><a href="${esc(data.url)}" target="_blank" rel="noopener noreferrer">${t('communes.readWiki')}</a></div>
     </article>`;
   }
 
   function portraitSystemMarkup(commune) {
     const fields = [
-      ['Intégrateur', commune.integrator],
-      ['Solution métier', commune.software],
+      [t('common.integrator'), commune.integrator],
+      [t('communes.businessSolution'), commune.software],
       ['ERP', commune.erp],
-      ['Hébergement', commune.hosting],
-      ['Modules', (commune.products || []).filter(Boolean).join(' · ')],
-      ['Relation Prime', commune.isPrime ? 'Client Prime' : ''],
-      ['Statut commercial', commune.salesStatus !== 'none' ? commune.salesStatus : '']
+      [t('communes.hosting'), commune.hosting],
+      [t('common.modules'), (commune.products || []).filter(Boolean).join(' · ')],
+      [t('communes.relationship'), commune.isPrime ? 'Client Prime' : ''],
+      [t('communes.salesStatus'), commune.salesStatus !== 'none' ? commune.salesStatus : '']
     ].filter(([, value]) => String(value ?? '').trim());
     const notes = String(commune.notes || '').trim();
     return `<section class="portrait-system">
-      <div class="portrait-section-title"><div><span>Profil communal</span><h3>Système communal</h3></div></div>
+      <div class="portrait-section-title"><div><span>${t('communes.systemProfile')}</span><h3>${t('communes.system')}</h3></div></div>
       ${fields.length ? `<dl class="portrait-facts portrait-system-facts">${fields.map(([label, value]) =>
         `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>` : ''}
-      ${notes ? `<div class="portrait-system-notes"><span>Notes</span><p>${esc(notes)}</p></div>` : ''}
-      ${!fields.length && !notes ? '<p class="portrait-system-empty">Aucune information système renseignée.</p>' : ''}
+      ${notes ? `<div class="portrait-system-notes"><span>${t('common.notes')}</span><p>${esc(notes)}</p></div>` : ''}
+      ${!fields.length && !notes ? `<p class="portrait-system-empty">${t('communes.systemEmpty')}</p>` : ''}
     </section>`;
   }
 
@@ -137,25 +138,25 @@
     if (!root) return;
     const cantonName = CANTON_NAMES[commune.canton] || commune.canton || '—';
     root.innerHTML = `<div class="portrait-backdrop">
-      <aside class="commune-portrait" role="dialog" aria-modal="true" aria-labelledby="portraitTitle">
-        <button class="portrait-close" type="button" aria-label="Fermer le portrait">×</button>
+      <aside class="commune-portrait" data-commune-id="${commune.id}" role="dialog" aria-modal="true" aria-labelledby="portraitTitle">
+        <button class="portrait-close" type="button" aria-label="${t('communes.portraitClose')}">×</button>
         <header class="portrait-heading">
           <img src="public/cantons/${esc(String(commune.canton || '').toLowerCase())}.svg" alt="">
-          <div><p>Portrait communal · 2.0.5</p><h2 id="portraitTitle">${esc(commune.name)}</h2><span>OFS ${esc(commune.id)}</span></div>
+          <div><p>${t('communes.portraitTitle')}</p><h2 id="portraitTitle">${esc(commune.name)}</h2><span>OFS ${esc(commune.id)}</span></div>
         </header>
         <dl class="portrait-facts">
-          <div><dt>Canton</dt><dd>${esc(cantonName)}</dd></div>
-          <div><dt>District</dt><dd>${esc(commune.district || '—')}</dd></div>
-          <div><dt>Population</dt><dd>${fmt.format(commune.expectedPopulation || 0)}</dd></div>
-          <div><dt>Marché</dt><dd>${esc(commune.market || '—')}</dd></div>
+          <div><dt>${t('page.030')}</dt><dd>${esc(cantonName)}</dd></div>
+          <div><dt>${t('common.district')}</dt><dd>${esc(commune.district || '—')}</dd></div>
+          <div><dt>${t('common.population')}</dt><dd>${fmt.format(commune.expectedPopulation || 0)}</dd></div>
+          <div><dt>${t('common.market')}</dt><dd>${esc(commune.market || '—')}</dd></div>
         </dl>
         <section class="portrait-public-context">
-          <div class="portrait-section-title"><div><span>Contexte public</span><h3>En quelques lignes</h3></div><span class="portrait-no-ai">Sans IA</span></div>
-          <div class="portrait-wikipedia" aria-live="polite"><div class="portrait-loading"><i></i><span>Lecture de Wikipédia à la demande…</span></div></div>
-          <p class="portrait-source">Source : Wikipédia · texte sous licence CC BY-SA. La source originale reste la référence.</p>
+          <div class="portrait-section-title"><div><span>${t('communes.publicContext')}</span><h3>${t('communes.shortSummary')}</h3></div><span class="portrait-no-ai">${t('communes.noAi')}</span></div>
+          <div class="portrait-wikipedia" aria-live="polite"><div class="portrait-loading"><i></i><span>${t('communes.wikipediaLoading')}</span></div></div>
+          <p class="portrait-source">${t('communes.wikipediaSource')}</p>
         </section>
         ${portraitSystemMarkup(commune)}
-        <button class="portrait-edit" type="button"><span aria-hidden="true">✎</span> Modifier les informations</button>
+        <button class="portrait-edit" type="button"><span aria-hidden="true">✎</span> ${t('communes.edit')}</button>
       </aside>
     </div>`;
     document.documentElement.classList.add('portrait-open');
@@ -182,8 +183,8 @@
     if (!table || !headRow) return;
 
     const headings = [...headRow.children];
-    const communeIndex = headings.findIndex(th => /^Commune\b/i.test(th.textContent.trim()));
-    const cantonIndex = headings.findIndex(th => th.textContent.trim().toLocaleLowerCase('fr-CH') === 'canton');
+    const communeIndex = headings.findIndex(th => th.id === 'sortName');
+    const cantonIndex = headings.findIndex(th => th.id === 'columnCanton');
     if (communeIndex < 0) return;
 
     headings[communeIndex].dataset.column = 'commune';
@@ -217,8 +218,8 @@
         rank.type = 'button';
         rank.className = 'commune-rank';
         rank.textContent = String(rowIndex + 1);
-        rank.title = `Découvrir ${commune.name}`;
-        rank.setAttribute('aria-label', `Découvrir le portrait de ${commune.name}`);
+        rank.title = t('communes.discover',{name:commune.name});
+        rank.setAttribute('aria-label', t('communes.discoverPortrait',{name:commune.name}));
         rank.addEventListener('click', event => {
           event.preventDefault();
           event.stopPropagation();
@@ -250,14 +251,14 @@
     if (!table || !headRow || headRow.querySelector('.hosting-heading')) return;
 
     const headings = [...headRow.children];
-    const modulesIndex = headings.findIndex(th => th.textContent.trim().toLocaleLowerCase('fr-CH') === 'modules');
+    const modulesIndex = headings.findIndex(th => th.id === 'columnModules');
     if (modulesIndex < 0) return;
 
     const modulesHeading = headings[modulesIndex];
     const hostingHeading = document.createElement('th');
     hostingHeading.className = 'hosting-heading';
     hostingHeading.dataset.softwareColumn = 'hosting';
-    hostingHeading.textContent = 'Hébergeur';
+    hostingHeading.textContent = t('common.hosting');
     modulesHeading.insertAdjacentElement('afterend', hostingHeading);
 
     bodyRows.forEach(row => {
@@ -314,19 +315,19 @@
     const query = document.getElementById('query')?.value || '';
     const count = mobileSearchOverlay.querySelector('[data-mobile-search-count]');
     const list = mobileSearchOverlay.querySelector('[data-mobile-search-results]');
-    if (count) count.textContent = `${fmt.format(results.length)} résultat${results.length > 1 ? 's' : ''}`;
+    if (count) count.textContent = t('communes.filterResult',{count:fmt.format(results.length)});
     if (!list) return;
     list.innerHTML = results.slice(0, 80).map(commune => `
       <button class="mobile-search-result" data-commune-id="${esc(commune.id)}">
         <img src="public/cantons/${esc(String(commune.canton || '').toLowerCase())}.svg" alt="">
         <span class="mobile-search-result-main">
           <strong>${esc(commune.name)}</strong>
-          <small>${esc(commune.canton)}${commune.district ? ` · ${esc(commune.district)}` : ''} · ${fmt.format(commune.expectedPopulation)} habitants</small>
+          <small>${esc(commune.canton)}${commune.district ? ` · ${esc(commune.district)}` : ''} · ${fmt.format(commune.expectedPopulation)} ${t('common.inhabitants')}</small>
           ${matchExplanation(commune, query)}
         </span>
         ${commune.isPrime ? '<img class="mobile-search-prime" src="public/prime-one-negative.png?v=4" alt="Client Prime">' : ''}
         <i aria-hidden="true">›</i>
-      </button>`).join('') || '<p class="mobile-search-empty"><strong>Aucune commune trouvée.</strong><span>Essaie un autre nom, logiciel, intégrateur, ERP ou module.</span></p>';
+      </button>`).join('') || `<p class="mobile-search-empty"><strong>${t('communes.noSearch')}</strong><span>${t('communes.searchHint')}</span></p>`;
     const limited = mobileSearchOverlay.querySelector('[data-mobile-search-limit]');
     if (limited) limited.hidden = results.length <= 80;
     syncMobileSearchFilters();
@@ -430,25 +431,25 @@
     mobileSearchOverlay.hidden = true;
     mobileSearchOverlay.setAttribute('role', 'dialog');
     mobileSearchOverlay.setAttribute('aria-modal', 'true');
-    mobileSearchOverlay.setAttribute('aria-label', 'Recherche universelle des communes');
+    mobileSearchOverlay.setAttribute('aria-label', t('communes.searchTitle'));
     mobileSearchOverlay.innerHTML = `
       <header class="mobile-search-header">
-        <button class="mobile-search-back" type="button" aria-label="Revenir aux communes">‹</button>
-        <label><span aria-hidden="true">⌕</span><input type="search" placeholder="Commune, logiciel, ERP, module…" autocomplete="off" autocapitalize="none" enterkeyhint="search"></label>
+        <button class="mobile-search-back" type="button" aria-label="${t('communes.searchBack')}">‹</button>
+        <label><span aria-hidden="true">⌕</span><input type="search" placeholder="${t('communes.mobileSearch')}" autocomplete="off" autocapitalize="none" enterkeyhint="search"></label>
       </header>
-      <div class="mobile-search-scopes" aria-label="Filtres rapides">
+      <div class="mobile-search-scopes" aria-label="${t('communes.quickFilters')}">
         <button type="button" data-mobile-market="Welsch">Welsch</button>
         <button type="button" data-mobile-market="Uf Tüütsch">Uf Tüütsch</button>
         <button type="button" data-mobile-market="Ticino">TI</button>
-        <button type="button" data-mobile-filter="prime">Clients Prime</button>
+        <button type="button" data-mobile-filter="prime">${t('common.primeClients')}</button>
         <button type="button" data-mobile-filter="eadmin">eAdmin</button>
       </div>
       <div class="mobile-search-summary">
-        <strong data-mobile-search-count>0 résultat</strong>
-        <span>Touchez une commune · voir dans la liste</span>
+        <strong data-mobile-search-count>${t('communes.filterResult',{count:0})}</strong>
+        <span>${t('communes.touchHint')}</span>
       </div>
       <div class="mobile-search-results" data-mobile-search-results></div>
-      <p class="mobile-search-limit" data-mobile-search-limit hidden>80 premiers résultats · précise ta recherche pour aller plus loin.</p>`;
+      <p class="mobile-search-limit" data-mobile-search-limit hidden>${t('communes.mobileLimit')}</p>`;
     document.body.append(mobileSearchOverlay);
 
     const sourceInput = document.getElementById('query');
@@ -512,6 +513,30 @@
   };
 
   buildMobileSearch();
+  document.addEventListener('prime-language-change', () => {
+    const portrait = document.querySelector('#portraitRoot .commune-portrait[data-commune-id]');
+    const commune = portrait && all.find(item => String(item.id) === portrait.dataset.communeId);
+    if (commune) {
+      const scroll = portrait.scrollTop;
+      void openCommunePortrait(commune).then(() => {
+        const current = document.querySelector('#portraitRoot .commune-portrait');
+        if (current) current.scrollTop = scroll;
+      });
+    }
+    if (mobileSearchOverlay) {
+      mobileSearchOverlay.setAttribute('aria-label', t('communes.searchTitle'));
+      mobileSearchOverlay.querySelector('.mobile-search-back')?.setAttribute('aria-label', t('communes.searchBack'));
+      mobileSearchOverlay.querySelector('input')?.setAttribute('placeholder', t('communes.mobileSearch'));
+      mobileSearchOverlay.querySelector('.mobile-search-scopes')?.setAttribute('aria-label', t('communes.quickFilters'));
+      const prime = mobileSearchOverlay.querySelector('[data-mobile-filter="prime"]');
+      if (prime) prime.textContent = t('common.primeClients');
+      const hint = mobileSearchOverlay.querySelector('.mobile-search-summary span');
+      if (hint) hint.textContent = t('communes.touchHint');
+      const limit = mobileSearchOverlay.querySelector('[data-mobile-search-limit]');
+      if (limit) limit.textContent = t('communes.mobileLimit');
+      renderMobileSearchResults();
+    }
+  });
 
   // Desktop uses the existing field and list. Keep its filters until typing
   // starts, then allow Escape or clearing the query to restore them.

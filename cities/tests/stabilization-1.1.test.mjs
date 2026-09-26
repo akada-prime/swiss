@@ -30,7 +30,7 @@ test('software columns are controlled by one semantic class', async () => {
 test('hosting is appended after Modules by the canonical Communes view', async () => {
   const js = await read('app/prime-communes-communes-1.2.js');
   assert.match(js, /decorateHostingColumn/);
-  assert.match(js, /textContent = 'Hébergeur'/);
+  assert.match(js, /textContent = t\('common\.hosting'\)/);
   assert.match(js, /dataset\.softwareColumn = 'hosting'/);
   assert.match(js, /modulesHeading\.insertAdjacentElement\('afterend', hostingHeading\)/);
   assert.match(js, /cell-empty/);
@@ -56,9 +56,9 @@ test('2.0.5 opens a sourced commune portrait from the row number without AI or e
   assert.match(js, /WIKIPEDIA_CACHE_TTL/);
   assert.match(js, /wikipediaCandidateScore/);
   assert.match(js, /claims\?\.P771/);
-  assert.match(js, /OFS .* vérifié/);
-  assert.match(js, /Résumé Wikipédia indisponible/);
-  assert.match(js, /Sans IA/);
+  assert.match(js, /t\('communes\.ofsMatched'/);
+  assert.match(js, /t\('communes\.wikiFallback'/);
+  assert.match(js, /t\('communes\.noAi'\)/);
   assert.doesNotMatch(js, /openai|chatgpt|anthropic/i);
   assert.match(css, /\.portrait-backdrop\{/);
   assert.match(css, /html\.portrait-open,body\.portrait-open\{overflow:hidden\}/);
@@ -71,6 +71,7 @@ test('the communal portrait shows known systems and multiline notes without empt
   const css = await read('app/styles/components.css');
   const source = js.slice(js.indexOf('function portraitSystemMarkup('), js.indexOf('async function openCommunePortrait('));
   const renderSystem = runInNewContext(`${source}\nportraitSystemMarkup`, {
+    t: key => ({ 'common.integrator':'Intégrateur','communes.businessSolution':'Métier','communes.hosting':'Hébergeur','common.modules':'Modules','communes.relationship':'Relation','communes.salesStatus':'Statut','communes.systemProfile':'Profil système','communes.system':'Système communal','common.notes':'Notes','communes.systemEmpty':'Aucune information système renseignée' }[key] || key),
     esc: value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]))
   });
   const rich = renderSystem({ integrator: 'Prime', software: 'innosolvcity', erp: 'Abacus', hosting: 'AZ', products: ['eAdmin'], isPrime: true, notes: 'Ligne 1\n<script>alert(1)</script>' });
@@ -105,7 +106,7 @@ test('Delimo is a premium control mode, not a fourth statistic or ordinary filte
   assert.doesNotMatch(bridge, /createElement\(['"]link|product-assets\.css\?v=/);
   assert.match(html, /class="delimo-control" id="issuesCard"/);
   assert.match(html, /Outil de contrôle · Delimo/);
-  assert.match(html, /id="ofsAction">Ouvrir le contrôle/);
+  assert.match(html, /id="ofsAction"><!--i18n:page\.029-->Ouvrir le contrôle/);
   assert.match(html, /public\/assets\/delimo\/favicon\.ico/);
   assert.doesNotMatch(html, /class="kpi-card alert-card"/);
   const kpis = html.match(/<section class="kpi-grid">([\s\S]*?)<\/section>/)?.[1] || '';
@@ -114,15 +115,15 @@ test('Delimo is a premium control mode, not a fourth statistic or ordinary filte
   assert.match(css, /\.delimo-control\.ofs-active/);
   assert.match(css, /@media \(max-width: 680px\)[\s\S]*\.delimo-control-action/);
   assert.match(bridge, /setAttribute\('aria-pressed', String\(ofsMode\)\)/);
-  assert.match(bridge, /Revenir au marché/);
-  assert.match(bridge, /à surveiller/);
+  assert.match(bridge, /t\('common\.reloadMarket'\)/);
+  assert.match(await read('app/core/runtime.js'), /t\('common\.watchCount'/);
 });
 
 test('language markets always filter while Territoire only reveals optional columns', async () => {
   const html = await read('index.html');
   const bridge = await read('app/prime-communes-1.1-base.js');
   assert.doesNotMatch(html, /id="territoryFilters"[^>]*hidden/);
-  assert.match(html, /id="districtsToggle"[^>]*>Territoire<\/button>/);
+  assert.match(html, /id="districtsToggle"[^>]*><!--i18n:page\.037-->Territoire<\/button>/);
   assert.match(html, /data-market="Welsch"/);
   assert.match(html, /data-market="Uf Tüütsch"/);
   assert.match(html, /data-market="Ticino"/);
@@ -145,14 +146,14 @@ test('commune save keeps the drawer editable after a rejected key and refreshes 
   const bridge = await read('app/prime-communes-1.1-base.js');
   const css = await read('app/styles/components.css');
   const html = await read('index.html');
-  assert.match(bridge, /Clé incorrecte · clique à nouveau sur Enregistrer/);
+  assert.match(bridge, /t\('communes\.invalidKey'\)/);
   assert.match(bridge, /openDrawer\(refreshed\)/);
-  assert.match(bridge, /Enregistré ✓/);
+  assert.match(bridge, /t\('common\.saved'\)/);
   const save = bridge.slice(bridge.indexOf('async function saveDrawerProfile('), bridge.indexOf('// Full editable non-OFS ecosystem.'));
-  assert.ok(save.indexOf("button.textContent = 'Enregistrement…'") < save.indexOf('let response = await send(editKey)'));
+  assert.ok(save.indexOf("button.textContent = t('common.saving')") < save.indexOf('let response = await send(editKey)'));
   assert.ok(save.indexOf('syncUrl(false)') < save.indexOf('await loadData()'));
-  assert.match(save, /savedButton\.textContent = 'Enregistré ✓';\s*savedButton\.disabled = true/);
-  assert.match(save, /finally \{\s*button\.disabled = false;\s*button\.textContent = 'Enregistrer les informations'/);
+  assert.match(save, /savedButton\.textContent = t\('common\.saved'\);\s*savedButton\.disabled = true/);
+  assert.match(save, /finally \{\s*button\.disabled = false;\s*button\.textContent = t\('common\.record'\)/);
   assert.match(bridge, /addEventListener\('input', resetSaveButton\)/);
   assert.match(bridge, /addEventListener\('change', resetSaveButton\)/);
   assert.match(css, /\.save-button\[data-saved="true"\]\{cursor:default;opacity:1\}/);
@@ -174,7 +175,8 @@ test('a rejected save retains edits; a successful retry syncs filters before ref
   const events = [];
   let reply = 403;
   const context = {
-    byId: id => nodes[id], document: { querySelectorAll: () => [], querySelector: selector => selector === '.drawer' ? { scrollTop: 0 } : null },
+    t: key => ({ 'common.saving': 'Enregistrement…', 'common.saved': 'Enregistré ✓', 'common.record': 'Enregistrer les informations', 'communes.invalidKey': 'Clé incorrecte', 'communes.saveError': 'Erreur' }[key] || key),
+    byId: id => nodes[id], document: { documentElement: { lang: 'fr' }, querySelectorAll: () => [], querySelector: selector => selector === '.drawer' ? { scrollTop: 0 } : null },
     window: { scrollY: 0, scrollTo: () => {}, prompt: () => 'good-key' },
     sessionStorage: { getItem: key => values.get(key), setItem: (key, value) => values.set(key, value), removeItem: key => values.delete(key) },
     fetch: async () => ({ ok: reply === 200, status: reply, text: async () => 'invalid key' }),
@@ -214,8 +216,8 @@ test('Systèmes keeps Intégrateur and Métier visible while extended details st
   const bridge = await read('app/prime-communes-1.1-base.js');
   const desktop = await read('app/styles/components.css');
   const mobile = await read('app/styles/responsive.css');
-  assert.match(bridge, /button\.textContent = 'Systèmes'/);
-  assert.match(bridge, /ERP, modules et hébergeur/);
+  assert.match(bridge, /button\.textContent = t\('common\.systems'\)/);
+  assert.match(bridge, /t\('communes\.systemsTitle'\)/);
   assert.doesNotMatch(desktop, /logiciels-hidden \.ecosystem-start/);
   assert.doesNotMatch(desktop, /logiciels-hidden \.metier-cell/);
   assert.match(mobile, /#logicielsToggle,[\s\S]*#issuesOnly\{/);
@@ -226,7 +228,7 @@ test('Natel header keeps all views and commune refresh reachable', async () => {
   const rebuild = await read('app/styles/responsive.css');
   assert.match(rebuild, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
   assert.match(rebuild, /\[hidden\] \{ display: none !important; \}/);
-  assert.match(css, /content:"MÀJ communes"/);
+  assert.match(css, /content:attr\(data-mobile-label\)/);
   assert.match(rebuild, /min-width: 116px/);
 });
 
@@ -302,7 +304,7 @@ test('Roadmap styling is canonical and absent from legacy stabilization layers',
 test('Roadmap infrastructure is a real semantic item, never CSS pseudo-content', async () => {
   const html = await read('index.html');
   const css = await read('app/styles/components.css');
-  assert.match(html, /<strong>Infrastructure Prime<\/strong>/);
+  assert.match(html, /<strong><!--i18n:page\.204-->Infrastructure Prime<\/strong>/);
   assert.match(html, /serveurs Prime/);
   assert.doesNotMatch(css, /roadmap-items::after/);
 });
@@ -352,16 +354,16 @@ test('Carte 1.2 keeps Switzerland on desktop, opens Romandie on Natel and uses t
   assert.match(js, /rasterPreload\.src = RASTER_URL/);
   assert.match(js, /legacyStage\.remove\(\)/);
   assert.match(js, /window\.loadMap = ensureMapLibre/);
-  assert.match(js, /data-map-view="impact"[^>]*>Empreinte Prime<\/button>/);
-  assert.match(js, /data-map-view="integrator"[^>]*>Intégrateur<\/button>/);
-  assert.match(js, /data-map-view="software"[^>]*>Logiciel<\/button>/);
+  assert.match(js, /data-map-view="impact"[^>]*>\$\{t\('map\.impact'\)\}<\/button>/);
+  assert.match(js, /data-map-view="integrator"[^>]*>\$\{t\('common\.integrator'\)\}<\/button>/);
+  assert.match(js, /data-map-view="software"[^>]*>\$\{t\('map\.software'\)\}<\/button>/);
   assert.doesNotMatch(js, /<select id="mapViewFilter"/);
   assert.match(css, /\.maplibre-view-buttons\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
   assert.doesNotMatch(js, /mapProductFilter/);
   assert.match(js, /mapLibreRomandieRatio/);
   assert.match(js, /mapLibreActiveRatio/);
   assert.match(js, /renderMetricMaps/);
-  assert.match(js, /ACTIVE_TERRITORY_LABEL = 'Jura · Berne · Vaud · Fribourg \(romands\)'/);
+  assert.match(js, /t\('map\.activeTerritory'\)/);
   assert.match(js, /mapAutocomplete/);
   assert.match(js, /municipalities-line/);
   assert.match(js, /municipality-labels/);

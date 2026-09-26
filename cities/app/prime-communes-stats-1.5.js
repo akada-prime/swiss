@@ -1,3 +1,4 @@
+import {t, number, date, locale} from './core/i18n.js';
 (() => {
   'use strict';
 
@@ -5,8 +6,8 @@
   // Canonical Stats enhancement: Prime + innosolvcity hero, compact KPI rhythm,
   // and a data-driven Switzerland footprint. Reads DATA 1.5 only.
   const GEOMETRY_URL = 'public/data/swiss-map-v1.json';
-  const nf = new Intl.NumberFormat('fr-CH');
-  const pf = new Intl.NumberFormat('fr-CH', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const nf = {format:value=>number(value)};
+  const pf = {format:value=>number(value,{minimumFractionDigits:1,maximumFractionDigits:1})};
 
   const root = document.getElementById('statsView');
   const hero = root?.querySelector('.stats-kpi-prime');
@@ -31,7 +32,7 @@
   }
 
   function scopeLabel() {
-    return scopeSelect?.selectedOptions?.[0]?.textContent?.trim() || 'Suisse romande';
+    return scopeSelect?.selectedOptions?.[0]?.textContent?.trim() || t('common.romandie');
   }
 
   function isRomandieScope() {
@@ -44,7 +45,7 @@
     hero.classList.add('stats-prime-hero');
     hero.innerHTML = `
       <div class="stats-prime-copy">
-        <span class="stats-prime-eyebrow">Part Prime · innosolvcity</span>
+        <span class="stats-prime-eyebrow">${t('stats.heroTitle')}</span>
         <strong id="statsPrimeShare">—</strong>
         <small id="statsPrimeDetail">—</small>
         <div class="stats-prime-meta">
@@ -94,13 +95,13 @@
 
     setText('statsPrimeShare', `${pf.format(share)}%`);
     setText('statsPrimeDetail', metric === 'communes'
-      ? `${nf.format(coveredCommunes)} communes couvertes`
-      : `${nf.format(coveredPopulation)} habitants couverts`);
-    setText('statsPrimeCommunes', `${nf.format(coveredCommunes)} communes clientes Prime · ${label}`);
+      ? t('stats.communesCovered',{count:nf.format(coveredCommunes)})
+      : t('common.covered',{count:nf.format(coveredPopulation)}));
+    setText('statsPrimeCommunes', t('stats.primeCommunes',{count:nf.format(coveredCommunes),scope:label}));
     setText('statsPrimeRatio', ratio
       ? (metric === 'population'
-          ? `${isRomandieScope() ? '1 Romand' : '1 habitant'} sur ${ratio}`
-          : `1 commune sur ${ratio}`)
+          ? t(isRomandieScope() ? 'map.westRatio' : 'map.inhabitantsRatio',{ratio})
+          : t('stats.communeRatio',{ratio}))
       : '—');
     setProgress(share);
     renderMiniMap(rows, coveredRows);
@@ -156,6 +157,11 @@
   metricButtons.forEach(button => button.addEventListener('click', queueRender));
   thresholdButtons.forEach(button => button.addEventListener('click', queueRender));
   statsTab?.addEventListener('click', queueRender);
+  document.addEventListener('prime-language-change', () => {
+    const label = hero.querySelector('.stats-prime-eyebrow');
+    if (label) label.textContent = t('stats.heroTitle');
+    queueRender();
+  });
   window.addEventListener('resize', () => window.requestAnimationFrame(syncContextKpiLabelHeight));
 
   ensureHeroMarkup();

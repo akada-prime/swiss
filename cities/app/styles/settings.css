@@ -1,0 +1,26 @@
+.header-actions{display:flex;align-items:center;gap:12px;margin-left:auto}
+.header-actions .sync-state{margin-left:0}
+.settings-trigger{display:flex;align-items:center;gap:8px;flex:0 0 auto;padding:9px 12px;border:1px solid var(--skin-border-soft);border-radius:10px;background:var(--skin-tint);color:var(--skin-secondary);font-size:12px;font-weight:650;cursor:pointer}
+.settings-trigger:hover,.settings-trigger:focus-visible{color:var(--skin-text);border-color:var(--skin-focus)}
+.settings-trigger span:first-child{font-size:18px;line-height:1}
+.settings-backdrop{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.35)}
+.settings-backdrop[hidden],.settings-panel[hidden]{display:none}
+.settings-panel{position:fixed;z-index:81;top:76px;right:max(18px,calc((100vw - 1500px)/2));width:min(360px,calc(100vw - 32px));max-height:calc(100dvh - 90px);overflow:auto;padding:22px;border:1px solid var(--skin-border);border-radius:18px;background:var(--skin-elevated);color:var(--skin-text);box-shadow:var(--skin-shadow)}
+.settings-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.settings-heading h2{margin:0;font-size:20px}
+.settings-heading button{width:36px;height:36px;border:1px solid var(--skin-border-soft);border-radius:8px;background:var(--skin-control);color:var(--skin-text);font-size:25px;cursor:pointer}
+.settings-panel fieldset{margin:0 0 16px;padding:0;border:0}
+.settings-panel legend{margin-bottom:8px;color:var(--skin-secondary);font-size:13px;font-weight:750}
+.settings-panel label{display:flex;align-items:center;gap:10px;min-height:44px;margin:5px 0;padding:9px 12px;border:1px solid var(--skin-border-soft);border-radius:10px;background:var(--skin-control);cursor:pointer}
+.settings-panel label:has(input:checked){border-color:var(--skin-accent);background:var(--skin-accent-soft)}
+.settings-panel input{accent-color:var(--skin-accent)}
+.settings-panel label span{font-size:14px}
+@media(max-width:900px){.header-actions .sync-state{position:static;width:12px;height:32px;transform:none}}
+@media(max-width:680px){
+  .header-actions{grid-column:2;grid-row:1;gap:8px;margin-left:0;justify-self:end}
+  .header-actions .sync-state{position:static;min-width:116px;transform:none}
+  .settings-trigger{padding:9px}
+  .settings-trigger span:last-child{display:none}
+  .settings-panel{top:auto;right:0;bottom:0;left:0;width:100%;max-height:90dvh;padding:max(22px,env(safe-area-inset-top)) 20px max(18px,env(safe-area-inset-bottom));border-radius:20px 20px 0 0}
+  body.settings-open{overflow:hidden}
+}

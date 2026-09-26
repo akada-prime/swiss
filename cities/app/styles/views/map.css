@@ -6,9 +6,9 @@
    The raster colour treatment itself remains unchanged. */
 
 :root{
-  --pc-card-bg:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
-  --pc-card-line:rgba(255,255,255,.075);
-  --pc-field-bg:#090e18;
+  --pc-card-bg:linear-gradient(145deg,var(--skin-border-faint),rgba(255,255,255,.018));
+  --pc-card-line:var(--skin-border-soft);
+  --pc-field-bg:var(--skin-control);
   --pc-text:#edf2f7;
   --pc-muted:#7f8ca0;
   --pc-blue:var(--pc-kpi-accent,#6ec7ff);
@@ -35,7 +35,7 @@
 .maplibre-territory-chips{display:none}
 
 /* Search + three direct reading buttons. On mobile each owns a full row. */
-.map-toolbar.maplibre-toolbar{position:relative;z-index:20;display:grid;grid-template-columns:minmax(280px,1fr);gap:8px;margin:0;padding:10px;border:1px solid rgba(255,255,255,.06);border-bottom:0;border-radius:15px 15px 0 0;background:rgba(255,255,255,.025)}
+.map-toolbar.maplibre-toolbar{position:relative;z-index:20;display:grid;grid-template-columns:minmax(280px,1fr);gap:8px;margin:0;padding:10px;border:1px solid rgba(255,255,255,.06);border-bottom:0;border-radius:15px 15px 0 0;background:var(--skin-tint)}
 .maplibre-toolbar .map-search{position:relative;display:flex;align-items:center;gap:9px;min-width:0;height:44px;padding:0 12px;border:1px solid var(--pc-card-line);border-radius:11px;background:var(--pc-field-bg);color:#778397}
 .maplibre-toolbar .map-search:focus-within{border-color:rgba(55,162,236,.55);box-shadow:inset 0 0 20px rgba(21,136,220,.10)}
 .maplibre-toolbar .map-search>span{flex:0 0 auto;color:#758297;font-size:21px;line-height:1}
@@ -44,7 +44,7 @@
 .maplibre-view-switch{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px;min-width:0;padding:7px;border:1px solid var(--pc-card-line);border-radius:11px;background:var(--pc-field-bg)}
 .maplibre-view-switch>span{padding-left:5px;color:#778397;font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
 .maplibre-view-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;min-width:0}
-.maplibre-view-buttons button{min-width:0;min-height:38px;padding:7px 10px;border:1px solid rgba(255,255,255,.07);border-radius:9px;background:rgba(255,255,255,.025);color:#8290a3;font:inherit;font-size:11px;font-weight:750;line-height:1.15;cursor:pointer;transition:border-color .15s ease,background .15s ease,color .15s ease}
+.maplibre-view-buttons button{min-width:0;min-height:38px;padding:7px 10px;border:1px solid rgba(255,255,255,.07);border-radius:9px;background:var(--skin-tint);color:#8290a3;font:inherit;font-size:11px;font-weight:750;line-height:1.15;cursor:pointer;transition:border-color .15s ease,background .15s ease,color .15s ease}
 .maplibre-view-buttons button:hover{border-color:rgba(55,162,236,.32);color:#c8d7e5}
 .maplibre-view-buttons button.active{border-color:rgba(55,162,236,.48);background:linear-gradient(135deg,rgba(13,105,166,.34),rgba(67,77,173,.18));color:#eef7ff;box-shadow:inset 0 0 18px rgba(28,132,205,.08)}
 .maplibre-view-buttons button:focus-visible{outline:2px solid #66c7ff;outline-offset:2px}

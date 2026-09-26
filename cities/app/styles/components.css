@@ -41,10 +41,10 @@
   place-items:center;
   width:30px;
   height:27px;
-  border:1px solid rgba(255,255,255,.075);
+  border:1px solid var(--skin-border-soft);
   border-radius:8px;
   color:#6f8096;
-  background:rgba(255,255,255,.025);
+  background:var(--skin-tint);
   font-size:10px;
   font-weight:750;
   line-height:1;
@@ -199,7 +199,7 @@
   border:1px solid rgba(255,255,255,.09);
   border-radius:11px;
   color:#a8b4c4;
-  background:#080d15;
+  background:var(--skin-control);
 }
 .drawer-client-toggle input{
   width:18px;
@@ -223,7 +223,7 @@
   border:1px solid rgba(255,255,255,.08);
   border-radius:10px;
   color:#aab5c4;
-  background:#080d15;
+  background:var(--skin-control);
   font-size:12px;
 }
 .drawer-module-option input{
@@ -317,7 +317,7 @@ html.portrait-open,body.portrait-open{overflow:hidden}
   border:1px solid rgba(255,255,255,.1);
   border-radius:50%;
   color:#c5d1df;
-  background:rgba(255,255,255,.045);
+  background:var(--skin-hover);
   font:300 28px/1 Arial,sans-serif;
   cursor:pointer;
 }
@@ -353,7 +353,7 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 .portrait-system-notes span{color:#8296ad;font-size:11px;font-weight:800}
 .portrait-system-notes p{margin:9px 0 0;color:#c9d4df;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
 .portrait-system-empty{margin:0;color:#8493a6;font-size:12px}
-.portrait-edit{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;margin-top:14px;border:1px solid rgba(255,255,255,.075);border-radius:13px;color:#8190a3;background:rgba(255,255,255,.025);font-size:11px;font-weight:650;cursor:pointer}
+.portrait-edit{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;margin-top:14px;border:1px solid var(--skin-border-soft);border-radius:13px;color:#8190a3;background:var(--skin-tint);font-size:11px;font-weight:650;cursor:pointer}
 .portrait-edit:hover,.portrait-edit:focus-visible{color:#c5d9ea;border-color:rgba(83,169,229,.28);outline:none;background:rgba(19,103,161,.09)}
 .portrait-edit span{font-size:15px}
 
@@ -386,7 +386,7 @@ html.portrait-open,body.portrait-open{overflow:hidden}
   border:1px solid rgba(255,255,255,.16);
   border-radius:9px;
   color:#c3cedc;
-  background:rgba(255,255,255,.055);
+  background:var(--skin-border-faint);
   font-size:12px;
   font-weight:700;
   white-space:nowrap;

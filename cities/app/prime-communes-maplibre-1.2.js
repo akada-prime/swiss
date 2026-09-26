@@ -1,3 +1,4 @@
+import {t, number, date, locale} from './core/i18n.js';
 (() => {
   'use strict';
 
@@ -12,7 +13,6 @@
   const RASTER_URL = `${import.meta.env?.BASE_URL || 'public/'}swiss-base.webp`;
   const COUNTRY_BORDER_URL = 'public/data/switzerland-border-2026.geojson';
   const ACTIVE_TERRITORIES = new Set(['JU', 'BE', 'VD', 'FR']);
-  const ACTIVE_TERRITORY_LABEL = 'Jura · Berne · Vaud · Fribourg (romands)';
   const PRIME_INNOSOLV_SOFTWARE = new Set(['innosolvcity', 'innosolv']);
 
   const panel = document.getElementById('mapPanel');
@@ -20,8 +20,8 @@
   let query = document.getElementById('mapQuery');
   if (!panel || !legacyStage || !query) return;
 
-  const nf = new Intl.NumberFormat('fr-CH');
-  const pf = new Intl.NumberFormat('fr-CH', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const nf = {format:value=>number(value)};
+  const pf = {format:value=>number(value,{minimumFractionDigits:1,maximumFractionDigits:1})};
   const html = value => typeof esc === 'function'
     ? esc(value)
     : String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
@@ -88,7 +88,7 @@
     metrics.innerHTML = `
       <article class="maplibre-metric">
         <div class="maplibre-metric-copy">
-          <p>Suisse romande</p>
+          <p>${t('common.romandie')}</p>
           <strong id="mapLibreRomandieRatio">—</strong>
           <span id="mapLibreRomandiePopulation">—</span>
           <div class="maplibre-progress" aria-hidden="true"><i id="mapLibreRomandieProgress"></i></div>
@@ -98,11 +98,11 @@
       </article>
       <article class="maplibre-metric">
         <div class="maplibre-metric-copy">
-          <p>Territoire innosolvcity Prime</p>
+          <p>${t('map.activeLabel')}</p>
           <strong id="mapLibreActiveRatio">—</strong>
           <span id="mapLibreActivePopulation">—</span>
           <div class="maplibre-progress" aria-hidden="true"><i id="mapLibreActiveProgress"></i></div>
-          <small>${ACTIVE_TERRITORY_LABEL}</small>
+          <small>${t('map.activeTerritory')}</small>
           <div class="maplibre-territory-chips" aria-hidden="true"><i>JU</i><i>BE</i><i>VD</i><i>FR</i></div>
         </div>
         <div class="maplibre-mini-map" id="mapLibreActiveMap" aria-hidden="true"></div>
@@ -138,8 +138,8 @@
     stage.className = 'maplibre-stage';
     stage.id = 'mapLibreStage';
     stage.innerHTML = `
-      <div id="primeMapLibre" aria-label="Carte interactive des communes suisses"></div>
-      <div class="maplibre-loading" id="mapLibreLoading"><span></span>Chargement de la carte…</div>`;
+      <div id="primeMapLibre" aria-label="${t('map.mapLabel')}"></div>
+      <div class="maplibre-loading" id="mapLibreLoading"><span></span>${t('map.loading')}</div>`;
     stage.querySelector('#mapLibreLoading').style.backgroundImage =
       `linear-gradient(rgba(20,34,44,.82),rgba(20,34,44,.82)),url("${RASTER_URL}")`;
     panel.append(stage);
@@ -158,7 +158,7 @@
     query.setAttribute('spellcheck', 'false');
     query.setAttribute('aria-autocomplete', 'list');
     query.setAttribute('aria-expanded', 'false');
-    query.placeholder = 'Rechercher une commune…';
+    query.placeholder = t('search.commune');
 
     toolbar.classList.add('maplibre-toolbar');
     search.classList.add('maplibre-search');
@@ -173,13 +173,13 @@
     const viewSwitch = document.createElement('div');
     viewSwitch.className = 'maplibre-view-switch';
     viewSwitch.setAttribute('role', 'group');
-    viewSwitch.setAttribute('aria-label', 'Choisir la lecture cartographique');
+    viewSwitch.setAttribute('aria-label', t('map.chooseView'));
     viewSwitch.innerHTML = `
-      <span>Affichage</span>
+      <span>${t('map.display')}</span>
       <div class="maplibre-view-buttons">
-        <button type="button" data-map-view="impact" aria-pressed="true">Empreinte Prime</button>
-        <button type="button" data-map-view="integrator" aria-pressed="false">Intégrateur</button>
-        <button type="button" data-map-view="software" aria-pressed="false">Logiciel</button>
+        <button type="button" data-map-view="impact" aria-pressed="true">${t('map.impact')}</button>
+        <button type="button" data-map-view="integrator" aria-pressed="false">${t('common.integrator')}</button>
+        <button type="button" data-map-view="software" aria-pressed="false">${t('map.software')}</button>
       </div>`;
     toolbar.append(viewSwitch);
     viewButtons = [...viewSwitch.querySelectorAll('[data-map-view]')];
@@ -258,12 +258,12 @@
     const active = all.filter(row => row.market === 'Welsch' && ACTIVE_TERRITORIES.has(row.canton));
     const r = coverage(romandie);
     const a = coverage(active);
-    setText('mapLibreRomandieRatio', r.ratio ? `1 Romand sur ${r.ratio}` : '—');
-    setText('mapLibreRomandiePopulation', `${nf.format(r.covered)} habitants · ${pf.format(r.share)}%`);
-    setText('mapLibreRomandieTotal', `Clients Prime innosolvcity · sur ${nf.format(r.total)} habitants`);
+    setText('mapLibreRomandieRatio', r.ratio ? t('map.westRatio',{ratio:r.ratio}) : '—');
+    setText('mapLibreRomandiePopulation', t('map.metricPopulation',{count:nf.format(r.covered),percent:pf.format(r.share)}));
+    setText('mapLibreRomandieTotal', t('map.primeTotal',{count:nf.format(r.total)}));
     setProgress('mapLibreRomandieProgress', r.share);
-    setText('mapLibreActiveRatio', a.ratio ? `1 habitant sur ${a.ratio}` : '—');
-    setText('mapLibreActivePopulation', `${nf.format(a.covered)} habitants · ${pf.format(a.share)}%`);
+    setText('mapLibreActiveRatio', a.ratio ? t('map.inhabitantsRatio',{ratio:a.ratio}) : '—');
+    setText('mapLibreActivePopulation', t('map.metricPopulation',{count:nf.format(a.covered),percent:pf.format(a.share)}));
     setProgress('mapLibreActiveProgress', a.share);
   }
 
@@ -541,13 +541,13 @@
   function popupNode(commune, interactive = false) {
     const root = document.createElement('div');
     root.className = 'maplibre-popup';
-    const tags = [commune.isPrime ? 'Client Prime' : '', commune.integrator || '', commune.software || '', commune.erp ? `ERP ${commune.erp}` : ''].filter(Boolean);
-    root.innerHTML = `<strong>${html(commune.name)}</strong><span>${html(commune.canton)} · ${nf.format(commune.expectedPopulation)} habitants</span><div class="maplibre-popup-meta">${tags.map(tag => `<i>${html(tag)}</i>`).join('')}</div>${commune.products?.length ? `<small>Modules · ${html(commune.products.join(' · '))}</small>` : ''}`;
+    const tags = [commune.isPrime ? t('common.customerPrime') : '', commune.integrator || '', commune.software || '', commune.erp ? `ERP ${commune.erp}` : ''].filter(Boolean);
+    root.innerHTML = `<strong>${html(commune.name)}</strong><span>${html(commune.canton)} · ${t('common.analyzed',{count:nf.format(commune.expectedPopulation)})}</span><div class="maplibre-popup-meta">${tags.map(tag => `<i>${html(tag)}</i>`).join('')}</div>${commune.products?.length ? `<small>${t('map.modules',{names:html(commune.products.join(' · '))})}</small>` : ''}`;
     if (interactive) {
       const button = document.createElement('button');
       button.className = 'maplibre-popup-action';
       button.type = 'button';
-      button.textContent = 'Fiche complète →';
+      button.textContent = t('common.mapComplete');
       button.onclick = event => { event.stopPropagation(); clickPopup?.remove(); if (typeof openDrawer === 'function') openDrawer(commune); };
       root.append(button);
     }
@@ -651,7 +651,7 @@
       return map;
     })().catch(error => {
       const loading = document.getElementById('mapLibreLoading');
-      if (loading) loading.innerHTML = `<div class="maplibre-error">La carte n’a pas pu démarrer sur cet appareil.<br>${html(error?.message || error)}</div>`;
+      if (loading) loading.innerHTML = `<div class="maplibre-error">${t('common.mapFailed')}<br>${html(error?.message || error)}</div>`;
       loadingPromise = null;
       throw error;
     });
@@ -785,6 +785,33 @@
 
   document.querySelector('[data-view="map"]')?.addEventListener('click', () => {
     ensureMapLibre().then(() => setTimeout(() => { map?.resize(); applyMapBounds(); fitCountryScope(); }, 100)).catch(() => {});
+  });
+
+  document.addEventListener('prime-language-change', () => {
+    query.placeholder = t('search.commune');
+    const switcher = panel.querySelector('.maplibre-view-switch');
+    if (switcher) {
+      switcher.setAttribute('aria-label', t('map.chooseView'));
+      switcher.querySelector('span').textContent = t('map.display');
+      for (const [view,key] of [['impact','map.impact'],['integrator','common.integrator'],['software','map.software']]) {
+        const button = switcher.querySelector(`[data-map-view="${view}"]`);
+        if (button) button.textContent = t(key);
+      }
+    }
+    if (metrics) {
+      metrics.querySelector('.maplibre-metric:first-child p').textContent = t('common.romandie');
+      metrics.querySelector('.maplibre-metric:nth-child(2) p').textContent = t('map.activeLabel');
+      metrics.querySelector('.maplibre-metric:nth-child(2) small').textContent = t('map.activeTerritory');
+      syncMetrics();
+    }
+    const loading = document.getElementById('mapLibreLoading');
+    if (loading && !loading.querySelector('.maplibre-error')) loading.lastChild.nodeValue = t('map.loading');
+    document.getElementById('primeMapLibre')?.setAttribute('aria-label', t('map.mapLabel'));
+    if (clickPopup?.isOpen()) {
+      const commune = all.find(row => String(row.id) === selectedId);
+      if (commune) clickPopup.setDOMContent(popupNode(commune, true));
+    }
+    hoverPopup?.remove();
   });
 
   window.addEventListener('resize', () => {

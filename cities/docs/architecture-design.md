@@ -24,6 +24,9 @@ lu avant toute modification structurelle.
 ```text
 index.html
 └── app/main.js                         entrée ES module unique
+    ├── core/preferences.js             valeurs locales et contrat de préférences
+    ├── core/settings.js                panneau Paramètres
+    ├── core/i18n.js                    traduction et formatage localisé
     ├── core/runtime.js                 shell et contrat de compatibilité
     ├── prime-communes-data-1.5.js      lecture, fallback et normalisation
     ├── prime-communes-maplibre-1.2.js  Carte
@@ -37,8 +40,8 @@ index.html
 
 L'ordre des imports est explicite et testé. Il remplace le chargeur dynamique,
 les versions de cache dispersées et le runtime métier inline historiques.
-`index.html` conserve uniquement la structure sémantique et la garde de premier
-affichage nécessaire aux deep-links.
+`index.html` conserve la structure sémantique et les gardes synchrones de
+premier affichage nécessaires aux deep-links, au Skin et à `html lang`.
 
 ### Responsabilités JavaScript
 
@@ -76,6 +79,8 @@ views/radar.css
 views/stories.css
 views/roadmap.css
 responsive.css
+skins.css
+settings.css
 ```
 
 | Couche | Rôle |
@@ -84,7 +89,9 @@ responsive.css
 | Composants | navigation, boutons, filtres, tableaux, cartes, drawers et états partagés |
 | Assets produit | dimensions et traitement des marques Prime/partenaires |
 | Vues | règles légitimes propres à un seul domaine |
-| Responsive | adaptations de disposition et lisibilité, chargées en dernier |
+| Responsive | adaptations de disposition et lisibilité, après les vues |
+| Skins | trois palettes de tokens sémantiques, appliquées avant l'affichage |
+| Paramètres | chrome du panneau de préférences, responsive |
 
 Règles :
 
@@ -96,6 +103,34 @@ Règles :
 - `[hidden]` est l'exception de cascade autorisée ; les deux autres occurrences
   actuelles sont la garde inline de premier affichage des deep-links ;
 - les media queries changent la disposition et la densité, pas le sens métier.
+- toute nouvelle couleur globale d'interface exprimant une décision d'apparence
+  passe par les tokens de Skin. Les couleurs de statut, de données, de carte,
+  de fournisseurs et de produits gardent leur sens indépendamment du Skin.
+
+## Préférences et langues
+
+`app/core/preferences.js` expose `getPreference`, `setPreference` et un abonnement
+aux changements. Les valeurs validées `skin` et `language` sont conservées sous
+`prime-communes-skin` et `prime-communes-language` dans `localStorage`, avec
+`prime-darkweb` et `fr` par défaut. La garde synchrone dans le `<head>` pose
+`data-skin` et `lang` avant les styles et le rendu ; le module reprend le même
+contrat après chargement. Il n'existe pas de compte, d'avatar ou de profil fictif.
+Lorsque les profils existeront, un adaptateur pourra résoudre profil distant >
+préférence locale > valeur par défaut sans changer les consommateurs.
+
+`app/core/i18n.js` expose les traductions à clés stables dans les catalogues
+séparés `app/i18n/fr.js` et `app/i18n/de.js`. Les libellés statiques portent un
+marqueur de clé dans le HTML ; les rendus dynamiques utilisent les mêmes clés.
+Le formatage destiné à l'utilisateur emploie `fr-CH` ou `de-CH`. Les noms
+officiels, faits stockés, identifiants, produits et sources restent des données,
+séparées du texte d'interface. Tout nouveau texte d'interface traduisible doit
+passer par i18n ; les données métier et contenus explicitement non traduisibles
+sont exclus. Les contenus éditoriaux traduits conservent les mêmes faits et les
+mêmes références de source.
+
+Paramètres dans le header héberge les préférences personnelles. Une éventuelle
+Administration, réservée aux rôles appropriés, est un domaine fonctionnel
+distinct ; aucune console Admin ou authentification n'est créée ici.
 
 ## Grammaire visuelle
 

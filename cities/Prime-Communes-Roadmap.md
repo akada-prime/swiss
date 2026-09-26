@@ -147,6 +147,20 @@ Estimation historique conservée : 14–28 h · 35–80 crédits.
 
 ## 2.5 — Comprendre le temps · fondations techniques
 
+### Préférences utilisateur · Apparence · Langues
+
+Première livraison frontend : Paramètres dans le header ; moteur de Skin et
+trois apparences (Prime Darkweb, Helvetia et Clair) ; français et allemand
+suisse ; préférences conservées localement dans le navigateur. Le chargement
+applique ces choix avant l'affichage principal. Cette livraison ne crée ni
+compte ni droit d'accès.
+
+Après l'authentification, les profils et les droits, les préférences pourront
+être synchronisées avec chaque profil, selon la priorité profil utilisateur >
+navigateur > valeur par défaut. La synchronisation serveur, les utilisateurs,
+le SSO et la RLS restent à faire ; Paramètres personnels et Administration
+réservée aux rôles autorisés restent deux surfaces distinctes.
+
 ### Mode d'intervention adaptative · sobriété de développement
 
 Prime Communes applique une validation proportionnée au risque de chaque

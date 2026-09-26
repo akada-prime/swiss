@@ -7,7 +7,7 @@ const read = path => readFile(new URL('../' + path, import.meta.url), 'utf8');
 
 test('Radar! replaces NEWS visibly and states the sobriety contract', async () => {
   const html = await read('index.html');
-  assert.match(html, />Radar!<span class="news-nav-badge">SOBRE/);
+  assert.match(html, />Radar!<span class="news-nav-badge"><!--i18n:page\.009-->SOBRE/);
   assert.match(html, /Veille sobre du marché communal/);
   assert.match(html, /Détecter mécaniquement\. Comprendre intelligemment\. Calculer le moins possible\./);
   assert.match(html, /0 appel IA lorsqu’aucune nouveauté/);

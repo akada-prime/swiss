@@ -14,6 +14,13 @@
       const requestedView = new URLSearchParams(window.location.search).get('view');
       const initialView = ['communes', 'map', 'stats', 'news', 'stories', 'roadmap'].includes(requestedView) ? requestedView : 'communes';
       document.documentElement.dataset.initialView = initialView;
+      // Apply validated local preferences before fetching CSS or rendering body.
+      const preference = (key, accepted, fallback) => {
+        try { const value = localStorage.getItem(key); return accepted.includes(value) ? value : fallback; }
+        catch { return fallback; }
+      };
+      document.documentElement.dataset.skin = preference('prime-communes-skin', ['prime-darkweb', 'helvetia', 'light'], 'prime-darkweb');
+      document.documentElement.lang = preference('prime-communes-language', ['fr', 'de'], 'fr');
     })();
   </script>
   <link rel="stylesheet" href="app/styles/main.css">
@@ -34,34 +41,48 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   <header class="topbar">
     <a href="./" aria-label="Retour à l’accueil Prime Communes"><img src="public/prime-communes-helvetia.webp" class="brand" alt="Prime Communes"></a>
     <nav class="view-tabs" aria-label="Navigation principale">
-      <button class="view-tab active" data-view="communes">Communes</button>
-      <button class="view-tab" data-view="map">Carte</button>
-      <button class="view-tab" data-view="stats">Stats</button>
-      <button class="view-tab news-nav-tab" data-view="news">Radar!<span class="news-nav-badge">SOBRE</span></button>
-      <button class="view-tab" data-view="stories">Histoires</button>
-      <button class="view-tab" data-view="roadmap">Roadmap</button>
+      <button class="view-tab active" data-view="communes"><!--i18n:page.006-->Communes</button>
+      <button class="view-tab" data-view="map"><!--i18n:page.007-->Carte</button>
+      <button class="view-tab" data-view="stats"><!--i18n:page.008-->Stats</button>
+      <button class="view-tab news-nav-tab" data-view="news">Radar!<span class="news-nav-badge"><!--i18n:page.009-->SOBRE</span></button>
+      <button class="view-tab" data-view="stories"><!--i18n:page.010-->Histoires</button>
+      <button class="view-tab" data-view="roadmap"><!--i18n:page.011-->Roadmap</button>
     </nav>
-    <button class="sync-state" id="syncReload" title="Recharger depuis Supabase" hidden><span></span><b id="syncText" aria-live="polite">Connexion à la base…</b></button>
+    <div class="header-actions"><button class="sync-state" id="syncReload" title="Recharger depuis Supabase" hidden><span></span><b id="syncText" aria-live="polite"><!--i18n:page.012-->Connexion à la base…</b></button>
+    <button class="settings-trigger" id="settingsTrigger" type="button" aria-haspopup="dialog" aria-controls="settingsPanel" aria-expanded="false" aria-label="Paramètres"><span aria-hidden="true">⚙</span><span><!--i18n:page.001-->Paramètres</span></button></div>
   </header>
+  <div class="settings-backdrop" id="settingsBackdrop" hidden></div>
+  <aside class="settings-panel" id="settingsPanel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
+    <div class="settings-heading"><h2 id="settingsTitle"><!--i18n:page.001-->Paramètres</h2><button id="settingsClose" type="button" aria-label="Fermer">×</button></div>
+    <fieldset><legend><!--i18n:page.002-->Apparence</legend>
+      <label><input type="radio" name="skin" value="prime-darkweb"><span>🌑 Prime Darkweb</span></label>
+      <label><input type="radio" name="skin" value="helvetia"><span>🇨🇭 Helvetia</span></label>
+      <label><input type="radio" name="skin" value="light"><span><!--i18n:page.003-->☀️ Clair</span></label>
+    </fieldset>
+    <fieldset><legend><!--i18n:page.004-->Langue</legend>
+      <label><input type="radio" name="language" value="fr"><span><!--i18n:page.005-->🇫🇷 Français</span></label>
+      <label><input type="radio" name="language" value="de"><span>🇩🇪 Deutsch</span></label>
+    </fieldset>
+  </aside>
   <section class="workspace">
     <div id="communesView">
-    <div class="intro-row view-intro"><div><h1>Les communes.<br><span>Enfin lisibles.</span></h1></div><div class="intro-summary view-intro-copy"><p class="eyebrow">Marché suisse · Delimo P99</p><p class="intro-copy">Une vue unique du marché communal suisse : population, qualité des livraisons, logiciels et opportunités.</p><p class="intro-count"><strong id="headerCommuneCount">—</strong> communes, une seule vue</p></div></div>
+    <div class="intro-row view-intro"><div><h1><!--i18n:page.013-->Les communes.<br><span><!--i18n:page.014-->Enfin lisibles.</span></h1></div><div class="intro-summary view-intro-copy"><p class="eyebrow"><!--i18n:page.015-->Marché suisse · Delimo P99</p><p class="intro-copy"><!--i18n:page.016-->Une vue unique du marché communal suisse : population, qualité des livraisons, logiciels et opportunités.</p><p class="intro-count"><strong id="headerCommuneCount">—</strong> <!--i18n:page.017-->communes, une seule vue</p></div></div>
     <section class="kpi-grid">
-      <article class="kpi-card hero-kpi"><div class="kpi-top"><span class="kpi-label">Population couverte</span><span class="kpi-country"><img class="swiss-mark" src="public/swiss-mark.svg" alt="Suisse"><span class="kpi-badge">100%</span></span></div><strong id="population">—</strong><p><span id="communeCount">—</span> communes</p><div class="sparkline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
-      <article class="kpi-card"><div class="kpi-top"><span class="kpi-label">Communes ≥ 10’000</span><span class="kpi-badge" id="over10kShare">—</span></div><strong id="over10k">—</strong><p><span id="over10kPop">—</span> habitants · <span id="over10kPopShare">—</span> du pays</p></article>
-      <article class="kpi-card prime-card"><div class="kpi-top"><span class="kpi-label">Clients Prime</span><img class="prime-one" src="public/prime-one-negative.png?v=3" alt="Prime"></div><strong id="prime">—</strong><p><span id="primePop">—</span> habitants identifiés</p></article>
+      <article class="kpi-card hero-kpi"><div class="kpi-top"><span class="kpi-label"><!--i18n:page.018-->Population couverte</span><span class="kpi-country"><img class="swiss-mark" src="public/swiss-mark.svg" alt="Suisse"><span class="kpi-badge">100%</span></span></div><strong id="population">—</strong><p><span id="communeCount">—</span> <!--i18n:page.019-->communes</p><div class="sparkline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+      <article class="kpi-card"><div class="kpi-top"><span class="kpi-label"><!--i18n:page.020-->Communes ≥ 10’000</span><span class="kpi-badge" id="over10kShare">—</span></div><strong id="over10k">—</strong><p><span id="over10kPop">—</span> <!--i18n:page.057-->habitants · <span id="over10kPopShare">—</span> <!--i18n:page.022-->du pays</p></article>
+      <article class="kpi-card prime-card"><div class="kpi-top"><span class="kpi-label"><!--i18n:page.023-->Clients Prime</span><img class="prime-one" src="public/prime-one-negative.png?v=3" alt="Prime"></div><strong id="prime">—</strong><p><span id="primePop">—</span> <!--i18n:page.024-->habitants identifiés</p></article>
     </section>
     <button class="delimo-control" id="issuesCard" type="button" aria-pressed="false">
       <span id="issues" hidden>—</span>
       <span class="delimo-control-icon" aria-hidden="true"><img src="public/assets/delimo/favicon.ico?v=1" alt=""></span>
       <span class="delimo-control-copy">
-        <span class="delimo-control-eyebrow">Outil de contrôle · Delimo</span>
-        <strong id="ofsLabel">Qualité des livraisons</strong>
-        <span id="ofsCopy">Afficher les statuts, erreurs EWID et commentaires OFS.</span>
+        <span class="delimo-control-eyebrow"><!--i18n:page.025-->Outil de contrôle · Delimo</span>
+        <strong id="ofsLabel"><!--i18n:page.026-->Qualité des livraisons</strong>
+        <span id="ofsCopy"><!--i18n:page.027-->Afficher les statuts, erreurs EWID et commentaires OFS.</span>
       </span>
       <span class="delimo-control-action">
-        <span class="delimo-control-count" id="ofsCount">Chargement…</span>
-        <b id="ofsAction">Ouvrir le contrôle</b>
+        <span class="delimo-control-count" id="ofsCount"><!--i18n:page.028-->Chargement…</span>
+        <b id="ofsAction"><!--i18n:page.029-->Ouvrir le contrôle</b>
         <span class="delimo-control-arrow" id="ofsArrow">→</span>
       </span>
     </button>
@@ -70,235 +91,236 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         <label class="search"><span>⌕</span><input id="query" type="search" enterkeyhint="search" placeholder="Rechercher une commune, un logiciel…"></label>
         <div class="market-toggles" id="territoryFilters" aria-label="Marché"><button class="filter-toggle market-toggle" data-market="Welsch">Welsch</button><button class="filter-toggle market-toggle" data-market="Uf Tüütsch">Uf&nbsp;Tüütsch</button><button class="filter-toggle market-toggle" data-market="Ticino">TI</button></div>
         <div class="canton-district-group">
-          <label class="canton-filter"><span>Canton</span><select id="canton"><option>Tous</option></select></label>
-          <label id="districtFilter" hidden><span>District</span><select id="district"><option value="">Tous les districts</option></select></label>
+          <label class="canton-filter"><span><!--i18n:page.030-->Canton</span><select id="canton"><option><!--i18n:page.031-->Tous</option></select></label>
+          <label id="districtFilter" hidden><span><!--i18n:page.032-->District</span><select id="district"><option value=""><!--i18n:page.033-->Tous les districts</option></select></label>
         </div>
-        <label class="solution-filter"><span>Solution</span><select id="solution"><option value="Tous">Toutes</option></select></label>
-        <button class="filter-toggle" id="primeOnly">Clients&nbsp;Prime</button><button class="filter-toggle" id="eadminOnly">eAdmin</button><span class="filters-separator" aria-hidden="true"></span><button class="filter-toggle" id="districtsToggle" aria-expanded="false" aria-controls="territoryFilters">Territoire</button><button class="filter-toggle" id="issuesOnly" hidden>À surveiller</button>
+        <label class="solution-filter"><span><!--i18n:page.034-->Solution</span><select id="solution"><option value="Tous"><!--i18n:page.035-->Toutes</option></select></label>
+        <button class="filter-toggle" id="primeOnly"><!--i18n:page.036-->Clients&nbsp;Prime</button><button class="filter-toggle" id="eadminOnly">eAdmin</button><span class="filters-separator" aria-hidden="true"></span><button class="filter-toggle" id="districtsToggle" aria-expanded="false" aria-controls="territoryFilters"><!--i18n:page.037-->Territoire</button><button class="filter-toggle" id="issuesOnly" hidden><!--i18n:page.038-->À surveiller</button>
       </div>
-      <div class="result-line"><span><strong id="resultCount">0</strong> résultats <button id="reset">Réinitialiser</button></span><small class="portrait-hint"><b>#</b> ouvre le portrait communal</small><button class="result-export" id="exportBtn">↓ Exporter (.tsv)</button></div>
+      <div class="result-line"><span><strong id="resultCount">0</strong> <!--i18n:page.039-->résultats <button id="reset"><!--i18n:page.040-->Réinitialiser</button></span><small class="portrait-hint"><b>#</b> <!--i18n:page.041-->ouvre le portrait communal</small><button class="result-export" id="exportBtn"><!--i18n:page.042-->↓ Exporter (.tsv)</button></div>
       <div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="rows"></tbody></table><p class="table-limit" id="limit"></p></div>
     </section>
     </div>
     <section class="map-view" id="mapView" hidden>
       <div class="map-intro view-intro">
-        <div><h1>La Romandie.<br><span>À portée de main.</span></h1></div>
-        <div class="map-intro-copy view-intro-copy"><p class="eyebrow">Carte interactive · swissBOUNDARIES3D</p><p>Survolez le marché communal, repérez les forces en présence et ouvrez directement la fiche d’une commune.</p><strong><span id="mapCommuneCount">621</span> communes francophones · contexte suisse conservé</strong></div>
+        <div><h1><!--i18n:page.043-->La Romandie.<br><span><!--i18n:page.044-->À portée de main.</span></h1></div>
+        <div class="map-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.045-->Carte interactive · swissBOUNDARIES3D</p><p><!--i18n:page.046-->Survolez le marché communal, repérez les forces en présence et ouvrez directement la fiche d’une commune.</p><strong><span id="mapCommuneCount">621</span> <!--i18n:page.047-->communes francophones · contexte suisse conservé</strong></div>
       </div>
       <section class="map-panel" id="mapPanel" aria-label="Carte interactive de la Suisse romande">
         <div class="map-toolbar">
           <label class="map-search"><span>⌕</span><input id="mapQuery" placeholder="Rechercher une commune…" autocomplete="off"></label>
           <div class="map-controls">
             <div class="map-perspective" aria-label="Lecture de la carte">
-              <button class="active" data-map-perspective="impact">Empreinte Prime</button>
-              <button data-map-perspective="factual">Marché factuel</button>
+              <button class="active" data-map-perspective="impact"><!--i18n:page.048-->Empreinte Prime</button>
+              <button data-map-perspective="factual"><!--i18n:page.049-->Marché factuel</button>
             </div>
             <div class="map-mode" id="mapModeControls" aria-label="Coloration de la carte" hidden>
-              <button class="active" data-map-mode="integrator">Intégrateur</button>
-              <button data-map-mode="software">Logiciel</button>
-              <button data-map-mode="product">Produit</button>
+              <button class="active" data-map-mode="integrator"><!--i18n:page.050-->Intégrateur</button>
+              <button data-map-mode="software"><!--i18n:page.051-->Logiciel</button>
+              <button data-map-mode="product"><!--i18n:page.052-->Produit</button>
               <select id="mapProduct" aria-label="Produit affiché"></select>
             </div>
           </div>
         </div>
         <div class="map-stage-shell" id="mapStage">
-          <div class="map-loading" id="mapLoading"><span></span>Préparation de la carte…</div>
+          <div class="map-loading" id="mapLoading"><span></span><!--i18n:page.053-->Préparation de la carte…</div>
           <svg id="swissMap" role="img" aria-label="Carte des communes de Suisse romande" preserveAspectRatio="xMidYMid slice"></svg>
           <aside class="map-impact" id="mapImpact">
-            <p>L’empreinte Prime</p>
-            <strong id="mapImpactRatio">1 Romand sur 5</strong>
-            <span>vit dans une commune gérée par Prime</span>
-            <div><b id="mapImpactPopulation">—</b><small> habitants · <span id="mapImpactShare">—</span> de la Romandie</small></div>
+            <p><!--i18n:page.054-->L’empreinte Prime</p>
+            <strong id="mapImpactRatio"><!--i18n:page.055-->1 Romand sur 5</strong>
+            <span><!--i18n:page.056-->vit dans une commune gérée par Prime</span>
+            <div><b id="mapImpactPopulation">—</b><small> <!--i18n:page.057-->habitants · <span id="mapImpactShare">—</span> <!--i18n:page.058-->de la Romandie</small></div>
           </aside>
           <div class="map-zoom" aria-label="Contrôles de zoom"><button id="mapZoomIn" aria-label="Zoom avant">+</button><button id="mapZoomOut" aria-label="Zoom arrière">−</button><button id="mapReset" aria-label="Réinitialiser la carte">⌂</button></div>
           <div class="map-tooltip" id="mapTooltip" hidden></div>
         </div>
-        <div class="map-footer"><div class="map-legend" id="mapLegend"></div><span class="map-source">Surfaces officielles 2026 · swisstopo</span></div>
+        <div class="map-footer"><div class="map-legend" id="mapLegend"></div><span class="map-source"><!--i18n:page.059-->Surfaces officielles 2026 · swisstopo</span></div>
       </section>
     </section>
     <section class="stats-view" id="statsView" hidden>
       <div class="stats-intro view-intro">
-        <div><h1>Le marché.<br><span>Mis en perspective.</span></h1></div>
-        <div class="stats-intro-copy view-intro-copy"><p class="eyebrow">Prime Communes · Statistiques 1.1</p><p>Mesurer notre présence en communes ou en habitants, puis comprendre qui occupe réellement les territoires qui comptent.</p><strong>Périmètre romand · Fribourg et Valais limités aux communes Welsch.</strong></div>
+        <div><h1><!--i18n:page.060-->Le marché.<br><span><!--i18n:page.061-->Mis en perspective.</span></h1></div>
+        <div class="stats-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.062-->Prime Communes · Statistiques 1.1</p><p><!--i18n:page.063-->Mesurer notre présence en communes ou en habitants, puis comprendre qui occupe réellement les territoires qui comptent.</p><strong><!--i18n:page.064-->Périmètre romand · Fribourg et Valais limités aux communes Welsch.</strong></div>
       </div>
       <section class="stats-panel">
         <div class="stats-toolbar">
-          <label><span>Territoire</span><select id="statsScope"><option value="romandie">Suisse romande</option><option value="JU">Jura</option><option value="jura-bernois">Jura bernois</option><option value="VD">Vaud</option><option value="FR-welsch">Fribourg</option><option value="VS-welsch">Valais</option></select></label>
-          <div class="stats-segment" aria-label="Mesure"><button class="active" data-stats-metric="population">Habitants</button><button data-stats-metric="communes">Communes</button></div>
-          <div class="stats-segment" aria-label="Seuil de population"><button class="active" data-stats-threshold="0">Toutes</button><button data-stats-threshold="5000">≥ 5’000</button><button data-stats-threshold="10000">≥ 10’000</button></div>
+          <label><span><!--i18n:page.037-->Territoire</span><select id="statsScope"><option value="romandie"><!--i18n:page.065-->Suisse romande</option><option value="JU">Jura</option><option value="jura-bernois"><!--i18n:page.066-->Jura bernois</option><option value="VD">Vaud</option><option value="FR-welsch">Fribourg</option><option value="VS-welsch">Valais</option></select></label>
+          <div class="stats-segment" aria-label="Mesure"><button class="active" data-stats-metric="population"><!--i18n:page.067-->Habitants</button><button data-stats-metric="communes"><!--i18n:page.006-->Communes</button></div>
+          <div class="stats-segment" aria-label="Seuil de population"><button class="active" data-stats-threshold="0"><!--i18n:page.035-->Toutes</button><button data-stats-threshold="5000">≥ 5’000</button><button data-stats-threshold="10000">≥ 10’000</button></div>
         </div>
         <div class="stats-kpis">
-          <article class="stats-kpi stats-kpi-prime"><span>Part Prime</span><strong id="statsPrimeShare">—</strong><small id="statsPrimeDetail">—</small></article>
-          <article class="stats-kpi"><span>Communes analysées</span><strong id="statsMunicipalities">—</strong><small id="statsPopulation">— habitants</small></article>
-          <article class="stats-kpi"><span>Premier intégrateur concurrent</span><strong id="statsCompetitor">—</strong><small id="statsCompetitorShare">—</small></article>
-          <article class="stats-kpi threshold-kpi"><span>Communes ≥ 5’000</span><strong id="statsPrime5">—</strong><small id="statsPrime5Detail">clients Prime</small></article>
-          <article class="stats-kpi threshold-kpi"><span>Communes ≥ 10’000</span><strong id="statsPrime10">—</strong><small id="statsPrime10Detail">clients Prime</small></article>
+          <article class="stats-kpi stats-kpi-prime"><span><!--i18n:page.068-->Part Prime</span><strong id="statsPrimeShare">—</strong><small id="statsPrimeDetail">—</small></article>
+          <article class="stats-kpi"><span><!--i18n:page.069-->Communes analysées</span><strong id="statsMunicipalities">—</strong><small id="statsPopulation"><!--i18n:page.070-->— habitants</small></article>
+          <article class="stats-kpi"><span><!--i18n:page.071-->Premier intégrateur concurrent</span><strong id="statsCompetitor">—</strong><small id="statsCompetitorShare">—</small></article>
+          <article class="stats-kpi threshold-kpi"><span><!--i18n:page.072-->Communes ≥ 5’000</span><strong id="statsPrime5">—</strong><small id="statsPrime5Detail"><!--i18n:page.073-->clients Prime</small></article>
+          <article class="stats-kpi threshold-kpi"><span><!--i18n:page.020-->Communes ≥ 10’000</span><strong id="statsPrime10">—</strong><small id="statsPrime10Detail"><!--i18n:page.073-->clients Prime</small></article>
         </div>
         <div class="stats-story-grid">
           <article class="stats-card territory-card">
-            <header><div><p class="eyebrow">Là où Prime pèse vraiment</p><h2>Nos territoires, une empreinte</h2></div><span class="stats-live">Données en direct</span></header>
+            <header><div><p class="eyebrow"><!--i18n:page.074-->Là où Prime pèse vraiment</p><h2><!--i18n:page.075-->Nos territoires, une empreinte</h2></div><span class="stats-live"><!--i18n:page.076-->Données en direct</span></header>
             <div id="territoryComparison" class="territory-comparison"></div>
           </article>
         </div>
         <div class="stats-analysis-grid">
-          <article class="stats-card"><header><div><p class="eyebrow">Rapport de forces</p><h2 id="statsRankingTitle">Intégrateurs</h2></div></header><div class="stats-ranking" id="statsIntegratorRanking"></div></article>
-          <article class="stats-card"><header><div><p class="eyebrow">Produits métier</p><h2>Les solutions en présence</h2></div></header><div class="stats-ranking" id="statsSoftwareRanking"></div></article>
+          <article class="stats-card"><header><div><p class="eyebrow"><!--i18n:page.077-->Rapport de forces</p><h2 id="statsRankingTitle"><!--i18n:page.078-->Intégrateurs</h2></div></header><div class="stats-ranking" id="statsIntegratorRanking"></div></article>
+          <article class="stats-card"><header><div><p class="eyebrow"><!--i18n:page.079-->Produits métier</p><h2><!--i18n:page.080-->Les solutions en présence</h2></div></header><div class="stats-ranking" id="statsSoftwareRanking"></div></article>
         </div>
       </section>
     </section>
     <section class="news-view" id="newsView" hidden>
-      <aside class="news-beta-note" aria-label="Sobriété numérique"><strong>SOBRIÉTÉ</strong><span>La veille privilégie les contrôles déterministes et les sources publiques structurées. L’IA n’est utilisée qu’en seconde lecture, lorsque son interprétation apporte une valeur réelle. La source publique primaire reste la référence.</span></aside>
+      <aside class="news-beta-note" aria-label="Sobriété numérique"><strong><!--i18n:page.081-->SOBRIÉTÉ</strong><span><!--i18n:page.082-->La veille privilégie les contrôles déterministes et les sources publiques structurées. L’IA n’est utilisée qu’en seconde lecture, lorsque son interprétation apporte une valeur réelle. La source publique primaire reste la référence.</span></aside>
       <div class="news-intro view-intro">
-        <div><h1>Ce qui bouge.<br><span>Avant que ça bouge.</span></h1></div>
-        <div class="news-intro-copy view-intro-copy"><p class="eyebrow">Veille sobre du marché communal</p><p>Prime Communes ne demande pas à l’IA de parcourir en permanence le web. Les sources sont surveillées avec les moyens les plus légers possibles ; l’IA intervient uniquement lorsqu’un changement mérite d’être compris, qualifié ou relié au marché Prime.</p><strong>Détecter mécaniquement. Comprendre intelligemment. Calculer le moins possible.</strong></div>
+        <div><h1><!--i18n:page.083-->Ce qui bouge.<br><span><!--i18n:page.084-->Avant que ça bouge.</span></h1></div>
+        <div class="news-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.085-->Veille sobre du marché communal</p><p><!--i18n:page.086-->Prime Communes ne demande pas à l’IA de parcourir en permanence le web. Les sources sont surveillées avec les moyens les plus légers possibles ; l’IA intervient uniquement lorsqu’un changement mérite d’être compris, qualifié ou relié au marché Prime.</p><strong><!--i18n:page.087-->Détecter mécaniquement. Comprendre intelligemment. Calculer le moins possible.</strong></div>
       </div>
       <section class="news-panel" aria-label="Radar communal">
         <header class="news-panel-heading">
-          <div><p class="eyebrow">Radar! · couverture mesurable</p><h2>Les signaux du territoire</h2></div>
+          <div><p class="eyebrow"><!--i18n:page.088-->Radar! · couverture mesurable</p><h2><!--i18n:page.089-->Les signaux du territoire</h2></div>
           <div class="news-radar-actions">
-            <div class="news-radar-state"><span></span><b>Surveillance mécanique</b><small>L’IA arrive uniquement après détection</small></div>
+            <div class="news-radar-state"><span></span><b><!--i18n:page.090-->Surveillance mécanique</b><small><!--i18n:page.091-->L’IA arrive uniquement après détection</small></div>
             <div class="news-refresh-stack">
               <button class="news-refresh-button" id="newsManualRefresh" type="button">
-                <span aria-hidden="true">↻</span><b>Analyser avec ChatGPT</b><small id="newsRefreshStatus" aria-live="polite">Lecture de la file de candidats…</small>
+                <span aria-hidden="true">↻</span><b><!--i18n:page.092-->Analyser avec ChatGPT</b><small id="newsRefreshStatus" aria-live="polite"><!--i18n:page.093-->Lecture de la file de candidats…</small>
               </button>
-              <small class="news-energy-note">0 appel IA lorsqu’aucune nouveauté ne mérite d’être analysée</small>
+              <small class="news-energy-note"><!--i18n:page.094-->0 appel IA lorsqu’aucune nouveauté ne mérite d’être analysée</small>
             </div>
           </div>
         </header>
         <div class="news-kpis news-kpis-operations" aria-label="Mesure du Radar">
-          <article class="news-kpi news-kpi-hot"><span>Couverture</span><strong id="radarCoverageCount">—</strong><small id="radarCoverageDetail">sources communales directes</small></article>
-          <article class="news-kpi"><span>Sources</span><strong id="radarSourceCount">—</strong><small id="radarSourceDetail">état de santé</small></article>
-          <article class="news-kpi"><span>Détection</span><strong id="radarChangeCount">—</strong><small id="radarChangeDetail">nouveaux documents</small></article>
-          <article class="news-kpi"><span>Analyse IA</span><strong id="radarCandidateCount">—</strong><small>uniquement les candidats utiles</small></article>
-          <article class="news-kpi"><span>Publication</span><strong id="radarPublishedCount">—</strong><small>signaux vérifiés</small></article>
+          <article class="news-kpi news-kpi-hot"><span><!--i18n:page.095-->Couverture</span><strong id="radarCoverageCount">—</strong><small id="radarCoverageDetail"><!--i18n:page.096-->sources communales directes</small></article>
+          <article class="news-kpi"><span><!--i18n:page.097-->Sources</span><strong id="radarSourceCount">—</strong><small id="radarSourceDetail"><!--i18n:page.098-->état de santé</small></article>
+          <article class="news-kpi"><span><!--i18n:page.099-->Détection</span><strong id="radarChangeCount">—</strong><small id="radarChangeDetail"><!--i18n:page.100-->nouveaux documents</small></article>
+          <article class="news-kpi"><span><!--i18n:page.101-->Analyse IA</span><strong id="radarCandidateCount">—</strong><small><!--i18n:page.102-->uniquement les candidats utiles</small></article>
+          <article class="news-kpi"><span><!--i18n:page.103-->Publication</span><strong id="radarPublishedCount">—</strong><small><!--i18n:page.104-->signaux vérifiés</small></article>
         </div>
         <section class="news-sobriety" aria-label="Principe de sobriété numérique">
-          <div><span>Sobriété numérique</span><strong>Détecter mécaniquement. Comprendre intelligemment.</strong></div>
-          <p>Le Radar privilégie RSS, API, sitemaps, requêtes conditionnelles et empreintes de contenu. Une source inchangée n’est jamais envoyée à l’IA.</p>
-          <small id="radarEconomyDetail">Mesure de la sobriété en attente du premier passage.</small>
+          <div><span><!--i18n:page.105-->Sobriété numérique</span><strong><!--i18n:page.106-->Détecter mécaniquement. Comprendre intelligemment.</strong></div>
+          <p><!--i18n:page.107-->Le Radar privilégie RSS, API, sitemaps, requêtes conditionnelles et empreintes de contenu. Une source inchangée n’est jamais envoyée à l’IA.</p>
+          <small id="radarEconomyDetail"><!--i18n:page.108-->Mesure de la sobriété en attente du premier passage.</small>
         </section>
         <section class="news-forecast" aria-label="Forecast léger">
-          <header><div><p class="eyebrow">Qualification légère · 2.0.4</p><h3>Le signal devient une décision.</h3></div><p>Un cockpit local, pas un CRM : rien n'est envoyé dans la base avant la future infrastructure 2.5.</p></header>
+          <header><div><p class="eyebrow"><!--i18n:page.109-->Qualification légère · 2.0.4</p><h3><!--i18n:page.110-->Le signal devient une décision.</h3></div><p><!--i18n:page.111-->Un cockpit local, pas un CRM : rien n'est envoyé dans la base avant la future infrastructure 2.5.</p></header>
           <div>
-            <article><span>Qualifiés</span><strong id="newsQualifiedCount">0/0</strong><small>brouillons enregistrés</small></article>
-            <article><span>À travailler</span><strong id="newsActionCount">0</strong><small>décisions « Agir »</small></article>
-            <article><span>Forecast brut</span><strong id="newsForecastGross">À compléter</strong><small>valeurs saisies</small></article>
-            <article><span>Forecast pondéré</span><strong id="newsForecastWeighted">À compléter</strong><small>valeur × probabilité</small></article>
+            <article><span><!--i18n:page.112-->Qualifiés</span><strong id="newsQualifiedCount">0/0</strong><small><!--i18n:page.113-->brouillons enregistrés</small></article>
+            <article><span><!--i18n:page.114-->À travailler</span><strong id="newsActionCount">0</strong><small><!--i18n:page.115-->décisions « Agir »</small></article>
+            <article><span><!--i18n:page.116-->Forecast brut</span><strong id="newsForecastGross"><!--i18n:page.117-->À compléter</strong><small><!--i18n:page.118-->valeurs saisies</small></article>
+            <article><span><!--i18n:page.119-->Forecast pondéré</span><strong id="newsForecastWeighted"><!--i18n:page.117-->À compléter</strong><small><!--i18n:page.120-->valeur × probabilité</small></article>
           </div>
         </section>
         <div class="news-toolbar">
           <label class="news-search"><span>⌕</span><input id="newsQuery" placeholder="Rechercher une commune, un sujet, une source…"></label>
           <div class="news-filters" aria-label="Niveau du signal">
-            <button class="active" data-news-level="all">Tous</button>
-            <button data-news-level="strong">Signal fort</button>
-            <button data-news-level="watch">À surveiller</button>
-            <button data-news-level="info">Information</button>
+            <button class="active" data-news-level="all"><!--i18n:page.031-->Tous</button>
+            <button data-news-level="strong"><!--i18n:page.121-->Signal fort</button>
+            <button data-news-level="watch"><!--i18n:page.038-->À surveiller</button>
+            <button data-news-level="info"><!--i18n:page.122-->Information</button>
           </div>
         </div>
-        <div class="news-result-line"><span><strong id="newsResultCount">0</strong> signaux</span><span>Triés par importance puis fraîcheur</span></div>
-        <div class="news-feed" id="newsFeed"><p class="news-loading">Lecture des premiers signaux…</p></div>
-        <footer class="news-method"><strong>Règle de preuve</strong><span>Un fait public vérifiable, séparé de la déduction documentée et de la lecture Prime. Aucun projet déjà gagné ou livré n’est présenté comme une opportunité.</span><strong>Règle de couverture</strong><span>« Surveillé » signifie contrôlé et mesurable. Une source inaccessible est une erreur, jamais un silence.</span></footer>
+        <div class="news-result-line"><span><strong id="newsResultCount">0</strong> <!--i18n:page.123-->signaux</span><span><!--i18n:page.124-->Triés par importance puis fraîcheur</span></div>
+        <div class="news-feed" id="newsFeed"><p class="news-loading"><!--i18n:page.125-->Lecture des premiers signaux…</p></div>
+        <footer class="news-method"><strong><!--i18n:page.126-->Règle de preuve</strong><span><!--i18n:page.127-->Un fait public vérifiable, séparé de la déduction documentée et de la lecture Prime. Aucun projet déjà gagné ou livré n’est présenté comme une opportunité.</span><strong><!--i18n:page.128-->Règle de couverture</strong><span><!--i18n:page.129-->« Surveillé » signifie contrôlé et mesurable. Une source inaccessible est une erreur, jamais un silence.</span></footer>
       </section>
     </section>
     <section class="stories-view" id="storiesView" hidden>
       <div class="stories-intro view-intro">
-        <div><h1>Des communes.<br><span>Des histoires.</span></h1></div>
-        <div class="stories-intro-copy view-intro-copy"><p class="eyebrow">Histoires de communes</p><p>Derrière les chiffres, les logiciels et les marchés, il y a des territoires qui se transforment. Quelques histoires pour comprendre comment une commune est devenue ce qu’elle est aujourd’hui.</p><strong>Radar! regarde devant. Histoires regarde derrière.</strong></div>
+        <div><h1><!--i18n:page.130-->Des communes.<br><span><!--i18n:page.131-->Des histoires.</span></h1></div>
+        <div class="stories-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.132-->Histoires de communes</p><p><!--i18n:page.133-->Derrière les chiffres, les logiciels et les marchés, il y a des territoires qui se transforment. Quelques histoires pour comprendre comment une commune est devenue ce qu’elle est aujourd’hui.</p><strong><!--i18n:page.134-->Radar! regarde devant. Histoires regarde derrière.</strong></div>
       </div>
       <section class="story-panel" aria-label="Histoires de communes">
         <header class="story-panel-heading">
-          <div><p class="eyebrow">Une commune, une histoire · 2.0.2</p><h2>Quand un projet raconte le territoire</h2></div>
-          <p>Des faits vérifiés, la mémoire de Prime et une lecture humaine — jamais confondus.</p>
+          <div><p class="eyebrow"><!--i18n:page.135-->Une commune, une histoire · 2.0.2</p><h2><!--i18n:page.136-->Quand un projet raconte le territoire</h2></div>
+          <p><!--i18n:page.137-->Des faits vérifiés, la mémoire de Prime et une lecture humaine — jamais confondus.</p>
         </header>
-        <div class="story-feed" id="storiesFeed"><p class="story-loading">Ouverture du premier récit…</p></div>
+        <div class="story-feed" id="storiesFeed"><p class="story-loading"><!--i18n:page.138-->Ouverture du premier récit…</p></div>
       </section>
     </section>
     <section class="roadmap-view" id="roadmapView" hidden>
       <div class="roadmap-intro view-intro">
-        <div><h1>La suite.<br><span>Déjà pensée.</span></h1></div>
-        <div class="roadmap-intro-copy view-intro-copy"><p class="eyebrow">Prime Communes · Vision produit</p><p>Construire aujourd’hui les fondations nécessaires aux étages futurs, même si toutes les fonctions ne sont pas encore visibles.</p><strong>De l’observatoire au copilote du marché communal suisse.</strong></div>
+        <div><h1><!--i18n:page.139-->La suite.<br><span><!--i18n:page.140-->Déjà pensée.</span></h1></div>
+        <div class="roadmap-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.141-->Prime Communes · Vision produit</p><p><!--i18n:page.142-->Construire aujourd’hui les fondations nécessaires aux étages futurs, même si toutes les fonctions ne sont pas encore visibles.</p><strong><!--i18n:page.143-->De l’observatoire au copilote du marché communal suisse.</strong></div>
       </div>
       <ol class="roadmap-journey" aria-label="Trajectoire produit">
-        <li class="journey-done"><span>1.0</span><strong>Rassembler</strong></li>
-        <li class="journey-know journey-done"><span>1.1</span><strong>Savoir</strong></li>
-        <li class="journey-bridge journey-done"><span>1.5</span><strong>Mettre en perspective</strong></li>
-        <li class="journey-understand journey-done"><span>2.0</span><strong>Faire parler</strong></li>
-        <li class="journey-see"><span>2.5</span><strong>Comprendre le temps</strong></li>
-        <li class="journey-anticipate"><span>3.0</span><strong>Anticiper</strong></li>
+        <li class="journey-done"><span>1.0</span><strong><!--i18n:page.144-->Rassembler</strong></li>
+        <li class="journey-know journey-done"><span>1.1</span><strong><!--i18n:page.145-->Savoir</strong></li>
+        <li class="journey-bridge journey-done"><span>1.5</span><strong><!--i18n:page.146-->Mettre en perspective</strong></li>
+        <li class="journey-understand journey-done"><span>2.0</span><strong><!--i18n:page.147-->Faire parler</strong></li>
+        <li class="journey-see"><span>2.5</span><strong><!--i18n:page.148-->Comprendre le temps</strong></li>
+        <li class="journey-anticipate"><span>3.0</span><strong><!--i18n:page.149-->Anticiper</strong></li>
       </ol>
-      <div class="roadmap-principle"><span>Principe directeur</span><p>Chaque choix doit rester propre lorsque nous ajouterons la carte, les statistiques, les finances, plusieurs logiciels, l’historique, les droits nominatifs et l’IA.</p></div>
+      <div class="roadmap-principle"><span><!--i18n:page.150-->Principe directeur</span><p><!--i18n:page.151-->Chaque choix doit rester propre lorsque nous ajouterons la carte, les statistiques, les finances, plusieurs logiciels, l’historique, les droits nominatifs et l’IA.</p></div>
       <article class="roadmap-stage completed-stage">
-        <header><span class="roadmap-version">1.0</span><div><p>Socle réalisé</p><h2>Rassembler</h2></div><span class="roadmap-done">Terminé ✓</span></header>
+        <header><span class="roadmap-version">1.0</span><div><p><!--i18n:page.152-->Socle réalisé</p><h2><!--i18n:page.144-->Rassembler</h2></div><span class="roadmap-done"><!--i18n:page.153-->Terminé ✓</span></header>
         <div class="completed-items">
-          <span>2’110 communes</span><span>Données OFS · Delimo P99</span><span>Marchés et districts</span><span>Intégrateurs et logiciels</span><span>Filtres et export</span><span>Interface Natel</span>
+          <span><!--i18n:page.154-->2’110 communes</span><span><!--i18n:page.155-->Données OFS · Delimo P99</span><span><!--i18n:page.156-->Marchés et districts</span><span><!--i18n:page.157-->Intégrateurs et logiciels</span><span><!--i18n:page.158-->Filtres et export</span><span><!--i18n:page.159-->Interface Natel</span>
         </div>
       </article>
       <div class="roadmap-grid">
         <article class="roadmap-stage completed-11">
-          <header><span class="roadmap-version">1.1</span><div><p>Fondations</p><h2>Savoir</h2></div><span class="roadmap-done">Terminé ✓</span></header>
+          <header><span class="roadmap-version">1.1</span><div><p><!--i18n:page.160-->Fondations</p><h2><!--i18n:page.145-->Savoir</h2></div><span class="roadmap-done"><!--i18n:page.153-->Terminé ✓</span></header>
           <div class="roadmap-items">
-            <div><strong>Carte suisse interactive</strong><span>Surfaces communales officielles, recherche, fiche, zoom et colorations Empreinte Prime, Intégrateur ou Logiciel.</span><small>Livrée en 1.1 · contexte suisse et Romandie commerciale</small></div>
-            <div><strong>Statistiques</strong><span>Parts de marché par communes ou habitants, Romandie, canton, Jura bernois et seuils de 5’000 ou 10’000 habitants.</span><small>10–20 h · 25–55 crédits · 0,1–0,5 kWh · ≈ 6–30 recharges</small></div>
-            <div><strong>Modèle multi-produits</strong><span>innosolv, ProConcept, Abacus, LCM, eAdmin et les autres solutions Prime.</span><small>12–28 h · 30–75 crédits · 0,15–0,7 kWh · ≈ 9–42 recharges</small></div>
-            <div><strong>Liens partageables</strong><span>L'URL conserve l'onglet actif, les filtres, la recherche et le tri.</span><small>Navigation Retour / Suivant incluse</small></div>
-            <div><strong>Stabilisation 1.1</strong><span>Base Delivery documentée, permissions resserrées, tests de non-régression et point de restauration GitHub.</span><small>État courant fiable · aucune historisation active</small></div>
+            <div><strong><!--i18n:page.161-->Carte suisse interactive</strong><span><!--i18n:page.162-->Surfaces communales officielles, recherche, fiche, zoom et colorations Empreinte Prime, Intégrateur ou Logiciel.</span><small><!--i18n:page.163-->Livrée en 1.1 · contexte suisse et Romandie commerciale</small></div>
+            <div><strong><!--i18n:page.164-->Statistiques</strong><span><!--i18n:page.165-->Parts de marché par communes ou habitants, Romandie, canton, Jura bernois et seuils de 5’000 ou 10’000 habitants.</span><small><!--i18n:roadmap.energy.stats-->10–20 h · 25–55 crédits · 0,1–0,5 kWh · ≈ 6–30 recharges</small></div>
+            <div><strong><!--i18n:page.166-->Modèle multi-produits</strong><span><!--i18n:page.167-->innosolv, ProConcept, Abacus, LCM, eAdmin et les autres solutions Prime.</span><small><!--i18n:roadmap.energy.products-->12–28 h · 30–75 crédits · 0,15–0,7 kWh · ≈ 9–42 recharges</small></div>
+            <div><strong><!--i18n:page.168-->Liens partageables</strong><span><!--i18n:page.169-->L'URL conserve l'onglet actif, les filtres, la recherche et le tri.</span><small><!--i18n:page.170-->Navigation Retour / Suivant incluse</small></div>
+            <div><strong><!--i18n:page.171-->Stabilisation 1.1</strong><span><!--i18n:page.172-->Base Delivery documentée, permissions resserrées, tests de non-régression et point de restauration GitHub.</span><small><!--i18n:page.173-->État courant fiable · aucune historisation active</small></div>
           </div>
         </article>
         <article class="roadmap-stage completed-15">
-          <header><span class="roadmap-version">1.5</span><div><p>Lecture du marché</p><h2>Mettre en perspective</h2></div><span class="roadmap-done">Terminé ✓</span></header>
+          <header><span class="roadmap-version">1.5</span><div><p><!--i18n:page.174-->Lecture du marché</p><h2><!--i18n:page.146-->Mettre en perspective</h2></div><span class="roadmap-done"><!--i18n:page.153-->Terminé ✓</span></header>
           <div class="roadmap-items">
-            <div><strong>Carte et périmètres</strong><span>Passer de la liste à une lecture territoriale : Suisse, Romandie, cantons, districts et marchés linguistiques.</span><small>Livré · vue Romandie optimisée sur Natel</small></div>
-            <div><strong>Statistiques lisibles</strong><span>Mesurer la présence Prime par communes et habitants, avec seuils et territoires comparables.</span><small>Livré · textes explicatifs rendus lisibles</small></div>
-            <div><strong>Deux niveaux de lecture</strong><span>Territoire révèle les informations géographiques ; Systèmes révèle l’écosystème IT.</span><small>Vue minimale par défaut · détails à la demande</small></div>
+            <div><strong><!--i18n:page.175-->Carte et périmètres</strong><span><!--i18n:page.176-->Passer de la liste à une lecture territoriale : Suisse, Romandie, cantons, districts et marchés linguistiques.</span><small><!--i18n:page.177-->Livré · vue Romandie optimisée sur Natel</small></div>
+            <div><strong><!--i18n:page.178-->Statistiques lisibles</strong><span><!--i18n:page.179-->Mesurer la présence Prime par communes et habitants, avec seuils et territoires comparables.</span><small><!--i18n:page.180-->Livré · textes explicatifs rendus lisibles</small></div>
+            <div><strong><!--i18n:page.181-->Deux niveaux de lecture</strong><span><!--i18n:page.182-->Territoire révèle les informations géographiques ; Systèmes révèle l’écosystème IT.</span><small><!--i18n:page.183-->Vue minimale par défaut · détails à la demande</small></div>
           </div>
         </article>
         <article class="roadmap-stage history-stage completed-20">
-          <header><span class="roadmap-version">2.0</span><div><p>Lecture active</p><h2>Faire parler</h2></div><span class="roadmap-done">Terminé ✓</span></header>
+          <header><span class="roadmap-version">2.0</span><div><p><!--i18n:page.184-->Lecture active</p><h2><!--i18n:page.147-->Faire parler</h2></div><span class="roadmap-done"><!--i18n:page.153-->Terminé ✓</span></header>
           <div class="roadmap-items">
-            <div><strong>Radar communal</strong><span>Détecter mécaniquement les changements utiles, puis interpréter uniquement ce qui mérite une lecture métier.</span><small>2.0.1 · veille sobre · couverture mesurable</small></div>
-            <div><strong>Une commune, une histoire</strong><span>Raconter son identité, son histoire avec Prime et les liens humains ou territoriaux qui donnent du sens à notre métier.</span><small>2.0.2 · premier récit Avenches–Le Noirmont livré</small></div>
-            <div><strong>Actualités interprétées</strong><span>Expliquer ce qu'un fait change, quelles communes sont concernées et distinguer fait, déduction et lecture Prime.</span><small>2.0.3 · livré dans chaque signal</small></div>
-            <div><strong>Qualification légère et forecast</strong><span>Responsable, prochaine action, probabilité, échéance et valeur estimée, reliés aux signaux qui les justifient.</span><small>2.0.4 · cockpit local livré · persistance centrale en 2.5</small></div>
-            <div><strong>Portrait communal</strong><span>Consulter une commune depuis la liste ou la recherche, puis ouvrir la modification uniquement à la demande.</span><small>2.0.5 · Wikipédia à la demande · OFS vérifié · source et licence visibles</small></div>
+            <div><strong><!--i18n:page.185-->Radar communal</strong><span><!--i18n:page.186-->Détecter mécaniquement les changements utiles, puis interpréter uniquement ce qui mérite une lecture métier.</span><small><!--i18n:page.187-->2.0.1 · veille sobre · couverture mesurable</small></div>
+            <div><strong><!--i18n:page.188-->Une commune, une histoire</strong><span><!--i18n:page.189-->Raconter son identité, son histoire avec Prime et les liens humains ou territoriaux qui donnent du sens à notre métier.</span><small><!--i18n:page.190-->2.0.2 · premier récit Avenches–Le Noirmont livré</small></div>
+            <div><strong><!--i18n:page.191-->Actualités interprétées</strong><span><!--i18n:page.192-->Expliquer ce qu'un fait change, quelles communes sont concernées et distinguer fait, déduction et lecture Prime.</span><small><!--i18n:page.193-->2.0.3 · livré dans chaque signal</small></div>
+            <div><strong><!--i18n:page.194-->Qualification légère et forecast</strong><span><!--i18n:page.195-->Responsable, prochaine action, probabilité, échéance et valeur estimée, reliés aux signaux qui les justifient.</span><small><!--i18n:page.196-->2.0.4 · cockpit local livré · persistance centrale en 2.5</small></div>
+            <div><strong><!--i18n:page.197-->Portrait communal</strong><span><!--i18n:page.198-->Consulter une commune depuis la liste ou la recherche, puis ouvrir la modification uniquement à la demande.</span><small><!--i18n:page.199-->2.0.5 · Wikipédia à la demande · OFS vérifié · source et licence visibles</small></div>
           </div>
         </article>
         <article class="roadmap-stage map-stage">
-          <header><span class="roadmap-version">2.5</span><div><p>Fondations techniques</p><h2>Comprendre le temps</h2></div></header>
+          <header><span class="roadmap-version">2.5</span><div><p><!--i18n:page.200-->Fondations techniques</p><h2><!--i18n:page.148-->Comprendre le temps</h2></div></header>
           <div class="roadmap-items">
-            <div><strong>Validation adaptative</strong><span>Qualifier chaque modification de 1 à 5 et n’exécuter que les contrôles réellement nécessaires au risque.</span><small>Chat d’abord · Work par exception · preuve minimale suffisante</small></div>
-            <div><strong>Infrastructure Prime</strong><span>Déplacer l'application et la base stabilisées vers les serveurs Prime, puis figer l'architecture cible.</span><small>Frontend / configuration / secrets séparés · point de restauration 1.1</small></div>
-            <div><strong>Authentification · SSO · rôles · RLS</strong><span>Comptes professionnels et accès nominatifs TeamVente, Direction et Admin.</span><small>Ancien point 1.5 conservé</small></div>
-            <div><strong>Audit trail et temporalité</strong><span>Savoir qui a créé, modifié, validé ou supprimé chaque information, avec valeurs précédentes et périodes de validité.</span><small>Trigger toujours désactivé jusqu'à cette phase</small></div>
-            <div><strong>Sources, confiance et contradictions</strong><span>Dater, sourcer et qualifier les faits ; rendre visibles les divergences entre données Prime et sources publiques.</span><small>Fait · déduction · avis toujours distingués</small></div>
-            <div><strong>Collecte Web et PV</strong><span>Budgets, décisions, appels d'offres, recrutements, sites communaux et veille des intégrateurs et logiciels.</span><small>Moteur technique du Radar · aucune GED recréée</small></div>
-            <div><strong>Historique Delimo</strong><span>Photographies successives, retour dans le temps, population, fusions et qualité des livraisons.</span><small>12–26 h · 30–70 crédits · 0,15–0,7 kWh · ≈ 9–42 recharges</small></div>
-            <div><strong>Mouvements de marché</strong><span>Gains, pertes, migrations et changements de fournisseurs avec provenance et dates.</span><small>Énergie à préciser après inventaire des sources</small></div>
-            <div><strong>Carte et statistiques temporelles</strong><span>Comparer instantanément deux dates avec le même moteur de filtres.</span><small>Dépend des statistiques et de la carte suisse 1.1</small></div>
-            <div><strong>Données financières sécurisées</strong><span>PA, PV, LCM, marge, récurrence et historique tarifaire dans un modèle dédié selon les droits.</span><small>Ancien point 1.5 conservé</small></div>
-            <div><strong>API interne et qualité</strong><span>Cohérence OFS, complétude, doublons et modèle multi-produits / multi-périodes avec provenance.</span><small>Socle des futurs consommateurs autorisés</small></div>
+            <div><strong><!--i18n:page.201-->Validation adaptative</strong><span><!--i18n:page.202-->Qualifier chaque modification de 1 à 5 et n’exécuter que les contrôles réellement nécessaires au risque.</span><small><!--i18n:page.203-->Chat d’abord · Work par exception · preuve minimale suffisante</small></div>
+            <div><strong><!--i18n:roadmap.preferences.title-->Préférences utilisateur · Apparence · Langues</strong><span><!--i18n:roadmap.preferences.current-->Livré : Paramètres, trois Skins, français et allemand suisse, préférences locales.</span><small><!--i18n:roadmap.preferences.future-->À venir après SSO et RLS : profils utilisateurs et synchronisation des préférences.</small></div>
+            <div><strong><!--i18n:page.204-->Infrastructure Prime</strong><span><!--i18n:page.205-->Déplacer l'application et la base stabilisées vers les serveurs Prime, puis figer l'architecture cible.</span><small><!--i18n:page.206-->Frontend / configuration / secrets séparés · point de restauration 1.1</small></div>
+            <div><strong><!--i18n:page.207-->Authentification · SSO · rôles · RLS</strong><span><!--i18n:page.208-->Comptes professionnels et accès nominatifs TeamVente, Direction et Admin.</span><small><!--i18n:page.209-->Ancien point 1.5 conservé</small></div>
+            <div><strong><!--i18n:page.210-->Audit trail et temporalité</strong><span><!--i18n:page.211-->Savoir qui a créé, modifié, validé ou supprimé chaque information, avec valeurs précédentes et périodes de validité.</span><small><!--i18n:page.212-->Trigger toujours désactivé jusqu'à cette phase</small></div>
+            <div><strong><!--i18n:page.213-->Sources, confiance et contradictions</strong><span><!--i18n:page.214-->Dater, sourcer et qualifier les faits ; rendre visibles les divergences entre données Prime et sources publiques.</span><small><!--i18n:page.215-->Fait · déduction · avis toujours distingués</small></div>
+            <div><strong><!--i18n:page.216-->Collecte Web et PV</strong><span><!--i18n:page.217-->Budgets, décisions, appels d'offres, recrutements, sites communaux et veille des intégrateurs et logiciels.</span><small><!--i18n:page.218-->Moteur technique du Radar · aucune GED recréée</small></div>
+            <div><strong><!--i18n:page.219-->Historique Delimo</strong><span><!--i18n:page.220-->Photographies successives, retour dans le temps, population, fusions et qualité des livraisons.</span><small><!--i18n:roadmap.energy.delimo-->12–26 h · 30–70 crédits · 0,15–0,7 kWh · ≈ 9–42 recharges</small></div>
+            <div><strong><!--i18n:page.221-->Mouvements de marché</strong><span><!--i18n:page.222-->Gains, pertes, migrations et changements de fournisseurs avec provenance et dates.</span><small><!--i18n:page.223-->Énergie à préciser après inventaire des sources</small></div>
+            <div><strong><!--i18n:page.224-->Carte et statistiques temporelles</strong><span><!--i18n:page.225-->Comparer instantanément deux dates avec le même moteur de filtres.</span><small><!--i18n:page.226-->Dépend des statistiques et de la carte suisse 1.1</small></div>
+            <div><strong><!--i18n:page.227-->Données financières sécurisées</strong><span><!--i18n:page.228-->PA, PV, LCM, marge, récurrence et historique tarifaire dans un modèle dédié selon les droits.</span><small><!--i18n:page.209-->Ancien point 1.5 conservé</small></div>
+            <div><strong><!--i18n:page.229-->API interne et qualité</strong><span><!--i18n:page.230-->Cohérence OFS, complétude, doublons et modèle multi-produits / multi-périodes avec provenance.</span><small><!--i18n:page.231-->Socle des futurs consommateurs autorisés</small></div>
           </div>
         </article>
         <article class="roadmap-stage ai-stage">
-          <header><span class="roadmap-version">3.0</span><div><p>Copilote IA</p><h2>Anticiper</h2></div></header>
+          <header><span class="roadmap-version">3.0</span><div><p><!--i18n:page.232-->Copilote IA</p><h2><!--i18n:page.149-->Anticiper</h2></div></header>
           <div class="roadmap-items">
-            <div><strong>Demande à la Suisse</strong><span>Interroger la base et ses sources en langage naturel, puis obtenir une réponse, une carte et un tableau vérifiables.</span><small>Copilote sourcé · aucune donnée inventée</small></div>
-            <div><strong>Briefing et jumeau communal</strong><span>Préparer une commune, trouver ses références comparables et expliquer pourquoi elles se ressemblent.</span><small>Données 2.5 + interprétation contrôlée</small></div>
-            <div><strong>Effet domino et simulateur de séisme</strong><span>Mesurer l'effet d'un gain, d'une fusion, d'un rachat, d'une fin de technologie ou d'un changement légal.</span><small>Scénarios distincts des faits observés</small></div>
+            <div><strong><!--i18n:page.233-->Demande à la Suisse</strong><span><!--i18n:page.234-->Interroger la base et ses sources en langage naturel, puis obtenir une réponse, une carte et un tableau vérifiables.</span><small><!--i18n:page.235-->Copilote sourcé · aucune donnée inventée</small></div>
+            <div><strong><!--i18n:page.236-->Briefing et jumeau communal</strong><span><!--i18n:page.237-->Préparer une commune, trouver ses références comparables et expliquer pourquoi elles se ressemblent.</span><small><!--i18n:page.238-->Données 2.5 + interprétation contrôlée</small></div>
+            <div><strong><!--i18n:page.239-->Effet domino et simulateur de séisme</strong><span><!--i18n:page.240-->Mesurer l'effet d'un gain, d'une fusion, d'un rachat, d'une fin de technologie ou d'un changement légal.</span><small><!--i18n:page.241-->Scénarios distincts des faits observés</small></div>
           </div>
         </article>
       </div>
-      <p class="roadmap-energy-note">Les heures et crédits sont des enveloppes de planification. Les kWh et équivalents de recharge restent des ordres de grandeur illustratifs, pas une comptabilité carbone.</p>
+      <p class="roadmap-energy-note"><!--i18n:page.242-->Les heures et crédits sont des enveloppes de planification. Les kWh et équivalents de recharge restent des ordres de grandeur illustratifs, pas une comptabilité carbone.</p>
     </section>
   </section>
   <footer class="site-footer" aria-label="Informations légales et techniques">
     <div class="footer-meta">
       <span class="footer-version">Prime Communes · version 2.0.5 · #460</span>
-      <span class="footer-confidential">Données confidentielles</span>
+      <span class="footer-confidential"><!--i18n:page.243-->Données confidentielles</span>
     </div>
     <div class="footer-legal">
       <span>© 2026 Prime Technologies SA</span>
-      <span>Auteur : Akada</span>
-      <a href="https://delimo.bfs.admin.ch/" target="_blank" rel="noopener noreferrer">Données OFS · Delimo P99 ↗</a>
+      <span><!--i18n:page.244-->Auteur : Akada</span>
+      <a href="https://delimo.bfs.admin.ch/" target="_blank" rel="noopener noreferrer"><!--i18n:page.245-->Données OFS · Delimo P99 ↗</a>
     </div>
   </footer>
 </main>

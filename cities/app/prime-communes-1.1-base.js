@@ -1,3 +1,4 @@
+import {t} from './core/i18n.js';
 (() => {
   'use strict';
 
@@ -56,8 +57,8 @@
     button.className = 'filter-toggle';
     button.id = 'logicielsToggle';
     button.type = 'button';
-    button.textContent = 'Systèmes';
-    button.title = 'Afficher / masquer ERP, modules et hébergeur';
+    button.textContent = t('common.systems');
+    button.title = t('communes.systemsTitle');
     districts.insertAdjacentElement('afterend', button);
     button.addEventListener('click', () => {
       logicielsMode = !logicielsMode;
@@ -73,9 +74,9 @@
     wrap.classList.toggle('logiciels-hidden', !logicielsMode);
     const headings = [...wrap.querySelectorAll('thead th')];
     headings.forEach(th => {
-      const label = th.textContent.trim().toLocaleLowerCase('fr-CH');
-      if (label === 'erp') th.dataset.softwareColumn = 'erp';
-      if (label === 'modules') th.dataset.softwareColumn = 'modules';
+      // Column identity is independent of the visible, translated heading.
+      if (th.id === 'columnErp') th.dataset.softwareColumn = 'erp';
+      if (th.id === 'columnModules') th.dataset.softwareColumn = 'modules';
     });
     byId('logicielsToggle')?.classList.toggle('on', logicielsMode);
   }
@@ -136,7 +137,7 @@
     if (!button) return;
     let editKey = sessionStorage.getItem('primeCommunesEditKey') || '';
     if (!editKey) {
-      editKey = window.prompt('Clé d’édition Prime Communes') || '';
+      editKey = window.prompt(t('communes.editKey')) || '';
       if (!editKey) return;
     }
 
@@ -168,8 +169,8 @@
     });
 
     button.disabled = true;
-    button.textContent = 'Enregistrement…';
-    saveStatus('Enregistrement…');
+    button.textContent = t('common.saving');
+    saveStatus(t('common.saving'));
     try {
       let response = await send(editKey);
       if (!response.ok) {
@@ -177,7 +178,7 @@
         const rejectedKey = failed.rejectedKey || /clé|key|denied|forbidden/i.test(failed.detail);
         if (rejectedKey) {
           sessionStorage.removeItem('primeCommunesEditKey');
-          saveStatus('Clé incorrecte · clique à nouveau sur Enregistrer pour la ressaisir.', 'error');
+          saveStatus(t('communes.invalidKey'), 'error');
           return;
         }
         let message = failed.detail;
@@ -197,19 +198,19 @@
         openDrawer(refreshed);
         document.querySelector('.drawer').scrollTop = scrollTop;
         const savedButton = byId('drawerSave');
-        savedButton.textContent = 'Enregistré ✓';
+        savedButton.textContent = t('common.saved');
         savedButton.disabled = true;
         savedButton.dataset.saved = 'true';
       }
       if (document.querySelector('.table-wrap')) document.querySelector('.table-wrap').scrollLeft = tableScrollLeft;
       window.scrollTo(0, listScrollTop);
-      saveStatus(`Enregistré ✓ · ${new Date().toLocaleTimeString('fr-CH', { hour: '2-digit', minute: '2-digit' })}`, 'success');
+      saveStatus(`${t('common.saved')} · ${new Date().toLocaleTimeString(document.documentElement.lang === 'de' ? 'de-CH' : 'fr-CH', { hour: '2-digit', minute: '2-digit' })}`, 'success');
     } catch (error) {
       console.error(error);
-      saveStatus(`Enregistrement impossible · ${error.message}`, 'error');
+      saveStatus(`${t('communes.saveError')} · ${error.message}`, 'error');
     } finally {
       button.disabled = false;
-      button.textContent = 'Enregistrer les informations';
+      button.textContent = t('common.record');
     }
   }
 
@@ -225,10 +226,10 @@
     ]);
     const products = [...(x.products || [])];
     const cantonCode = String(x.canton || '').toLowerCase();
-    const delivery = ofsMode ? `<section><h3>Livraison Delimo</h3><dl><div><dt>Population reçue</dt><dd>${fmt.format(x.receivedPopulation ?? 0)}</dd></div><div><dt>Erreur EWID</dt><dd>${x.ewidErrorRate?.toFixed(1) ?? '—'}%</dd></div><div><dt>EWID manquants</dt><dd>${x.missingEwid?.toFixed(1) ?? '—'}%</dd></div><div><dt>Version eCH</dt><dd>${esc(x.echVersion)}</dd></div></dl><p class="delivery-comment">${esc(x.comment)}</p></section>` : '';
+    const delivery = ofsMode ? `<section><h3>${t('common.delivery')}</h3><dl><div><dt>${t('common.receivedPopulation')}</dt><dd>${fmt.format(x.receivedPopulation ?? 0)}</dd></div><div><dt>${t('common.errorEwid')}</dt><dd>${x.ewidErrorRate?.toFixed(1) ?? '—'}%</dd></div><div><dt>${t('common.missingEwid')}</dt><dd>${x.missingEwid?.toFixed(1) ?? '—'}%</dd></div><div><dt>Version eCH</dt><dd>${esc(x.echVersion)}</dd></div></dl><p class="delivery-comment">${esc(x.comment)}</p></section>` : '';
 
-    byId('drawerRoot').innerHTML = `<div class="drawer-backdrop"><aside class="drawer">
-      <button class="drawer-close" aria-label="Fermer">×</button>
+    byId('drawerRoot').innerHTML = `<div class="drawer-backdrop"><aside class="drawer" data-commune-id="${x.id}">
+      <button class="drawer-close" aria-label="${t('common.close')}">×</button>
       <div class="drawer-title">
         <div>
           <p>OFS ${x.id}</p>
@@ -241,21 +242,21 @@
         </div>
         ${x.isPrime ? '<img class="drawer-prime-mark" src="public/prime-one-negative.png?v=4" alt="Client Prime" title="Client Prime">' : ''}
       </div>
-      <div class="drawer-pop"><strong>${fmt.format(x.expectedPopulation)}</strong><span>habitants attendus</span></div>
+      <div class="drawer-pop"><strong>${fmt.format(x.expectedPopulation)}</strong><span>${t('common.expectedInhabitants')}</span></div>
       ${delivery}
       <section>
-        <h3>Écosystème communal</h3>
+        <h3>${t('common.municipalEcosystem')}</h3>
         <div class="drawer-edit-grid">
-          <label class="drawer-client-toggle full-width"><span>Client Prime</span><input id="drawerPrimeClient" type="checkbox" ${x.isPrime ? 'checked' : ''}></label>
-          <label>Intégrateur<select id="drawerIntegrator">${optionList(integrators, x.integrator)}</select></label>
-          <label>Métier<select id="drawerSoftware">${optionList(softwares, x.software)}</select></label>
+          <label class="drawer-client-toggle full-width"><span>${t('common.customerPrime')}</span><input id="drawerPrimeClient" type="checkbox" ${x.isPrime ? 'checked' : ''}></label>
+          <label>${t('common.integrator')}<select id="drawerIntegrator">${optionList(integrators, x.integrator)}</select></label>
+          <label>${t('common.software')}<select id="drawerSoftware">${optionList(softwares, x.software)}</select></label>
           <label>ERP<select id="drawerErp">${optionList(erps, x.erp)}</select></label>
-          <label>Hébergeur<select id="drawerHosting">${optionList(hostings, x.hosting)}</select></label>
+          <label>${t('common.hosting')}<select id="drawerHosting">${optionList(hostings, x.hosting)}</select></label>
           <label class="full-width">Modules${moduleEditor(products)}</label>
-          <label class="full-width">Notes<textarea id="drawerNotes" placeholder="Informations utiles…">${esc(x.notes)}</textarea></label>
+          <label class="full-width">${t('common.notes')}<textarea id="drawerNotes" placeholder="${t('common.usefulNotes')}">${esc(x.notes)}</textarea></label>
         </div>
-        <button class="save-button" id="drawerSave">Enregistrer les informations</button>
-        <p class="drawer-save-status" id="drawerSaveStatus">Données OFS verrouillées · écosystème modifiable</p>
+        <button class="save-button" id="drawerSave">${t('common.record')}</button>
+        <p class="drawer-save-status" id="drawerSaveStatus">${t('common.dataLocked')}</p>
       </section>
     </aside></div>`;
 
@@ -266,9 +267,9 @@
     byId('drawerSave').onclick = () => saveDrawerProfile(x);
     const resetSaveButton = () => {
       const button = byId('drawerSave');
-      if (button?.disabled && button.textContent === 'Enregistré ✓') {
+      if (button?.disabled && button.dataset.saved === 'true') {
         button.disabled = false;
-        button.textContent = 'Enregistrer les informations';
+        button.textContent = t('common.record');
         delete button.dataset.saved;
       }
     };
@@ -318,10 +319,10 @@
     if (byId('issuesOnly')) byId('issuesOnly').hidden = !ofsMode;
     byId('issuesCard')?.classList.toggle('ofs-active', ofsMode);
     byId('issuesCard')?.setAttribute('aria-pressed', String(ofsMode));
-    if (byId('ofsLabel')) byId('ofsLabel').textContent = ofsMode ? 'Contrôle Delimo actif' : 'Qualité des livraisons';
-    if (byId('ofsCopy')) byId('ofsCopy').textContent = ofsMode ? 'Les statuts OFS et erreurs EWID sont affichés dans le tableau.' : 'Afficher les statuts, erreurs EWID et commentaires OFS.';
-    if (byId('ofsCount')) byId('ofsCount').textContent = `${byId('issues')?.textContent || '—'} à surveiller`;
-    if (byId('ofsAction')) byId('ofsAction').textContent = ofsMode ? 'Revenir au marché' : 'Ouvrir le contrôle';
+    if (byId('ofsLabel')) byId('ofsLabel').textContent = ofsMode ? t('common.deliveryActive') : t('common.deliveryQuality');
+    if (byId('ofsCopy')) byId('ofsCopy').textContent = ofsMode ? t('common.deliveryDescriptionActive') : t('common.deliveryDescription');
+    if (byId('ofsCount')) byId('ofsCount').textContent = `${byId('issues')?.textContent || '—'} ${t('radar.watch')}`;
+    if (byId('ofsAction')) byId('ofsAction').textContent = ofsMode ? t('common.reloadMarket') : t('common.openControl');
     if (byId('ofsArrow')) byId('ofsArrow').textContent = ofsMode ? '←' : '→';
     document.querySelectorAll('.market-toggle').forEach(button => button.classList.toggle('on', button.dataset.market === marketOnly));
     decorateSoftwareColumns();
@@ -547,6 +548,31 @@
     });
     updateBackToTop();
   }
+
+  document.addEventListener('prime-language-change', () => {
+    const drawer = byId('drawerRoot')?.querySelector('.drawer[data-commune-id]');
+    const commune = drawer && all.find(row => String(row.id) === drawer.dataset.communeId);
+    const fields = drawer && [...drawer.querySelectorAll('input,select,textarea')].map(field => ({id:field.id,value:field.value,checked:field.checked}));
+    const scroll = drawer?.scrollTop || 0;
+    const wasSaved = byId('drawerSave')?.dataset.saved === 'true';
+    if (commune) {
+      openDrawer(commune);
+      for (const field of fields) {
+        const replacement = byId(field.id);
+        if (!replacement) continue;
+        replacement.value = field.value;
+        if (replacement.type === 'checkbox') replacement.checked = field.checked;
+      }
+      byId('drawerRoot').querySelector('.drawer').scrollTop = scroll;
+      if (wasSaved) {
+        byId('drawerSave').dataset.saved = 'true';
+        byId('drawerSave').disabled = true;
+        byId('drawerSave').textContent = t('common.saved');
+      }
+    }
+    const systemsButton = byId('logicielsToggle');
+    if (systemsButton) { systemsButton.textContent = t('common.systems'); systemsButton.title = t('communes.systemsTitle'); }
+  });
 
   restoreFromUrl();
 })();
