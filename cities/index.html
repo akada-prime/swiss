@@ -33,6 +33,11 @@ html[data-initial-view="stories"] #storiesView,
 html[data-initial-view="roadmap"] #roadmapView{display:block!important}
 th.sortable{cursor:pointer;user-select:none}
 th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
+/* Keep the portrait settings control usable while nested CSS imports expire from cache. */
+.settings-backdrop{z-index:160}
+.settings-panel{z-index:161}
+.portrait-settings{position:absolute;top:20px;right:70px;width:42px;height:42px;border:1px solid var(--skin-border-soft);border-radius:50%;color:var(--skin-text);background:var(--skin-control);font-size:20px;cursor:pointer}
+@media(max-width:680px){.portrait-settings{top:15px;right:65px}}
 </style>
 </head>
 <body>

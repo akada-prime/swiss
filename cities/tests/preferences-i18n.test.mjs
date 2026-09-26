@@ -138,10 +138,13 @@ test('an open commune portrait can open settings and retain its modal on Escape'
   const portrait = await read('app/prime-communes-communes-1.2.js');
   const settings = await read('app/core/settings.js');
   const css = await read('app/styles/settings.css');
+  const html = await read('index.html');
   assert.match(portrait, /class="portrait-settings"[^>]*settings\.trigger/);
   assert.match(portrait, /querySelector\('\.portrait-settings'\)\.onclick = \(\) => document\.getElementById\('settingsTrigger'\)\.click\(\)/);
   assert.match(portrait, /prime-language-change[\s\S]*openCommunePortrait\(commune\)/);
   assert.match(settings, /event\.stopPropagation\(\); close\(\)/);
   assert.match(css, /\.settings-backdrop\{[^}]*z-index:160/);
   assert.match(css, /\.settings-panel\{[^}]*z-index:161/);
+  assert.match(html, /\.settings-panel\{z-index:161\}/);
+  assert.match(html, /\.portrait-settings\{position:absolute/);
 });
