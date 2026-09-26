@@ -149,11 +149,11 @@ Estimation historique conservée : 14–28 h · 35–80 crédits.
 
 ### Préférences utilisateur · Apparence · Langues
 
-Première livraison frontend : Paramètres dans le header ; moteur de Skin et
-trois apparences (Prime Darkweb, Helvetia et Clair) ; français et allemand
-suisse ; préférences conservées localement dans le navigateur. Le chargement
-applique ces choix avant l'affichage principal. Cette livraison ne crée ni
-compte ni droit d'accès.
+Première livraison frontend : Paramètres dans le header ; deux apparences
+(Prime Dark et Helvetia Hell) complétées par un mode Automatique qui suit le
+thème clair/sombre du système ; français et allemand suisse ; préférences
+conservées localement dans le navigateur. Le chargement applique ces choix avant
+l'affichage principal. Cette livraison ne crée ni compte ni droit d'accès.
 
 Après l'authentification, les profils et les droits, les préférences pourront
 être synchronisées avec chaque profil, selon la priorité profil utilisateur >
