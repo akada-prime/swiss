@@ -8,7 +8,7 @@ Pour une demande contenant plusieurs points, affiche d'abord une synthèse compa
 
 L'objectif est de conserver un niveau de qualité élevé tout en évitant les inspections, tests, builds, navigations, validations et consommations de calcul inutiles.
 
-## Niveau 0 — ⚡ Ultra rapide
+## Niveau 1 — ⚡ Ultra rapide
 
 Pour une modification déterministe, évidente et sans impact fonctionnel :
 
@@ -31,7 +31,7 @@ Exemple : remplacer `prime-communes-helvetia.webp` par une nouvelle version sous
 
 ---
 
-## Niveau 1 — 🟢 Simple
+## Niveau 2 — 🟢 Simple
 
 Pour une modification visuelle ou éditoriale isolée :
 
@@ -53,7 +53,7 @@ Exemple : ajouter une séparation visuelle entre deux groupes de filtres.
 
 ---
 
-## Niveau 2 — 🟡 Ciblé
+## Niveau 3 — 🟡 Ciblé
 
 Pour une modification pouvant affecter le rendu, le responsive ou plusieurs états d'un composant :
 
@@ -75,7 +75,7 @@ Ne pas lancer une validation générale par habitude.
 
 ---
 
-## Niveau 3 — 🟠 Fonctionnel
+## Niveau 4 — 🟠 Fonctionnel
 
 Pour une modification de comportement :
 
@@ -100,7 +100,7 @@ Exemple : vérifier qu'un refus de clé conserve les saisies et qu'une sauvegard
 
 ---
 
-## Niveau 4 — 🔴 Structurel / haut risque
+## Niveau 5 — 🔴 Structurel / haut risque
 
 Pour :
 
@@ -132,9 +132,9 @@ Utiliser Work lorsque l'exécution autonome multi-étapes apporte réellement de
 ## Règles générales
 
 1. **Chat d'abord, Work par exception.**  
-   Une demande de niveau 0, 1 ou 2 doit normalement être traitée directement dans le chat si les outils disponibles suffisent.  
-   Le niveau 3 peut rester dans le chat si le changement et ses tests sont clairement maîtrisés.  
-   Le niveau 4 est le candidat naturel pour Work.
+   Une demande de niveau 1, 2 ou 3 doit normalement être traitée directement dans le chat si les outils disponibles suffisent.  
+   Le niveau 4 peut rester dans le chat si le changement et ses tests sont clairement maîtrisés.  
+   Le niveau 5 est le candidat naturel pour Work.
 
 2. **Le niveau peut monter après inspection.**  
    Si une modification paraît simple mais révèle une dépendance inattendue, passe au niveau supérieur et explique brièvement pourquoi.  
@@ -173,39 +173,43 @@ Utiliser Work lorsque l'exécution autonome multi-étapes apporte réellement de
 
    Ne pas transformer cette qualification en longue analyse préalable.
 
-10. **Qualifier chaque point séparément.**  
+10. **Annoncer toute modification complémentaire prévue.**  
+    Le pré-tri doit inclure non seulement les points explicitement demandés, mais aussi toute modification dérivée que ChatGPT prévoit d'effectuer pour garder le dépôt cohérent.  
+    Une modification complémentaire ne doit pas être ajoutée silencieusement. Si elle n'apparaît qu'après inspection, l'annoncer avant de l'effectuer.
+
+11. **Qualifier chaque point séparément.**  
     Si la demande contient plusieurs points, déterminer le niveau de chacun, puis regrouper ceux qui peuvent partager la même intervention et la même validation.
 
-11. **Éviter les validations redondantes.**  
+12. **Éviter les validations redondantes.**  
     Si un contrôle déterministe prouve déjà le résultat, ne lancer ni navigateur, ni génération, ni inspection supplémentaire sans raison.
 
-12. **Ne pas faire de smoke test de production par automatisme.**  
-    Le smoke test production est réservé aux changements où le risque réel le justifie : niveau 4, changement transversal, modification d'architecture, bug runtime ou déploiement sensible.
+13. **Ne pas faire de smoke test de production par automatisme.**  
+    Le smoke test production est réservé aux changements où le risque réel le justifie : niveau 5, changement transversal, modification d'architecture, bug runtime ou déploiement sensible.
 
-13. **Ne pas reconstruire tout le projet pour un changement local.**  
-    Une modification de niveau 0 ou 1 ne doit pas provoquer un cycle complet de build/test si rien dans le changement ne le nécessite.
+14. **Ne pas reconstruire tout le projet pour un changement local.**  
+    Une modification de niveau 1 ou 2 ne doit pas provoquer un cycle complet de build/test si rien dans le changement ne le nécessite.
 
-14. **Privilégier le diff minimal.**  
+15. **Privilégier le diff minimal.**  
     Quand plusieurs solutions sont possibles, choisir celle qui touche le moins de fichiers, le moins de logique et le moins de dépendances, à qualité égale.
 
-15. **En cas d'anomalie, arrêter plutôt qu'improviser.**  
+16. **En cas d'anomalie, arrêter plutôt qu'improviser.**  
     Si le changement prévu révèle une situation inattendue, une dépendance inconnue, un conflit, un état différent du dépôt ou une nécessité de modifier davantage de code, arrêter et rapporter le problème avant d'élargir le périmètre.
 
-16. **Compte rendu final compact.**  
+17. **Compte rendu final compact.**  
     Lors du compte rendu final, indiquer simplement le niveau utilisé lorsque cela apporte de la clarté, par exemple :
 
-    `⚡ Niveau 0 — asset remplacé, diff vérifié, aucun test inutile lancé.`
+    `⚡ Niveau 1 — asset remplacé, diff vérifié, aucun test inutile lancé.`
 
     ou :
 
-    `🟠 Niveau 3 — comportement corrigé, 2 tests ciblés passés, aucun test général lancé.`
+    `🟠 Niveau 4 — comportement corrigé, 2 tests ciblés passés, aucun test général lancé.`
 
     Le compte rendu ne doit pas devenir un journal d'exécution détaillé sauf si une anomalie ou un risque le justifie.
 
-17. **Le but n'est pas de minimiser les contrôles à tout prix.**  
+18. **Le but n'est pas de minimiser les contrôles à tout prix.**  
     Le but est de faire exactement autant de contrôle que nécessaire, et pas davantage.
 
-18. **Principe directeur.**  
+19. **Principe directeur.**  
     Déterministe d'abord. Raisonnement lourd seulement lorsqu'il apporte une information nouvelle ou réduit réellement le risque.
 
 > Une procédure plus lourde n'est pas meilleure parce qu'elle est plus lourde ; elle n'est justifiée que si elle apporte une preuve supplémentaire utile.

@@ -150,11 +150,12 @@ Estimation historique conservée : 14–28 h · 35–80 crédits.
 ### Mode d'intervention adaptative · sobriété de développement
 
 Prime Communes applique une validation proportionnée au risque de chaque
-modification : niveaux 0 à 4, du remplacement déterministe d'un asset au
+modification : niveaux 1 à 5, du remplacement déterministe d'un asset au
 changement structurel à haut risque.
 
 - Chat d'abord, Work par exception.
 - Pré-tri visible pour les demandes multi-points.
+- Toute modification complémentaire prévue doit être annoncée avant exécution.
 - Diff minimal et aucun refactoring opportuniste.
 - Tests, build, navigateur et smoke test uniquement lorsqu'ils apportent une
   preuve supplémentaire utile.

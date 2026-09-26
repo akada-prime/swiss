@@ -5,10 +5,10 @@ sans recréer les couches historiques retirées par le rebuild.
 
 Toute intervention commence par le
 [mode d'intervention adaptative](./adaptive-intervention-mode.md). Les contrôles
-doivent être proportionnés au niveau 0–4 de la modification. La procédure
+doivent être proportionnés au niveau 1–5 de la modification. La procédure
 exhaustive de ce playbook reste pertinente pour les interventions structurelles,
-les reprises de rebuild et les changements de niveau 4 ; elle ne doit pas être
-appliquée automatiquement aux niveaux 0–3.
+les reprises de rebuild et les changements de niveau 5 ; elle ne doit pas être
+appliquée automatiquement aux niveaux 1–4.
 
 ## Démarrage sûr
 
@@ -25,9 +25,9 @@ baseline immuable est `b327d57126cf5dd8d5291ff1487d9af21a9c8cb9`.
 Ne jamais réinitialiser un état local inconnu, ne jamais travailler sur `main`
 et ne jamais merger automatiquement.
 
-## Boucle de modification structurelle · niveau 4
+## Boucle de modification structurelle · niveau 5
 
-Pour les niveaux 0–3, suivre la procédure proportionnée décrite dans le mode
+Pour les niveaux 1–4, suivre la procédure proportionnée décrite dans le mode
 d'intervention adaptative et ne pas déclencher automatiquement build, suite
 complète de tests ou matrice navigateur.
 
