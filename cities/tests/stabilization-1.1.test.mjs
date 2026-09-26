@@ -329,7 +329,7 @@ test('current site loads one canonical runtime per view and no SVG map runtime',
   const html = await read('index.html');
   const runtime = await read('app/main.js');
   const styles = await read('app/styles/main.css');
-  assert.match(html, /<script type="module" src="app\/main\.js"><\/script>/);
+  assert.match(html, /<script type="module" src="app\/main\.js\?v=[^"]+"><\/script>/);
   assert.equal((html.match(/<script type="module"/g) || []).length, 1);
   assert.match(runtime, /prime-communes-maplibre-1\.2\.js/);
   assert.match(runtime, /prime-communes-communes-1\.2\.js/);
