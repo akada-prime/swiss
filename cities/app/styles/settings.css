@@ -3,9 +3,9 @@
 .settings-trigger{display:flex;align-items:center;gap:8px;flex:0 0 auto;padding:9px 12px;border:1px solid var(--skin-border-soft);border-radius:10px;background:var(--skin-tint);color:var(--skin-secondary);font-size:12px;font-weight:650;cursor:pointer}
 .settings-trigger:hover,.settings-trigger:focus-visible{color:var(--skin-text);border-color:var(--skin-focus)}
 .settings-trigger span:first-child{font-size:18px;line-height:1}
-.settings-backdrop{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.35)}
+.settings-backdrop{position:fixed;inset:0;z-index:160;background:rgba(0,0,0,.35)}
 .settings-backdrop[hidden],.settings-panel[hidden]{display:none}
-.settings-panel{position:fixed;z-index:81;top:76px;right:max(18px,calc((100vw - 1500px)/2));width:min(360px,calc(100vw - 32px));max-height:calc(100dvh - 90px);overflow:auto;padding:22px;border:1px solid var(--skin-border);border-radius:18px;background:var(--skin-elevated);color:var(--skin-text);box-shadow:var(--skin-shadow)}
+.settings-panel{position:fixed;z-index:161;top:76px;right:max(18px,calc((100vw - 1500px)/2));width:min(360px,calc(100vw - 32px));max-height:calc(100dvh - 90px);overflow:auto;padding:22px;border:1px solid var(--skin-border);border-radius:18px;background:var(--skin-elevated);color:var(--skin-text);box-shadow:var(--skin-shadow)}
 .settings-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .settings-heading h2{margin:0;font-size:20px}
 .settings-heading button{width:36px;height:36px;border:1px solid var(--skin-border-soft);border-radius:8px;background:var(--skin-control);color:var(--skin-text);font-size:25px;cursor:pointer}

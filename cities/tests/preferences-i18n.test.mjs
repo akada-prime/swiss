@@ -48,8 +48,8 @@ test('the early bootstrap applies skin and html lang before styles and the main 
   assert.ok(html.indexOf('document.documentElement.dataset.skin = preference(') < html.indexOf('app/styles/main.css'));
   assert.ok(html.indexOf('document.documentElement.lang = preference(') < html.indexOf('app/styles/main.css'));
   assert.ok(html.indexOf('app/styles/main.css') < html.indexOf('app/main.js'));
-  assert.match(html, /app\/styles\/main\.css\?v=20260926-preferences-1/);
-  assert.match(html, /app\/main\.js\?v=20260926-preferences-3/);
+  assert.match(html, /app\/styles\/main\.css\?v=20260926-preferences-4/);
+  assert.match(html, /app\/main\.js\?v=20260926-preferences-4/);
   const css = await read('app/styles/main.css');
   const modules = await read('app/main.js');
   assert.match(css, /skins\.css/);
@@ -62,7 +62,7 @@ test('the early bootstrap applies skin and html lang before styles and the main 
   assert.equal((html.match(/name="language"/g) || []).length, 2);
   const settings = await read('app/core/settings.js');
   assert.match(settings, /setPreference\(input.name, input.value\)/);
-  assert.match(settings, /if \(event.key === 'Escape'\) close\(\)/);
+  assert.match(settings, /if \(event.key === 'Escape'\) \{ event\.stopPropagation\(\); close\(\); \}/);
   assert.match(settings, /event.shiftKey.*focus/);
 });
 
@@ -94,7 +94,7 @@ test('settings opens as a dialog, changes both preferences and closes with Escap
   listeners.get('de:change')();
   assert.equal(document.documentElement.dataset.skin, 'helvetia');
   assert.equal(document.documentElement.lang, 'de');
-  listeners.get('document:keydown')({key:'Escape'});
+  listeners.get('document:keydown')({key:'Escape',stopPropagation(){}});
   assert.equal(panel.hidden, true);
   assert.equal(trigger['aria-expanded'], 'false');
   assert.equal(document.activeElement, trigger);
@@ -132,4 +132,16 @@ test('translating the canton label preserves the filter value and refreshes load
   assert.match(data, /source:t\(source === 'base live' \? 'common\.sourceLive' : 'common\.sourceLocal'\)/);
   assert.match(runtime, /lastReferenceDate.*common\.dataAt/s);
   assert.match(runtime, /\$\('ofsLabel'\)\.textContent=ofsMode\?t\('common\.deliveryActive'\)/);
+});
+
+test('an open commune portrait can open settings and retain its modal on Escape', async () => {
+  const portrait = await read('app/prime-communes-communes-1.2.js');
+  const settings = await read('app/core/settings.js');
+  const css = await read('app/styles/settings.css');
+  assert.match(portrait, /class="portrait-settings"[^>]*settings\.trigger/);
+  assert.match(portrait, /querySelector\('\.portrait-settings'\)\.onclick = \(\) => document\.getElementById\('settingsTrigger'\)\.click\(\)/);
+  assert.match(portrait, /prime-language-change[\s\S]*openCommunePortrait\(commune\)/);
+  assert.match(settings, /event\.stopPropagation\(\); close\(\)/);
+  assert.match(css, /\.settings-backdrop\{[^}]*z-index:160/);
+  assert.match(css, /\.settings-panel\{[^}]*z-index:161/);
 });

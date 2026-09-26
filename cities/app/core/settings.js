@@ -31,7 +31,7 @@ closeButton.addEventListener('click', close);
 backdrop.addEventListener('click', close);
 document.addEventListener('keydown', event => {
   if (panel.hidden) return;
-  if (event.key === 'Escape') close();
+  if (event.key === 'Escape') { event.stopPropagation(); close(); }
   if (event.key !== 'Tab') return;
   const focusable = [...panel.querySelectorAll('button, input')];
   const first = focusable[0], last = focusable.at(-1);
