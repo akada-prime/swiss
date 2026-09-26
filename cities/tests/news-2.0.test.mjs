@@ -21,7 +21,7 @@ test('Radar and Histoires are first-class deep-linked views', async () => {
   assert.match(styles, /views\/radar\.css/);
   assert.match(styles, /views\/stories\.css/);
   assert.match(styles, /views\/roadmap\.css/);
-  assert.match(html, /type="module" src="app\/main\.js"/);
+  assert.match(html, /type="module" src="app\/main\.js\?v=[^"]+"/);
   assert.match(html, /class="news-beta-note"/);
   assert.match(html, /class="news-nav-badge"><!--i18n:page\.009-->SOBRE/);
   assert.doesNotMatch(html, /news-nav-dot/);
