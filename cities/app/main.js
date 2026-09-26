@@ -1,5 +1,5 @@
 // Prime Communes 2.0 — deterministic module graph.
-import './core/preferences.js';
+import './core/preferences.js?v=20260926-auto-skin-1';
 import './core/settings.js?v=20260926-preferences-4';
 import './core/i18n.js?v=20260926-preferences-2';
 import './core/runtime.js?v=20260926-preferences-2';
