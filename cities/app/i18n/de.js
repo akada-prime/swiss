@@ -302,6 +302,8 @@ export default {
   "common.topResults": "Erste 120 Ergebnisse · Filter eingrenzen, um mehr zu sehen",
   "common.approxCommune": "Ähnliche Gemeinde",
   "common.dataAt": "Daten vom {date} · {source}",
+  "common.sourceLive": "Live-Datenbank",
+  "common.sourceLocal": "lokale Kopie",
   "common.upToDate": "Aktuell ✓ · {count} Gemeinden · {seconds} s",
   "common.results": "{count} Ergebnisse",
   "common.covered": "{count} erfasste Einwohner",

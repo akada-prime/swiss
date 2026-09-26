@@ -302,6 +302,8 @@ export default {
   "common.topResults": "120 premiers résultats affichés · affinez les filtres pour aller plus loin",
   "common.approxCommune": "Commune approchante",
   "common.dataAt": "Données au {date} · {source}",
+  "common.sourceLive": "base live",
+  "common.sourceLocal": "copie locale",
   "common.upToDate": "À jour ✓ · {count} communes · {seconds} s",
   "common.results": "{count} résultats",
   "common.covered": "{count} habitants couverts",

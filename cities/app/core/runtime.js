@@ -1,7 +1,7 @@
-import { t, number, date } from './i18n.js';
+import { t, number, date } from './i18n.js?v=20260926-preferences-2';
 // Prime Communes 2.0 — shell and shared compatibility contract.
 
-const fmt={format:value=>number(value)},pct={format:value=>number(value,{minimumFractionDigits:1,maximumFractionDigits:1})};let all=[],primeOnly=false,eadminOnly=false,issuesOnly=false,districtsMode=false,marketOnly='',ofsMode=false,sortKey='population',sortDirection='desc',mapGeometry=null,mapMode='integrator',mapPerspective='impact',mapProduct='eAdmin',mapViewBox=null,mapInitialViewBox=null,mapFullViewBox=null,mapDragging=false,mapMoved=false,statsMetric='population',statsThreshold=0;
+const fmt={format:value=>number(value)},pct={format:value=>number(value,{minimumFractionDigits:1,maximumFractionDigits:1})};let all=[],primeOnly=false,eadminOnly=false,issuesOnly=false,districtsMode=false,marketOnly='',ofsMode=false,sortKey='population',sortDirection='desc',mapGeometry=null,mapMode='integrator',mapPerspective='impact',mapProduct='eAdmin',mapViewBox=null,mapInitialViewBox=null,mapFullViewBox=null,mapDragging=false,mapMoved=false,statsMetric='population',statsThreshold=0,lastReferenceDate='',lastDataSource='';
 const supplierChoices=['Abraxas','Axians','Ciges','Data','Epsitec','OBT','Ofisa','Prime','SIACG','SIEN','T2i','Talus']; const softwareChoices=['innosolvcity','Urbanus','Calvin','Citizen','ETIC','BDI','Crésus','Epsilon','Ruf'];
 const ERP_BY_METIER={ETIC:'Abacus',Urbanus:'Urbanus',Citizen:'Citizen',BDI:'BDI',Epsilon:'Epsilon','Crésus':'Crésus',Ruf:'Ruf',Calvin:'Opale'};
 const $=id=>document.getElementById(id), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -52,16 +52,18 @@ function communeSearchMeta(x,query){
 const SUPABASE_URL='https://ozdvmllgxduzquiujcbg.supabase.co',SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96ZHZtbGxneGR1enF1aXVqY2JnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NzkwNTIsImV4cCI6MjEwMzE1NTA1Mn0.mVT0_dqcpAzb3QxmC5xDmB8bq7RZrpDd5dpvnGKPaTw';
 const decodeEntities=value=>{const node=document.createElement('textarea');node.innerHTML=String(value??'');return node.value};
 function applyData(data,source){
+  lastReferenceDate=data.meta.referenceDate;
+  lastDataSource=source;
   all=data.municipalities.map(x=>{const products=[...(x.products??[])];if(Number(x.id)===2206&&!products.includes('Clever.Tax'))products.push('Clever.Tax');const explicitPrime=x.primeClient??x.prime_client,isPrime=explicitPrime==null?Boolean(x.isPrime||x.integrator==='Prime'||(x.canton==='GE'&&products.includes('eAdmin'))):Boolean(explicitPrime);const erp=Object.prototype.hasOwnProperty.call(x,'erp')?(x.erp||''):(ERP_BY_METIER[x.software]||'');return{...x,name:decodeEntities(x.name),district:decodeEntities(x.district),comment:decodeEntities(x.comment),products,isPrime,primeClient:isPrime,erp}});
   $('population').textContent=fmt.format(data.meta.expectedPopulation);$('communeCount').textContent=fmt.format(data.meta.municipalityCount);$('headerCommuneCount').textContent=fmt.format(data.meta.municipalityCount);
   const over=all.filter(x=>x.expectedPopulation>=10000),prime=all.filter(x=>x.isPrime),issues=all.filter(x=>x.deliveryStatus!=='accepted');
   const overPop=over.reduce((s,x)=>s+x.expectedPopulation,0);$('over10k').textContent=over.length;$('over10kPop').textContent=fmt.format(overPop);$('over10kShare').textContent=pct.format(over.length/all.length*100)+'%';$('over10kPopShare').textContent=pct.format(overPop/data.meta.expectedPopulation*100)+'%';$('prime').textContent=prime.length;$('primePop').textContent=fmt.format(prime.reduce((s,x)=>s+x.expectedPopulation,0));$('issues').textContent=issues.length;
-  $('canton').innerHTML='<option>'+t('common.all')+'</option>';fill('canton',[...new Set(all.map(x=>x.canton))].sort());
+  $('canton').innerHTML='<option value="Tous">'+t('common.all')+'</option>';fill('canton',[...new Set(all.map(x=>x.canton))].sort());
   updateDistrictOptions();
   const solutions=[...new Map(all.filter(x=>x.integrator||x.software).map(x=>{const value=(x.integrator||'')+'|||'+(x.software||''),label=(x.integrator||t('common.empty'))+' | '+(x.software||'—');return[value,{value,label}]})).values()].sort((a,b)=>a.label.localeCompare(b.label,'fr-CH',{sensitivity:'base'}));
   $('solution').innerHTML='<option value="Tous">'+t('common.allFeminine')+'</option>'+solutions.map(x=>`<option value="${esc(x.value)}">${esc(x.label)}</option>`).join('');
   const products=[...new Set(all.flatMap(x=>x.products||[]))].sort((a,b)=>a.localeCompare(b,'fr-CH',{sensitivity:'base'}));$('mapProduct').innerHTML=products.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');if(products.includes(mapProduct))$('mapProduct').value=mapProduct;
-  updateStatsScopeOptions();$('syncText').textContent=t('common.dataAt',{date:date(new Date(data.meta.referenceDate+'T00:00:00')),source});render();renderStats();if(mapGeometry)renderMap();
+  updateStatsScopeOptions();$('syncText').textContent=t('common.dataAt',{date:date(new Date(data.meta.referenceDate+'T00:00:00')),source:t(source==='base live'?'common.sourceLive':'common.sourceLocal')});render();renderStats();if(mapGeometry)renderMap();
 }
 function mapDb(x){return{id:x.bfs_id,name:x.name,canton:x.canton,market:x.market,districtCode:x.bezirk_code??'',district:x.bezirk??'',expectedPopulation:x.expected_population??0,receivedPopulation:x.received_population,receivedOn:x.received_on??'',comment:x.comment??'',echVersion:x.ech_version??'',missingEwid:x.missing_ewid,ewidErrorRate:x.ewid_error_rate,deliveryStatus:x.delivery_status??'unknown',software:x.software??'',integrator:x.integrator??'',primeClient:x.prime_client,erp:x.erp??'',salesStatus:x.sales_status??'none',notes:x.notes??'',products:x.products??[]}}
 async function loadData(manual=false){
@@ -253,6 +255,14 @@ Object.assign(window, {
 });
 
 document.addEventListener('prime-language-change', () => {
+  $('canton').options[0].textContent=t('common.all');
+  $('solution').options[0].textContent=t('common.allFeminine');
+  updateDistrictOptions();
   updateStatsScopeOptions();
+  if (lastReferenceDate) $('syncText').textContent=t('common.dataAt',{date:date(new Date(lastReferenceDate+'T00:00:00')),source:t(lastDataSource==='base live'?'common.sourceLive':'common.sourceLocal')});
+  $('ofsLabel').textContent=ofsMode?t('common.deliveryActive'):t('common.deliveryQuality');
+  $('ofsCopy').textContent=ofsMode?t('common.deliveryDescriptionActive'):t('common.deliveryDescription');
+  $('ofsCount').textContent=t('common.watchCount',{count:$('issues').textContent});
+  $('ofsAction').textContent=ofsMode?t('common.reloadMarket'):t('common.openControl');
   if (all.length) { render(); renderStats(); if (mapGeometry) { updateMapImpact(); updateMapLegend(); } }
 });
