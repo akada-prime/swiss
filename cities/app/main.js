@@ -3,7 +3,7 @@ import './core/preferences.js';
 import './core/settings.js';
 import './core/i18n.js?v=20260926-preferences-2';
 import './core/runtime.js?v=20260926-preferences-2';
-import './prime-communes-data-1.5.js?v=20260926-preferences-2';
+import './prime-communes-data-1.5.js?v=20260926-preferences-3';
 import './prime-communes-maplibre-1.2.js?v=20260926-preferences-2';
 import './prime-communes-1.1-base.js?v=20260926-preferences-2';
 import './prime-communes-stats-1.5.js?v=20260926-preferences-2';

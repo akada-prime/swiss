@@ -138,7 +138,7 @@ import {t, number, date} from './core/i18n.js?v=20260926-preferences-2';
     const cantonSelect = byId('canton');
     if (cantonSelect) {
       const cantons = [...new Set(rows.map(row => row.canton).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'fr-CH'));
-      cantonSelect.innerHTML = '<option>'+t('common.all')+'</option>' + cantons.map(canton => `<option>${String(canton).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]))}</option>`).join('');
+      cantonSelect.innerHTML = '<option value="Tous">'+t('common.all')+'</option>' + cantons.map(canton => `<option>${String(canton).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]))}</option>`).join('');
     }
     if (typeof updateDistrictOptions === 'function') updateDistrictOptions();
 
@@ -157,7 +157,7 @@ import {t, number, date} from './core/i18n.js?v=20260926-preferences-2';
     const syncText = byId('syncText');
     if (syncText) {
       const referenceDate = meta?.referenceDate || '2026-06-30';
-      syncText.textContent = t('common.dataAt',{date:date(new Date(`${referenceDate}T00:00:00`)),source});
+      syncText.textContent = t('common.dataAt',{date:date(new Date(`${referenceDate}T00:00:00`)),source:t(source === 'base live' ? 'common.sourceLive' : 'common.sourceLocal')});
     }
   }
 
@@ -273,6 +273,15 @@ import {t, number, date} from './core/i18n.js?v=20260926-preferences-2';
   };
 
   window.PrimeCommunesData = api;
+
+  document.addEventListener('prime-language-change', () => {
+    if (!snapshot) return;
+    const { meta, source } = snapshot;
+    byId('syncText').textContent = t('common.dataAt', {
+      date: date(new Date(`${meta.referenceDate}T00:00:00`)),
+      source: t(source === 'base live' ? 'common.sourceLive' : 'common.sourceLocal')
+    });
+  });
 
   // Replace the historical transport/scope functions as soon as this layer loads.
   // The visible shell remains unchanged while data ownership moves out of index.html.
