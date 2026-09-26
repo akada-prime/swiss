@@ -88,19 +88,23 @@
     background:var(--skin-control);
     color:#8794a7;
     font-size:12px;
-    white-space:nowrap;
+    flex-wrap:wrap;
+    padding-top:7px;
+    padding-bottom:7px;
+    white-space:normal;
   }
   .result-line #resultCount{
     display:inline-grid;
     place-items:center;
-    min-width:31px;
-    height:28px;
+    flex:none;
+    min-width:4ch;
+    height:32px;
     padding:0 7px;
     border:1px solid rgba(55,162,236,.34);
     border-radius:8px;
     color:#d9f1ff;
     background:rgba(10,102,170,.18);
-    font-size:13px;
+    font-size:16px;
     font-weight:750;
     font-variant-numeric:tabular-nums;
   }
