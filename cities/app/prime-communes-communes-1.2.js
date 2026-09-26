@@ -139,6 +139,7 @@ import {t} from './core/i18n.js?v=20260926-preferences-2';
     const cantonName = CANTON_NAMES[commune.canton] || commune.canton || '—';
     root.innerHTML = `<div class="portrait-backdrop">
       <aside class="commune-portrait" data-commune-id="${commune.id}" role="dialog" aria-modal="true" aria-labelledby="portraitTitle">
+        <button class="portrait-settings" type="button" aria-label="${t('settings.trigger')}" title="${t('settings.trigger')}">⚙</button>
         <button class="portrait-close" type="button" aria-label="${t('communes.portraitClose')}">×</button>
         <header class="portrait-heading">
           <img src="public/cantons/${esc(String(commune.canton || '').toLowerCase())}.svg" alt="">
@@ -161,6 +162,7 @@ import {t} from './core/i18n.js?v=20260926-preferences-2';
     </div>`;
     document.documentElement.classList.add('portrait-open');
     document.body.classList.add('portrait-open');
+    root.querySelector('.portrait-settings').onclick = () => document.getElementById('settingsTrigger').click();
     root.querySelector('.portrait-close').onclick = closeCommunePortrait;
     root.querySelector('.portrait-backdrop').onclick = event => { if (event.target === event.currentTarget) closeCommunePortrait(); };
     root.querySelector('.portrait-edit').onclick = () => {
