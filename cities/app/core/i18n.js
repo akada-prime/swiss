@@ -1,5 +1,5 @@
-import fr from '../i18n/fr.js';
-import de from '../i18n/de.js';
+import fr from '../i18n/fr.js?v=20260926-preferences-2';
+import de from '../i18n/de.js?v=20260926-preferences-2';
 import { getPreference, subscribePreferences } from './preferences.js';
 
 const catalogues = { fr, de };

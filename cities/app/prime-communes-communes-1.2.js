@@ -1,4 +1,4 @@
-import {t} from './core/i18n.js';
+import {t} from './core/i18n.js?v=20260926-preferences-2';
 (() => {
   'use strict';
 
