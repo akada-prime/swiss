@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFile } from 'node:fs/promises';
+import fr from '../app/i18n/fr.js';
 
 const read = path => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
@@ -10,7 +11,7 @@ async function searchRuntime() {
   const start = runtime.indexOf('const normalizeSearchText');
   const end = runtime.indexOf('const SUPABASE_URL', start);
   assert.ok(start >= 0 && end > start, 'search runtime must remain independently testable');
-  const context = { window: { PrimeCommunesData: null } };
+  const context = { window: { PrimeCommunesData: null }, t: key => fr[key] };
   vm.runInNewContext(runtime.slice(start, end), context);
   return context;
 }

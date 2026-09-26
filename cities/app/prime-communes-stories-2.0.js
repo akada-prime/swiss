@@ -1,3 +1,7 @@
+import { stories as germanStories } from './i18n/editorial-de.js';
+import { getPreference } from './core/preferences.js';
+import { t } from './core/i18n.js';
+
 (() => {
   'use strict';
 
@@ -7,6 +11,17 @@
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[character]));
   let stories = [];
+  function displayedStory(story) {
+    const translation = getPreference('language') === 'de' && germanStories[story.id];
+    if (!translation) return story;
+    return {
+      ...story, ...translation,
+      primeFact: { ...story.primeFact, ...translation.primeFact, sourceLabel: story.primeFact?.sourceLabel },
+      facts: story.facts.map((fact, index) => ({ ...fact, ...translation.facts[index] })),
+      angles: story.angles.map((angle, index) => ({ ...angle, ...translation.angles[index] })),
+      sources: story.sources // References and source titles remain in their original language.
+    };
+  }
 
   function storySource(story, sourceId) {
     return (story.sources || []).find(source => source.id === sourceId) || null;
@@ -14,7 +29,7 @@
 
   function storySourceLink(source, compact = false) {
     if (!source) return '';
-    const label = compact ? 'Source' : source.label;
+    const label = compact ? t('stories.source') : source.label;
     if (!source.url) return `<span>${escapeHtml(label)}</span>`;
     return `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)} ↗</a>`;
   }
@@ -30,7 +45,7 @@
     const firstAngle = angles[0] || { id: '', label: '', title: '', text: '' };
     const angleButtons = angles.map((angle, index) => `<button type="button" class="${index === 0 ? 'active' : ''}" data-story-id="${escapeHtml(story.id)}" data-story-angle="${escapeHtml(angle.id)}" aria-pressed="${index === 0}">${escapeHtml(angle.label)}</button>`).join('');
     const deliverables = (story.deliverables || []).map(item => `<span>${escapeHtml(item)}</span>`).join('');
-    const sources = (story.sources || []).map(source => `<li><b>${escapeHtml(source.type)}</b>${storySourceLink(source)}</li>`).join('');
+    const sources = (story.sources || []).map(source => `<li><b>${t(source.type === 'Source publique' ? 'stories.publicSource' : 'stories.internalSource')}</b>${storySourceLink(source)}</li>`).join('');
     return `<article class="story-card" id="story-${escapeHtml(story.id)}">
       <header class="story-hero">
         <div>
@@ -50,12 +65,12 @@
         <section class="story-axel-reading"><span>${escapeHtml(story.axelReading.label)}</span><p>${escapeHtml(story.axelReading.text)}</p></section>
       </div>
       <section class="story-angles">
-        <header><div><span>Angles éditoriaux</span><strong>Une histoire, plusieurs usages</strong></div><button type="button" class="story-copy" data-story-copy="${escapeHtml(story.id)}">Copier cet angle</button></header>
-        <div class="story-angle-tabs" role="group" aria-label="Choisir un angle éditorial">${angleButtons}</div>
+        <header><div><span>${t('stories.angles')}</span><strong>${t('stories.multipleUses')}</strong></div><button type="button" class="story-copy" data-story-copy="${escapeHtml(story.id)}">${t('stories.copy')}</button></header>
+        <div class="story-angle-tabs" role="group" aria-label="${t('stories.chooseAngle')}">${angleButtons}</div>
         <div class="story-angle-copy" data-story-angle-copy="${escapeHtml(story.id)}" aria-live="polite"><strong>${escapeHtml(firstAngle.title)}</strong><p>${escapeHtml(firstAngle.text)}</p></div>
-        <div class="story-deliverables"><b>Prêt pour</b>${deliverables}</div>
+        <div class="story-deliverables"><b>${t('stories.readyFor')}</b>${deliverables}</div>
       </section>
-      <footer class="story-sources"><strong>Sources du récit</strong><ul>${sources}</ul></footer>
+      <footer class="story-sources"><strong>${t('stories.sources')}</strong><ul>${sources}</ul></footer>
     </article>`;
   }
 
@@ -83,7 +98,8 @@
       if (municipality && typeof openDrawer === 'function') openDrawer(municipality);
     }));
     feed.querySelectorAll('[data-story-angle]').forEach(button => button.addEventListener('click', () => {
-      const story = stories.find(item => item.id === button.dataset.storyId);
+      const original = stories.find(item => item.id === button.dataset.storyId);
+      const story = original && displayedStory(original);
       const angle = story?.angles?.find(item => item.id === button.dataset.storyAngle);
       if (!story || !angle) return;
       feed.querySelectorAll(`[data-story-id="${story.id}"]`).forEach(item => {
@@ -95,13 +111,14 @@
       if (copy) copy.innerHTML = `<strong>${escapeHtml(angle.title)}</strong><p>${escapeHtml(angle.text)}</p>`;
     }));
     feed.querySelectorAll('[data-story-copy]').forEach(button => button.addEventListener('click', async () => {
-      const story = stories.find(item => item.id === button.dataset.storyCopy);
+      const original = stories.find(item => item.id === button.dataset.storyCopy);
+      const story = original && displayedStory(original);
       const selected = feed.querySelector(`[data-story-id="${button.dataset.storyCopy}"].active`);
       const angle = story?.angles?.find(item => item.id === selected?.dataset.storyAngle) || story?.angles?.[0];
       if (!story || !angle) return;
       await copyText(`${story.title}\n\n${angle.title}\n${angle.text}\n\n${story.standfirst}`);
-      button.textContent = 'Angle copié ✓';
-      window.setTimeout(() => { button.textContent = 'Copier cet angle'; }, 1800);
+      button.textContent = t('stories.copied');
+      window.setTimeout(() => { if (button.isConnected) button.textContent = t('stories.copy'); }, 1800);
     }));
   }
 
@@ -113,15 +130,23 @@
       if (!response.ok) throw new Error(`Histoires ${response.status}`);
       const data = await response.json();
       stories = Array.isArray(data.stories) ? data.stories : [];
-      feed.innerHTML = stories.length ? stories.map(storyCard).join('') : '<div class="news-empty"><strong>Aucun récit publié.</strong><span>Les histoires validées apparaîtront ici.</span></div>';
+      feed.innerHTML = stories.length ? stories.map(story => storyCard(displayedStory(story))).join('') : `<div class="news-empty"><strong>${t('stories.emptyTitle')}</strong><span>${t('stories.emptyDetail')}</span></div>`;
       bindStories();
     } catch (error) {
       console.error(error);
-      feed.innerHTML = '<div class="news-empty"><strong>Le récit ne peut pas être chargé.</strong><span>Réessaie plus tard.</span></div>';
+      feed.innerHTML = `<div class="news-empty"><strong>${t('stories.loadingError')}</strong><span>${t('stories.retryLater')}</span></div>`;
     }
   }
 
 
   window.PrimeCommunesStories = { reload: loadStories };
+  document.addEventListener('prime-language-change', () => {
+    const selected = [...document.querySelectorAll('.story-angle-tabs button.active')].map(button => ({story:button.dataset.storyId, angle:button.dataset.storyAngle}));
+    const feed = byId('storiesFeed');
+    if (!feed || !stories.length) return;
+    feed.innerHTML = stories.map(story => storyCard(displayedStory(story))).join('');
+    bindStories();
+    for (const {story,angle} of selected) feed.querySelector(`[data-story-id="${story}"][data-story-angle="${angle}"]`)?.click();
+  });
   void loadStories();
 })();

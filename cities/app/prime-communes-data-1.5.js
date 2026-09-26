@@ -1,3 +1,4 @@
+import {t, number, date} from './core/i18n.js';
 (() => {
   'use strict';
 
@@ -18,8 +19,8 @@
   let readyResolve;
   const firstReady = new Promise(resolve => { readyResolve = resolve; });
 
-  const nf = new Intl.NumberFormat('fr-CH');
-  const pf = new Intl.NumberFormat('fr-CH', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const nf = {format:value=>number(value)};
+  const pf = {format:value=>number(value,{minimumFractionDigits:1,maximumFractionDigits:1})};
   const byId = id => document.getElementById(id);
   const normalizeText = value => String(value || '')
     .normalize('NFD')
@@ -137,7 +138,7 @@
     const cantonSelect = byId('canton');
     if (cantonSelect) {
       const cantons = [...new Set(rows.map(row => row.canton).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'fr-CH'));
-      cantonSelect.innerHTML = '<option>Tous</option>' + cantons.map(canton => `<option>${String(canton).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]))}</option>`).join('');
+      cantonSelect.innerHTML = '<option>'+t('common.all')+'</option>' + cantons.map(canton => `<option>${String(canton).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]))}</option>`).join('');
     }
     if (typeof updateDistrictOptions === 'function') updateDistrictOptions();
 
@@ -145,18 +146,18 @@
     if (solutionSelect) {
       const solutions = [...new Map(rows.filter(row => row.integrator || row.software).map(row => {
         const value = `${row.integrator || ''}|||${row.software || ''}`;
-        const label = `${row.integrator || 'À compléter'} | ${row.software || '—'}`;
+        const label = `${row.integrator || t('common.empty')} | ${row.software || '—'}`;
         return [value, { value, label }];
       })).values()].sort((a, b) => a.label.localeCompare(b.label, 'fr-CH', { sensitivity: 'base' }));
       const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-      solutionSelect.innerHTML = '<option value="Tous">Toutes</option>' + solutions.map(item => `<option value="${escape(item.value)}">${escape(item.label)}</option>`).join('');
+      solutionSelect.innerHTML = '<option value="Tous">'+t('common.allFeminine')+'</option>' + solutions.map(item => `<option value="${escape(item.value)}">${escape(item.label)}</option>`).join('');
     }
 
     if (typeof updateStatsScopeOptions === 'function') updateStatsScopeOptions();
     const syncText = byId('syncText');
     if (syncText) {
       const referenceDate = meta?.referenceDate || '2026-06-30';
-      syncText.textContent = `Données au ${new Date(`${referenceDate}T00:00:00`).toLocaleDateString('fr-CH')} · ${source}`;
+      syncText.textContent = t('common.dataAt',{date:date(new Date(`${referenceDate}T00:00:00`)),source});
     }
   }
 
@@ -227,7 +228,7 @@
       syncButton.dataset.state = 'loading';
       syncButton.disabled = true;
     }
-    if (syncText) syncText.textContent = 'Actualisation…';
+    if (syncText) syncText.textContent = t('common.refreshing');
     try {
       const result = await load();
       applyPayload(result.data, result.source);
@@ -237,13 +238,13 @@
       if (manual && syncText) {
         const seconds = Math.max(.1, (performance.now() - started) / 1000).toFixed(1).replace('.', ',');
         syncText.textContent = result.source === 'base live'
-          ? `À jour ✓ · ${result.data.municipalities.length.toLocaleString('fr-CH')} communes · ${seconds} s`
-          : 'Copie locale chargée · base indisponible';
+          ? t('common.upToDate',{count:number(result.data.municipalities.length),seconds})
+          : t('common.localCopy');
       }
       return result;
     } catch (error) {
       if (syncButton) syncButton.dataset.state = 'error';
-      if (syncText) syncText.textContent = 'Erreur de chargement';
+      if (syncText) syncText.textContent = t('common.errorLoading');
       const rowsNode = byId('rows');
       if (rowsNode) rowsNode.innerHTML = `<tr><td colspan="9">${String(error?.message || error)}</td></tr>`;
       throw error;

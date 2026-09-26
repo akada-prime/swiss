@@ -1,0 +1,161 @@
+/* Only interface appearance belongs here. Status and map/data colours retain
+   their own meaning independently of the selected skin. */
+html[data-skin="prime-darkweb"] {
+  color-scheme:dark;
+  --skin-page:#05080e;
+  --skin-shell:linear-gradient(150deg,#07111e 0%,#080b14 33%,#0a0712 68%,#110805 100%);
+  --skin-header:rgba(5,8,14,.7);
+  --skin-panel:rgba(7,11,19,.76);
+  --skin-card:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018));
+  --skin-control:#090e18;
+  --skin-elevated:#101827;
+  --skin-text:#f5f7fb;
+  --skin-secondary:#98a4b5;
+  --skin-muted:#778397;
+  --skin-border:rgba(255,255,255,.09);
+  --skin-border-soft:rgba(255,255,255,.075);
+  --skin-border-faint:rgba(255,255,255,.055);
+  --skin-hover:rgba(255,255,255,.045);
+  --skin-tint:rgba(255,255,255,.025);
+  --skin-accent:#0878d1;
+  --skin-accent-soft:rgba(10,102,170,.18);
+  --skin-focus:#66c7ff;
+  --skin-shadow:0 32px 80px rgba(0,0,0,.35);
+  --skin-ambient-blue:#0068c9;
+  --skin-ambient-warm:#ff4b20;
+  --skin-hero:linear-gradient(90deg,#3ea6ff,#7d73ff 45%,#ff5630 90%);
+  --skin-mobile-search:#070b12;
+}
+html[data-skin="helvetia"] {
+  color-scheme:light;
+  --skin-page:#f5f6f6;
+  --skin-shell:#f5f6f6;
+  --skin-header:#fff;
+  --skin-panel:#fff;
+  --skin-card:#fff;
+  --skin-control:#fff;
+  --skin-elevated:#fff;
+  --skin-text:#18222b;
+  --skin-secondary:#404d57;
+  --skin-muted:#5d6b75;
+  --skin-border:#cfd5d9;
+  --skin-border-soft:#dce1e4;
+  --skin-border-faint:#e7eaec;
+  --skin-hover:#f1f3f4;
+  --skin-tint:#f7f8f8;
+  --skin-accent:#b5222a;
+  --skin-accent-soft:#f8e9e9;
+  --skin-focus:#a21b23;
+  --skin-shadow:0 8px 24px rgba(23,38,50,.07);
+  --skin-ambient-blue:transparent;
+  --skin-ambient-warm:transparent;
+  --skin-hero:linear-gradient(90deg,#222e38,#ad252d);
+  --skin-mobile-search:#f5f6f6;
+}
+html[data-skin="light"] {
+  color-scheme:light;
+  --skin-page:#f3f7fc;
+  --skin-shell:linear-gradient(150deg,#f5f9fe,#eef5fc);
+  --skin-header:#fff;
+  --skin-panel:#fff;
+  --skin-card:#fff;
+  --skin-control:#fff;
+  --skin-elevated:#fff;
+  --skin-text:#182638;
+  --skin-secondary:#40546b;
+  --skin-muted:#5d7085;
+  --skin-border:#cbd8e6;
+  --skin-border-soft:#d7e2ee;
+  --skin-border-faint:#e5edf5;
+  --skin-hover:#eef5fc;
+  --skin-tint:#f6faff;
+  --skin-accent:#126bc0;
+  --skin-accent-soft:#e6f2ff;
+  --skin-focus:#1669bc;
+  --skin-shadow:0 12px 32px rgba(23,65,110,.08);
+  --skin-ambient-blue:transparent;
+  --skin-ambient-warm:transparent;
+  --skin-hero:linear-gradient(90deg,#1174cf,#4566bd);
+  --skin-mobile-search:#f3f7fc;
+}
+
+/* Shared application chrome. Geography, series, status and product marks are
+   deliberately excluded from these selectors. */
+html[data-skin] body{background:var(--skin-page);color:var(--skin-text)}
+html[data-skin] .app-shell{background:var(--skin-shell)}
+html[data-skin] .topbar{background:var(--skin-header);border-color:var(--skin-border)}
+html[data-skin] .ambient-one{background:var(--skin-ambient-blue)}
+html[data-skin] .ambient-two{background:var(--skin-ambient-warm)}
+html[data-skin] h1 span{background:var(--skin-hero);background-clip:text}
+html[data-skin] .data-panel,
+html[data-skin] .map-panel,
+html[data-skin] .stats-panel,
+html[data-skin] .news-panel,
+html[data-skin] .story-panel,
+html[data-skin] .roadmap-panel,
+html[data-skin] .drawer,
+html[data-skin] .commune-portrait,
+html[data-skin] .portrait-panel{background:var(--skin-panel);color:var(--skin-text);border-color:var(--skin-border);box-shadow:var(--skin-shadow)}
+html[data-skin] .kpi-card:not(.hero-kpi):not(.prime-card):not(.alert-card),
+html[data-skin] .stats-card,
+html[data-skin] .stats-kpi,
+html[data-skin] .news-kpi,
+html[data-skin] .story-card,
+html[data-skin] .roadmap-stage,
+html[data-skin] .maplibre-metric{background:var(--skin-card);border-color:var(--skin-border-soft);box-shadow:var(--skin-shadow)}
+html[data-skin] .filters,
+html[data-skin] .map-toolbar,
+html[data-skin] .stats-toolbar,
+html[data-skin] .news-toolbar,
+html[data-skin] .story-fact,
+html[data-skin] .story-reading-grid section,
+html[data-skin] .news-sobriety,
+html[data-skin] .roadmap-principle{background:var(--skin-tint);border-color:var(--skin-border-soft)}
+html[data-skin] input,
+html[data-skin] select,
+html[data-skin] textarea,
+html[data-skin] .filter-toggle,
+html[data-skin] .filters label,
+html[data-skin] .canton-district-group,
+html[data-skin] .market-toggles,
+html[data-skin] .map-search,
+html[data-skin] .maplibre-toolbar .map-search,
+html[data-skin] .maplibre-view-switch,
+html[data-skin] .map-autocomplete,
+html[data-skin] .map-autocomplete button{background:var(--skin-control);color:var(--skin-text);border-color:var(--skin-border-soft);color-scheme:inherit}
+html[data-skin] .maplibre-toolbar .map-search input{background:transparent;color:var(--skin-text);color-scheme:inherit}
+html[data-skin] .filter-toggle.on:not(.warning),
+html[data-skin] .maplibre-view-buttons button.active{background:var(--skin-accent-soft);border-color:var(--skin-accent);color:var(--skin-accent)}
+html[data-skin] .mobile-search-overlay{background:var(--skin-mobile-search);color:var(--skin-text)}
+html[data-skin] .mobile-search-header{background:var(--skin-header);border-color:var(--skin-border)}
+html[data-skin] .mobile-search-result,
+html[data-skin] .mobile-search-back{background:var(--skin-control);color:var(--skin-text);border-color:var(--skin-border-soft)}
+html[data-skin] .site-footer{color:var(--skin-muted);border-color:var(--skin-border)}
+html[data-skin="helvetia"] .ambient,html[data-skin="light"] .ambient{opacity:0}
+html[data-skin="helvetia"] .brand,html[data-skin="light"] .brand{filter:none}
+html[data-skin="helvetia"] .save-button{background:var(--skin-accent);color:#fff}
+html[data-skin="light"] .save-button{background:var(--skin-accent);color:#fff}
+
+/* Text on light surfaces. Existing status, series and product colours keep
+   their semantic palette; shared labels use the skin's contrast contract. */
+html[data-skin="helvetia"],html[data-skin="light"]{--pc-text:var(--skin-text);--pc-muted:var(--skin-muted);--pc-card-bg:var(--skin-card);--pc-card-line:var(--skin-border-soft);--pc-field-bg:var(--skin-control)}
+html[data-skin="helvetia"] :is(.view-intro-copy,.intro-copy,.intro-count,.kpi-card p,.result-line,.table-limit,.stats-card p,.news-panel p,.story-panel p,.roadmap-panel p,.maplibre-metric span,.maplibre-metric small),
+html[data-skin="light"] :is(.view-intro-copy,.intro-copy,.intro-count,.kpi-card p,.result-line,.table-limit,.stats-card p,.news-panel p,.story-panel p,.roadmap-panel p,.maplibre-metric span,.maplibre-metric small){color:var(--skin-secondary)}
+html[data-skin="helvetia"] :is(.view-tab,.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small),
+html[data-skin="light"] :is(.view-tab,.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small){color:var(--skin-muted)}
+html[data-skin="helvetia"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.view-tab.active,.nav-tab.active),
+html[data-skin="light"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.view-tab.active,.nav-tab.active){color:var(--skin-text)}
+html[data-skin="helvetia"] :is(.eyebrow,.stats-kpi>strong,.maplibre-metric strong){color:var(--skin-accent)}
+html[data-skin="light"] :is(.eyebrow,.stats-kpi>strong,.maplibre-metric strong){color:var(--skin-accent)}
+html[data-skin="helvetia"] :is(th,.story-sources,.roadmap-stage header),html[data-skin="light"] :is(th,.story-sources,.roadmap-stage header){background:var(--skin-tint);border-color:var(--skin-border-soft)}
+html[data-skin="helvetia"] :is(td,.table-wrap,.story-fact,.story-reading-grid section),html[data-skin="light"] :is(td,.table-wrap,.story-fact,.story-reading-grid section){border-color:var(--skin-border-soft)}
+/* Light surfaces need explicit neutral text and controls in the older view
+   styles; categorical, status and product colours remain view-owned. */
+html[data-skin="helvetia"] :is(.story-hero,.story-fact,.story-angles,.story-sources,.story-angle-copy,.news-signal,.news-interpretation,.news-qualification,.roadmap-stage),
+html[data-skin="light"] :is(.story-hero,.story-fact,.story-angles,.story-sources,.story-angle-copy,.news-signal,.news-interpretation,.news-qualification,.roadmap-stage){background:var(--skin-card);border-color:var(--skin-border-soft)}
+html[data-skin="helvetia"] :is(.story-hero>p,.story-fact p,.story-prime-fact>p,.story-axel-reading>p,.story-angle-copy p,.story-sources li,.story-deliverables b,.story-angles>header strong,.story-places i,.story-places button,.story-places>span,.drawer dd,.drawer-pop span,.drawer section>label,.drawer dt,.drawer-title p,.numeric,.empty,.result-line strong,.ghost-button),
+html[data-skin="light"] :is(.story-hero>p,.story-fact p,.story-prime-fact>p,.story-axel-reading>p,.story-angle-copy p,.story-sources li,.story-deliverables b,.story-angles>header strong,.story-places i,.story-places button,.story-places>span,.drawer dd,.drawer-pop span,.drawer section>label,.drawer dt,.drawer-title p,.numeric,.empty,.result-line strong,.ghost-button){color:var(--skin-secondary)}
+html[data-skin="helvetia"] :is(.story-places button,.story-places>span,.story-angle-tabs button,.story-copy,.ghost-button,.drawer dl div,.drawer-pop),
+html[data-skin="light"] :is(.story-places button,.story-places>span,.story-angle-tabs button,.story-copy,.ghost-button,.drawer dl div,.drawer-pop){background:var(--skin-tint);border-color:var(--skin-border-soft)}
+html[data-skin="helvetia"] :is(.story-angle-copy strong,.story-angle-tabs button.active,.story-sources li b),
+html[data-skin="light"] :is(.story-angle-copy strong,.story-angle-tabs button.active,.story-sources li b){color:var(--skin-text)}

@@ -93,7 +93,7 @@
   margin-top:15px;
   overflow:hidden;
   border-radius:999px;
-  background:rgba(255,255,255,.055);
+  background:var(--skin-border-faint);
 }
 
 .stats-prime-progress i{

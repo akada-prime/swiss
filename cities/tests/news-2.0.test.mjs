@@ -23,7 +23,7 @@ test('Radar and Histoires are first-class deep-linked views', async () => {
   assert.match(styles, /views\/roadmap\.css/);
   assert.match(html, /type="module" src="app\/main\.js"/);
   assert.match(html, /class="news-beta-note"/);
-  assert.match(html, /class="news-nav-badge">SOBRE/);
+  assert.match(html, /class="news-nav-badge"><!--i18n:page\.009-->SOBRE/);
   assert.doesNotMatch(html, /news-nav-dot/);
   assert.match(html, /La source publique primaire reste la référence/);
   assert.ok(html.indexOf('news-beta-note') < html.indexOf('news-intro'));
@@ -76,10 +76,10 @@ test('2.0.3 interprets every signal without blurring fact, deduction and Prime r
   assert.equal(analysis.meta.version, '2.0.4-v1');
   assert.equal(analysis.meta.mode, 'radar-qualified');
   assert.match(runtime, /ANALYSIS_URL = 'public\/data\/news-analysis-v1\.json/);
-  assert.match(runtime, /1 · Fait public/);
-  assert.match(runtime, /2 · Déduction documentée/);
-  assert.match(runtime, /3 · Lecture Prime/);
-  assert.match(runtime, /Communes.*Territoires.*Produits.*Intégrateurs/s);
+  assert.match(runtime, /t\('radar\.publicFact'\)/);
+  assert.match(runtime, /t\('radar\.deduction'\)/);
+  assert.match(runtime, /t\('radar\.primeReading'\)/);
+  assert.match(runtime, /radar\.affectedMunicipalities.*radar\.affectedTerritories.*radar\.affectedProducts.*radar\.affectedIntegrators/s);
   assert.match(css, /\.news-proof-line/);
   assert.match(css, /@media\(max-width:680px\).*\.news-affected\{grid-template-columns:1fr\}/s);
   assert.deepEqual(
@@ -129,7 +129,7 @@ test('Histoires is standalone and Radar contains no story responsibility', async
   const data = JSON.parse(await read('public/data/stories-v1.json'));
   assert.equal(data.meta.version, '2.0.2-v1');
   assert.equal(data.meta.mode, 'editorial');
-  assert.match(html, /data-view="stories">Histoires/);
+  assert.match(html, /data-view="stories"><!--i18n:page\.010-->Histoires/);
   assert.match(html, /id="storiesView"/);
   assert.match(html, /Histoires de communes/);
   assert.match(html, /Radar! regarde devant\. Histoires regarde derrière\./);
@@ -139,7 +139,7 @@ test('Histoires is standalone and Radar contains no story responsibility', async
   assert.doesNotMatch(radarCss, /\.story-/);
   assert.match(runtime, /STORY_URL = 'public\/data\/stories-v1\.json/);
   assert.match(runtime, /data-story-angle/);
-  assert.match(runtime, /Angle copié ✓/);
+  assert.match(runtime, /t\('stories\.copied'\)/);
   assert.match(css, /\.story-reading-grid/);
   assert.match(css, /@media\(max-width:680px\).*\.story-angle-tabs\{grid-template-columns:1fr\}/s);
   const story = data.stories.find(item => item.id === 'avenches-le-noirmont-prime');
@@ -196,7 +196,7 @@ test('Radar is functional without a new database write path', async () => {
   assert.match(runtime, /publie-le avec une réserve explicite/);
   assert.doesNotMatch(runtime, /Ne modifie ni le dépôt ni le site avant mon « feu »/);
   assert.match(runtime, /REFRESH_REQUEST_KEY/);
-  assert.match(runtime, /Aucun candidat · 0 appel IA nécessaire ✓/);
+  assert.match(runtime, /t\('radar\.noCandidates'\)/);
   assert.match(html, /0 appel IA lorsqu’aucune nouveauté/);
   assert.match(html, /aria-live="polite"/);
   assert.match(runtime, /data-news-level/);
@@ -223,7 +223,7 @@ test('roadmap preserves old phases while completing NEWS 2.0', async () => {
   assert.match(roadmap, /2\.0\.5 — Portrait communal · livré/);
   assert.match(html, /journey-understand journey-done/);
   assert.match(html, /history-stage completed-20/);
-  assert.match(html, /<span class="roadmap-done">Terminé ✓<\/span>/);
+  assert.match(html, /<span class="roadmap-done"><!--i18n:page\.153-->Terminé ✓<\/span>/);
 });
 
 test('commune refresh confirms fast updates on desktop and Natel', async () => {
@@ -231,14 +231,14 @@ test('commune refresh confirms fast updates on desktop and Natel', async () => {
   const data = await read('app/prime-communes-data-1.5.js');
   const css = await read('app/styles/foundation.css');
   assert.match(runtime, /loadData\(manual=false\)/);
-  assert.match(runtime, /À jour ✓ · /);
+  assert.match(runtime, /t\('common\.upToDate'/);
   assert.match(runtime, /sync\.dataset\.state='success'/);
   assert.match(runtime, /\$\('syncReload'\)\.onclick=\(\)=>loadData\(true\)/);
   assert.match(data, /async function reload\(manual = false\)/);
   assert.match(data, /reload\(true\)\.catch/);
   assert.match(data, /syncButton\.dataset\.state = 'loading'/);
-  assert.match(data, /À jour ✓/);
+  assert.match(data, /t\('common\.upToDate'/);
   assert.match(css, /sync-state\[data-state="loading"\]/);
   assert.match(css, /sync-state\[data-state="success"\]/);
-  assert.match(css, /content:"À jour ✓"/);
+  assert.match(await read('app/styles/responsive.css'), /content:attr\(data-mobile-label\)/);
 });

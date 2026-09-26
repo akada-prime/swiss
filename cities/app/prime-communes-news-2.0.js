@@ -1,3 +1,6 @@
+import {t, number, date, locale} from './core/i18n.js';
+import { signals as germanSignals, analysis as germanAnalysis } from './i18n/editorial-de.js';
+import { getPreference } from './core/preferences.js';
 (() => {
   'use strict';
 
@@ -7,13 +10,13 @@
   const RADAR_CANDIDATES_URL = 'public/data/radar-candidates-v1.json?v=20260921-1';
   const CHAT_URL = 'https://chatgpt.com/c/6a9ef456-9284-83ed-9f8b-5e32c1fdfcc3';
   const levelOrder = { strong: 0, watch: 1, info: 2 };
-  const levelLabels = { strong: 'Signal fort', watch: 'À surveiller', info: 'Information' };
-  const confidenceLabels = { confirmed: 'Confirmé', probable: 'Probable', verify: 'À vérifier' };
+  const levelLabels = { strong: 'radar.strong', watch: 'radar.watch', info: 'radar.info' };
+  const confidenceLabels = { confirmed: 'radar.confirmed', probable: 'radar.probable', verify: 'radar.verify' };
   const byId = id => document.getElementById(id);
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[character]));
-  const formatDate = value => new Date(`${value}T12:00:00`).toLocaleDateString('fr-CH', {
+  const formatDate = value => date(new Date(`${value}T12:00:00`), {
     day: '2-digit', month: 'long', year: 'numeric'
   });
 
@@ -23,6 +26,29 @@
   let radarStatus = null;
   let radarCandidates = [];
   let activeLevel = 'all';
+  const displayedSignal = signal => getPreference('language') === 'de'
+    ? { ...signal, ...germanSignals[signal.id], sourceLabel: signal.sourceLabel }
+    : signal;
+  const displayedAnalysis = item => {
+    const translation = getPreference('language') === 'de' && germanAnalysis[item.signalId];
+    const affectedTerms = {
+      'Aucun produit Prime établi':'Kein Prime-Produkt belegt',
+      'Non identifié dans la source':'In der Quelle nicht genannt',
+      'innosolvcity · contexte client seulement':'innosolvcity · nur Kundenkontext',
+      'Cartolacôte · cité par le préavis':'Cartolacôte · in der Vorlage erwähnt',
+      'Intégration / données · contexte potentiel':'Integration / Daten · möglicher Bezug',
+      'Facturation / données débiteurs · contexte potentiel':'Fakturierung / Debitorendaten · möglicher Bezug',
+      'Loyco SA · conseil en marchés publics, pas intégrateur technique établi':'Loyco SA · Beratung für öffentliches Beschaffungswesen, kein technischer Integrationspartner belegt',
+      // Territorial labels are stored data and retain their original wording.
+    };
+    return translation ? {
+      ...item,
+      interpretation: { ...item.interpretation, ...translation,
+        affected: Object.fromEntries(Object.entries(item.interpretation?.affected || {}).map(([key,values]) =>
+          [key, values.map(value => affectedTerms[value] || value)])) },
+      qualificationProposal: { ...item.qualificationProposal, nextAction: translation.nextAction }
+    } : item;
+  };
   const REFRESH_REQUEST_KEY = 'primeCommunesNewsRefreshRequest';
   const QUALIFICATION_KEY = 'primeCommunesNewsQualificationsV1';
 
@@ -91,25 +117,24 @@
     const pending = radarCandidates.filter(item => (item.status || 'pending') === 'pending');
 
     setText('radarCoverageCount', procurement + '/' + target);
-    setText('radarCoverageDetail', 'marchés publics · ' + direct + '/' + target + ' sources communales directes');
+    setText('radarCoverageDetail', t('radar.coverageDetail', {direct,target}));
     setText('radarSourceCount', active + '/' + configured);
-    setText('radarSourceDetail', errors ? errors + ' source' + (errors > 1 ? 's' : '') + ' en erreur' : 'aucune erreur connue');
+    setText('radarSourceDetail', errors ? t('radar.sourceError', {count:errors}) : t('radar.noSourceError'));
     setText('radarChangeCount', String(Number(detection.newDocuments || 0)));
-    setText('radarChangeDetail', Number(detection.changes || 0) + ' changement' + (Number(detection.changes || 0) > 1 ? 's' : '') + ' au dernier passage');
+    setText('radarChangeDetail', t('radar.changeDetail', {count:Number(detection.changes || 0)}));
     setText('radarCandidateCount', String(pending.length));
     setText('radarPublishedCount', String(Number(analysis.published || signals.length || 0)));
-    setText('radarEconomyDetail',
-      Number(economy.requests || 0) + ' requêtes · ' +
-      Number(economy.notModified || 0) + ' réponses sans contenu · ' +
-      Number(economy.aiCalls || 0) + ' appel IA automatique');
+    setText('radarEconomyDetail', t('radar.economyDetail', {
+      requests:Number(economy.requests || 0),unchanged:Number(economy.notModified || 0),ai:Number(economy.aiCalls || 0)
+    }));
 
     const button = byId('newsManualRefresh');
     const status = byId('newsRefreshStatus');
     if (button) button.disabled = pending.length === 0;
     if (status) {
-      if (pending.length) status.textContent = pending.length + ' candidat' + (pending.length > 1 ? 's' : '') + ' détecté' + (pending.length > 1 ? 's' : '') + ' · prêt' + (pending.length > 1 ? 's' : '') + ' à analyser';
-      else if (radarStatus?.meta?.generatedAt) status.textContent = 'Aucun candidat · 0 appel IA nécessaire ✓';
-      else status.textContent = 'Premier passage mécanique en attente';
+      if (pending.length) status.textContent = t('radar.candidateStatus', {count:pending.length});
+      else if (radarStatus?.meta?.generatedAt) status.textContent = t('radar.noCandidates');
+      else status.textContent = t('radar.waiting');
     }
   }
 
@@ -135,11 +160,12 @@
   function filteredSignals() {
     const needle = byId('newsQuery')?.value.trim().toLocaleLowerCase('fr-CH') || '';
     return signals.filter(signal => {
-      const interpretation = analysisItems.find(item => item.signalId === signal.id)?.interpretation || {};
+      const interpretation = analysisFor(signal.id)?.interpretation || {};
       const affected = interpretation.affected || {};
+      const display = displayedSignal(signal);
       const haystack = [signal.municipality, signal.canton, signal.title, signal.summary,
-        signal.why, signal.sourceLabel, interpretation.change, interpretation.deduction,
-        interpretation.primeReading, ...Object.values(affected).flat(), ...(signal.tags || [])]
+        signal.why, display.title, display.summary, display.why, signal.sourceLabel, interpretation.change, interpretation.deduction,
+        interpretation.primeReading, ...Object.values(affected).flat(), ...(signal.tags || []), ...(display.tags || [])]
         .join(' ').toLocaleLowerCase('fr-CH');
       return (activeLevel === 'all' || signal.level === activeLevel) && (!needle || haystack.includes(needle));
     }).sort((a, b) => levelOrder[a.level] - levelOrder[b.level] || b.date.localeCompare(a.date));
@@ -152,7 +178,8 @@
   }
 
   function analysisFor(signalId) {
-    return analysisItems.find(item => item.signalId === signalId) || null;
+    const item = analysisItems.find(item => item.signalId === signalId);
+    return item ? displayedAnalysis(item) : null;
   }
 
   function readQualifications() {
@@ -175,9 +202,9 @@
   }
 
   function money(value) {
-    return value > 0 ? new Intl.NumberFormat('fr-CH', {
+    return value > 0 ? new Intl.NumberFormat(locale(), {
       style: 'currency', currency: 'CHF', maximumFractionDigits: 0
-    }).format(value) : 'À compléter';
+    }).format(value) : t('radar.toComplete');
   }
 
   function renderForecast() {
@@ -194,18 +221,18 @@
 
   function affectedMarkup(affected = {}) {
     const groups = [
-      ['Communes', affected.municipalities],
-      ['Territoires', affected.territories],
-      ['Produits', affected.products],
-      ['Intégrateurs', affected.integrators]
+      [t('radar.affectedMunicipalities'), affected.municipalities],
+      [t('radar.affectedTerritories'), affected.territories],
+      [t('radar.affectedProducts'), affected.products],
+      [t('radar.affectedIntegrators'), affected.integrators]
     ];
-    return groups.map(([label, values]) => `<div><span>${label}</span><p>${(values || []).map(value => `<b>${escapeHtml(value)}</b>`).join('') || '<b>Non établi</b>'}</p></div>`).join('');
+    return groups.map(([label, values]) => `<div><span>${label}</span><p>${(values || []).map(value => `<b>${escapeHtml(value)}</b>`).join('') || `<b>${t('radar.notEstablished')}</b>`}</p></div>`).join('');
   }
 
   function decisionOptions(selected) {
     return [
-      ['to_qualify', 'À qualifier'], ['watch', 'Surveiller'], ['act', 'Agir'], ['discard', 'Écarter']
-    ].map(([value, label]) => `<option value="${value}" ${selected === value ? 'selected' : ''}>${label}</option>`).join('');
+      ['to_qualify', 'radar.qualify'], ['watch', 'radar.monitor'], ['act', 'radar.act'], ['discard', 'radar.discard']
+    ].map(([value, label]) => `<option value="${value}" ${selected === value ? 'selected' : ''}>${t(label)}</option>`).join('');
   }
 
   function signalTools(signal) {
@@ -214,30 +241,30 @@
     const interpretation = item.interpretation || {};
     const qualification = qualificationFor(signal.id);
     return `<div class="news-tools">
-      <div class="news-tool-buttons" role="group" aria-label="Approfondir ${escapeHtml(signal.municipality)}">
-        <button type="button" data-news-tool="impact" data-news-signal="${escapeHtml(signal.id)}" aria-expanded="false"><span>2.0.3</span> Comprendre l'impact</button>
-        <button type="button" data-news-tool="qualification" data-news-signal="${escapeHtml(signal.id)}" aria-expanded="false"><span>2.0.4</span> Qualifier ce signal</button>
+      <div class="news-tool-buttons" role="group" aria-label="${t('radar.deepen',{name:escapeHtml(signal.municipality)})}">
+        <button type="button" data-news-tool="impact" data-news-signal="${escapeHtml(signal.id)}" aria-expanded="false"><span>2.0.3</span> ${t('radar.impact')}</button>
+        <button type="button" data-news-tool="qualification" data-news-signal="${escapeHtml(signal.id)}" aria-expanded="false"><span>2.0.4</span> ${t('radar.qualification')}</button>
       </div>
       <section class="news-tool-panel news-impact-panel" data-news-panel="impact" data-news-signal="${escapeHtml(signal.id)}" hidden>
-        <header><div><span>Actualité interprétée · 2.0.3</span><strong>Ce que ce fait change</strong></div><small>Trois niveaux, jamais confondus</small></header>
+        <header><div><span>${t('radar.impactHeader')}</span><strong>${t('radar.impactChange')}</strong></div><small>${t('radar.levels')}</small></header>
         <div class="news-proof-line">
-          <article class="is-fact"><span>1 · Fait public</span><p>${escapeHtml(signal.summary)}</p></article>
-          <article class="is-deduction"><span>2 · Déduction documentée</span><p>${escapeHtml(interpretation.deduction)}</p></article>
-          <article class="is-prime"><span>3 · Lecture Prime</span><p>${escapeHtml(interpretation.primeReading)}</p></article>
+          <article class="is-fact"><span>${t('radar.publicFact')}</span><p>${escapeHtml(signal.summary)}</p></article>
+          <article class="is-deduction"><span>${t('radar.deduction')}</span><p>${escapeHtml(interpretation.deduction)}</p></article>
+          <article class="is-prime"><span>${t('radar.primeReading')}</span><p>${escapeHtml(interpretation.primeReading)}</p></article>
         </div>
-        <div class="news-change"><span>En clair</span><strong>${escapeHtml(interpretation.change)}</strong></div>
+        <div class="news-change"><span>${t('radar.inShort')}</span><strong>${escapeHtml(interpretation.change)}</strong></div>
         <div class="news-affected">${affectedMarkup(interpretation.affected)}</div>
       </section>
       <section class="news-tool-panel news-qualification-panel" data-news-panel="qualification" data-news-signal="${escapeHtml(signal.id)}" hidden>
-        <header><div><span>Qualification légère · 2.0.4</span><strong>Décider de la prochaine action</strong></div><small>Brouillon sur cet appareil · aucun CRM créé</small></header>
+        <header><div><span>${t('radar.qualificationHeader')}</span><strong>${t('radar.decisionHeader')}</strong></div><small>${t('radar.localDraft')}</small></header>
         <form data-qualification-form="${escapeHtml(signal.id)}">
-          <label><span>Décision</span><select name="decision">${decisionOptions(qualification.decision)}</select></label>
-          <label><span>Responsable</span><input name="owner" value="${escapeHtml(qualification.owner || '')}" placeholder="À attribuer"></label>
-          <label class="wide"><span>Prochaine action</span><textarea name="nextAction" rows="2">${escapeHtml(qualification.nextAction || '')}</textarea></label>
-          <label><span>Échéance</span><input name="dueDate" type="date" value="${escapeHtml(qualification.dueDate || '')}"></label>
-          <label><span>Probabilité</span><div class="news-unit-input"><input name="probability" type="number" min="0" max="100" inputmode="numeric" value="${qualification.probability ?? ''}" placeholder="—"><b>%</b></div></label>
-          <label><span>Valeur estimée</span><div class="news-unit-input"><input name="estimatedValue" type="number" min="0" step="1000" inputmode="numeric" value="${qualification.estimatedValue ?? ''}" placeholder="—"><b>CHF</b></div></label>
-          <div class="news-qualification-actions wide"><button type="submit">Enregistrer sur cet appareil</button><button type="button" data-qualification-reset="${escapeHtml(signal.id)}">Réinitialiser</button><small data-qualification-status>${qualification.saved ? 'Brouillon enregistré ✓' : escapeHtml(qualification.basis || '')}</small></div>
+          <label><span>${t('radar.decision')}</span><select name="decision">${decisionOptions(qualification.decision)}</select></label>
+          <label><span>${t('radar.owner')}</span><input name="owner" value="${escapeHtml(qualification.owner || '')}" placeholder="${t('radar.assign')}"></label>
+          <label class="wide"><span>${t('radar.nextAction')}</span><textarea name="nextAction" rows="2">${escapeHtml(qualification.nextAction || '')}</textarea></label>
+          <label><span>${t('radar.dueDate')}</span><input name="dueDate" type="date" value="${escapeHtml(qualification.dueDate || '')}"></label>
+          <label><span>${t('radar.probability')}</span><div class="news-unit-input"><input name="probability" type="number" min="0" max="100" inputmode="numeric" value="${qualification.probability ?? ''}" placeholder="—"><b>%</b></div></label>
+          <label><span>${t('radar.value')}</span><div class="news-unit-input"><input name="estimatedValue" type="number" min="0" step="1000" inputmode="numeric" value="${qualification.estimatedValue ?? ''}" placeholder="—"><b>CHF</b></div></label>
+          <div class="news-qualification-actions wide"><button type="submit">${t('radar.saveLocal')}</button><button type="button" data-qualification-reset="${escapeHtml(signal.id)}">${t('page.040')}</button><small data-qualification-status>${qualification.saved ? t('radar.draftSaved') : t('radar.proposalBasis')}</small></div>
         </form>
       </section>
     </div>`;
@@ -249,24 +276,24 @@
       <div class="news-card-rail" aria-hidden="true"></div>
       <div class="news-card-main">
         <header>
-          <span class="news-level news-level-${escapeHtml(signal.level)}"><i></i>${levelLabels[signal.level] || 'Information'}</span>
+          <span class="news-level news-level-${escapeHtml(signal.level)}"><i></i>${t(levelLabels[signal.level] || 'radar.info')}</span>
           <time datetime="${escapeHtml(signal.date)}">${formatDate(signal.date)}</time>
         </header>
-        <button class="news-municipality" data-news-bfs="${Number(signal.bfsId)}" title="Ouvrir la fiche de ${escapeHtml(signal.municipality)}">
+        <button class="news-municipality" data-news-bfs="${Number(signal.bfsId)}" title="${t('radar.openMunicipality',{name:escapeHtml(signal.municipality)})}">
           <img src="public/cantons/${escapeHtml(signal.canton.toLowerCase())}.svg" alt="">
           <span><strong>${escapeHtml(signal.municipality)}</strong><small>${escapeHtml(signal.canton)} · OFS ${Number(signal.bfsId)}</small></span><b>Ouvrir la fiche&nbsp;›</b>
         </button>
         <h3>${escapeHtml(signal.title)}</h3>
-        <div class="news-fact"><span>Fait public</span><p>${escapeHtml(signal.summary)}</p></div>
-        <div class="news-why"><span>Lecture de l'IA d'Axel</span><p>${escapeHtml(signal.why)}</p></div>
+        <div class="news-fact"><span>${t('radar.publicFactShort')}</span><p>${escapeHtml(signal.summary)}</p></div>
+        <div class="news-why"><span>${t('radar.aiReading')}</span><p>${escapeHtml(signal.why)}</p></div>
         <div class="news-tags">${tags}</div>
         ${signalTools(signal)}
       </div>
       <aside class="news-card-proof">
-        <span>Provenance</span><strong>${escapeHtml(signal.sourceType)}</strong>
+        <span>${t('radar.provenance')}</span><strong>${signal.sourceType === 'Source publique' ? t('radar.publicSource') : escapeHtml(signal.sourceType)}</strong>
         ${sourceMarkup(signal)}
-        <div class="news-update"><span>Mise à jour</span><b>${escapeHtml(signal.updatedBy || "IA d'Axel")}</b></div>
-        <div><span>Confiance</span><b class="news-confidence news-confidence-${escapeHtml(signal.confidence)}"><i></i>${confidenceLabels[signal.confidence] || 'À vérifier'}</b></div>
+        <div class="news-update"><span>${t('radar.updated')}</span><b>${signal.updatedBy === "IA d'Axel" || !signal.updatedBy ? t('radar.updatedBy') : escapeHtml(signal.updatedBy)}</b></div>
+        <div><span>${t('radar.confidence')}</span><b class="news-confidence news-confidence-${escapeHtml(signal.confidence)}"><i></i>${t(confidenceLabels[signal.confidence] || 'radar.verify')}</b></div>
       </aside>
     </article>`;
   }
@@ -278,7 +305,7 @@
     renderRadarOperations();
     const feed = byId('newsFeed');
     if (!feed) return;
-    feed.innerHTML = list.length ? list.map(signalCard).join('') : '<div class="news-empty"><strong>Aucun signal dans cette vue.</strong><span>Essaie un autre niveau ou efface la recherche.</span></div>';
+    feed.innerHTML = list.length ? list.map(signal => signalCard(displayedSignal(signal))).join('') : `<div class="news-empty"><strong>${t('radar.emptyTitle')}</strong><span>${t('radar.emptyDetail')}</span></div>`;
     feed.querySelectorAll('[data-news-bfs]').forEach(button => {
       button.addEventListener('click', () => {
         const municipality = all.find(item => Number(item.id) === Number(button.dataset.newsBfs));
@@ -319,7 +346,7 @@
         };
         writeQualifications(values);
         const status = form.querySelector('[data-qualification-status]');
-        if (status) status.textContent = 'Brouillon enregistré sur cet appareil ✓';
+        if (status) status.textContent = t('radar.draftSavedLocal');
         renderForecast();
       });
     });
@@ -356,7 +383,7 @@
       render();
     } catch (error) {
       console.error(error);
-      if (byId('newsFeed')) byId('newsFeed').innerHTML = '<div class="news-empty"><strong>Le Radar ne peut pas être chargé.</strong><span>Les autres vues restent disponibles.</span></div>';
+      if (byId('newsFeed')) byId('newsFeed').innerHTML = `<div class="news-empty"><strong>${t('radar.loadError')}</strong><span>${t('radar.otherViews')}</span></div>`;
     }
   }
 
@@ -365,7 +392,7 @@
     const status = byId('newsRefreshStatus');
     const pending = radarCandidates.filter(item => (item.status || 'pending') === 'pending');
     if (!pending.length) {
-      if (status) status.textContent = 'Aucun candidat · aucun appel IA lancé ✓';
+      if (status) status.textContent = t('radar.noCalls');
       return;
     }
     try {
@@ -375,11 +402,11 @@
       }));
       await copyRefreshPrompt();
       byId('newsManualRefresh')?.classList.add('is-launching');
-      if (status) status.textContent = 'Candidats copiés · ouverture de l’analyse…';
+      if (status) status.textContent = t('radar.copied');
       window.setTimeout(() => window.location.assign(CHAT_URL), 900);
     } catch (error) {
       console.error(error);
-      if (status) status.textContent = 'Copie impossible · réessaie';
+      if (status) status.textContent = t('radar.copyFailed');
     }
   });
 
@@ -392,6 +419,18 @@
   });
 
   window.PrimeCommunesNews = { render, reload: load };
+  document.addEventListener('prime-language-change', () => {
+    const openTools = [...document.querySelectorAll('#newsFeed [data-news-tool][aria-expanded="true"]')]
+      .map(button => ({signal:button.dataset.newsSignal,tool:button.dataset.newsTool}));
+    const forms = [...document.querySelectorAll('#newsFeed [data-qualification-form]')]
+      .map(form => ({id:form.dataset.qualificationForm,fields:[...new FormData(form).entries()]}));
+    render();
+    for (const {signal,tool} of openTools) document.querySelector(`#newsFeed [data-news-tool="${tool}"][data-news-signal="${signal}"]`)?.click();
+    for (const {id,fields} of forms) {
+      const form = document.querySelector(`#newsFeed [data-qualification-form="${id}"]`);
+      for (const [name,value] of fields) if (form?.elements[name]) form.elements[name].value = value;
+    }
+  });
   void loadAnalysis().then(load);
   void loadRadarOperations();
 })();
