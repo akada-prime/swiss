@@ -19,7 +19,12 @@
         try { const value = localStorage.getItem(key); return accepted.includes(value) ? value : fallback; }
         catch { return fallback; }
       };
-      document.documentElement.dataset.skin = preference('prime-communes-skin', ['prime-darkweb', 'helvetia', 'light'], 'prime-darkweb');
+      const storedSkin = preference('prime-communes-skin', ['auto', 'prime-darkweb', 'helvetia', 'light'], 'prime-darkweb');
+      const skinPreference = storedSkin === 'light' ? 'helvetia' : storedSkin;
+      const systemSkin = typeof window.matchMedia === 'function'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'prime-darkweb' : 'helvetia')
+        : 'prime-darkweb';
+      document.documentElement.dataset.skin = skinPreference === 'auto' ? systemSkin : skinPreference;
       document.documentElement.lang = preference('prime-communes-language', ['fr', 'de'], 'fr');
     })();
   </script>
@@ -60,9 +65,9 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   <aside class="settings-panel" id="settingsPanel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
     <div class="settings-heading"><h2 id="settingsTitle"><!--i18n:page.001-->Paramètres</h2><button id="settingsClose" type="button" aria-label="Fermer">×</button></div>
     <fieldset><legend><!--i18n:page.002-->Apparence</legend>
-      <label><input type="radio" name="skin" value="prime-darkweb"><span>🌑 Prime Darkweb</span></label>
-      <label><input type="radio" name="skin" value="helvetia"><span>🇨🇭 Helvetia</span></label>
-      <label><input type="radio" name="skin" value="light"><span><!--i18n:page.003-->☀️ Clair</span></label>
+      <label><input type="radio" name="skin" value="auto"><span><!--i18n:settings.appearanceAuto-->◐ Automatique</span></label>
+      <label><input type="radio" name="skin" value="prime-darkweb"><span>🌑 Prime Dark</span></label>
+      <label><input type="radio" name="skin" value="helvetia"><span>🇨🇭 Helvetia Hell</span></label>
     </fieldset>
     <fieldset><legend><!--i18n:page.004-->Langue</legend>
       <label><input type="radio" name="language" value="fr"><span><!--i18n:page.005-->🇫🇷 Français</span></label>
@@ -332,6 +337,6 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
 <div id="drawerRoot"></div>
 <div id="portraitRoot"></div>
 <button class="back-to-top" id="backToTop" type="button" aria-label="Retour en haut" title="Retour en haut"><span aria-hidden="true">↑</span></button>
-<script type="module" src="app/main.js?v=20260926-preferences-4"></script>
+<script type="module" src="app/main.js?v=20260926-auto-skin-1"></script>
 </body>
 </html>

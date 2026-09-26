@@ -90,7 +90,7 @@ settings.css
 | Assets produit | dimensions et traitement des marques Prime/partenaires |
 | Vues | règles légitimes propres à un seul domaine |
 | Responsive | adaptations de disposition et lisibilité, après les vues |
-| Skins | trois palettes de tokens sémantiques, appliquées avant l'affichage |
+| Skins | deux palettes de tokens sémantiques ; le mode Automatique résout l'une des deux avant l'affichage |
 | Paramètres | chrome du panneau de préférences, responsive |
 
 Règles :
@@ -112,9 +112,13 @@ Règles :
 `app/core/preferences.js` expose `getPreference`, `setPreference` et un abonnement
 aux changements. Les valeurs validées `skin` et `language` sont conservées sous
 `prime-communes-skin` et `prime-communes-language` dans `localStorage`, avec
-`prime-darkweb` et `fr` par défaut. La garde synchrone dans le `<head>` pose
-`data-skin` et `lang` avant les styles et le rendu ; le module reprend le même
-contrat après chargement. Il n'existe pas de compte, d'avatar ou de profil fictif.
+`prime-darkweb` et `fr` par défaut. L'apparence accepte `auto`, `prime-darkweb`
+et `helvetia` : `auto` suit `prefers-color-scheme` et résout Prime Dark en mode
+sombre ou Helvetia Hell en mode clair. L'ancienne valeur `light` est relue comme
+`helvetia` pour préserver les navigateurs existants. La garde synchrone dans le
+`<head>` pose le Skin résolu et `lang` avant les styles et le rendu ; le module
+reprend le même contrat après chargement. Il n'existe pas de compte, d'avatar ou
+de profil fictif.
 Lorsque les profils existeront, un adaptateur pourra résoudre profil distant >
 préférence locale > valeur par défaut sans changer les consommateurs.
 

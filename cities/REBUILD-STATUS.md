@@ -2,6 +2,11 @@
 
 ## Maintenance après intégration
 
+2026-09-26 : préférences d'apparence simplifiées à deux Skins, Prime Dark et
+Helvetia Hell. Le nouveau mode Automatique suit le thème clair/sombre du système
+et réagit à ses changements ; l'ancienne préférence Clair est relue comme
+Helvetia Hell pour préserver les navigateurs existants.
+
 2026-09-25 : séparation discrète entre les filtres de Communes et les boutons
 « Territoire » / « Systèmes ». Trait vertical sur grand écran, horizontal sur
 écran plus étroit ; aucune logique de filtre modifiée. `npm run check` (65 tests)

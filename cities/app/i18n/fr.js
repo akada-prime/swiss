@@ -247,6 +247,7 @@ export default {
   "page.245": "Données OFS · Delimo P99 ↗",
   "settings.trigger": "Paramètres",
   "settings.close": "Fermer",
+  "settings.appearanceAuto": "◐ Automatique",
   "search.communeSoftware": "Rechercher une commune, un logiciel…",
   "search.commune": "Rechercher une commune…",
   "search.radar": "Rechercher une commune, un sujet, une source…",
