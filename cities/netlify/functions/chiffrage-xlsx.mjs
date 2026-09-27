@@ -98,7 +98,7 @@ export function exportQuoteXlsx(quote) {
     ['Marge logicielle 5 ans', summary.software_margin_5y],
     ['Coûts non renseignés', summary.incomplete_costs.join(', ')]);
   const detail = [[
-    'Famille', 'Produit', 'Module', 'Identifiant licence', 'Source', 'Version tarifaire',
+    'Famille', 'Produit', 'Module', 'Identifiant licence', 'Fournisseur', 'Source', 'Version tarifaire',
     'Dimension', 'Quantité', 'Règle / palier', 'Valeur logiciel', 'Jours',
     'PA investissement', 'PV investissement', 'PA annuel', 'PV annuel',
     'Marge CHF annuelle', 'Marge % annuelle', 'Calcul théorique', 'Override',
@@ -108,9 +108,9 @@ export function exportQuoteXlsx(quote) {
     const explanation = line.explanation ?? {};
     const override = line.overrides?.pv ?? line.overrides?.investment ?? null;
     const margin = line.annual_pa == null ? null : (line.annual_pv ?? 0) - line.annual_pa;
-    detail.push([line.family, line.family, line.label, line.item_code,
+    detail.push([line.family, line.family, line.label, line.item_code, line.supplier,
       explanation.source, explanation.catalog_version, explanation.basis,
-      explanation.quantity, explanation.tier_up_to ?? explanation.regime,
+      line.quantity ?? explanation.quantity, explanation.tier_up_to ?? explanation.regime,
       line.license_value, line.selected_days,
       line.investment_pa, line.investment_pv, line.annual_pa, line.annual_pv,
       margin, margin != null && line.annual_pv ? margin / line.annual_pv : null,
@@ -121,6 +121,7 @@ export function exportQuoteXlsx(quote) {
     ['Hypothèse / source', 'Valeur'], ['Habitants', input.dimensions.population],
     ['Compteurs', input.dimensions.meters], ['Taxes', input.dimensions.taxes],
     ['Employés', input.dimensions.employees], ['SQL users', input.sql?.users],
+    ['SQL cores', input.sql?.cores],
     ['Oracle Full', input.oracle?.full], ['Oracle Light', input.oracle?.light],
     ['Date de calcul', date], ['OFS', input.bfs_id],
     ['Source LCM Gold', JSON.stringify(summary.lcm.gold?.source ?? null)],

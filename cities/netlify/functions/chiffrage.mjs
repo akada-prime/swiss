@@ -137,9 +137,10 @@ async function writeQuote(payload) {
   if (!input || !Number.isInteger(input.bfs_id) || !input.name || !input.canton ||
     !Number.isInteger(input.dimensions?.population)) throw new Error('Invalid commune input');
   const products = input.products ?? [];
-  if (!Array.isArray(products) || !products.includes('innosolv') ||
-    (products.includes('abacus') === products.includes('pce')))
-    throw new Error('Choose innosolv and one ERP');
+  if (!Array.isArray(products) || products.some(product =>
+    !['innosolv', 'abacus', 'pce'].includes(product)) ||
+    new Set(products).size !== products.length)
+    throw new Error('Invalid product selection');
   const catalog = await loadCatalog(payload.catalog_versions);
   const result = calculateQuote(input, catalog);
   const id = payload.id ?? randomUUID();

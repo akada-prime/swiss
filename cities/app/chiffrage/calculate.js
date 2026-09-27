@@ -213,6 +213,9 @@ export function calculateQuote(input, catalog) {
   }
   for (const entry of [...(input.moduleServices ?? []), ...(input.services ?? []),
     ...(input.primeLines ?? []), ...(input.partners ?? [])]) {
+    const quantity = entry.family === 'prime' || entry.family === 'partenaires' ?
+      finite(entry.quantity ?? 1, 'line quantity') : 1;
+    if (quantity < 0 || !Number.isInteger(quantity)) throw new Error('Invalid line quantity');
     const suggestedDays = entry.suggested_days ??
       catalog.parameters.service_presets?.[entry.level]?.[entry.item_code] ?? null;
     const days = entry.days ?? suggestedDays;
@@ -221,9 +224,13 @@ export function calculateQuote(input, catalog) {
     const investment = effective(serviceValue ?? finite(entry.investment_pv ?? 0,
       'investment PV'), entry.investment_override);
     lines.push({ family: entry.family, item_code: entry.item_code ?? null,
-      label: entry.label, investment_pa: optionalMoney(entry.investment_pa),
-      investment_pv: investment.effective_value,
-      annual_pa: optionalMoney(entry.annual_pa), annual_pv: finite(entry.annual_pv ?? 0, 'annual PV'),
+      label: entry.label, supplier: entry.supplier ?? null, note: entry.note ?? null,
+      quantity, investment_pa: optionalMoney(entry.investment_pa) == null ? null :
+        optionalMoney(entry.investment_pa) * quantity,
+      investment_pv: investment.effective_value * quantity,
+      annual_pa: optionalMoney(entry.annual_pa) == null ? null :
+        optionalMoney(entry.annual_pa) * quantity,
+      annual_pv: finite(entry.annual_pv ?? 0, 'annual PV') * quantity,
       software: false, explanation: entry.explanation ?? null,
       suggested_days: suggestedDays, selected_days: days,
       calculated_investment: investment.calculated_value,

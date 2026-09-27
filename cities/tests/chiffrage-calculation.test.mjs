@@ -93,3 +93,29 @@ test('LCM options preserve estimate provenance and stay outside the main TCO', (
   assert.equal(result.gold.source.sample_size, 4);
   assert.equal(result.platinium.five_year_option, 1600);
 });
+
+test('standalone ERP and combined ERPs remain calculable, with quantity applied to extra lines', () => {
+  const catalog = { items: [{ vendor: 'abacus', product: 'ERP', item_code: 'A1',
+    label_fr: 'Comptabilité', source: 'fixture', pricing_rule: { kind: 'lookup',
+      basis: 'population', tiers: [{ up_to: 5000, value: 1000 }] } }],
+  parameters: { publisher_rent: { abacus: { standard: {
+    pa_rate: 0.1, pv_rate: 0.2 } } },
+    pce: { finance_ratio: 0.4, finance_adjustment: 100,
+      finance_round_to: 100, salary_round_to: 50, pv_margin: 0.2, pv_round_to: 50 },
+    oracle: { full_price: 100, light_price: 50,
+      full_maintenance: 10, light_maintenance: 5 } } };
+  const input = { products: ['abacus'], dimensions: { population: 5000 },
+    modules: [{ vendor: 'abacus', product: 'ERP', item_code: 'A1' }],
+    primeLines: [{ family: 'prime', item_code: 'H1', label: 'Hébergement',
+      quantity: 3, investment_pv: 100, investment_pa: 80,
+      annual_pv: 40, annual_pa: 20 }] };
+  const standalone = calculateQuote(input, catalog);
+  assert.equal(standalone.summary.investment, 300);
+  assert.equal(standalone.summary.annual, 320);
+  assert.equal(standalone.lines.find(line => line.item_code === 'H1').annual_pa, 60);
+  const combined = calculateQuote({ ...input, products: ['abacus', 'pce'],
+    pce: { finances: true, salaires: false, innosolvPaBaseOverride: 1000 },
+    oracle: { full: 1, light: 0 } }, catalog);
+  assert.ok(combined.lines.some(line => line.item_code === 'finances'));
+  assert.equal(combined.lines.find(line => line.item_code === 'oracle').investment_pv, 100);
+});

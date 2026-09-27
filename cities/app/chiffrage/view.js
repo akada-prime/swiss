@@ -13,6 +13,8 @@ const money = value => value == null ? '—' : `${number(value, {
   minimumFractionDigits: 0, maximumFractionDigits: 0 })} CHF`;
 const field = (key, value, label, { min = 0, step = 1 } = {}) =>
   `<label>${label}<input data-field="${key}" type="number" min="${min}" step="${step}" value="${escape(value ?? '')}"></label>`;
+const textField = (key, value, label) =>
+  `<label>${label}<input data-field="${key}" value="${escape(value ?? '')}"></label>`;
 
 async function api(action, payload, params = {}) {
   const url = new URL(endpoint, window.location.origin);
@@ -191,10 +193,19 @@ function technicalSection() {
   return `<details class="chiffrage-section"><summary>${t('chiffrage.technical')}</summary>
     ${hasSql ? `<p>${t('chiffrage.sqlSuggested', { count: suggestion ?? '—' })}</p>
       <div class="chiffrage-grid">${field('sql.users', state.draft.sql.users ?? suggestion,
-        t('chiffrage.sqlUsers'))}</div>` : ''}
+        t('chiffrage.sqlUsers'))}
+      ${field('sql.cores', state.draft.sql.cores, t('chiffrage.sqlCores'))}
+      ${field('sql.override', state.draft.sql.override, t('chiffrage.sqlInvestmentPv'))}
+      ${field('sql.purchasePa', state.draft.sql.purchasePa, t('chiffrage.sqlInvestmentPa'))}
+      ${field('sql.annualPv', state.draft.sql.annualPv, t('chiffrage.sqlAnnualPv'))}
+      ${field('sql.annualPa', state.draft.sql.annualPa, t('chiffrage.sqlAnnualPa'))}</div>` : ''}
     ${hasOracle ? `<div class="chiffrage-grid">
       ${field('oracle.full', state.draft.oracle.full, t('chiffrage.oracleFull'))}
       ${field('oracle.light', state.draft.oracle.light, t('chiffrage.oracleLight'))}
+      ${field('oracle.investmentOverride', state.draft.oracle.investmentOverride, t('chiffrage.oracleInvestmentPv'))}
+      ${field('oracle.annualOverride', state.draft.oracle.annualOverride, t('chiffrage.oracleAnnualPv'))}
+      ${field('oracle.purchasePa', state.draft.oracle.purchasePa, t('chiffrage.oracleInvestmentPa'))}
+      ${field('oracle.maintenancePa', state.draft.oracle.maintenancePa, t('chiffrage.oracleAnnualPa'))}
       ${field('pce.interfacePa', state.draft.pce.interfacePa, 'Interface PCE–ISAG (PA)')}
       <label class="chiffrage-choice"><input type="checkbox" data-field="pce.finances" ${state.draft.pce.finances ? 'checked' : ''}>${t('chiffrage.finances')}</label>
       <label class="chiffrage-choice"><input type="checkbox" data-field="pce.salaires" ${state.draft.pce.salaires ? 'checked' : ''}>${t('chiffrage.payroll')}</label></div>` : ''}</details>`;
@@ -205,13 +216,20 @@ function extraSection() {
     ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index })),
       ...state.draft.partners.map((line, index) => ({ ...line, kind: 'partners', index }))]
       .map(line => `<div class="chiffrage-line">
-        <label>${t('chiffrage.lineLabel')}<input data-field="${line.kind}.${line.index}.label" value="${escape(line.label)}"></label>
+        ${textField(`${line.kind}.${line.index}.label`, line.label, t('chiffrage.lineLabel'))}
+        ${textField(`${line.kind}.${line.index}.item_code`, line.item_code, t('chiffrage.internalCode'))}
+        ${line.kind === 'partners' ? textField(`${line.kind}.${line.index}.supplier`, line.supplier, t('chiffrage.supplier')) : ''}
+        ${field(`${line.kind}.${line.index}.quantity`, line.quantity ?? 1, t('chiffrage.quantity'))}
         ${field(`${line.kind}.${line.index}.investment_pv`, line.investment_pv,
           t('chiffrage.investment'))}
+        ${field(`${line.kind}.${line.index}.investment_pa`, line.investment_pa, t('chiffrage.investmentPa'))}
         ${field(`${line.kind}.${line.index}.annual_pv`, line.annual_pv,
-          t('chiffrage.annual'))}</div>`).join('')}
+          t('chiffrage.annual'))}
+        ${field(`${line.kind}.${line.index}.annual_pa`, line.annual_pa, t('chiffrage.annualPa'))}
+        ${textField(`${line.kind}.${line.index}.note`, line.note, t('chiffrage.note'))}
+        <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${line.kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div>`).join('')}
     <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addPrime">${t('chiffrage.addLine')} Prime</button>
-      <button type="button" class="chiffrage-button" data-action="addPartner">${t('chiffrage.addLine')} partenaire</button></div></details>`;
+      <button type="button" class="chiffrage-button" data-action="addPartner">${t('chiffrage.addLine')} ${t('chiffrage.partner')}</button></div></details>`;
 }
 
 function lcmSection() {
@@ -251,15 +269,19 @@ function lineDetail() {
   catch { return ''; }
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.detail')}</summary>
     <div class="chiffrage-table-scroll"><table class="chiffrage-detail"><thead><tr>
-      <th>${t('chiffrage.modules')}</th><th>SW-ID / ID</th><th>${t('chiffrage.investment')}</th>
+      <th>${t('chiffrage.modules')}</th><th>SW-ID / ID</th><th>${t('chiffrage.quantity')}</th><th>${t('chiffrage.investment')}</th>
       <th>${t('chiffrage.annual')} PV</th><th>${t('chiffrage.annual')} PA</th>
       <th>${t('chiffrage.annualMargin')}</th><th>${t('chiffrage.catalog', { version: '' })}</th>
     </tr></thead><tbody>${result.lines.map(line => `<tr>
-      <td>${escape(line.label)}</td><td>${escape(line.item_code ?? '—')}</td>
+      <td>${escape(line.label)}${line.supplier ? `<small> · ${escape(line.supplier)}</small>` : ''}</td><td>${escape(line.item_code ?? '—')}</td><td>${line.quantity ?? '—'}</td>
       <td>${money(line.investment_pv)}</td><td>${money(line.annual_pv)}</td>
       <td>${money(line.annual_pa)}</td><td>${money(line.annual_pa == null ? null :
         (line.annual_pv ?? 0) - line.annual_pa)}</td>
-      <td>${escape(line.explanation?.source ?? '—')}</td></tr>`).join('')}</tbody></table></div></details>`;
+      <td>${escape(line.explanation?.source ?? '—')}${line.explanation?.kind ? ` · ${escape(line.explanation.kind)}` : ''}
+        ${line.license_value == null ? '' : ` · ${t('chiffrage.theoreticalBase')} ${money(line.license_value)}`}
+        ${line.overrides?.pa == null ? '' : ` · ${t('chiffrage.manualPa')}`}
+        ${line.overrides?.pv == null ? '' : ` · ${t('chiffrage.manualPv')}`}
+        ${line.overrides?.investment == null ? '' : ` · ${t('chiffrage.theoreticalPv')} ${money(line.calculated_investment)}`}</td></tr>`).join('')}</tbody></table></div></details>`;
 }
 
 function renderEditor() {
@@ -300,7 +322,8 @@ function setValue(path, raw, isCheckbox = false) {
   }
   if (parts[0] === 'primeLines' || parts[0] === 'partners') {
     const row = state.draft[parts[0]][Number(parts[1])];
-    row[parts[2]] = parts[2] === 'label' ? raw : raw === '' ? 0 : Number(raw);
+    row[parts[2]] = ['label', 'item_code', 'supplier', 'note'].includes(parts[2]) ? raw :
+      raw === '' ? null : Number(raw);
     return;
   }
   if (parts[0] === 'modules') {
@@ -416,7 +439,11 @@ root.addEventListener('click', async event => {
   if (action === 'addPrime' || action === 'addPartner') {
     state.draft[action === 'addPrime' ? 'primeLines' : 'partners'].push({
       family: action === 'addPrime' ? 'prime' : 'partenaires',
-      label: '', investment_pv: 0, annual_pv: 0 });
+      label: '', quantity: 1, investment_pv: 0, annual_pv: 0 });
+    renderEditor(); return;
+  }
+  if (action === 'removeLine') {
+    state.draft[button.dataset.kind].splice(Number(button.dataset.index), 1);
     renderEditor(); return;
   }
   button.disabled = true;
