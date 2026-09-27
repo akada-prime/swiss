@@ -1,5 +1,7 @@
 # État de reprise — Prime Communes 2.0
 
+> **Affinage 2.5 — 27.09.2026 :** le panneau Paramètres n’utilise plus d’emoji dépendant du rendu Windows ; la roadmap produit est volontairement synthétique, la 3.0 reste dédiée au Chiffrage et une 3.5 regroupe infrastructure Prime, accès et historique du marché.
+
 > **Jalon produit 2.5 — 27.09.2026 : terminé.** La roadmap affichée dans l’application est alignée sur le socle consolidé 2.5 ; la prochaine grande version est **3.0 — Chiffrage**. Les idées de copilote IA sont déplacées en brainstorming futur non planifié.
 
 ## Maintenance après intégration
