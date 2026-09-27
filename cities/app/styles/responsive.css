@@ -212,7 +212,7 @@
     grid-column:1/-1;
     grid-row:2;
     display:grid;
-    grid-template-columns:1.22fr .72fr .72fr .92fr 1.02fr 1fr;
+    grid-template-columns:1.15fr .7fr .7fr .85fr .95fr .95fr 1fr;
     gap:1px;
     width:100%;
     min-width:0;
@@ -574,14 +574,14 @@
 
 @media (max-width: 680px) {
   .topbar {
-    min-height: 158px;
-    grid-template-rows: 48px 80px;
+    min-height: 194px;
+    grid-template-rows: 48px 116px;
   }
 
   .view-tabs {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: repeat(2, 36px);
+    grid-template-rows: repeat(3, 36px);
     gap: 4px;
     overflow: visible;
   }

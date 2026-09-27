@@ -39,10 +39,10 @@ test('important declarations are reduced to the documented hidden contract', asy
   assert.match(await read('app/styles/responsive.css'), /\[hidden\] \{ display: none !important; \}/);
 });
 
-test('shared mobile controls keep a readable floor and six reachable tabs', async () => {
+test('shared mobile controls keep a readable floor and seven reachable tabs', async () => {
   const html = await read('index.html');
   const css = await read('app/styles/responsive.css');
-  assert.equal((html.match(/class="view-tab(?: |")/g) || []).length, 6);
+  assert.equal((html.match(/class="view-tab(?: |")/g) || []).length, 7);
   assert.match(css, /--pc-type-min: 12px/);
   assert.match(css, /--pc-control-height: 40px/);
   assert.match(css, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);

@@ -9,7 +9,7 @@ import {t} from './core/i18n.js?v=20260926-preferences-2';
 
   const byId = id => document.getElementById(id);
   const truthyParam = value => value === '1' || value === 'true';
-  const validViews = new Set(['communes', 'map', 'stats', 'news', 'stories', 'roadmap']);
+  const validViews = new Set(['communes', 'map', 'stats', 'news', 'stories', 'roadmap', 'chiffrage']);
   const validSortKeys = new Set(['population', 'name']);
   const validDirections = new Set(['asc', 'desc']);
   const validMarkets = new Set(['Welsch', 'Uf Tüütsch', 'Ticino']);
@@ -290,6 +290,7 @@ import {t} from './core/i18n.js?v=20260926-preferences-2';
     byId('newsView').hidden = next !== 'news';
     byId('storiesView').hidden = next !== 'stories';
     byId('roadmapView').hidden = next !== 'roadmap';
+    byId('chiffrageView').hidden = next !== 'chiffrage';
     byId('syncReload').hidden = next !== 'communes';
     document.documentElement.removeAttribute('data-initial-view');
     if (next === 'map') loadMap().then(restoreMapUi);
