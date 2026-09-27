@@ -65,13 +65,13 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   <aside class="settings-panel" id="settingsPanel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
     <div class="settings-heading"><h2 id="settingsTitle"><!--i18n:page.001-->Paramètres</h2><button id="settingsClose" type="button" aria-label="Fermer">×</button></div>
     <fieldset><legend><!--i18n:page.002-->Apparence</legend>
-      <label><input type="radio" name="skin" value="auto"><span><!--i18n:settings.appearanceAuto-->◐ Automatique</span></label>
-      <label><input type="radio" name="skin" value="prime-darkweb"><span>🌑 Prime Dark</span></label>
-      <label><input type="radio" name="skin" value="helvetia"><span>🇨🇭 Helvetia Hell</span></label>
+      <label><input type="radio" name="skin" value="auto"><span><!--i18n:settings.appearanceAuto-->Automatique</span></label>
+      <label><input type="radio" name="skin" value="prime-darkweb"><span>Prime Dark</span></label>
+      <label><input type="radio" name="skin" value="helvetia"><span>Helvetia Hell</span></label>
     </fieldset>
     <fieldset><legend><!--i18n:page.004-->Langue</legend>
-      <label><input type="radio" name="language" value="fr"><span><!--i18n:page.005-->🇫🇷 Français</span></label>
-      <label><input type="radio" name="language" value="de"><span>🇩🇪 Deutsch</span></label>
+      <label><input type="radio" name="language" value="fr"><span><!--i18n:page.005-->Français</span></label>
+      <label><input type="radio" name="language" value="de"><span>Deutsch</span></label>
     </fieldset>
   </aside>
   <section class="workspace">
@@ -256,6 +256,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         <li class="journey-understand journey-done"><span>2.0</span><strong><!--i18n:page.147-->Faire parler</strong></li>
         <li class="journey-see journey-done"><span>2.5</span><strong><!--i18n:page.148-->Consolider</strong></li>
         <li class="journey-see journey-current"><span>3.0</span><strong><!--i18n:page.149-->Chiffrer</strong></li>
+        <li class="journey-anticipate"><span>3.5</span><strong><!--i18n:page.270-->Pérenniser</strong></li>
       </ol>
       <div class="roadmap-principle"><span><!--i18n:page.150-->Principe directeur</span><p><!--i18n:page.151-->Le produit calcule avec des règles explicites. L’IA ne remplace ni les données, ni les calculs, ni la décision humaine.</p></div>
       <article class="roadmap-stage completed-stage">
@@ -296,33 +297,25 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         <article class="roadmap-stage map-stage completed-stage">
           <header><span class="roadmap-version">2.5</span><div><p><!--i18n:page.200-->Socle consolidé</p><h2><!--i18n:page.148-->Consolider</h2></div><span class="roadmap-done"><!--i18n:page.153-->Terminé ✓</span></header>
           <div class="roadmap-items">
-            <div><strong><!--i18n:page.201-->Rebuild & stabilité</strong><span><!--i18n:page.202-->Rebuild structurel intégré, six vues revalidées, carte WebGL2 stabilisée et bug runtime React post-déploiement corrigé.</span><small><!--i18n:page.203-->Socle 2.5 validé pour construire la suite</small></div>
-            <div><strong><!--i18n:page.204-->Recherche, navigation & édition</strong><span><!--i18n:page.205-->Recherche dédiée, filtres et contexte conservés, sauvegarde fiable et hébergeur modifiable dans la fiche communale.</span><small><!--i18n:page.206-->Ordinateur et Natel alignés</small></div>
-            <div><strong><!--i18n:page.207-->Apparence, langues & préférences</strong><span><!--i18n:page.208-->Prime Dark, Helvetia Hell, mode Automatique, français et allemand suisse avec préférences locales.</span><small><!--i18n:page.209-->Paramètres séparés de la future administration</small></div>
-            <div><strong><!--i18n:page.210-->Radar!</strong><span><!--i18n:page.211-->Veille sobre, couverture mesurable et séparation stricte entre fait public, déduction et lecture Prime.</span><small><!--i18n:page.212-->NEWS! devient Radar!</small></div>
-            <div><strong><!--i18n:page.213-->Mode d’intervention adaptative</strong><span><!--i18n:page.214-->Chaque modification est qualifiée de 1 à 5 et reçoit uniquement les contrôles nécessaires à son risque.</span><small><!--i18n:page.215-->Chat d’abord · Work par exception · diff minimal</small></div>
+            <div><strong><!--i18n:page.201-->Prime Communes 2.5</strong><span><!--i18n:page.202-->Rebuild stabilisé, navigation et édition fiabilisées, préférences d’apparence et de langue, Radar! et méthode d’intervention adaptative.</span><small><!--i18n:page.203-->Socle terminé · prêt pour les prochaines briques métier</small></div>
           </div>
         </article>
         <article class="roadmap-stage map-stage">
           <header><span class="roadmap-version">3.0</span><div><p><!--i18n:page.216-->Prochaine grande version</p><h2><!--i18n:page.232-->Chiffrage</h2></div></header>
           <div class="roadmap-items">
-            <div><strong><!--i18n:page.233-->Commune → Chiffrage</strong><span><!--i18n:page.234-->Créer un chiffrage depuis une commune et reprendre automatiquement OFS, canton, population et contexte système utiles.</span><small><!--i18n:page.235-->Usage 3.0 limité aux communes</small></div>
-            <div><strong><!--i18n:page.236-->Solutions & modules</strong><span><!--i18n:page.237-->Sélection explicite d’innosolv, Abacus et ProConcept avec leurs modules et moteurs de calcul propres.</span><small><!--i18n:page.238-->Le choix final des modules reste humain</small></div>
-            <div><strong><!--i18n:page.239-->Prestations projet</strong><span><!--i18n:page.240-->Reprise de données, gestion de projet, formation, aide au démarrage et prestations propres aux modules.</span><small><!--i18n:page.241-->Quantités et règles explicables · ajustement manuel possible</small></div>
-            <div><strong><!--i18n:page.246-->Technique & bases de données</strong><span><!--i18n:page.247-->innosolv implique MS SQL ; ProConcept implique Oracle avec Full/Light ; Abacus n’ajoute pas de base de données à chiffrer.</span></div>
-            <div><strong><!--i18n:page.248-->Hébergement & écosystème</strong><span><!--i18n:page.249-->Hébergement, GED, eAdmin et autres solutions tierces intégrés au TCO sans les confondre avec la marge logiciel Prime.</span></div>
-            <div><strong><!--i18n:page.250-->LCM</strong><span><!--i18n:page.251-->Aucun, Gold ou Platinium avec proposition par blocs de population de 5’000 habitants et prix retenu librement ajustable.</span></div>
-            <div><strong><!--i18n:page.252-->Marges & règles commerciales</strong><span><!--i18n:page.253-->Marge clairement identifiée par famille, valeur théorique conservée et override commercial visible.</span></div>
-            <div><strong><!--i18n:page.254-->Résumé & Excel</strong><span><!--i18n:page.255-->Investissement, coûts annuels, TCO, ventilation et marges ; export Excel avec Résumé et Détail.</span><small><!--i18n:page.256-->Pas d’offre Word/PDF contractuelle dans Prime Communes</small></div>
+            <div><strong><!--i18n:page.233-->Chiffrage communal</strong><span><!--i18n:page.234-->Transformer les données d’une commune en estimation structurée des coûts de projet et récurrents, avec règles explicables, ajustements humains et résumé Excel.</span><small><!--i18n:page.235-->Le calcul reste déterministe ; l’offre contractuelle reste hors de Prime Communes.</small></div>
           </div>
         </article>
-        <article class="roadmap-stage ai-stage roadmap-future-stage">
+        <article class="roadmap-stage ai-stage">
+          <header><span class="roadmap-version">3.5</span><div><p><!--i18n:page.269-->Technique & mémoire</p><h2><!--i18n:page.270-->Pérenniser</h2></div></header>
+          <div class="roadmap-items">
+            <div><strong><!--i18n:page.271-->Infrastructure, accès & historique</strong><span><!--i18n:page.272-->Transfert vers l’infrastructure Prime, SSO et rôles, audit et qualité, historique Delimo, fusions et mouvements de marché.</span><small><!--i18n:page.273-->Un socle durable et un marché lisible dans le temps.</small></div>
+          </div>
+        </article>
+        <article class="roadmap-stage roadmap-future-stage">
           <header><span class="roadmap-version">∞</span><div><p><!--i18n:page.257-->Brainstorming futur · non planifié</p><h2><!--i18n:page.258-->Intelligence commerciale / IA</h2></div></header>
           <div class="roadmap-items">
-            <div><strong><!--i18n:page.259-->Copilote de chiffrage</strong><span><!--i18n:page.260-->Proposer des modules, repérer les informations manquantes ou incohérentes et préparer un chiffrage en langage naturel.</span><small><!--i18n:page.261-->L’IA assiste et orchestre ; les règles calculent.</small></div>
-            <div><strong><!--i18n:page.262-->Demande à la Suisse</strong><span><!--i18n:page.263-->Interroger la base et ses sources en langage naturel avec réponses vérifiables.</span></div>
-            <div><strong><!--i18n:page.264-->Briefing, jumeaux & scénarios</strong><span><!--i18n:page.265-->Préparer une commune, trouver des références comparables et simuler des effets domino ou changements de marché.</span></div>
-            <div><strong><!--i18n:page.266-->Backlog transversal</strong><span><!--i18n:page.267-->SSO/RLS, audit et temporalité, historique Delimo, collecte Web industrialisée, données financières sécurisées et API interne.</span><small><!--i18n:page.268-->Utile, mais volontairement non attaché à une version tant qu’il n’est pas replanifié</small></div>
+            <div><strong><!--i18n:page.259-->Copilote futur</strong><span><!--i18n:page.260-->Explorer un copilote capable d’exploiter les données et les moteurs de Chiffrage pour préparer, expliquer et comparer, sans devenir la source du prix.</span><small><!--i18n:page.261-->Idées ouvertes · aucune promesse de version.</small></div>
           </div>
         </article>
       </div>
