@@ -235,7 +235,12 @@ function summary() {
     <div><dt>${t('chiffrage.year2')}</dt><dd>${money(s.software_margin_year2)}</dd></div>
     <div><dt>${t('chiffrage.year3')}</dt><dd>${money(s.software_margin_year3plus)}</dd></div>
     <div><dt>Gold</dt><dd>${money(s.lcm.gold?.effective_value)}</dd></div>
-    <div><dt>Platinium</dt><dd>${money(s.lcm.platinium?.effective_value)}</dd></div></dl>
+    <div><dt>${t('chiffrage.lcmFiveYears')} Gold</dt><dd>${money(s.lcm.gold?.five_year_option)}</dd></div>
+    <div><dt>Platinium</dt><dd>${money(s.lcm.platinium?.effective_value)}</dd></div>
+    <div><dt>${t('chiffrage.lcmFiveYears')} Platinium</dt><dd>${money(s.lcm.platinium?.five_year_option)}</dd></div></dl>
+    ${['gold','platinium'].map(key => s.lcm[key]?.source ? `<small>${key}: ${
+      t('chiffrage.lcmEstimate')} · ${escape(s.lcm[key].source.method)} · ${
+      s.lcm[key].source.sample_size ?? 0} ${t('chiffrage.contracts')}</small>` : '').join('')}
     ${s.lcm.missing_reference ? `<p class="chiffrage-warning">${t('chiffrage.lcmMissing')}</p>` : ''}
     ${s.incomplete_costs.length ? `<p class="chiffrage-warning">${t('chiffrage.incomplete')}: ${escape(s.incomplete_costs.join(', '))}</p>` : ''}</aside>`;
 }

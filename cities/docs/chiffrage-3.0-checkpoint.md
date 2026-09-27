@@ -39,16 +39,28 @@ ni export client ne doit être ajouté au dépôt public.
 
 ## Points encore à compléter
 
-- La grille LCM par blocs de 5 000 n'est pas complètement reconstituée ; le
-  moteur signale une tranche sans référence et accepte une valeur manuelle.
+- Une grille LCM **candidate** par blocs de 5 000 est désormais dérivée hors
+  dépôt de la liste contractuelle retrouvée (18 contrats Gold et 8 Platinium
+  comparables) et de l'offre Fribourg pour le Gold 40 000 habitants. Le script
+  `scripts/chiffrage/derive-lcm.py` écarte les compléments, hébergements seuls,
+  autres plans, GRD et instances mutualisées. Il conserve pour chaque palier la
+  méthode, les références observées et le statut `draft_unapproved`. Les
+  résultats au-dessus des communes comparables sont des estimations, pas des
+  prix approuvés. L'outil d'import les refuse tant que la révision métier n'a
+  pas été faite. Les montants et le fichier contractuel restent hors du dépôt.
 - Les règles produits `Versorger` et `Kirche` et une divergence de grille
   Abacus sont signalées `unverified` et refusées par le calcul automatique.
   Les cinq sous-totaux de licences Abacus groupées sont rattachés à leurs
   identifiants de base, avec les composants inclus ; la validation des quatre
   offres reste nécessaire.
-- La valeur exacte du seuil SQL/core et le tarif actuel Abacus ne sont pas
-  tranchés par les sources disponibles. Ce sont des paramètres privés, pas
-  des valeurs implicites dans le code.
+- Le tarif actuel Abacus n'est pas daté comme tarif officiel 2027 dans ces
+  calculateurs historiques. La grille importée couvre désormais les colonnes
+  explicites jusqu'à 40 000 habitants dans l'offre Fribourg. Au-delà, une
+  extrapolation linéaire bornée par produit est signalée comme estimation.
+  Les cellules « 30 000 » de Fribourg référencent `V8`, multiplicateur
+  « 40 000 » : elles sont conservées comme source et annotées pour arbitrage,
+  sans correction silencieuse. Le seuil SQL/core reste paramétrable et doit
+  être vérifié commercialement.
 - La migration, le stockage et les fonctions Netlify n'ont pas pu être
   vérifiés sur un environnement de test Supabase/Netlify. Le statut de
   sécurité en production et l'acceptation métier ne sont donc pas validés.

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculateQuote, calculatePce, calculateSql, effective, priceCatalogItem,
+import { calculateQuote, calculatePce, calculateSql, calculateLcm, effective, priceCatalogItem,
   selectInnosolvItem } from '../app/chiffrage/calculate.js';
 
 test('catalog follows the declared tier rule, preserves its source and does not interpolate', () => {
@@ -9,6 +9,7 @@ test('catalog follows the declared tier rule, preserves its source and does not 
       { up_to: 1000, value: 100 }, { up_to: 5000, value: 290 } ] } };
   assert.equal(priceCatalogItem(item, { population: 1001 }).value, 290);
   assert.equal(priceCatalogItem(item, { population: 1001 }).explanation.catalog_version, 'synthetic');
+  assert.throws(() => priceCatalogItem(item, { population: 500 }), /Missing lower tier/);
   assert.throws(() => priceCatalogItem(item, { population: 5001 }), /Missing tier/);
 });
 
@@ -18,6 +19,18 @@ test('declared linear rule rounds midpoint halves away from zero', () => {
       tiers: [{ up_to: 1000, value: 500 }, { up_to: 2000, value: 800 }] } };
   assert.equal(priceCatalogItem(item, { population: 1500 }).value, 700);
   assert.throws(() => priceCatalogItem(item, { population: 300 }), /lower anchor/);
+});
+
+test('larger Abacus commune uses a declared, bounded estimate above the source grid', () => {
+  const item = { item_code: 'TEST', catalog_version: 'synthetic', source: 'fixture',
+    pricing_rule: { kind: 'lookup', basis: 'population', tiers: [
+      { up_to: 15000, value: 100 }, { up_to: 40000, value: 350 } ],
+    above_last: { kind: 'linear_tail_estimate', from: 15000,
+      max_population: 60000, round_to: 1 } } };
+  assert.equal(priceCatalogItem(item, { population: 50000 }).value, 450);
+  assert.equal(priceCatalogItem(item, { population: 50000 }).explanation.kind,
+    'linear_tail_estimate');
+  assert.throws(() => priceCatalogItem(item, { population: 60001 }), /Missing tier/);
 });
 
 test('VD chooses explicit 129VD variant', () => {
@@ -68,4 +81,15 @@ test('year one has no recurring charge; publisher PA is halved only in year two'
   assert.equal(quote.summary.lcm.gold.effective_value, 99);
   assert.equal(quote.summary.lcm.missing_reference, true);
   assert.deepEqual(quote.summary.incomplete_costs, ['sql', 'Setup']);
+});
+
+test('LCM options preserve estimate provenance and stay outside the main TCO', () => {
+  const rule = [{ up_to: 5000, gold: 200, platinium: 400,
+    status: 'draft_unapproved', gold_evidence: { method: 'observed_median', sample_size: 4 } }];
+  const result = calculateLcm(4800, rule, { gold: 250 });
+  assert.equal(result.gold.calculated_value, 200);
+  assert.equal(result.gold.effective_value, 250);
+  assert.equal(result.gold.five_year_option, 1000);
+  assert.equal(result.gold.source.sample_size, 4);
+  assert.equal(result.platinium.five_year_option, 1600);
 });

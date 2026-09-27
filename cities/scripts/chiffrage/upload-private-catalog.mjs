@@ -26,6 +26,9 @@ if (!Array.isArray(source.items) || !source.items.length ||
     !parameters.publisher_rent?.abacus?.rh_sal_ebanking ||
     !parameters.pce || !parameters.sql || !parameters.oracle ||
     !Number.isFinite(parameters.day_rate)) throw new Error('Incomplete private input');
+if (!Array.isArray(parameters.lcm) || parameters.lcm.some(row =>
+  row.status === 'draft_unapproved'))
+  throw new Error('LCM candidates require explicit commercial review before import');
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!url || !key) throw new Error('Server credentials are required');

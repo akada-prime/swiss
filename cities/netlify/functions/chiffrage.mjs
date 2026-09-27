@@ -117,6 +117,8 @@ async function loadCatalog(versions) {
   for (const version of versionsRows) {
     if (versions[version.vendor] !== version.id) throw new Error('Catalog vendor mismatch');
   }
+  if (parameterRows[0].content.lcm?.some(entry => entry.status === 'draft_unapproved'))
+    throw new Error('Unapproved LCM reference');
   return { items: items.map(row => row.content), parameters: parameterRows[0].content,
     versions: versionsRows };
 }

@@ -86,7 +86,9 @@ export function exportQuoteXlsx(quote) {
     ['Investissement', summary.investment], ['Coût annuel dès N+1', summary.annual],
     ['TCO 5 ans hors LCM', summary.tco5y_excluding_lcm],
     ['LCM Gold', summary.lcm.gold?.effective_value],
+    ['Option Gold 5 ans', summary.lcm.gold?.five_year_option],
     ['LCM Platinium', summary.lcm.platinium?.effective_value],
+    ['Option Platinium 5 ans', summary.lcm.platinium?.five_year_option],
     ['Famille', 'Investissement PV', 'Annuel PV', 'Investissement PA', 'Annuel PA', 'Marge connue année 3+']
   ];
   for (const [family, [invPv, annualPv, invPa, annualPa]] of totals)
@@ -121,6 +123,8 @@ export function exportQuoteXlsx(quote) {
     ['Employés', input.dimensions.employees], ['SQL users', input.sql?.users],
     ['Oracle Full', input.oracle?.full], ['Oracle Light', input.oracle?.light],
     ['Date de calcul', date], ['OFS', input.bfs_id],
+    ['Source LCM Gold', JSON.stringify(summary.lcm.gold?.source ?? null)],
+    ['Source LCM Platinium', JSON.stringify(summary.lcm.platinium?.source ?? null)],
     ...Object.entries(versions).map(([vendor, id]) => [`Version ${vendor}`, id]),
     ['Révision', quote.snapshot.revision], ['Entrées complètes', JSON.stringify(input)],
     ['Résultats complets', JSON.stringify(result)]

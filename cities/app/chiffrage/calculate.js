@@ -41,9 +41,29 @@ export function priceCatalogItem(item, dimensions) {
   const quantity = finite(dimensions[rule.basis], rule.basis);
   const tiers = [...rule.tiers].sort((a, b) => a.up_to - b.up_to);
   const tier = tiers.find(entry => quantity <= finite(entry.up_to, 'tier boundary'));
+  if (!tier && rule.above_last?.kind === 'linear_tail_estimate') {
+    const last = tiers.at(-1);
+    const lower = tiers.find(entry => entry.up_to === rule.above_last.from);
+    if (!lower || last.up_to <= lower.up_to ||
+      quantity > finite(rule.above_last.max_population, 'estimate ceiling'))
+      throw new Error(`Missing tier for ${item.item_code}: ${quantity}`);
+    const slope = (finite(last.value, 'last price') -
+      finite(lower.value, 'lower price')) / (last.up_to - lower.up_to);
+    const value = roundTo(last.value + (quantity - last.up_to) * slope,
+      rule.above_last.round_to);
+    return { value, explanation: { item_code: item.item_code,
+      basis: rule.basis, quantity, tier_up_to: last.up_to,
+      kind: 'linear_tail_estimate', anchor_lower: lower.up_to,
+      anchor_upper: last.up_to, source: item.source,
+      catalog_version: item.catalog_version } };
+  }
   if (!tier) throw new Error(`Missing tier for ${item.item_code}: ${quantity}`);
   let value;
-  if (rule.kind === 'lookup') value = finite(tier.value, 'tier value');
+  if (rule.kind === 'lookup') {
+    if (quantity < tiers[0].up_to && rule.below_first !== 'hold')
+      throw new Error(`Missing lower tier for ${item.item_code}: ${quantity}`);
+    value = finite(tier.value, 'tier value');
+  }
   else if (rule.kind === 'linear_rounded') {
     const upperIndex = tiers.indexOf(tier);
     const lower = tiers[upperIndex - 1];
@@ -66,7 +86,8 @@ export function priceCatalogItem(item, dimensions) {
   } else throw new Error(`Unsupported pricing rule: ${rule.kind}`);
   return { value, explanation: { item_code: item.item_code, basis: rule.basis,
     quantity, tier_up_to: tier.up_to, kind: rule.kind, source: item.source,
-    catalog_version: item.catalog_version } };
+    catalog_version: item.catalog_version,
+    source_grid_note: item.source_grid_note ?? null } };
 }
 
 export function selectInnosolvItem(items, code, canton) {
@@ -134,8 +155,13 @@ export function calculateLcm(population, rule, overrides = {}) {
   const entry = rule?.find(candidate => candidate.up_to === block);
   const one = (key) => entry?.[key] == null ? (overrides[key] == null ? null :
     { calculated_value: null, override_value: finite(overrides[key], 'LCM override'),
-      effective_value: finite(overrides[key], 'LCM override'), difference: null }) :
-    effective(entry[key], overrides[key]);
+      effective_value: finite(overrides[key], 'LCM override'), difference: null,
+      five_year_option: finite(overrides[key], 'LCM override') * 4,
+      source: null }) :
+    { ...effective(entry[key], overrides[key]),
+      five_year_option: effective(entry[key], overrides[key]).effective_value * 4,
+      source: entry[`${key}_evidence`] ?? null,
+      status: entry.status ?? 'versioned' };
   return { block, gold: one('gold'), platinium: one('platinium'),
     missing_reference: !entry || entry.gold == null || entry.platinium == null };
 }

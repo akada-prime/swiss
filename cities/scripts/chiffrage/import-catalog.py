@@ -9,6 +9,7 @@ as a static asset. The source files are never copied into the repository.
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 from datetime import date
 from pathlib import Path
@@ -86,9 +87,14 @@ def innosolv(source, version):
 def abacus(source, sheet_name, flag_col, header_row, version):
     workbook = load_workbook(source, read_only=False, data_only=True)
     sheet = workbook[sheet_name]
-    anchors = [(col, amount(sheet.cell(header_row, col).value))
-               for col in range(3, 21)]
-    anchors = [(col, boundary) for col, boundary in anchors if boundary is not None]
+    anchors = []
+    for col in range(3, sheet.max_column + 1):
+        boundary = amount(sheet.cell(header_row, col).value)
+        # Only the contiguous population header is a pricing grid. The
+        # following summary cells may contain other numbers or assumptions.
+        if boundary is None: break
+        if anchors and boundary <= anchors[-1][1]: break
+        anchors.append((col, boundary))
     result = {}
     unpriced_components = []
     for row in range(header_row + 1, sheet.max_row + 1):
@@ -99,6 +105,8 @@ def abacus(source, sheet_name, flag_col, header_row, version):
         tiers = [{"up_to": int(boundary), "value": value}
                  for col, boundary in anchors
                  if (value := amount(sheet.cell(row, col).value)) is not None]
+        if item_code and not re.fullmatch(r"\d{3,6}(?:\.\d+)?", item_code):
+            continue
         if item_code and not tiers:
             unpriced_components.append((item_code, label,
                                          str(sheet.cell(row, flag_col).value).lower() == "x"))
@@ -124,13 +132,23 @@ def abacus(source, sheet_name, flag_col, header_row, version):
             continue
         else:
             selected = str(sheet.cell(row, flag_col).value).lower() == "x"
+        rule = {"kind": "lookup", "basis": "population", "tiers": tiers}
+        if len(tiers) >= 2 and tiers[-1]["up_to"] >= 15000:
+            from_anchor = next((x["up_to"] for x in tiers
+                                if x["up_to"] == 15000), tiers[-2]["up_to"])
+            rule["above_last"] = {"kind": "linear_tail_estimate",
+                                  "from": from_anchor, "max_population": 100000,
+                                  "round_to": 1}
         result[item_code] = {"vendor": "abacus", "product": "ERP",
                              "item_code": item_code, "label_fr": label,
                              "label_de": None,
                              "rate_class": ("rh_sal_ebanking" if item_code.startswith(
                                  ("10540.", "10515.")) else "standard"),
-                             "pricing_rule": {"kind": "lookup", "basis": "population",
-                                              "tiers": tiers},
+                             "pricing_rule": rule,
+                             "source_grid_note": ("Fribourg 30k Excel formula references V8 "
+                                                  "(40k multiplier): validate before activation"
+                                                  if sheet_name == "ABA_Client" and
+                                                  any(t["up_to"] == 30000 for t in tiers) else None),
                              "included_components": included,
                              "default_selected": selected,
                              "catalog_version": version,
@@ -163,7 +181,11 @@ def main():
         older = avenches.get(item_code)
         entry["default_selected"] = bool(older and older["default_selected"] and
                                          entry["default_selected"])
-        if older and older["pricing_rule"]["tiers"] != entry["pricing_rule"]["tiers"]:
+        shared = {tier["up_to"]: tier["value"] for tier in
+                  older["pricing_rule"]["tiers"]} if older else {}
+        if older and any(tier["up_to"] in shared and
+                         shared[tier["up_to"]] != tier["value"]
+                         for tier in entry["pricing_rule"]["tiers"]):
             entry["pricing_rule"]["kind"] = "unverified"
             entry["conflict_sources"] = [older["source"], entry["source"]]
             entry["alternative_tiers"] = older["pricing_rule"]["tiers"]
