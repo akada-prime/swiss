@@ -65,13 +65,13 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   <aside class="settings-panel" id="settingsPanel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
     <div class="settings-heading"><h2 id="settingsTitle"><!--i18n:page.001-->Paramètres</h2><button id="settingsClose" type="button" aria-label="Fermer">×</button></div>
     <fieldset><legend><!--i18n:page.002-->Apparence</legend>
-      <label><input type="radio" name="skin" value="auto"><span><!--i18n:settings.appearanceAuto-->Automatique</span></label>
-      <label><input type="radio" name="skin" value="prime-darkweb"><span>Prime Dark</span></label>
-      <label><input type="radio" name="skin" value="helvetia"><span>Helvetia Hell</span></label>
+      <label><input type="radio" name="skin" value="auto"><span class="settings-choice-icon settings-choice-auto" aria-hidden="true"></span><span><!--i18n:settings.appearanceAuto-->Automatique</span></label>
+      <label><input type="radio" name="skin" value="prime-darkweb"><span class="settings-choice-icon settings-choice-dark" aria-hidden="true"></span><span>Prime Dark</span></label>
+      <label><input type="radio" name="skin" value="helvetia"><span class="settings-choice-icon settings-choice-helvetia" aria-hidden="true"></span><span>Helvetia Hell</span></label>
     </fieldset>
     <fieldset><legend><!--i18n:page.004-->Langue</legend>
-      <label><input type="radio" name="language" value="fr"><span><!--i18n:page.005-->Français</span></label>
-      <label><input type="radio" name="language" value="de"><span>Deutsch</span></label>
+      <label><input type="radio" name="language" value="fr"><span class="settings-choice-icon settings-choice-fr" aria-hidden="true"></span><span><!--i18n:page.005-->Français</span></label>
+      <label><input type="radio" name="language" value="de"><span class="settings-choice-icon settings-choice-de" aria-hidden="true"></span><span>Deutsch</span></label>
     </fieldset>
   </aside>
   <section class="workspace">
@@ -307,19 +307,19 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         <article class="roadmap-stage map-stage">
           <header><span class="roadmap-version">3.0</span><div><p><!--i18n:page.216-->Prochaine grande version</p><h2><!--i18n:page.232-->Chiffrage</h2></div></header>
           <div class="roadmap-items">
-            <div><strong><!--i18n:page.233-->Chiffrage communal</strong><span><!--i18n:page.234-->Transformer les données d’une commune en estimation structurée des coûts de projet et récurrents, avec règles explicables, ajustements humains et résumé Excel.</span><small><!--i18n:page.235-->Le calcul reste déterministe ; l’offre contractuelle reste hors de Prime Communes.</small></div>
+            <div><strong><!--i18n:page.233-->Chiffrage communal</strong><span><!--i18n:page.234-->À partir d’une commune, sélectionner les solutions, modules et prestations puis appliquer les moteurs de calcul propres à innosolv, Abacus et ProConcept. Intégrer les composantes techniques, l’hébergement, les partenaires et le LCM pour obtenir investissement, coûts annuels et TCO. Les valeurs restent explicables et ajustables humainement avant export Excel.</span><small><!--i18n:page.235-->Le moteur reste déterministe et vérifiable ; l’offre contractuelle finale reste hors de Prime Communes.</small></div>
           </div>
         </article>
         <article class="roadmap-stage ai-stage">
           <header><span class="roadmap-version">3.5</span><div><p><!--i18n:page.269-->Technique & mémoire</p><h2><!--i18n:page.270-->Pérenniser</h2></div></header>
           <div class="roadmap-items">
-            <div><strong><!--i18n:page.271-->Infrastructure, accès & historique</strong><span><!--i18n:page.272-->Transfert vers l’infrastructure Prime, SSO et rôles, audit et qualité, historique Delimo, fusions et mouvements de marché.</span><small><!--i18n:page.273-->Un socle durable et un marché lisible dans le temps.</small></div>
+            <div><strong><!--i18n:page.271-->Infrastructure, accès & historique</strong><span><!--i18n:page.272-->Pérenniser Prime Communes sur l’infrastructure Prime avec authentification, SSO, rôles, audit et qualité des données. Ajouter la dimension temporelle : historique Delimo, apparitions ou disparitions de communes, fusions et mouvements de marché, afin que Radar et les statistiques puissent lire l’évolution et pas seulement l’état actuel.</span><small><!--i18n:page.273-->Un socle durable, sécurisé et lisible dans le temps.</small></div>
           </div>
         </article>
         <article class="roadmap-stage roadmap-future-stage">
           <header><span class="roadmap-version">∞</span><div><p><!--i18n:page.257-->Brainstorming futur · non planifié</p><h2><!--i18n:page.258-->Intelligence commerciale / IA</h2></div></header>
           <div class="roadmap-items">
-            <div><strong><!--i18n:page.259-->Copilote futur</strong><span><!--i18n:page.260-->Explorer un copilote capable d’exploiter les données et les moteurs de Chiffrage pour préparer, expliquer et comparer, sans devenir la source du prix.</span><small><!--i18n:page.261-->Idées ouvertes · aucune promesse de version.</small></div>
+            <div><strong><!--i18n:page.259-->Copilote futur</strong><span><!--i18n:page.260-->Explorer un copilote capable d’exploiter les données communales, Radar, l’historique et les moteurs de Chiffrage pour préparer une commune, identifier les informations manquantes, expliquer une configuration, comparer des cas ou accélérer un chiffrage — sans devenir la source du prix.</span><small><!--i18n:page.261-->L’IA assiste et orchestre ; les données et les règles restent la source de vérité.</small></div>
           </div>
         </article>
       </div>

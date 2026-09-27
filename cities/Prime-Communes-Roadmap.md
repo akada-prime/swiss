@@ -203,10 +203,14 @@ lorsqu'il apporte une information nouvelle ou réduit réellement le risque.
 
 ## 3.0 — Chiffrage · à réaliser
 
-La 3.0 introduit le **Chiffrage communal** : partir d'une commune connue pour
-produire rapidement une estimation structurée des coûts de projet et des coûts
-récurrents, avec des règles explicables, des ajustements humains et un résumé
-Excel.
+La 3.0 introduit le **Chiffrage communal** : partir d'une commune connue,
+sélectionner les solutions, modules et prestations puis appliquer les moteurs
+de calcul propres à innosolv, Abacus et ProConcept.
+
+Le chiffrage intègre les composantes techniques, l'hébergement, les partenaires
+et le LCM afin de produire une vue claire de l'investissement, des coûts annuels
+et du TCO. Les valeurs calculées restent explicables et peuvent être ajustées
+humainement avant export Excel.
 
 Le moteur reste déterministe et vérifiable. La vraie offre contractuelle
 Word/PDF reste hors de Prime Communes.
@@ -218,16 +222,23 @@ Cette étape regroupe les fondations nécessaires à un usage durable :
 - transfert vers l'infrastructure Prime ;
 - authentification, SSO, rôles et droits ;
 - audit, qualité et provenance ;
-- historique Delimo, fusions et mouvements de marché.
+- historique Delimo, apparitions ou disparitions de communes, fusions et
+  mouvements de marché.
 
-L'objectif est de rendre le socle durable et le marché lisible dans le temps,
-sans transformer Prime Communes en base client générale.
+L'objectif est de rendre le socle durable, sécurisé et lisible dans le temps.
+Radar, les statistiques et les futurs usages métier doivent pouvoir comprendre
+non seulement l'état actuel d'une commune, mais aussi son évolution, sans
+transformer Prime Communes en base client générale.
 
 ## Brainstorming futur — Intelligence commerciale / IA · non planifié
 
-Explorer un copilote qui exploite les données de Prime Communes et les moteurs
-de Chiffrage pour préparer, expliquer et comparer plus vite, sans devenir la
-source du prix ni remplacer la décision humaine.
+Explorer un copilote qui exploite les données communales, Radar, l'historique
+et les moteurs de Chiffrage pour préparer une commune, identifier les
+informations manquantes, expliquer une configuration, comparer des cas et
+accélérer un chiffrage.
+
+L'IA assiste et orchestre ; les données et les règles déterministes restent la
+source de vérité et la décision humaine reste finale.
 
 ## Règles permanentes
 
