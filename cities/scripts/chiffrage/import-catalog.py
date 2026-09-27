@@ -90,16 +90,40 @@ def abacus(source, sheet_name, flag_col, header_row, version):
                for col in range(3, 21)]
     anchors = [(col, boundary) for col, boundary in anchors if boundary is not None]
     result = {}
+    unpriced_components = []
     for row in range(header_row + 1, sheet.max_row + 1):
         item_code = code(sheet.cell(row, 1).value)
         label = sheet.cell(row, 2).value
-        if not item_code or not isinstance(label, str):
+        if not isinstance(label, str):
             continue
         tiers = [{"up_to": int(boundary), "value": value}
                  for col, boundary in anchors
                  if (value := amount(sheet.cell(row, col).value)) is not None]
-        if not tiers:
+        if item_code and not tiers:
+            unpriced_components.append((item_code, label,
+                                         str(sheet.cell(row, flag_col).value).lower() == "x"))
             continue
+        included = []
+        if not item_code and label.lower().startswith("total ") and tiers:
+            # Example calculators group a base licence and several mandatory
+            # modules into one priced subtotal. Preserve the source licence ID
+            # of the base instead of inventing an ID for the subtotal.
+            candidates = [entry for entry in unpriced_components
+                          if "version de base" in entry[1].lower()]
+            if not candidates:
+                unpriced_components = []
+                continue
+            base = candidates[-1]
+            item_code = base[0]
+            included = [entry[0] for entry in unpriced_components
+                        if entry[0].split('.')[0] == item_code.split('.')[0]]
+            unpriced_components = []
+            label = f"{label} ({base[1]})"
+            selected = base[2]
+        elif not item_code or not tiers:
+            continue
+        else:
+            selected = str(sheet.cell(row, flag_col).value).lower() == "x"
         result[item_code] = {"vendor": "abacus", "product": "ERP",
                              "item_code": item_code, "label_fr": label,
                              "label_de": None,
@@ -107,7 +131,8 @@ def abacus(source, sheet_name, flag_col, header_row, version):
                                  ("10540.", "10515.")) else "standard"),
                              "pricing_rule": {"kind": "lookup", "basis": "population",
                                               "tiers": tiers},
-                             "default_selected": str(sheet.cell(row, flag_col).value).lower() == "x",
+                             "included_components": included,
+                             "default_selected": selected,
                              "catalog_version": version,
                              "source": f"{source.name}:{sheet_name}:article {item_code}",
                              "source_sha256": workbook_hash(source)}

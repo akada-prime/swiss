@@ -30,6 +30,9 @@
 .chiffrage-summary dt{color:var(--skin-muted)}
 .chiffrage-summary dd{margin:0;font-weight:750;text-align:right}
 .chiffrage-module-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.chiffrage-module-groups{display:grid;gap:10px;margin-top:16px}
+.chiffrage-module-groups>details{padding:10px;border:1px solid var(--skin-border-soft);border-radius:8px}
+.chiffrage-module-groups>details>summary{cursor:pointer}
 .chiffrage-module-list label,.chiffrage-choice{display:flex;align-items:center;gap:9px;color:var(--skin-text);font-size:13px}
 .chiffrage-module-list small{color:var(--skin-muted)}
 .chiffrage-line{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(2,minmax(90px,1fr));align-items:end;gap:10px;margin-top:10px}

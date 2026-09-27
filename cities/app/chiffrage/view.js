@@ -115,14 +115,23 @@ function productSection() {
     type="checkbox" data-product="${key}" ${state.draft.products.includes(key) ? 'checked' : ''}>${label}</label>`).join('');
   const selected = new Set(state.draft.modules.map(item => `${item.vendor}/${item.product}/${item.item_code}`));
   const modules = availableModules().sort((a, b) => Number(b.default_selected) - Number(a.default_selected));
+  const groups = new Map();
+  for (const item of modules) {
+    const key = item.vendor === 'abacus' ? `Abacus · ${item.item_code.split('.')[0]}` :
+      `${item.vendor} · ${item.product}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  }
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.products')}</summary>
     <div class="chiffrage-grid">${choices}</div></details>
     <details class="chiffrage-section" open><summary>${t('chiffrage.modules')}</summary>
-      <div class="chiffrage-module-list">${modules.map(item => {
+      <div class="chiffrage-module-groups">${[...groups].map(([group, entries]) =>
+    `<details ${entries.some(item => selected.has(`${item.vendor}/${item.product}/${item.item_code}`)) ? 'open' : ''}>
+      <summary>${escape(group)} · ${entries.length}</summary><div class="chiffrage-module-list">${entries.map(item => {
         const id = `${item.vendor}/${item.product}/${item.item_code}`;
         return `<label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''}>
           <span><small>${escape(item.item_code)} · ${escape(item.vendor)}</small><br>${escape(item.label_fr || item.label_de || item.item_code)}</span></label>`;
-      }).join('') || '—'}</div></details>`;
+      }).join('')}</div></details>`).join('') || '—'}</div></details>`;
 }
 
 const serviceTypes = [

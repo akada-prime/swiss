@@ -43,8 +43,9 @@ ni export client ne doit être ajouté au dépôt public.
   moteur signale une tranche sans référence et accepte une valeur manuelle.
 - Les règles produits `Versorger` et `Kirche` et une divergence de grille
   Abacus sont signalées `unverified` et refusées par le calcul automatique.
-  Les références Abacus importées ne couvrent pas tous les modules de base
-  des calculateurs : la validation des quatre offres reste nécessaire.
+  Les cinq sous-totaux de licences Abacus groupées sont rattachés à leurs
+  identifiants de base, avec les composants inclus ; la validation des quatre
+  offres reste nécessaire.
 - La valeur exacte du seuil SQL/core et le tarif actuel Abacus ne sont pas
   tranchés par les sources disponibles. Ce sont des paramètres privés, pas
   des valeurs implicites dans le code.
