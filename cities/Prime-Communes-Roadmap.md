@@ -203,165 +203,31 @@ lorsqu'il apporte une information nouvelle ou réduit réellement le risque.
 
 ## 3.0 — Chiffrage · à réaliser
 
-La 3.0 introduit un nouveau cœur métier : partir d'une commune connue et produire
-rapidement un **chiffrage ERP complet, explicable et défendable**.
+La 3.0 introduit le **Chiffrage communal** : partir d'une commune connue pour
+produire rapidement une estimation structurée des coûts de projet et des coûts
+récurrents, avec des règles explicables, des ajustements humains et un résumé
+Excel.
 
-Le résultat n'est pas l'offre contractuelle finale. Il sert à établir le coût
-du projet et ses coûts récurrents afin de disposer d'une base solide pour une
-présentation au Conseil, à l'Assemblée, à une commission ou à toute autre
-instance communale. L'offre Word/PDF à signer reste hors de Prime Communes.
+Le moteur reste déterministe et vérifiable. La vraie offre contractuelle
+Word/PDF reste hors de Prime Communes.
 
-### Entrée et périmètre
+## 3.5 — Pérenniser · à réaliser
 
-- Nouvel onglet **Chiffrage**.
-- Création depuis une commune de Prime Communes ou depuis l'onglet Chiffrage.
-- Reprise automatique des données communales utiles déjà connues : OFS, canton,
-  population et contexte système lorsque disponible.
-- Usage 3.0 limité aux **communes**.
-- Le modèle de données ne doit pas empêcher une extension future à d'autres
-  entités, mais aucune interface de chiffrage PME, fondation ou GRD autonome
-  n'est prévue dans cette version.
+Cette étape regroupe les fondations nécessaires à un usage durable :
 
-### Solutions et modules
+- transfert vers l'infrastructure Prime ;
+- authentification, SSO, rôles et droits ;
+- audit, qualité et provenance ;
+- historique Delimo, fusions et mouvements de marché.
 
-- **innosolv** : sélection des modules, valeur logiciel, prestations et coûts
-  récurrents selon le moteur innosolv.
-- **Abacus** : sélection explicite des modules utiles à la commune ; règles
-  standard et règles RH distinctes lorsque nécessaire.
-- **ProConcept ERP** : périmètre volontairement simple, limité à
-  **Finances** et **Salaires**, dérivé de la base innosolv selon les règles Prime.
-- Les modules peuvent embarquer leurs propres prestations de mise en œuvre.
-
-### Prestations projet
-
-Prestations transversales séparées des modules :
-
-- reprise de données ;
-- gestion de projet ;
-- formation ;
-- aide au démarrage ;
-- autres prestations globales explicitement justifiées.
-
-Chaque prestation doit pouvoir exposer quantité, unité, prix, règle source et
-éventuel ajustement manuel.
-
-### Technique et bases de données
-
-- innosolv implique **Microsoft SQL Server**.
-- ProConcept ERP implique **Oracle**.
-- Abacus ne génère pas de coût de base de données dans le chiffrage.
-- Oracle apparaît uniquement lorsque ProConcept est sélectionné.
-- Le moteur Oracle gère notamment les utilisateurs **Full** et **Light** ainsi
-  que leurs règles de licence et de maintenance.
-- Les règles exactes de prix restent paramétrables et ne doivent pas être
-  dispersées dans le code.
-
-### Hébergement et écosystème
-
-- Hébergement oui/non et montant associé.
-- GED, eAdmin et autres prestations ou solutions tierces peuvent être intégrées
-  au chiffrage.
-- Les éléments tiers peuvent contribuer au TCO et au rôle de SPOC commercial
-  sans être artificiellement assimilés à une marge logiciel Prime.
-
-### LCM
-
-- Choix limité pour les nouveaux chiffrages à **Aucun**, **Gold** ou
-  **Platinium**.
-- Proposition de référence par blocs de population de 5'000 habitants.
-- Le prix calculé reste visible comme référence.
-- Le prix retenu peut être ajusté manuellement.
-- Les anciens Bronze, Silver, Gold+ et compléments historiques ne servent pas
-  de modèle pour les nouveaux chiffrages.
-
-### Marges et règles commerciales
-
-- Marge identifiable clairement par famille : innosolv, ProConcept, Abacus et
-  autres familles pertinentes.
-- innosolv et Abacus standard utilisent un modèle de rent annuel basé sur une
-  valeur logiciel avec PA et PV distincts.
-- **Abacus standard** : PA annuel = **19 %** de la valeur logiciel ; PV annuel =
-  **25 %**.
-- **Abacus RH, SAL et eBanking** : PA annuel = **23 %** ; PV annuel = **29 %**.
-- Les règles propres à ProConcept et aux modules RH Abacus sont modélisées
-  séparément.
-- Toute règle doit être explicable et centralisée.
-- Toute valeur commerciale importante peut être ajustée manuellement sans
-  perdre la valeur théorique d'origine.
-
-### Résumé et export
-
-Le chiffrage doit produire au minimum :
-
-- investissement initial ;
-- coûts annuels ;
-- TCO ;
-- ventilation par solution et grandes familles ;
-- marges pertinentes ;
-- principales hypothèses et ajustements manuels.
-
-Export Excel prévu avec :
-
-- un onglet **Résumé** ;
-- un onglet **Détail** avec les lignes de calcul et leurs sources.
-
-### Hors périmètre 3.0
-
-- Pas de génération de l'offre Word/PDF contractuelle finale.
-- Pas de scoring ou simulation AOP.
-- Pas de CRM complet.
-- Pas de chiffrage PME, fondation ou GRD autonome.
-- Pas d'IA nécessaire au calcul ou à la détermination du prix.
-- Pas de décision automatique à la place de l'utilisateur.
-
-Le moteur de prix 3.0 doit fonctionner sur la base de
-**données + règles + paramètres + choix utilisateur = résultat**.
-
-## Backlog transversal — non versionné
-
-Ces sujets restent utiles mais ne définissent plus une version produit tant
-qu'ils ne sont pas replanifiés explicitement :
-
-- infrastructure Prime et séparation frontend / configuration / secrets ;
-- authentification, SSO, rôles et RLS ;
-- audit trail et temporalité métier ;
-- provenance, confiance et contradictions ;
-- collecte Web industrialisée et moteur technique du Radar ;
-- historique Delimo, fusions et photographies successives ;
-- mouvements de marché et statistiques temporelles ;
-- modèle sécurisé des données financières ;
-- API interne et contrôles de qualité.
+L'objectif est de rendre le socle durable et le marché lisible dans le temps,
+sans transformer Prime Communes en base client générale.
 
 ## Brainstorming futur — Intelligence commerciale / IA · non planifié
 
-L'ancien **3.0 — Anticiper · copilote** est déplacé ici. Ces idées restent
-volontairement hors engagement de version.
-
-### Copilote communal
-
-- Recherche en langage naturel **Demande à la Suisse**.
-- Préparation automatique d'un briefing communal sourcé.
-- Jumeaux communaux et recommandations de références.
-- Simulateur d'effet domino et de scénarios de marché.
-- Détection et rédaction assistée d'histoires, avec validation humaine.
-- Simulateur de séisme : éditeur, technologie, fusion ou changement légal.
-
-### Copilote de chiffrage
-
-L'IA peut à terme accélérer fortement la préparation sans devenir la source du
-prix :
-
-- proposer les modules probablement pertinents à partir du contexte communal ;
-- préremplir certaines hypothèses ;
-- identifier les informations encore manquantes ;
-- signaler les incohérences de configuration ;
-- détecter une prestation probablement oubliée ;
-- expliquer un calcul ou un écart ;
-- préparer un chiffrage en langage naturel à partir des moteurs déterministes ;
-- comparer une configuration aux pratiques historiques Prime lorsque les
-  données sont suffisamment fiables.
-
-Principe permanent : **l'IA assiste et orchestre ; les règles calculent**.
+Explorer un copilote qui exploite les données de Prime Communes et les moteurs
+de Chiffrage pour préparer, expliquer et comparer plus vite, sans devenir la
+source du prix ni remplacer la décision humaine.
 
 ## Règles permanentes
 

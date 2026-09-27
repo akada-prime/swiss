@@ -277,8 +277,13 @@ test('roadmap marks 2.5 complete and 3.0 as Chiffrage', async () => {
   assert.match(html, /<span class="roadmap-version">2\.5<\/span>/);
   assert.match(html, /journey-see journey-done/);
   assert.match(html, /<!--i18n:page\.200-->Socle consolidé/);
+  assert.match(html, /class="intervention-scale"/);
+  assert.match(html, /intervention-level-1/);
+  assert.match(html, /intervention-level-5/);
   assert.match(html, /<span class="roadmap-version">3\.0<\/span>/);
   assert.match(html, /<!--i18n:page\.232-->Chiffrage/);
+  assert.match(html, /<span class="roadmap-version">3\.5<\/span>/);
+  assert.match(html, /<!--i18n:page\.270-->Pérenniser/);
   assert.match(html, /Brainstorming futur · non planifié/);
   assert.match(roadmapRuntime, /data-roadmap-version', '2\.5'/);
   assert.equal(pkg.version, '2.5.0');
@@ -308,11 +313,11 @@ test('Roadmap styling is canonical and absent from legacy stabilization layers',
   assert.match(css, /\.history-stage\.current\{/);
 });
 
-test('Roadmap future backlog is a real semantic item, never CSS pseudo-content', async () => {
+test('Roadmap 3.5 carries infrastructure and history as semantic product scope', async () => {
   const html = await read('index.html');
   const css = await read('app/styles/components.css');
-  assert.match(html, /<strong><!--i18n:page\.266-->Backlog transversal<\/strong>/);
-  assert.match(html, /SSO\/RLS, audit et temporalité/);
+  assert.match(html, /<strong><!--i18n:page\.271-->Infrastructure, accès & historique<\/strong>/);
+  assert.match(html, /historique Delimo, fusions et mouvements de marché/);
   assert.doesNotMatch(css, /roadmap-items::after/);
 });
 test('production DB stabilization migration never writes business rows', async () => {
