@@ -43,6 +43,7 @@ def workbook_hash(path):
 def innosolv(source, version):
     workbook = load_workbook(source, read_only=False, data_only=True, keep_vba=True)
     result = []
+    seen = {}
     dimensions = {"PL_Gemeinde": "population", "PL_Versorger": "meters",
                   "PL_Kirche": "members"}
     defaults = {"1", "27", "30", "100", "116", "125", "129", "135",
@@ -68,7 +69,7 @@ def innosolv(source, version):
             rule = ({"kind": "linear_rounded", "basis": basis, "round_to": 100,
                      "tiers": tiers} if sheet_name == "PL_Gemeinde" else
                     {"kind": "unverified", "basis": basis, "tiers": tiers})
-            result.append({"vendor": "innosolv", "product": sheet_name[3:],
+            entry = {"vendor": "innosolv", "product": sheet_name[3:],
                            "item_code": item_code,
                            "label_de": sheet.cell(row, 2).value,
                            "label_fr": label,
@@ -80,7 +81,14 @@ def innosolv(source, version):
                            (item_code in defaults or item_code == "129VD"),
                            "catalog_version": version,
                            "source": f"{source.name}:{sheet_name}:SW-ID {item_code}",
-                           "source_sha256": workbook_hash(source)})
+                           "source_sha256": workbook_hash(source)}
+            key = (entry["product"], item_code)
+            if key in seen:
+                if seen[key] != entry:
+                    raise ValueError(f"Conflicting innosolv SW-ID {key}")
+                continue
+            seen[key] = entry
+            result.append(entry)
     return result
 
 

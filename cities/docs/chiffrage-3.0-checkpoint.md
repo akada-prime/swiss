@@ -2,15 +2,16 @@
 
 Branche : `feature/chiffrage-3.0`. La version affichée reste 2.5. La migration
 `20260927200100_chiffrage_private_schema.sql` crée uniquement des tables,
-index et fonctions de stockage et de limitation de connexion. Elle n'a pas
-été appliquée à la base distante. Aucun tarif, coefficient commercial, annexe
+index et fonctions de stockage et de limitation de connexion. Elle a été
+appliquée le 27.09.2026 à la base Prime Communes après ordre explicite d'Alex.
+Les six tables ont RLS activé ; `anon` et `authenticated` n'ont aucun SELECT,
+et les deux RPC sont exécutables seulement par `service_role`. Aucun tarif,
+coefficient commercial, annexe
 ni export client ne doit être ajouté au dépôt public.
 
 ## Flux privé à valider avant une mise en service
 
-1. Faire relire et approuver la migration. L'appliquer ensuite sur le projet
-   Supabase attendu. Vérifier les droits `anon`, `authenticated` et
-   `service_role` sur les tables et RPC. Aucun accès anonyme au catalogue.
+1. Migration et droits de base vérifiés sur le projet Prime Communes.
 2. Déployer la fonction Netlify `netlify/functions/chiffrage.mjs` depuis le
    répertoire `cities` ; vérifier que `/cities/api/chiffrage` atteint vraiment
    cette fonction sur le domaine cible. Configurer côté serveur seulement
@@ -29,11 +30,12 @@ ni export client ne doit être ajouté au dépôt public.
    coefficients explicitement fournis et contrôlés ; son LCM reste vide jusqu'à
    validation commerciale. Au-dessus du seuil SQL, un PV manuel est exigé car
    le tarif par cœur n'est pas établi. Ne jamais committer ces fichiers privés.
-4. Après validation, `node scripts/chiffrage/upload-private-catalog.mjs
-   <catalogue-externe.json> <parametres-externes.json>` avec les deux variables
-   Supabase serveur crée des versions **inactives**. Vérifier le nombre de
-   lignes, sources, paramètres et conflits dans la base privée. Activer les
-   versions innosolv, Abacus et commercial dans une transaction contrôlée,
+4. Les trois versions privées sont chargées **inactives** dans la base :
+   166 lignes innosolv, 184 Abacus et un enregistrement de paramètres
+   commerciaux. Deux SW-ID innosolv identiques en double dans la feuille
+   source ont été dédupliqués à l'extraction ; toute divergence sur une même
+   clé interrompt désormais l'import. Activer les versions innosolv, Abacus
+   et commercial dans une transaction contrôlée,
    après désactivation des précédentes du même fournisseur. Une version
    tarifaire est toujours conservée si une révision la référence.
 5. Tester sur le domaine réellement déployé la connexion, la lecture refusée
@@ -83,9 +85,10 @@ ni export client ne doit être ajouté au dépôt public.
   Le fichier source et l'offre signée ne sont pas modifiés ; l'écart demande
   une revue commerciale séparée avant de considérer Fribourg comme recette
   de référence des tarifs 40 000 habitants.
-- La migration, le stockage et les fonctions Netlify n'ont pas pu être
-  vérifiés sur un environnement de test Supabase/Netlify. Le statut de
-  sécurité en production et l'acceptation métier ne sont donc pas validés.
+- Le schéma et les droits de base ont été vérifiés sur Supabase. Les versions
+  commerciales restent inactives ; ni la fonction Netlify ni le parcours
+  authentifié complet n'ont été vérifiés sur le domaine. L'acceptation métier
+  et la mise en service du calculateur restent à faire.
 
 Les tests Git utilisent uniquement des données inventées. La reconstruction
 locale de la formule PCE Haute-Sorne correspond aux quatre valeurs de contrôle
