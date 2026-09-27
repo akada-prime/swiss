@@ -268,17 +268,24 @@ test('commune identity owns the canton flag and standalone Canton is hidden', as
   assert.match(css, /\.canton-column\s*\{\s*display:none;/);
 });
 
-test('roadmap records stabilization and moves audit to technical 2.5', async () => {
+test('roadmap marks 2.5 complete and 3.0 as Chiffrage', async () => {
   const js = await read('app/prime-communes-1.1-base.js');
   const html = await read('index.html');
+  const roadmapRuntime = await read('app/prime-communes-roadmap-1.2.js');
+  const pkg = JSON.parse(await read('package.json'));
   assert.match(html, /Stabilisation 1\.1/);
   assert.match(html, /<span class="roadmap-version">2\.5<\/span>/);
-  assert.match(html, /Audit trail et temporalité/);
+  assert.match(html, /journey-see journey-done/);
+  assert.match(html, /<!--i18n:page\.200-->Socle consolidé/);
+  assert.match(html, /<span class="roadmap-version">3\.0<\/span>/);
+  assert.match(html, /<!--i18n:page\.232-->Chiffrage/);
+  assert.match(html, /Brainstorming futur · non planifié/);
+  assert.match(roadmapRuntime, /data-roadmap-version', '2\.5'/);
+  assert.equal(pkg.version, '2.5.0');
   assert.match(html, /<span class="roadmap-version">1\.5<\/span>/);
   assert.match(html, /Mettre en perspective/);
   assert.doesNotMatch(js, /items15|stage15/);
 });
-
 test('Roadmap completed stages keep their colors, checks and one-line status badges', async () => {
   const css = await read('app/styles/views/roadmap.css');
   assert.doesNotMatch(css, /journey-done\{opacity:/);
@@ -301,14 +308,13 @@ test('Roadmap styling is canonical and absent from legacy stabilization layers',
   assert.match(css, /\.history-stage\.current\{/);
 });
 
-test('Roadmap infrastructure is a real semantic item, never CSS pseudo-content', async () => {
+test('Roadmap future backlog is a real semantic item, never CSS pseudo-content', async () => {
   const html = await read('index.html');
   const css = await read('app/styles/components.css');
-  assert.match(html, /<strong><!--i18n:page\.204-->Infrastructure Prime<\/strong>/);
-  assert.match(html, /serveurs Prime/);
+  assert.match(html, /<strong><!--i18n:page\.266-->Backlog transversal<\/strong>/);
+  assert.match(html, /SSO\/RLS, audit et temporalité/);
   assert.doesNotMatch(css, /roadmap-items::after/);
 });
-
 test('production DB stabilization migration never writes business rows', async () => {
   const sql = await read('supabase/migrations/20260904190000_prime_communes_1_1_stabilization.sql');
   assert.match(sql, /DISABLE TRIGGER gemeinde_profil_audit/);
