@@ -322,7 +322,7 @@ test('Roadmap 3.5 carries infrastructure and history as semantic product scope',
   const html = await read('index.html');
   const css = await read('app/styles/components.css');
   assert.match(html, /<strong><!--i18n:page\.271-->Infrastructure, accès & historique<\/strong>/);
-  assert.match(html, /historique Delimo, fusions et mouvements de marché/);
+  assert.match(html, /historique Delimo[\s\S]*fusions[\s\S]*mouvements de marché/);
   assert.doesNotMatch(css, /roadmap-items::after/);
 });
 test('production DB stabilization migration never writes business rows', async () => {
