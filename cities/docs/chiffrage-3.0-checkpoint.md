@@ -57,10 +57,14 @@ ni export client ne doit être ajouté au dépôt public.
   calculateurs historiques. La grille importée couvre désormais les colonnes
   explicites jusqu'à 40 000 habitants dans l'offre Fribourg. Au-delà, une
   extrapolation linéaire bornée par produit est signalée comme estimation.
-  Les cellules « 30 000 » de Fribourg référencent `V8`, multiplicateur
-  « 40 000 » : elles sont conservées comme source et annotées pour arbitrage,
-  sans correction silencieuse. Le seuil SQL/core reste paramétrable et doit
-  être vérifié commercialement.
+  Dans Fribourg, la population `Gemeinde!L3` est 40 000, le sélecteur Abacus
+  `ABA_Client!X5` vaut 30 000, et les deux colonnes 30 000 et 40 000
+  utilisent le multiplicateur `V8` calculé à 40 000. Le calcul historique
+  sélectionne donc la colonne 30 000, tandis que le nouveau calcul à 40 000
+  sélectionnerait la colonne 40 000. Le catalogue conserve les deux valeurs
+  source et signale le choix historique ; il ne le reproduit pas silencieusement
+  pour un nouveau chiffrage. Il faut confirmer commercialement laquelle sert
+  d'ancre à Fribourg. Le seuil SQL/core reste paramétrable.
 - La migration, le stockage et les fonctions Netlify n'ont pas pu être
   vérifiés sur un environnement de test Supabase/Netlify. Le statut de
   sécurité en production et l'acceptation métier ne sont donc pas validés.

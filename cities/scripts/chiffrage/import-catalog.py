@@ -145,8 +145,11 @@ def abacus(source, sheet_name, flag_col, header_row, version):
                              "rate_class": ("rh_sal_ebanking" if item_code.startswith(
                                  ("10540.", "10515.")) else "standard"),
                              "pricing_rule": rule,
-                             "source_grid_note": ("Fribourg 30k Excel formula references V8 "
-                                                  "(40k multiplier): validate before activation"
+                             "source_grid_note": ("Fribourg selected 30k at X5 despite "
+                                                  "40k population; both 30k and 40k columns "
+                                                  "reference V8 (40k multiplier). Preserve "
+                                                  "historic selection separately from a "
+                                                  "new 40k quote"
                                                   if sheet_name == "ABA_Client" and
                                                   any(t["up_to"] == 30000 for t in tiers) else None),
                              "included_components": included,
