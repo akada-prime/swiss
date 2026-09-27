@@ -86,6 +86,12 @@ test('the early bootstrap applies skin and html lang before styles and the main 
   assert.match(html, /prefers-color-scheme: dark/);
   assert.match(html, /Prime Dark/);
   assert.match(html, /Helvetia Hell/);
+  assert.doesNotMatch(html, /🌑|🇨🇭|🇫🇷|🇩🇪/);
+  const settingsCss = await read('app/styles/settings.css');
+  assert.match(settingsCss, /input\[value="prime-darkweb"\] \+ span::before/);
+  assert.match(settingsCss, /input\[value="helvetia"\] \+ span::before/);
+  assert.match(settingsCss, /input\[value="fr"\] \+ span::before/);
+  assert.match(settingsCss, /input\[value="de"\] \+ span::before/);
   assert.equal((html.match(/name="language"/g) || []).length, 2);
   const settings = await read('app/core/settings.js');
   assert.match(settings, /setPreference\(input.name, input.value\)/);
