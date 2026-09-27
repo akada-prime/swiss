@@ -133,11 +133,19 @@ export function calculateSql(input, rule) {
   const base = finite(rule.user_base, 'SQL user base');
   const userPrice = finite(rule.price_per_user, 'SQL price per user');
   const cores = finite(input.cores ?? rule.default_cores, 'SQL cores');
-  const pricePerCore = finite(rule.price_per_core, 'SQL price per core');
+  const pricePerCore = rule.price_per_core == null ? null :
+    finite(rule.price_per_core, 'SQL price per core');
   const useCores = input.population >= threshold;
+  if (useCores && pricePerCore == null && input.override == null)
+    throw new Error('SQL core price unconfirmed: enter an investment PV');
+  const calculated = useCores && pricePerCore == null ? null :
+    useCores ? cores * pricePerCore : base + users * userPrice;
   return { usersSuggested, users, cores, regime: useCores ? 'core' : 'user',
-    amount: effective(useCores ? cores * pricePerCore : base + users * userPrice,
-      input.override), explanation: { threshold, base, userPrice, cores, pricePerCore } };
+    amount: calculated == null ? { calculated_value: null,
+      override_value: finite(input.override, 'SQL investment PV'),
+      effective_value: finite(input.override, 'SQL investment PV'), difference: null } :
+      effective(calculated, input.override),
+    explanation: { threshold, base, userPrice, cores, pricePerCore } };
 }
 
 export function calculateOracle(input, rule) {

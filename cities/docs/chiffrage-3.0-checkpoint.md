@@ -22,8 +22,13 @@ ni export client ne doit être ajouté au dépôt public.
    `scripts/chiffrage/import-catalog.py` extrait des produits de trois Excel.
    Compléter séparément un JSON de paramètres privés/versionnés en suivant
    l'entrée exigée par `upload-private-catalog.mjs` et les règles du prompt.
-   Les sources Abacus Avenches/Fribourg sont des références historiques :
-   ne pas les activer comme tarif Abacus courant sans arbitrage métier.
+   Les grilles Abacus Avenches/Fribourg sont retenues par Alex le 27.09.2026
+   comme base de calcul des nouveaux devis, sous leur version de source
+   historique, sans les présenter comme tarif éditeur officiel 2027.
+   Le fichier privé `private-parameters-prevalidation.json` rassemble les
+   coefficients explicitement fournis et contrôlés ; son LCM reste vide jusqu'à
+   validation commerciale. Au-dessus du seuil SQL, un PV manuel est exigé car
+   le tarif par cœur n'est pas établi. Ne jamais committer ces fichiers privés.
 4. Après validation, `node scripts/chiffrage/upload-private-catalog.mjs
    <catalogue-externe.json> <parametres-externes.json>` avec les deux variables
    Supabase serveur crée des versions **inactives**. Vérifier le nombre de
@@ -63,8 +68,11 @@ ni export client ne doit être ajouté au dépôt public.
   sélectionne donc la colonne 30 000, tandis que le nouveau calcul à 40 000
   sélectionnerait la colonne 40 000. Le catalogue conserve les deux valeurs
   source et signale le choix historique ; il ne le reproduit pas silencieusement
-  pour un nouveau chiffrage. Il faut confirmer commercialement laquelle sert
-  d'ancre à Fribourg. Le seuil SQL/core reste paramétrable.
+  pour un nouveau chiffrage. Alex a confirmé le 27.09.2026 que le calculateur
+  historique Fribourg était cohérent avec sa sélection à 30 000 habitants ;
+  cette validation du palier effectivement sélectionné ne transforme pas
+  l'offre signée en recette pour une commune à 40 000 habitants. Le seuil
+  SQL/core reste paramétrable.
 
   Vérification de l'offre Fribourg : l'en-tête `ABA_Client!V5` du palier 40 000
   est du texte, ce qui fait échouer `MATCH` lorsqu'on ne change que le sélecteur
@@ -82,3 +90,9 @@ ni export client ne doit être ajouté au dépôt public.
 Les tests Git utilisent uniquement des données inventées. La reconstruction
 locale de la formule PCE Haute-Sorne correspond aux quatre valeurs de contrôle
 du calculateur, mais ce résultat isolé ne valide pas toute l'offre.
+
+La branche inclut `public/_redirects` afin que `/cities/api/chiffrage` soit
+dirigé vers la fonction Netlify sur le domaine du site. Ce routage, les
+variables privées et la migration restent à vérifier ensemble avant une mise
+en service. L'importeur accepte une liste LCM vide : les deux options restent
+manuelles tant que la grille candidate n'a pas été validée.

@@ -582,6 +582,7 @@ export default {
   "chiffrage.amount": "Montant CHF",
   "chiffrage.sqlUsers": "Utilisateurs SQL retenus",
   "chiffrage.sqlCores": "Cœurs SQL retenus",
+  "chiffrage.sqlCoreUnconfirmed": "Tarif SQL par cœur non confirmé : saisis le PV d’investissement retenu pour calculer cette variante.",
   "chiffrage.sqlInvestmentPv": "SQL investissement PV retenu",
   "chiffrage.sqlInvestmentPa": "SQL investissement PA",
   "chiffrage.sqlAnnualPv": "SQL annuel PV",

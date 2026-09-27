@@ -582,6 +582,7 @@ export default {
   "chiffrage.amount": "Betrag CHF",
   "chiffrage.sqlUsers": "Gewählte SQL-Benutzer",
   "chiffrage.sqlCores": "Gewählte SQL-Kerne",
+  "chiffrage.sqlCoreUnconfirmed": "SQL-Preis pro Kern unbestätigt: Für diese Variante den gewählten Investitions-VP eingeben.",
   "chiffrage.sqlInvestmentPv": "SQL-Investition VP (gewählt)",
   "chiffrage.sqlInvestmentPa": "SQL-Investition EP",
   "chiffrage.sqlAnnualPv": "SQL jährlich VP",

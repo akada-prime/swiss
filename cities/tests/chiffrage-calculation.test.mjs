@@ -58,6 +58,12 @@ test('SQL uses editable suggestion and configurable threshold', () => {
     user_base: 100, price_per_user: 20, default_cores: 2, price_per_core: 200 };
   assert.equal(calculateSql({ population: 5000, users: 9 }, rule).amount.effective_value, 280);
   assert.equal(calculateSql({ population: 6000 }, rule).amount.effective_value, 400);
+  assert.throws(() => calculateSql({ population: 6000 }, {
+    ...rule, price_per_core: null }), /price unconfirmed/);
+  const manual = calculateSql({ population: 6000, override: 12500 },
+    { ...rule, price_per_core: null });
+  assert.equal(manual.amount.calculated_value, null);
+  assert.equal(manual.amount.effective_value, 12500);
 });
 
 test('year one has no recurring charge; publisher PA is halved only in year two', () => {

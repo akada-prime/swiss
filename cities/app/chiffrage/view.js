@@ -192,6 +192,9 @@ function technicalSection() {
     state.catalog.parameters.sql.suggestion); } catch { /* Missing private rule. */ }
   return `<details class="chiffrage-section"><summary>${t('chiffrage.technical')}</summary>
     ${hasSql ? `<p>${t('chiffrage.sqlSuggested', { count: suggestion ?? '—' })}</p>
+      ${state.draft.dimensions.population >= state.catalog.parameters.sql.core_from_population &&
+        state.catalog.parameters.sql.price_per_core == null ?
+        `<p class="chiffrage-warning">${t('chiffrage.sqlCoreUnconfirmed')}</p>` : ''}
       <div class="chiffrage-grid">${field('sql.users', state.draft.sql.users ?? suggestion,
         t('chiffrage.sqlUsers'))}
       ${field('sql.cores', state.draft.sql.cores, t('chiffrage.sqlCores'))}
