@@ -147,9 +147,10 @@ def abacus(source, sheet_name, flag_col, header_row, version):
                              "pricing_rule": rule,
                              "source_grid_note": ("Fribourg selected 30k at X5 despite "
                                                   "40k population; both 30k and 40k columns "
-                                                  "reference V8 (40k multiplier). Preserve "
-                                                  "historic selection separately from a "
-                                                  "new 40k quote"
+                                                  "reference V8 (40k multiplier). V5 is "
+                                                  "text, so numeric 40k lookup fails in "
+                                                  "the workbook. Preserve the historical "
+                                                  "offer separately from a new 40k quote"
                                                   if sheet_name == "ABA_Client" and
                                                   any(t["up_to"] == 30000 for t in tiers) else None),
                              "included_components": included,

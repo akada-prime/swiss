@@ -65,6 +65,16 @@ ni export client ne doit être ajouté au dépôt public.
   source et signale le choix historique ; il ne le reproduit pas silencieusement
   pour un nouveau chiffrage. Il faut confirmer commercialement laquelle sert
   d'ancre à Fribourg. Le seuil SQL/core reste paramétrable.
+
+  Vérification de l'offre Fribourg : l'en-tête `ABA_Client!V5` du palier 40 000
+  est du texte, ce qui fait échouer `MATCH` lorsqu'on ne change que le sélecteur
+  numérique `X5`. Dans une copie isolée où `V5` et `X5` sont numériques,
+  `ABA_Client!Z5` et son PA/PV annuel augmentent, tandis que `Modules!P170`
+  demeure inchangé parce que ses lignes d'entrée sont des valeurs figées.
+  La ligne annuelle du PDF final correspond à `Modules!P170` avant correction.
+  Le fichier source et l'offre signée ne sont pas modifiés ; l'écart demande
+  une revue commerciale séparée avant de considérer Fribourg comme recette
+  de référence des tarifs 40 000 habitants.
 - La migration, le stockage et les fonctions Netlify n'ont pas pu être
   vérifiés sur un environnement de test Supabase/Netlify. Le statut de
   sécurité en production et l'acceptation métier ne sont donc pas validés.
