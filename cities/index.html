@@ -12,7 +12,7 @@
   <script>
     (() => {
       const requestedView = new URLSearchParams(window.location.search).get('view');
-      const initialView = ['communes', 'map', 'stats', 'news', 'stories', 'roadmap'].includes(requestedView) ? requestedView : 'communes';
+      const initialView = ['communes', 'map', 'stats', 'news', 'stories', 'roadmap', 'chiffrage'].includes(requestedView) ? requestedView : 'communes';
       document.documentElement.dataset.initialView = initialView;
       // Apply validated local preferences before fetching CSS or rendering body.
       const preference = (key, accepted, fallback) => {
@@ -35,7 +35,8 @@ html[data-initial-view="map"] #mapView,
 html[data-initial-view="stats"] #statsView,
 html[data-initial-view="news"] #newsView,
 html[data-initial-view="stories"] #storiesView,
-html[data-initial-view="roadmap"] #roadmapView{display:block!important}
+html[data-initial-view="roadmap"] #roadmapView,
+html[data-initial-view="chiffrage"] #chiffrageView{display:block!important}
 th.sortable{cursor:pointer;user-select:none}
 th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
 /* Keep the portrait settings control usable while nested CSS imports expire from cache. */
@@ -57,6 +58,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       <button class="view-tab news-nav-tab" data-view="news">Radar!<span class="news-nav-badge"><!--i18n:page.009-->SOBRE</span></button>
       <button class="view-tab" data-view="stories"><!--i18n:page.010-->Histoires</button>
       <button class="view-tab" data-view="roadmap"><!--i18n:page.011-->Roadmap</button>
+      <button class="view-tab" data-view="chiffrage"><!--i18n:chiffrage.nav-->Chiffrage</button>
     </nav>
     <div class="header-actions"><button class="sync-state" id="syncReload" title="Recharger depuis Supabase" hidden><span></span><b id="syncText" aria-live="polite"><!--i18n:page.012-->Connexion à la base…</b></button>
     <button class="settings-trigger" id="settingsTrigger" type="button" aria-haspopup="dialog" aria-controls="settingsPanel" aria-expanded="false" aria-label="Paramètres"><span aria-hidden="true">⚙</span><span><!--i18n:page.001-->Paramètres</span></button></div>
@@ -325,6 +327,9 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       </div>
       <p class="roadmap-energy-note"><!--i18n:page.242-->La roadmap distingue les versions engagées du brainstorming futur : une idée n’est pas une promesse de version.</p>
     </section>
+  </section>
+  <section id="chiffrageView" class="view chiffrage-view" hidden aria-label="Chiffrage">
+    <div id="chiffrageRoot" aria-live="polite"></div>
   </section>
   <footer class="site-footer" aria-label="Informations légales et techniques">
     <div class="footer-meta">

@@ -11,3 +11,4 @@ import './prime-communes-communes-1.2.js?v=20260926-preferences-4';
 import './prime-communes-news-2.0.js?v=20260926-preferences-2';
 import './prime-communes-stories-2.0.js?v=20260926-preferences-2';
 import './prime-communes-roadmap-1.2.js';
+import './chiffrage/view.js';

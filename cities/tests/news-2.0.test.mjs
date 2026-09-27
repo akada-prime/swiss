@@ -45,7 +45,7 @@ test('mobile header, footer evolution and return-to-top stay usable before rebui
   assert.match(globals, /\.back-to-top\.is-visible\{/);
   assert.match(bridge, /window\.scrollY > threshold/);
   assert.match(bridge, /window\.scrollTo\(\{ top: 0, behavior:/);
-  assert.match(mobile, /grid-template-columns:1\.22fr \.72fr \.72fr \.92fr 1\.02fr 1fr/);
+  assert.match(mobile, /grid-template-columns:1\.15fr \.7fr \.7fr \.85fr \.95fr \.95fr 1fr/);
   assert.doesNotMatch(layer, /@import/);
   assert.match(styles, /responsive\.css/);
   assert.match(styles, /components\.css/);
