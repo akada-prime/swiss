@@ -1,5 +1,6 @@
 import { createHmac, createHash, randomUUID, timingSafeEqual } from 'node:crypto';
-import { calculateQuote } from '../../app/chiffrage/calculate.js';
+import { Buffer } from 'node:buffer';
+import { calculateQuote } from '../../../app/chiffrage/calculate.js';
 import { exportQuoteXlsx } from './chiffrage-xlsx.mjs';
 
 const json = (data, status = 200, headers = {}) => new Response(JSON.stringify(data), {
@@ -7,25 +8,24 @@ const json = (data, status = 200, headers = {}) => new Response(JSON.stringify(d
     'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers }
 });
 const fail = (message, status) => json({ error: message }, status);
-const env = name => process.env[name];
-const configured = () => ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY',
-  'CHIFFRAGE_ACCESS_CODE', 'CHIFFRAGE_SESSION_SECRET'].every(env);
-const cookieName = 'prime_chiffrage_session';
+const env = name => Deno.env.get(name);
+const secret = () => env('SUPABASE_SERVICE_ROLE_KEY');
+const configured = () => ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY'].every(env);
 const sessionDurationMs = 12 * 60 * 60 * 1000;
 
 export function signSession(now = Date.now()) {
   const payload = Buffer.from(JSON.stringify({ exp: now + sessionDurationMs,
     nonce: randomUUID() })).toString('base64url');
-  const signature = createHmac('sha256', env('CHIFFRAGE_SESSION_SECRET'))
+  const signature = createHmac('sha256', secret())
     .update(payload).digest('base64url');
   return `${payload}.${signature}`;
 }
 
 export function verifySession(value, now = Date.now()) {
-  if (!value || !env('CHIFFRAGE_SESSION_SECRET')) return false;
+  if (!value || !secret()) return false;
   const [payload, signature, extra] = value.split('.');
   if (!payload || !signature || extra) return false;
-  const expected = createHmac('sha256', env('CHIFFRAGE_SESSION_SECRET'))
+  const expected = createHmac('sha256', secret())
     .update(payload).digest();
   let supplied;
   try { supplied = Buffer.from(signature, 'base64url'); }
@@ -35,20 +35,14 @@ export function verifySession(value, now = Date.now()) {
   catch { return false; }
 }
 
-function sessionCookie(request) {
-  const value = request.headers.get('cookie')?.split(';')
-    .map(part => part.trim()).find(part => part.startsWith(`${cookieName}=`));
-  return value ? value.slice(cookieName.length + 1) : '';
-}
-
-function cookie(value, maxAge) {
-  return `${cookieName}=${value}; HttpOnly; Secure; SameSite=Strict; Path=/cities/api/chiffrage; Max-Age=${maxAge}`;
-}
+const sessionToken = request => request.headers.get('authorization')
+  ?.match(/^Bearer ([A-Za-z0-9_.-]+)$/)?.[1] ?? '';
 
 function sameOrigin(request) {
   const origin = request.headers.get('origin');
   if (!origin) return false;
-  const expected = env('URL') ? new URL(env('URL')).origin : new URL(request.url).origin;
+  const expected = env('CHIFFRAGE_ALLOWED_ORIGIN') ??
+    'https://akada-prime.github.io';
   return origin === expected;
 }
 
@@ -83,17 +77,11 @@ async function db(path, { method = 'GET', payload, query = {}, single = false } 
 }
 
 function ipHash(request) {
-  // Netlify supplies this header; hash it before persistence. No plaintext IP
-  // or access code is stored in the catalog or quote tables.
+  // Hash the gateway's client IP before persistence. No plaintext IP or access
+  // code is stored in the catalog or quote tables.
   const ip = request.headers.get('x-nf-client-connection-ip') ??
     request.headers.get('x-forwarded-for')?.split(',')[0] ?? 'unknown';
-  return createHash('sha256').update(`${env('CHIFFRAGE_SESSION_SECRET')}:${ip}`).digest('hex');
-}
-
-function validCode(value) {
-  const expected = createHash('sha256').update(String(env('CHIFFRAGE_ACCESS_CODE'))).digest();
-  const supplied = createHash('sha256').update(String(value ?? '')).digest();
-  return timingSafeEqual(supplied, expected);
+  return createHash('sha256').update(`${secret()}:${ip}`).digest('hex');
 }
 
 async function loadCatalog(versions) {
@@ -162,15 +150,14 @@ export default async function handler(request) {
   try {
     if (action === 'login' && request.method === 'POST') {
       const { code } = await body(request);
-      const allowed = await db('rpc/chiffrage_record_login', { method: 'POST',
-        payload: { p_ip_hash: ipHash(request), p_valid: validCode(code) } });
+      const allowed = await db('rpc/chiffrage_record_login_with_key', {
+        method: 'POST', payload: { p_ip_hash: ipHash(request), p_key: code } });
       if (!allowed) return fail('Access denied', 401);
-      return json({ authenticated: true }, 200,
-        { 'Set-Cookie': cookie(signSession(), sessionDurationMs / 1000) });
+      return json({ authenticated: true, session: signSession() });
     }
-    if (!verifySession(sessionCookie(request))) return fail('Authentication required', 401);
+    if (!verifySession(sessionToken(request))) return fail('Authentication required', 401);
     if (action === 'logout' && request.method === 'POST')
-      return json({ authenticated: false }, 200, { 'Set-Cookie': cookie('', 0) });
+      return json({ authenticated: false });
     if (action === 'status' && request.method === 'GET')
       return json({ authenticated: true });
     if (action === 'catalog' && request.method === 'GET') {
@@ -217,5 +204,3 @@ export default async function handler(request) {
       error.status ?? (error.message.startsWith('Storage operation') ? 503 : 400));
   }
 }
-
-export const config = { path: '/cities/api/chiffrage' };

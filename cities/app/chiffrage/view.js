@@ -5,10 +5,12 @@ import { calculateQuote, suggestedSqlUsers } from './calculate.js';
 const root = document.getElementById('chiffrageRoot');
 const runtime = window.PrimeCommunesRuntime;
 const escape = runtime.escapeHtml;
-const endpoint = '/cities/api/chiffrage';
+const endpoint = `${window.SUPABASE_URL}/functions/v1/chiffrage`;
+const sessionKey = 'prime-chiffrage-session';
 const state = { authenticated: false, loaded: false, catalog: null, versions: {},
   quotes: [], quote: null, draft: null, revision: null, title: '', archived: false,
-  showArchived: false, mode: 'list', message: '', error: false, loading: null };
+  showArchived: false, mode: 'list', message: '', error: false, loading: null,
+  session: sessionStorage.getItem(sessionKey) };
 const money = value => value == null ? '—' : `${number(value, {
   minimumFractionDigits: 0, maximumFractionDigits: 0 })} CHF`;
 const field = (key, value, label, { min = 0, step = 1 } = {}) =>
@@ -21,8 +23,8 @@ async function api(action, payload, params = {}) {
   url.searchParams.set('action', action);
   for (const [key, value] of Object.entries(params)) url.searchParams.set(key, value);
   const response = await fetch(url, { method: payload === undefined ? 'GET' : 'POST',
-    credentials: 'same-origin', headers: payload === undefined ? {} : {
-      'Content-Type': 'application/json' },
+    headers: { ...(state.session ? { Authorization: `Bearer ${state.session}` } : {}),
+      ...(payload === undefined ? {} : { 'Content-Type': 'application/json' }) },
     body: payload === undefined ? undefined : JSON.stringify(payload), cache: 'no-store' });
   const result = await response.json().catch(() => ({}));
   if (!response.ok) {
@@ -393,7 +395,8 @@ root.addEventListener('submit', async event => {
   event.preventDefault();
   if (event.target.id === 'chiffrageLogin') {
     const button = event.target.querySelector('button'); button.disabled = true;
-    try { await api('login', { code: event.target.elements.code.value });
+    try { const login = await api('login', { code: event.target.elements.code.value });
+      state.session = login.session; sessionStorage.setItem(sessionKey, login.session);
       state.loaded = false; state.message = ''; await load(); }
     catch { notice(t('chiffrage.denied'), true); button.disabled = false; }
   } else if (event.target.id === 'chiffrageChoose') {
@@ -452,7 +455,8 @@ root.addEventListener('click', async event => {
   button.disabled = true;
   try {
     if (action === 'logout') {
-      await api('logout', {}); state.loaded = false; state.authenticated = false;
+      await api('logout', {}); state.session = null; sessionStorage.removeItem(sessionKey);
+      state.loaded = false; state.authenticated = false;
       state.catalog = null; state.quotes = []; state.draft = null;
       state.message = ''; renderLogin(); return;
     }
@@ -496,7 +500,7 @@ root.addEventListener('click', async event => {
     }
     if (action === 'export') {
       const response = await fetch(`${endpoint}?action=export&id=${encodeURIComponent(state.quote)}`,
-        { credentials: 'same-origin', cache: 'no-store' });
+        { headers: { Authorization: `Bearer ${state.session}` }, cache: 'no-store' });
       if (!response.ok) throw new Error(t('chiffrage.error'));
       const link = document.createElement('a');
       link.href = URL.createObjectURL(await response.blob());

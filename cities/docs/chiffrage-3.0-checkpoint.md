@@ -12,13 +12,21 @@ ni export client ne doit être ajouté au dépôt public.
 ## Flux privé à valider avant une mise en service
 
 1. Migration et droits de base vérifiés sur le projet Prime Communes.
-2. Déployer la fonction Netlify `netlify/functions/chiffrage.mjs` depuis le
-   répertoire `cities` ; vérifier que `/cities/api/chiffrage` atteint vraiment
-   cette fonction sur le domaine cible. Configurer côté serveur seulement
-   `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CHIFFRAGE_ACCESS_CODE` (la
-   même valeur que l'éditeur communal) et `CHIFFRAGE_SESSION_SECRET` (long,
-   aléatoire). Ne pas placer leurs valeurs dans le dépôt ni les variables
-   publiques Vite. Vérifier le domaine `URL` utilisé par le contrôle d'origine.
+2. Le site est publié sur GitHub Pages à l'adresse
+   `https://akada-prime.github.io/swiss/cities/` : il ne possède pas de
+   serveur Netlify. Déployer la fonction Supabase
+   `supabase/functions/chiffrage/index.ts` avec `verify_jwt=false` car elle
+   applique sa propre authentification par le code existant de l'éditeur
+   communal, vérifié uniquement dans la base par un RPC réservé au serveur.
+   `SUPABASE_SERVICE_ROLE_KEY` et `SUPABASE_URL` restent dans l'environnement
+   Edge ; ne pas les exposer au site. La fonction n'accepte que l'origine
+   `https://akada-prime.github.io`, sauf configuration serveur explicite.
+   La fonction Edge `chiffrage` est déployée indépendamment du site le
+   27.09.2026 (`verify_jwt=false`, authentification par code contrôlée dans
+   la fonction et la base). Vérifications réelles : origine autorisée et sans
+   session → HTTP 401 ; prévol CORS → 204 ; origine tierce → 403. Il reste à
+   tester une vraie connexion, l'enregistrement et l'export depuis l'interface
+   après intégration validée à `main`.
 3. Garder les 9 annexes et les JSON privés hors de Git. Le script
    `scripts/chiffrage/import-catalog.py` extrait des produits de trois Excel.
    Compléter séparément un JSON de paramètres privés/versionnés en suivant
@@ -86,16 +94,17 @@ ni export client ne doit être ajouté au dépôt public.
   une revue commerciale séparée avant de considérer Fribourg comme recette
   de référence des tarifs 40 000 habitants.
 - Le schéma et les droits de base ont été vérifiés sur Supabase. Les versions
-  commerciales restent inactives ; ni la fonction Netlify ni le parcours
-  authentifié complet n'ont été vérifiés sur le domaine. L'acceptation métier
-  et la mise en service du calculateur restent à faire.
+  commerciales restent inactives ; la fonction Edge répond et refuse les
+  accès non autorisés, mais le parcours authentifié et le devis complet n'ont
+  pas été vérifiés sur le site GitHub Pages. L'acceptation métier et la mise
+  en service du calculateur restent à faire.
 
 Les tests Git utilisent uniquement des données inventées. La reconstruction
 locale de la formule PCE Haute-Sorne correspond aux quatre valeurs de contrôle
 du calculateur, mais ce résultat isolé ne valide pas toute l'offre.
 
-La branche inclut `public/_redirects` afin que `/cities/api/chiffrage` soit
-dirigé vers la fonction Netlify sur le domaine du site. Ce routage, les
-variables privées et la migration restent à vérifier ensemble avant une mise
-en service. L'importeur accepte une liste LCM vide : les deux options restent
+La migration secondaire `20260927222500_chiffrage_existing_editor_key.sql`
+permet de contrôler le code existant côté base, sans en créer un autre. Elle
+est appliquée ; la fonction n'est exécutable que par `service_role` et refuse
+`anon` / `authenticated`. L'importeur accepte une liste LCM vide : les deux options restent
 manuelles tant que la grille candidate n'a pas été validée.

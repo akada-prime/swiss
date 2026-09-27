@@ -1,4 +1,5 @@
 import { deflateRawSync } from 'node:zlib';
+import { Buffer } from 'node:buffer';
 
 // Standalone XLSX writer for the authenticated function. It never needs a
 // browser bundle, a static price file, or a deployment-time spreadsheet.
