@@ -27,7 +27,7 @@ test('Radar and Histoires are first-class deep-linked views', async () => {
   assert.doesNotMatch(html, /news-nav-dot/);
   assert.match(html, /La source publique primaire reste la référence/);
   assert.ok(html.indexOf('news-beta-note') < html.indexOf('news-intro'));
-  assert.match(html, /Prime Communes · version 2\.0\.5/);
+  assert.match(html, /Prime Communes · version 2\.5/);
 });
 
 test('mobile header, footer evolution and return-to-top stay usable before rebuild', async () => {
@@ -38,7 +38,7 @@ test('mobile header, footer evolution and return-to-top stay usable before rebui
   const layer = await read('app/styles/components.css');
   const styles = await read('app/styles/main.css');
 
-  assert.match(html, /Prime Communes · version 2\.0\.5 · #460/);
+  assert.match(html, /Prime Communes · version 2\.5 · #460/);
   assert.doesNotMatch(bridge, /footerVersion\.textContent/);
   assert.match(html, /id="backToTop"/);
   assert.match(globals, /\.back-to-top\{/);
@@ -206,26 +206,19 @@ test('Radar is functional without a new database write path', async () => {
   assert.doesNotMatch(runtime, /SUPABASE|rpc\//i);
 });
 
-test('roadmap preserves old phases while completing NEWS 2.0', async () => {
+test('roadmap keeps completed history and exposes 2.5 done, 3.0 Chiffrage and future AI', async () => {
   const html = await read('index.html');
   const roadmap = await read('Prime-Communes-Roadmap.md');
-  for (const item of [
-    'Qualification légère et forecast',
-    'Authentification · SSO · rôles · RLS',
-    'Audit trail et temporalité métier',
-    'Données financières sécurisées',
-    'Historique Delimo',
-    'Mouvements de marché',
-    'Carte et statistiques temporelles',
-    'Collecte et intelligence Web'
-  ]) assert.match(roadmap, new RegExp(item.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-  assert.match(roadmap, /2\.0 — NEWS! · Faire parler les communes · terminé/);
-  assert.match(roadmap, /2\.0\.5 — Portrait communal · livré/);
+  assert.match(roadmap, /## 2\.0 — Radar! · Faire parler les communes · terminé/);
+  assert.match(roadmap, /## 2\.5 — Socle consolidé · terminé/);
+  assert.match(roadmap, /## 3\.0 — Chiffrage · à réaliser/);
+  assert.match(roadmap, /## Brainstorming futur — Intelligence commerciale \/ IA · non planifié/);
   assert.match(html, /journey-understand journey-done/);
-  assert.match(html, /history-stage completed-20/);
+  assert.match(html, /journey-see journey-done/);
+  assert.match(html, /<span>3\.0<\/span><strong><!--i18n:page\.149-->Chiffrer<\/strong>/);
+  assert.match(html, /roadmap-future-stage/);
   assert.match(html, /<span class="roadmap-done"><!--i18n:page\.153-->Terminé ✓<\/span>/);
 });
-
 test('commune refresh confirms fast updates on desktop and Natel', async () => {
   const runtime = await read('app/core/runtime.js');
   const data = await read('app/prime-communes-data-1.5.js');
