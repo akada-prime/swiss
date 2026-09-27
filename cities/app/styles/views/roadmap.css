@@ -69,6 +69,7 @@
 .map-stage .roadmap-version{border-color:rgba(126,91,255,.24);color:#a18bff;background:rgba(100,74,207,.11)}
 .ai-stage:before{background:linear-gradient(90deg,#ff5a32,#8d55ff)}
 .ai-stage .roadmap-version{border-color:rgba(255,90,50,.24);color:#ff8062;background:rgba(179,61,42,.11)}
+.roadmap-future-stage{grid-column:1/-1}
 
 .roadmap-done{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;margin-left:auto;padding:7px 10px;border:1px solid rgba(72,202,151,.24);border-radius:999px;color:#7bddb7;background:rgba(34,145,104,.11);font-size:9px;font-weight:800;line-height:1;letter-spacing:.11em;text-transform:uppercase;white-space:nowrap}
 .completed-items{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
