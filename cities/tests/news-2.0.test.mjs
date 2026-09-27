@@ -212,10 +212,12 @@ test('roadmap keeps completed history and exposes 2.5 done, 3.0 Chiffrage and fu
   assert.match(roadmap, /## 2\.0 — Radar! · Faire parler les communes · terminé/);
   assert.match(roadmap, /## 2\.5 — Socle consolidé · terminé/);
   assert.match(roadmap, /## 3\.0 — Chiffrage · à réaliser/);
+  assert.match(roadmap, /## 3\.5 — Pérenniser · à réaliser/);
   assert.match(roadmap, /## Brainstorming futur — Intelligence commerciale \/ IA · non planifié/);
   assert.match(html, /journey-understand journey-done/);
   assert.match(html, /journey-see journey-done/);
   assert.match(html, /<span>3\.0<\/span><strong><!--i18n:page\.149-->Chiffrer<\/strong>/);
+  assert.match(html, /<span>3\.5<\/span><strong><!--i18n:page\.270-->Pérenniser<\/strong>/);
   assert.match(html, /roadmap-future-stage/);
   assert.match(html, /<span class="roadmap-done"><!--i18n:page\.153-->Terminé ✓<\/span>/);
 });
