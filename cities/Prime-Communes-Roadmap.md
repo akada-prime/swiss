@@ -1,17 +1,18 @@
 # Prime Communes · Roadmap validée
 
-Validation produit : 7 septembre 2026.
+Validation produit : 27 septembre 2026.
 
 ## Vision
 
-Prime Communes passe d'une base qui sait **qui utilise quoi** à un observatoire
-qui explique **ce qui bouge, pourquoi cela compte et ce que l'histoire d'une
-commune raconte de notre métier**.
+Prime Communes évolue d'un référentiel qui sait **qui utilise quoi** vers un outil
+qui permet de **comprendre le marché communal, qualifier les signaux utiles et
+transformer une commune en chiffrage ERP défendable**.
 
-Le produit ne devient ni un CRM complet, ni une GED. Les actions commerciales
-restent légères et les documents restent dans leurs systèmes d'origine ; Prime
-Communes conserve uniquement les faits, leurs liens, leur provenance et leur
-interprétation.
+Le produit ne devient ni un CRM complet, ni une GED, ni un générateur d'offre
+contractuelle. Les documents restent dans leurs systèmes d'origine ; Prime
+Communes conserve les faits, leurs liens, leur provenance et les éléments
+nécessaires au chiffrage. La décision commerciale reste humaine et les calculs
+financiers doivent rester déterministes, explicables et auditables.
 
 ## 1.0 — Rassembler · terminé
 
@@ -49,11 +50,11 @@ La 1.1 décrit le socle de données stabilisé. Elle n'historise pas encore les 
 Cette étape fonctionnelle est distincte de l'ancienne phase technique 1.5, dont
 tous les éléments restent conservés en 2.5.
 
-## 2.0 — NEWS! · Faire parler les communes · terminé
+## 2.0 — Radar! · Faire parler les communes · terminé
 
 ### 2.0.1 — Radar communal · première version livrée, enrichissement actif
 
-- Nouvel onglet **NEWS!**.
+- Onglet **Radar!**.
 - Flux de signaux forts, éléments à surveiller et informations de marché.
 - Recherche par commune, canton, sujet ou source.
 - Filtres par niveau de signal.
@@ -78,7 +79,7 @@ et Prime — constitue le modèle éditorial de référence.
 
 Première livraison :
 
-- récit affiché directement dans **NEWS!**, sous le Radar communal ;
+- récit affiché directement dans **Radar!**, sous le Radar communal ;
 - chronologie fondée sur les sources officielles du Site et Musée romains
   d'Avenches et d'Agroscope ;
 - fait Prime, sources publiques et lecture d'Axel visuellement séparés ;
@@ -145,37 +146,54 @@ Estimation historique conservée : 14–28 h · 35–80 crédits.
 - « Pourquoi je regarde cette commune ? ».
 - Histoires et statistiques Prime prêtes à raconter.
 
-## 2.5 — Comprendre le temps · fondations techniques
+## 2.5 — Socle consolidé · terminé
 
-### Préférences utilisateur · Apparence · Langues
+La 2.5 clôt la phase de reconstruction et de maturation du produit actuel.
+Elle constitue le socle stable sur lequel sera construite la 3.0.
 
-Première livraison frontend : Paramètres dans le header ; deux apparences
-(Prime Dark et Helvetia Hell) complétées par un mode Automatique qui suit le
-thème clair/sombre du système ; français et allemand suisse ; préférences
-conservées localement dans le navigateur. Le chargement applique ces choix avant
-l'affichage principal. Cette livraison ne crée ni compte ni droit d'accès.
+### Rebuild et stabilité
 
-Après l'authentification, les profils et les droits, les préférences pourront
-être synchronisées avec chaque profil, selon la priorité profil utilisateur >
-navigateur > valeur par défaut. La synchronisation serveur, les utilisateurs,
-le SSO et la RLS restent à faire ; Paramètres personnels et Administration
-réservée aux rôles autorisés restent deux surfaces distinctes.
+- Rebuild structurel intégré et stabilisé.
+- Fondations CSS, composants, vues et responsive consolidés.
+- Navigation et état applicatif fiabilisés après déploiement.
+- Carte WebGL2 et six vues principales revalidées.
+- Correction du bug runtime React post-déploiement.
+- Contrat de non-régression conservé pour ordinateur et Natel.
 
-### Mode d'intervention adaptative · sobriété de développement
+### Recherche, navigation et édition
 
-Prime Communes applique une validation proportionnée au risque de chaque
-modification : niveaux 1 à 5, du remplacement déterministe d'un asset au
-changement structurel à haut risque.
+- Recherche dédiée qui filtre la liste sans ouvrir automatiquement une fiche.
+- Conservation des filtres et du contexte après sauvegarde.
+- Fermeture d'une fiche avec retour à la liste filtrée.
+- Enregistrement explicite : en cours, succès, reprise après modification et
+  conservation des saisies en cas d'échec.
+- Hébergeur modifiable dans la fiche communale.
+- Regroupement des informations métier, ERP, modules, hébergeur et notes.
+- Navigation par le grand logo Prime vers l'accueil avec réinitialisation globale.
+- Séparation visuelle plus claire entre filtres et informations affichées.
 
-- Chat d'abord, Work par exception.
-- Pré-tri visible pour les demandes multi-points.
-- Toute modification complémentaire prévue doit être annoncée avant exécution.
-- Diff minimal et aucun refactoring opportuniste.
-- Tests, build, navigateur et smoke test uniquement lorsqu'ils apportent une
-  preuve supplémentaire utile.
-- Regroupement des petites modifications compatibles afin d'éviter les cycles
-  de validation redondants.
-- Le niveau monte automatiquement si l'inspection révèle un risque supérieur.
+### Apparence, préférences et langues
+
+- Apparence **Prime Dark**.
+- Apparence **Helvetia Hell**.
+- Mode **Automatique** suivant le thème clair/sombre du système.
+- Préférences utilisateur conservées côté navigateur.
+- Français et allemand suisse intégrés comme préférences d'interface.
+- Paramètres séparés des futures fonctions d'administration.
+
+### Radar et lecture du marché
+
+- **NEWS!** devient **Radar!**.
+- Veille communale, signaux, interprétations et portrait communal conservés.
+- Séparation stricte entre fait public, déduction et lecture Prime.
+- Les éléments de qualification légère existants restent disponibles sans
+  transformer Prime Communes en CRM.
+
+### Mode d'intervention adaptative
+
+Prime Communes conserve une validation proportionnée au risque de chaque
+modification : diff minimal, pas de refactoring opportuniste et contrôles
+uniquement lorsqu'ils apportent une preuve utile.
 
 Document de référence :
 [`docs/adaptive-intervention-mode.md`](./docs/adaptive-intervention-mode.md).
@@ -183,83 +201,167 @@ Document de référence :
 Principe directeur : déterministe d'abord ; raisonnement lourd seulement
 lorsqu'il apporte une information nouvelle ou réduit réellement le risque.
 
-### Infrastructure Prime
+## 3.0 — Chiffrage · à réaliser
 
-Déplacer l'application et la base stabilisées vers les serveurs Prime, séparer
-frontend, configuration et secrets, puis figer l'architecture cible avec un
-point de restauration 1.1.
+La 3.0 introduit un nouveau cœur métier : partir d'une commune connue et produire
+rapidement un **chiffrage ERP complet, explicable et défendable**.
 
-### Authentification · SSO · rôles · RLS
+Le résultat n'est pas l'offre contractuelle finale. Il sert à établir le coût
+du projet et ses coûts récurrents afin de disposer d'une base solide pour une
+présentation au Conseil, à l'Assemblée, à une commission ou à toute autre
+instance communale. L'offre Word/PDF à signer reste hors de Prime Communes.
 
-Comptes professionnels et accès nominatifs `TeamVente`, `Direction` et `Admin`.
-Estimation historique conservée : 16–30 h · 40–90 crédits.
+### Entrée et périmètre
 
-### Audit trail et temporalité métier
+- Nouvel onglet **Chiffrage**.
+- Création depuis une commune de Prime Communes ou depuis l'onglet Chiffrage.
+- Reprise automatique des données communales utiles déjà connues : OFS, canton,
+  population et contexte système lorsque disponible.
+- Usage 3.0 limité aux **communes**.
+- Le modèle de données ne doit pas empêcher une extension future à d'autres
+  entités, mais aucune interface de chiffrage PME, fondation ou GRD autonome
+  n'est prévue dans cette version.
 
-- Savoir qui a créé, modifié, validé ou supprimé une information.
-- Valeurs précédentes, périodes de validité et retour à une date.
-- Audit redéfini avec les utilisateurs et les droits nominatifs.
-- Le trigger historique reste désactivé jusqu'à cette phase.
+### Solutions et modules
 
-Estimation historique conservée : 8–16 h · 20–45 crédits.
+- **innosolv** : sélection des modules, valeur logiciel, prestations et coûts
+  récurrents selon le moteur innosolv.
+- **Abacus** : sélection explicite des modules utiles à la commune ; règles
+  standard et règles RH distinctes lorsque nécessaire.
+- **ProConcept ERP** : périmètre volontairement simple, limité à
+  **Finances** et **Salaires**, dérivé de la base innosolv selon les règles Prime.
+- Les modules peuvent embarquer leurs propres prestations de mise en œuvre.
 
-### Provenance, confiance et contradictions
+### Prestations projet
 
-- Source primaire, URL ou référence interne.
-- Date de publication, détection et dernière vérification.
-- Confiance : confirmée, probable ou à vérifier.
-- Contradictions visibles entre données Prime et sources publiques.
-- Séparation stricte entre fait, déduction et avis.
+Prestations transversales séparées des modules :
 
-### Collecte et intelligence Web
+- reprise de données ;
+- gestion de projet ;
+- formation ;
+- aide au démarrage ;
+- autres prestations globales explicitement justifiées.
 
-- Collecte des budgets, décisions, PV, appels d'offres, recrutements et sites
-  communaux.
-- Veille des intégrateurs, éditeurs et logiciels.
-- Détection, dédoublonnage, rapprochement OFS et file de validation humaine.
-- Les documents restent dans leur source : Prime Communes n'est pas une GED.
+Chaque prestation doit pouvoir exposer quantité, unité, prix, règle source et
+éventuel ajustement manuel.
 
-Les anciens points 3.0 « Opportunités marché », « Mise à jour web et PV » et
-« Veille intégrateurs et logiciels » sont conservés ici comme moteur technique
-du Radar visible en 2.0.
+### Technique et bases de données
 
-### Historique Delimo
+- innosolv implique **Microsoft SQL Server**.
+- ProConcept ERP implique **Oracle**.
+- Abacus ne génère pas de coût de base de données dans le chiffrage.
+- Oracle apparaît uniquement lorsque ProConcept est sélectionné.
+- Le moteur Oracle gère notamment les utilisateurs **Full** et **Light** ainsi
+  que leurs règles de licence et de maintenance.
+- Les règles exactes de prix restent paramétrables et ne doivent pas être
+  dispersées dans le code.
 
-Photographies successives, population, fusions et qualité des livraisons.
-Estimation historique conservée : 12–26 h · 30–70 crédits.
+### Hébergement et écosystème
 
-### Mouvements de marché
+- Hébergement oui/non et montant associé.
+- GED, eAdmin et autres prestations ou solutions tierces peuvent être intégrées
+  au chiffrage.
+- Les éléments tiers peuvent contribuer au TCO et au rôle de SPOC commercial
+  sans être artificiellement assimilés à une marge logiciel Prime.
 
-Gains, pertes, migrations et changements de fournisseurs avec provenance et
-dates.
+### LCM
 
-### Carte et statistiques temporelles
+- Choix limité pour les nouveaux chiffrages à **Aucun**, **Gold** ou
+  **Platinium**.
+- Proposition de référence par blocs de population de 5'000 habitants.
+- Le prix calculé reste visible comme référence.
+- Le prix retenu peut être ajusté manuellement.
+- Les anciens Bronze, Silver, Gold+ et compléments historiques ne servent pas
+  de modèle pour les nouveaux chiffrages.
 
-Comparer deux dates avec le moteur de filtres commun à la carte et aux
-statistiques.
+### Marges et règles commerciales
 
-### Données financières sécurisées
+- Marge identifiable clairement par famille : innosolv, ProConcept, Abacus et
+  autres familles pertinentes.
+- innosolv et Abacus standard utilisent un modèle de rent annuel basé sur une
+  valeur logiciel avec PA et PV distincts.
+- **Abacus standard** : PA annuel = **19 %** de la valeur logiciel ; PV annuel =
+  **25 %**.
+- **Abacus RH, SAL et eBanking** : PA annuel = **23 %** ; PV annuel = **29 %**.
+- Les règles propres à ProConcept et aux modules RH Abacus sont modélisées
+  séparément.
+- Toute règle doit être explicable et centralisée.
+- Toute valeur commerciale importante peut être ajustée manuellement sans
+  perdre la valeur théorique d'origine.
 
-PA, PV, LCM, marge, récurrence et historique tarifaire dans un modèle dédié,
-visible uniquement selon les droits. Ces données ne deviennent pas des colonnes
-improvisées du profil communal.
+### Résumé et export
 
-Estimation historique conservée : 16–36 h · 40–100 crédits.
+Le chiffrage doit produire au minimum :
 
-### API interne et qualité
+- investissement initial ;
+- coûts annuels ;
+- TCO ;
+- ventilation par solution et grandes familles ;
+- marges pertinentes ;
+- principales hypothèses et ajustements manuels.
 
-- API interne stable pour les consommateurs autorisés.
-- Cohérence OFS, complétude, doublons et contrôles automatisés.
-- Modèle multi-produits et installations multi-périodes avec provenance.
+Export Excel prévu avec :
 
-## 3.0 — Anticiper · copilote
+- un onglet **Résumé** ;
+- un onglet **Détail** avec les lignes de calcul et leurs sources.
 
-- Recherche en langage naturel « Demande à la Suisse ».
+### Hors périmètre 3.0
+
+- Pas de génération de l'offre Word/PDF contractuelle finale.
+- Pas de scoring ou simulation AOP.
+- Pas de CRM complet.
+- Pas de chiffrage PME, fondation ou GRD autonome.
+- Pas d'IA nécessaire au calcul ou à la détermination du prix.
+- Pas de décision automatique à la place de l'utilisateur.
+
+Le moteur de prix 3.0 doit fonctionner sur la base de
+**données + règles + paramètres + choix utilisateur = résultat**.
+
+## Backlog transversal — non versionné
+
+Ces sujets restent utiles mais ne définissent plus une version produit tant
+qu'ils ne sont pas replanifiés explicitement :
+
+- infrastructure Prime et séparation frontend / configuration / secrets ;
+- authentification, SSO, rôles et RLS ;
+- audit trail et temporalité métier ;
+- provenance, confiance et contradictions ;
+- collecte Web industrialisée et moteur technique du Radar ;
+- historique Delimo, fusions et photographies successives ;
+- mouvements de marché et statistiques temporelles ;
+- modèle sécurisé des données financières ;
+- API interne et contrôles de qualité.
+
+## Brainstorming futur — Intelligence commerciale / IA · non planifié
+
+L'ancien **3.0 — Anticiper · copilote** est déplacé ici. Ces idées restent
+volontairement hors engagement de version.
+
+### Copilote communal
+
+- Recherche en langage naturel **Demande à la Suisse**.
 - Préparation automatique d'un briefing communal sourcé.
 - Jumeaux communaux et recommandations de références.
 - Simulateur d'effet domino et de scénarios de marché.
 - Détection et rédaction assistée d'histoires, avec validation humaine.
 - Simulateur de séisme : éditeur, technologie, fusion ou changement légal.
+
+### Copilote de chiffrage
+
+L'IA peut à terme accélérer fortement la préparation sans devenir la source du
+prix :
+
+- proposer les modules probablement pertinents à partir du contexte communal ;
+- préremplir certaines hypothèses ;
+- identifier les informations encore manquantes ;
+- signaler les incohérences de configuration ;
+- détecter une prestation probablement oubliée ;
+- expliquer un calcul ou un écart ;
+- préparer un chiffrage en langage naturel à partir des moteurs déterministes ;
+- comparer une configuration aux pratiques historiques Prime lorsque les
+  données sont suffisamment fiables.
+
+Principe permanent : **l'IA assiste et orchestre ; les règles calculent**.
 
 ## Règles permanentes
 
