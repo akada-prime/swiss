@@ -277,6 +277,9 @@ test('roadmap marks 2.5 complete and 3.0 as Chiffrage', async () => {
   assert.match(html, /<span class="roadmap-version">2\.5<\/span>/);
   assert.match(html, /journey-see journey-done/);
   assert.match(html, /<!--i18n:page\.200-->Socle consolidé/);
+  assert.match(html, /class="intervention-scale"/);
+  assert.match(html, /intervention-level-1/);
+  assert.match(html, /intervention-level-5/);
   assert.match(html, /<span class="roadmap-version">3\.0<\/span>/);
   assert.match(html, /<!--i18n:page\.232-->Chiffrage/);
   assert.match(html, /<span class="roadmap-version">3\.5<\/span>/);
