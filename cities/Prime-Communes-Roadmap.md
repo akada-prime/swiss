@@ -280,6 +280,9 @@ Chaque prestation doit pouvoir exposer quantité, unité, prix, règle source et
   autres familles pertinentes.
 - innosolv et Abacus standard utilisent un modèle de rent annuel basé sur une
   valeur logiciel avec PA et PV distincts.
+- **Abacus standard** : PA annuel = **19 %** de la valeur logiciel ; PV annuel =
+  **25 %**.
+- **Abacus RH, SAL et eBanking** : PA annuel = **23 %** ; PV annuel = **29 %**.
 - Les règles propres à ProConcept et aux modules RH Abacus sont modélisées
   séparément.
 - Toute règle doit être explicable et centralisée.
