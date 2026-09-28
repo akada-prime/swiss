@@ -106,7 +106,7 @@ test('Prime 2027 publisher rent uses 20% PA and 27% PV on the licence value', ()
     { pa: 1100, pv: 1485 });
 });
 
-test('LCM uses the strict Habitants < boundary, including irregular bands', () => {
+test('LCM includes the Habitants <= boundary, including irregular bands', () => {
   const bands = [
     [2000, 6400, 16000], [3000, 8000, 20000], [5000, 10000, 25000],
     [8000, 12000, 35000], [12000, 15000, 50000],
@@ -114,20 +114,23 @@ test('LCM uses the strict Habitants < boundary, including irregular bands', () =
     [30000, 24000, 100000]
   ].map(([up_to, gold, platinium]) => ({ up_to, gold, platinium }));
   for (const [population, band, gold, platinium] of [
-    [1999, 2000, 6400, 16000], [2000, 3000, 8000, 20000],
-    [2999, 3000, 8000, 20000], [3000, 5000, 10000, 25000],
-    [5000, 8000, 12000, 35000], [12000, 15000, 18000, 60000],
-    [29999, 30000, 24000, 100000]
+    [1, 2000, 6400, 16000], [1999, 2000, 6400, 16000],
+    [2000, 2000, 6400, 16000], [2001, 3000, 8000, 20000],
+    [3000, 3000, 8000, 20000], [3001, 5000, 10000, 25000],
+    [5000, 5000, 10000, 25000], [5001, 8000, 12000, 35000],
+    [12000, 12000, 15000, 50000], [15000, 15000, 18000, 60000],
+    [20000, 20000, 20000, 80000], [29999, 30000, 24000, 100000],
+    [30000, 30000, 24000, 100000]
   ]) {
     const result = calculateLcm(population, bands);
     assert.equal(result.block, band);
     assert.equal(result.gold.effective_value, gold);
     assert.equal(result.platinium.effective_value, platinium);
   }
-  const beyond = calculateLcm(30000, bands);
+  const beyond = calculateLcm(30001, bands);
   assert.equal(beyond.block, null);
   assert.equal(beyond.missing_reference, true);
-  assert.equal(calculateLcm(30000, bands, { gold: 25000 }).gold.effective_value, 25000);
+  assert.equal(calculateLcm(30001, bands, { gold: 25000 }).gold.effective_value, 25000);
 });
 
 test('standalone ERP and combined ERPs remain calculable, with quantity applied to extra lines', () => {
