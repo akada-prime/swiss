@@ -1,6 +1,6 @@
 import { t, number } from '../core/i18n.js?v=20260928-chiffrage-mobile';
 import { subscribePreferences } from '../core/preferences.js';
-import { calculateQuote, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20260928-tarif-lcm';
+import { calculateQuote, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20260928-lcm-inclusive';
 
 const root = document.getElementById('chiffrageRoot');
 const runtime = window.PrimeCommunesRuntime;
