@@ -534,6 +534,8 @@
 :root {
   --pc-type-min: 12px;
   --pc-type-label: 12px;
+  --pc-type-section: 15px;
+  --pc-type-overline: 18px;
   --pc-type-body: 14px;
   --pc-type-action: 14px;
   --pc-control-height: 40px;
@@ -563,6 +565,10 @@
 :is(.portrait-heading span,.portrait-source,.portrait-system-notes span) { font-size: var(--pc-type-min); }
 
 :is(.portrait-edit,.chiffrage-button) { font-size: var(--pc-type-action); }
+
+/* A view's uppercase introduction is a heading, not a metadata label. */
+.eyebrow,.stats-card .eyebrow { font-size:var(--pc-type-section);letter-spacing:.11em;line-height:1.35; }
+.view-intro-copy>.eyebrow { font-size:var(--pc-type-overline);letter-spacing:.09em;font-weight:800;line-height:1.35; }
 
 .view-tab,
 .filter-toggle,

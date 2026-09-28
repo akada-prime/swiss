@@ -153,6 +153,9 @@ elle ne constitue pas un gabarit pixel-perfect.
   partir de 14 px. Les grands titres gardent leur propre hiérarchie ; les
   détails d'attribution ou icônes purement accessoires peuvent rester compacts.
   Les tokens `--pc-type-*` portent ces rôles dans la couche responsive partagée.
+- Les intitulés en capitales des vues sont des titres à 18 px, au-dessus du
+  texte d'introduction de 16–17 px. Les intitulés de section utilisent 15 px ;
+  12 px est un plancher pour les métadonnées, pas une taille de titre.
 - Une étiquette ne doit pas gagner sa visibilité par la seule graisse ou par
   un espacement extrême entre lettres ; vérifier sa taille et son contraste
   réel sur PC et Natel.
