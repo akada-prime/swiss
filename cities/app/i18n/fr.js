@@ -578,6 +578,7 @@ export default {
   "chiffrage.hosting": "Hébergement",
   "chiffrage.primeLicense": "Licence Prime",
   "chiffrage.primeSupport": "Support Prime annuel",
+  "chiffrage.supportSplitHint": "Le support Prime ventile le prix annuel innosolv existant : il ne s'ajoute pas au total. Saisis son montant annuel séparément.",
   "chiffrage.margin": "Marge logicielle 5 ans",
   "chiffrage.annualMargin": "Marge annuelle",
   "chiffrage.year2": "Marge année 2",

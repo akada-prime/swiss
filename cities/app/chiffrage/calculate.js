@@ -259,6 +259,22 @@ export function calculateQuote(input, catalog) {
       calculated_investment: investment.calculated_value,
       overrides: { ...entry.overrides, investment: entry.investment_override ?? null } });
   }
+  const primeSupport = lines.filter(line => line.family === 'prime' &&
+    line.category === 'support').reduce((amount, line) => amount + (line.annual_pv ?? 0), 0);
+  if (primeSupport) {
+    const innosolvLines = lines.filter(line => line.family === 'innosolv');
+    const innosolvPv = innosolvLines.reduce((amount, line) => amount + line.annual_pv, 0);
+    if (primeSupport < 0 || primeSupport > innosolvPv)
+      throw new Error('Prime support exceeds innosolv annual price');
+    let allocated = 0;
+    innosolvLines.forEach((line, index) => {
+      const amount = index === innosolvLines.length - 1 ? primeSupport - allocated :
+        primeSupport * line.annual_pv / innosolvPv;
+      line.annual_pv -= amount;
+      line.support_allocated = amount;
+      allocated += amount;
+    });
+  }
   const lcm = calculateLcm(input.dimensions.population, catalog.parameters.lcm,
     input.lcm ?? {});
   const selectedLcm = input.lcm?.selection;
@@ -278,7 +294,8 @@ export function calculateQuote(input, catalog) {
   const knownAnnualCost = sum('annual_pa');
   const publisherAnnualPa = sum('annual_pa', lines.filter(line =>
     line.family === 'innosolv' || line.family === 'abacus'));
-  const software = lines.filter(line => line.software);
+  const software = lines.filter(line => line.software || line.family === 'prime' &&
+    line.category === 'support');
   const softwarePa = sum('annual_pa', software);
   const softwarePv = sum('annual_pv', software);
   const publisherSoftwarePa = sum('annual_pa', software.filter(line =>

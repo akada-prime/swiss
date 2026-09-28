@@ -161,3 +161,25 @@ test('LCM enters annual total and five-year total only when selected', () => {
   assert.equal(included.summary.tco5y_excluding_lcm, 0);
   assert.deepEqual(included.summary.incomplete_costs, ['gold']);
 });
+
+test('Prime support splits existing innosolv annual PV without changing revenue or margin', () => {
+  const catalog = { items: [{ vendor: 'innosolv', product: 'Gemeinde', item_code: '1',
+    label_fr: 'Base', pricing_rule: { kind: 'lookup', basis: 'population',
+      tiers: [{ up_to: 2000, value: 1000 }] } }],
+  parameters: { publisher_rent: { innosolv: { standard: { pa_rate: .2, pv_rate: .27 } } },
+    sql: { suggestion: { lowerPopulation: 0, lowerUsers: 0, upperPopulation: 2000,
+      upperUsers: 1 }, core_from_population: 6000, user_base: 0,
+      price_per_user: 0, default_cores: 1, price_per_core: 0 } } };
+  const input = { products: ['innosolv'], dimensions: { population: 1900, licensedPopulation: 2000 },
+    modules: [{ vendor: 'innosolv', product: 'Gemeinde', item_code: '1' }], sql: {} };
+  const before = calculateQuote(input, catalog);
+  const after = calculateQuote({ ...input, primeLines: [{ family: 'prime',
+    category: 'support', label: 'Support Prime annuel', annual_pv: 35 }] }, catalog);
+  assert.equal(before.summary.annual, 270);
+  assert.equal(after.summary.annual, 270);
+  assert.equal(after.lines.find(line => line.family === 'innosolv').annual_pv, 235);
+  assert.equal(after.lines.find(line => line.category === 'support').annual_pv, 35);
+  assert.equal(after.summary.software_margin_year3plus, before.summary.software_margin_year3plus);
+  assert.throws(() => calculateQuote({ ...input, primeLines: [{ family: 'prime',
+    category: 'support', annual_pv: 300 }] }, catalog), /exceeds/);
+});
