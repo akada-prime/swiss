@@ -411,6 +411,8 @@ function renderEditor() {
     <div class="chiffrage-actions"><button class="chiffrage-button primary" data-action="save">${t('chiffrage.save')}</button>
       ${state.quote ? `<button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button>
       <button class="chiffrage-button" data-action="archive">${t('chiffrage.archive')}</button>
+      <button class="chiffrage-button chiffrage-danger" data-action="delete">${
+        localLabel('Supprimer définitivement', 'Endgültig löschen')}</button>
       <button class="chiffrage-button" data-action="revisions">${t('chiffrage.revisions')}</button>
       <button class="chiffrage-button" data-action="export">${t('chiffrage.export')}</button>` : ''}</div>
     <div id="chiffrageHistory"></div></div></div>`;
@@ -597,6 +599,9 @@ root.addEventListener('click', async event => {
     state.draft[button.dataset.kind].splice(Number(button.dataset.index), 1);
     renderEditor(); return;
   }
+  if (action === 'delete' && !window.confirm(localLabel(
+    `Supprimer définitivement « ${state.title} » et toutes ses révisions ?`,
+    `« ${state.title} » und alle Versionen endgültig löschen?`))) return;
   button.disabled = true;
   try {
     if (action === 'logout') {
@@ -606,6 +611,12 @@ root.addEventListener('click', async event => {
       state.message = ''; renderLogin(); return;
     }
     if (action === 'open') { await open(button.dataset.id); return; }
+    if (action === 'delete') {
+      await api('delete', { id: state.quote, expected_revision: state.revision });
+      state.quotes = await api('list', undefined, { archived: 'all' });
+      renderList(); notice(localLabel('Chiffrage supprimé.', 'Kalkulation gelöscht.'));
+      return;
+    }
     if (action === 'save' || action === 'duplicate' || action === 'archive') {
       const duplicate = action === 'duplicate';
       const saved = await api('save', { id: duplicate ? undefined : state.quote ?? undefined,

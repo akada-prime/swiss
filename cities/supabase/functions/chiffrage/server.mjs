@@ -56,14 +56,16 @@ async function body(request) {
   return JSON.parse(text);
 }
 
-async function db(path, { method = 'GET', payload, query = {}, single = false } = {}) {
+async function db(path, { method = 'GET', payload, query = {}, single = false,
+  returning = false } = {}) {
   const url = new URL(`/rest/v1/${path}`, env('SUPABASE_URL'));
   for (const [key, value] of Object.entries(query)) url.searchParams.set(key, value);
   const response = await fetch(url, { method, headers: {
     apikey: env('SUPABASE_SERVICE_ROLE_KEY'),
     Authorization: `Bearer ${env('SUPABASE_SERVICE_ROLE_KEY')}`,
     'Content-Type': 'application/json',
-    ...(single ? { Accept: 'application/vnd.pgrst.object+json' } : {})
+    ...(single ? { Accept: 'application/vnd.pgrst.object+json' } : {}),
+    ...(returning ? { Prefer: 'return=representation' } : {})
   }, body: payload == null ? undefined : JSON.stringify(payload) });
   if (!response.ok) {
     const detail = await response.text();
@@ -188,6 +190,15 @@ export default async function handler(request) {
     }
     if (action === 'save' && request.method === 'POST')
       return json(await writeQuote(await body(request)));
+    if (action === 'delete' && request.method === 'POST') {
+      const { id, expected_revision } = await body(request);
+      if (!/^[0-9a-f-]{36}$/i.test(id) || !Number.isInteger(expected_revision) ||
+        expected_revision < 1) return fail('Invalid quote reference', 400);
+      const removed = await db('chiffrages', { method: 'DELETE', returning: true,
+        query: { select: 'id', id: `eq.${id}`,
+          current_revision: `eq.${expected_revision}` } });
+      return removed.length ? json({ deleted: true }) : fail('Revision conflict', 409);
+    }
     if (action === 'export' && request.method === 'GET') {
       const quote = await savedQuote(url.searchParams.get('id') ?? '');
       if (!quote?.snapshot) return fail('Quote not found', 404);

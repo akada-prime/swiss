@@ -69,8 +69,8 @@ test('the early bootstrap applies skin and html lang before styles and the main 
   assert.ok(html.indexOf('document.documentElement.dataset.skin = skinPreference') < html.indexOf('app/styles/main.css'));
   assert.ok(html.indexOf('document.documentElement.lang = preference(') < html.indexOf('app/styles/main.css'));
   assert.ok(html.indexOf('app/styles/main.css') < html.indexOf('app/main.js'));
-  assert.match(html, /app\/styles\/main\.css\?v=20260928-chiffrage-workflow/);
-  assert.match(html, /app\/main\.js\?v=20260928-chiffrage-workflow/);
+  assert.match(html, /app\/styles\/main\.css\?v=20260928-chiffrage-delete/);
+  assert.match(html, /app\/main\.js\?v=20260928-chiffrage-delete/);
   const css = await read('app/styles/main.css');
   const modules = await read('app/main.js');
   assert.match(css, /skins\.css/);
@@ -78,7 +78,7 @@ test('the early bootstrap applies skin and html lang before styles and the main 
   assert.match(modules, /core\/preferences\.js\?v=20260928-chiffrage-mobile/);
   assert.match(modules, /core\/runtime\.js\?v=20260928-chiffrage-mobile/);
   assert.match(modules, /prime-communes-data-1\.5\.js\?v=20260928-chiffrage-mobile/);
-  assert.match(modules, /chiffrage\/view\.js\?v=20260928-chiffrage-workflow/);
+  assert.match(modules, /chiffrage\/view\.js\?v=20260928-chiffrage-delete/);
   assert.match(await read('app/chiffrage/view.js'),
     /\.\/calculate\.js\?v=20260928-lcm-inclusive/);
   assert.match(html, /id="settingsTrigger"[^>]*aria-haspopup="dialog"/);
