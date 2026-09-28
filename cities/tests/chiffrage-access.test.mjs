@@ -24,6 +24,33 @@ test('catalog and saved quotes cannot be read without a session', async () => {
   }
 });
 
+test('deletion requires a session and a matching revision', async () => {
+  const url = 'https://example.supabase.co/functions/v1/chiffrage?action=delete';
+  const headers = { origin: 'https://akada-prime.github.io',
+    'content-type': 'application/json' };
+  const body = JSON.stringify({ id: '00000000-0000-4000-8000-000000000001', expected_revision: 2 });
+  assert.equal((await handler(new Request(url, { method: 'POST', headers, body }))).status, 401);
+  const originalFetch = globalThis.fetch;
+  let deleted = false;
+  globalThis.fetch = async (resource, options) => {
+    assert.equal(options.method, 'DELETE');
+    assert.match(String(resource), /current_revision=eq\.2/);
+    assert.equal(options.headers.Prefer, 'return=representation');
+    return new Response(deleted ? '[{"id":"00000000-0000-4000-8000-000000000001"}]' : '[]', { status: 200,
+      headers: { 'content-type': 'application/json' } });
+  };
+  try {
+    const response = await handler(new Request(url, { method: 'POST',
+      headers: { ...headers, Authorization: `Bearer ${signSession()}` }, body }));
+    assert.equal(response.status, 409);
+    deleted = true;
+    const success = await handler(new Request(url, { method: 'POST',
+      headers: { ...headers, Authorization: `Bearer ${signSession()}` }, body }));
+    assert.equal(success.status, 200);
+    assert.deepEqual(await success.json(), { deleted: true });
+  } finally { globalThis.fetch = originalFetch; }
+});
+
 test('cross-site write is rejected even with a valid session', async () => {
   const response = await handler(new Request('https://example.supabase.co/functions/v1/chiffrage?action=save', {
     method: 'POST', headers: { origin: 'https://evil.example',
