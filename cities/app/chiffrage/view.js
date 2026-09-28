@@ -1,6 +1,6 @@
 import { t, number } from '../core/i18n.js?v=20260928-chiffrage-mobile';
 import { subscribePreferences } from '../core/preferences.js';
-import { calculateQuote, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20260928-lcm-inclusive';
+import { calculateQuote, calculateLcm, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20260928-lcm-inclusive';
 
 const root = document.getElementById('chiffrageRoot');
 const runtime = window.PrimeCommunesRuntime;
@@ -18,6 +18,7 @@ const field = (key, value, label, { min = 0, step = 1 } = {}) =>
   `<label>${label}<input data-field="${key}" type="number" min="${min}" step="${step}" value="${escape(value ?? '')}"></label>`;
 const textField = (key, value, label) =>
   `<label>${label}<input data-field="${key}" value="${escape(value ?? '')}"></label>`;
+const localLabel = (fr, de) => document.documentElement.lang === 'de' ? de : fr;
 
 async function api(action, payload, params = {}) {
   const url = new URL(endpoint, window.location.origin);
@@ -119,13 +120,49 @@ function availableModules() {
     (item.item_code !== '129VD' || state.draft.canton === 'VD'));
 }
 
+// The source Gemeinde sheet uses this business order; suffix modules follow their parent.
+const gemeindeOrder = '1,36,21,28,22,23,24,30,31,122,124,116,34,35,13,26,27,38,39,41,33,40,50,54,57,51,52,53,55,56,58,29,208,209,210,25,10,11,100,101,113,104,115,120,125,132,140,135,129,119,127,138,136,143,200,201,214,205,206,202,211,212,207,215,501,509,516,517,504,523,514,502,533,528,534,531,529,530,532'.split(',');
+const abacusOrder = '10510.1,10510.208,10510.206,10510.218,10510.219,10510.205,10510.211,10510.214,10510.222,10510.215,10510.21,10510.212,10510.209,10510.22,10510.207,10510.224,10510.221,10510.225,10510.228,10510.229,10510.23,10520.1,10520.222,10520.223,10520.226,10520.227,10520.224,10520.205,10520.228,10520.207,10520.231,10520.209,10520.225,10520.233,10520.235,10530.1,10530.232,10530.205,10530.207,10530.209,10530.22,10530.234,10530.235,10530.237,10530.24,10530.242,10530.244,10530.245,10530.246,10531.1,10531.101,10540.1,10540.206,10540.244,10540.205,10540.199,10540.207,10540.209,10540.21,10540.243,10540.25,10540.254,10540.255,10540.26,10540.261,10540.262,10540.263,10540.264,10540.265,10540.266,10540.267,10540.27,10570.1,10570.206,10570.27,10570.205,10570.208,10570.209,10570.207,10570.272,10570.21,10570.28,10566.1,10566.205,10566.266,10566.269,10566.274,10566.275,10560,10560.205,10560.209,10560.258,10560.206,10560.207,10560.26,10560.263,10560.264,10560.265,10560.259,10560.266,10560.267,10560.268,10560.269,10560.272,10560.274,10560.276,10560.278,10560.279,10560.28,10560.282,10575.1,10575.214,10575.205,10575.209,10575.207,10575.211,10575.216,10575.215,10575.212,10575.213,10575.21,10575.218,10575.219,10575.24,10575.242,10575.244,10555.1,10555.205,10555.25,10555.251,10555.252,10555.255,10555.256,10555.257,10555.261,10555.262,10555.263,10555.265,10555.266,10555.267,10555.268,10555.269,10555.272,10555.273,10555.274,10555.275,10555.276,10515.1,10515.205,10515.21,10515.211,10515.24,10515.241,10515.242,10515.245,10593.1,10593.214,10582.1,10582.216,10583.1,10583.221,10583.216,10587.1,10581.1,10576.1,10577.1,10575.241,10598.1,10595.1,10594.1,10572.1,10572.101,10572.205,10572.207,10572.212,10572.221,10572.222,10572.223,10572.224,10572.226,10572.23,10572.231,10573.1,10550.1,10550.205,10550.254,10550.252,10550.258,10550.256,10550.255,10550.261,10550.262,10503.1,10503.25,10503.245,10503.255,10503.256,10503.257,10503.258,10503.286'.split(',');
+function moduleOrder(item) {
+  const order = item.vendor === 'innosolv' ? gemeindeOrder : abacusOrder;
+  const index = order.indexOf(item.item_code === '129VD' ? '129' : item.item_code);
+  return index < 0 ? Number.MAX_SAFE_INTEGER : index;
+}
+function presetDays(id) {
+  const presets = state.catalog?.parameters.service_presets?.standard ?? {};
+  return presets[id] ?? (id.endsWith('/129VD') ? presets['innosolv/Gemeinde/129'] : null);
+}
+function addModuleService(id) {
+  const days = presetDays(id);
+  if (!state.draft.moduleServices.some(line => line.item_code === id))
+    state.draft.moduleServices.push({ family: 'prestations_module', item_code: id,
+      label: id, level: 'standard', days: days ?? 0 });
+}
+
+function rateInventory() {
+  const p = state.catalog?.parameters;
+  const percent = value => value == null ? '—' : `${number(value * 100)} %`;
+  const standard = p?.publisher_rent?.innosolv?.standard;
+  const abacus = p?.publisher_rent?.abacus?.standard;
+  const ref = p?.reference_rates ?? {};
+  return `<details class="chiffrage-section chiffrage-rates" open><summary>${localLabel('Repères de prix et de marges', 'Preis- und Margenübersicht')}</summary>
+    <div class="chiffrage-rate-grid">
+      <span>${localLabel('Prix par jour', 'Tagessatz')} <strong>${money(p?.day_rate)}</strong></span>
+      <span>innosolv PA / PV <strong>${percent(standard?.pa_rate)} / ${percent(standard?.pv_rate)}</strong></span>
+      <span>Abacus PA / PV <strong>${percent(abacus?.pa_rate)} / ${percent(abacus?.pv_rate)}</strong></span>
+      <span>ProConcept ${t('chiffrage.margin')} <strong>${percent(p?.pce?.pv_margin)}</strong></span>
+      ${Object.entries(ref).map(([label, value]) => `<span>${escape(label)} <strong>${
+        ['Déplacement', 'Taux horaire'].includes(label) ? money(value) : percent(value)}</strong></span>`).join('')}
+    </div>${Object.keys(ref).length ? `<small>${localLabel('Autres taux du tableau Excel : repères commerciaux, non appliqués automatiquement aux lignes.', 'Weitere Excel-Werte: kaufmännische Referenz, nicht automatisch auf Positionen angewendet.')}</small>` : ''}</details>`;
+}
+
 function productSection() {
   const products = [['innosolv', 'innosolvcity'], ['abacus', 'Abacus'],
     ['pce', 'ProConcept ERP']];
   const choices = products.map(([key, label]) => `<label class="chiffrage-choice"><input
     type="checkbox" data-product="${key}" ${state.draft.products.includes(key) ? 'checked' : ''}>${label}</label>`).join('');
   const selected = new Set(state.draft.modules.map(item => `${item.vendor}/${item.product}/${item.item_code}`));
-  const modules = availableModules().sort((a, b) => Number(b.default_selected) - Number(a.default_selected));
+  const modules = availableModules().sort((a, b) => moduleOrder(a) - moduleOrder(b));
   const groups = new Map();
   for (const item of modules) {
     const key = item.vendor === 'abacus' ? `Abacus · ${item.item_code.split('.')[0]}` :
@@ -141,13 +178,14 @@ function productSection() {
       <summary>${escape(group)} · ${entries.length}</summary><div class="chiffrage-module-list">${entries.map(item => {
         const id = `${item.vendor}/${item.product}/${item.item_code}`;
         const current = state.draft.moduleServices.find(line => line.item_code === id);
+        const days = current?.days ?? presetDays(id);
         return `<div class="chiffrage-module-entry"><label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''}>
           <span><small>${escape(item.item_code)} · ${escape(item.vendor)}</small><br>${escape(item.label_fr || item.label_de || item.item_code)}</span></label>
           ${selected.has(id) ? `<div class="chiffrage-module-service">
-            <label>${t('chiffrage.level')}<select data-field="moduleService.${escape(id)}.level">
-              ${['standard','enhanced','custom'].map(level => `<option value="${level}" ${
-                (current?.level ?? 'standard') === level ? 'selected' : ''}>${t('chiffrage.' + level)}</option>`).join('')}</select></label>
-            ${field(`moduleService.${id}.days`, current?.days, t('chiffrage.days'), { step: .5 })}
+            ${field(`moduleService.${id}.days`, days, t('chiffrage.days'), { step: .5 })}
+            <small>${localLabel('Prix par jour', 'Tagessatz')} : ${money(state.catalog.parameters.day_rate)} · ${
+              t('chiffrage.investment')} : ${money(days == null ? null : days * state.catalog.parameters.day_rate)}${
+                presetDays(id) == null ? ` · ${localLabel('Pas de standard chiffré : 0 j modifiable', 'Kein Richtwert: 0 Tage anpassbar')}` : ''}</small>
           </div>` : ''}</div>`;
       }).join('')}</div></details>`).join('') || '—'}</div></details>`;
 }
@@ -219,7 +257,8 @@ function technicalSection() {
 
 function extraSection() {
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.partners')}</summary>
-    ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index })),
+    ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index }))
+      .filter(line => line.category !== 'hosting'),
       ...state.draft.partners.map((line, index) => ({ ...line, kind: 'partners', index }))]
       .map(line => `<div class="chiffrage-line">
         ${textField(`${line.kind}.${line.index}.label`, line.label, t('chiffrage.lineLabel'))}
@@ -234,14 +273,36 @@ function extraSection() {
         ${field(`${line.kind}.${line.index}.annual_pa`, line.annual_pa, t('chiffrage.annualPa'))}
         ${textField(`${line.kind}.${line.index}.note`, line.note, t('chiffrage.note'))}
         <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${line.kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div>`).join('')}
-    <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addHosting">${t('chiffrage.addHosting')}</button>
-      <button type="button" class="chiffrage-button" data-action="addLicense">${t('chiffrage.addPrimeLicense')}</button>
+    <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addLicense">${t('chiffrage.addPrimeLicense')}</button>
       <button type="button" class="chiffrage-button" data-action="addPrime">${t('chiffrage.addLine')} Prime</button>
       <button type="button" class="chiffrage-button" data-action="addPartner">${t('chiffrage.addLine')} ${t('chiffrage.partner')}</button></div></details>`;
 }
 
+function hostingSection() {
+  const rows = state.draft.primeLines.map((line, index) => ({ ...line, index }))
+    .filter(line => line.category === 'hosting');
+  return `<details class="chiffrage-section" open><summary>${t('chiffrage.hosting')}</summary>
+    <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addHosting">${
+      t('chiffrage.addHosting')}</button></div>
+    ${rows.map(line => `<div class="chiffrage-line chiffrage-hosting-line">
+      ${textField(`primeLines.${line.index}.label`, line.label, t('chiffrage.lineLabel'))}
+      ${field(`primeLines.${line.index}.investment_pv`, line.investment_pv, t('chiffrage.investment') + ' PV')}
+      ${field(`primeLines.${line.index}.investment_pa`, line.investment_pa, t('chiffrage.investmentPa'))}
+      ${field(`primeLines.${line.index}.annual_pv`, line.annual_pv, t('chiffrage.annual') + ' PV')}
+      ${field(`primeLines.${line.index}.annual_pa`, line.annual_pa, t('chiffrage.annualPa'))}
+      <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="primeLines" data-index="${line.index}">${t('chiffrage.removeLine')}</button>
+    </div>`).join('')}</details>`;
+}
+
+function lcmPrices() {
+  const prices = calculateLcm(state.draft.dimensions.population,
+    state.catalog.parameters.lcm, state.draft.lcm);
+  return `Gold : <strong>${money(prices.gold?.effective_value)}</strong> · Platinum : <strong>${money(prices.platinium?.effective_value)}</strong>${
+    prices.block == null ? ` · ${t('chiffrage.lcmMissing')}` : ` · ≤ ${number(prices.block)} ${localLabel('habitants', 'Einwohner')}`}`;
+}
 function lcmSection() {
-  return `<details class="chiffrage-section"><summary>${t('chiffrage.lcm')}</summary>
+  return `<details class="chiffrage-section" open><summary>${t('chiffrage.lcm')}</summary>
+    <p class="chiffrage-lcm-prices">${lcmPrices()}</p>
     <div class="chiffrage-grid"><label>${t('chiffrage.lcmSelection')}<select data-field="lcm.selection">
       ${[['none', t('chiffrage.lcmNone')], ['gold','Gold'], ['platinium','Platinum']].map(([key,label]) =>
         `<option value="${key}" ${(state.draft.lcm.selection ?? 'none') === key ? 'selected' : ''}>${label}</option>`).join('')}
@@ -275,13 +336,7 @@ function summary() {
     <div><dt>${t('chiffrage.investment')}</dt><dd>${money(s.investment)}</dd></div>
     <div><dt>${t('chiffrage.annual')}</dt><dd>${money(s.annual)}</dd></div>
     <div><dt>${t('chiffrage.tco')}</dt><dd>${money(s.tco5y)}</dd></div>
-    <div><dt>${t('chiffrage.margin')}</dt><dd>${money(s.software_margin_5y)}</dd></div>
-    <div><dt>${t('chiffrage.year2')}</dt><dd>${money(s.software_margin_year2)}</dd></div>
-    <div><dt>${t('chiffrage.year3')}</dt><dd>${money(s.software_margin_year3plus)}</dd></div>
-    <div><dt>Gold</dt><dd>${money(s.lcm.gold?.effective_value)}</dd></div>
-    <div><dt>${t('chiffrage.lcmFiveYears')} Gold</dt><dd>${money(s.lcm.gold?.five_year_option)}</dd></div>
-    <div><dt>Platinium</dt><dd>${money(s.lcm.platinium?.effective_value)}</dd></div>
-    <div><dt>${t('chiffrage.lcmFiveYears')} Platinium</dt><dd>${money(s.lcm.platinium?.five_year_option)}</dd></div></dl>
+    <div><dt>${t('chiffrage.margin')}</dt><dd>${money(s.software_margin_5y)}</dd></div></dl>
     <details class="chiffrage-summary-breakdown" open><summary>${t('chiffrage.costBreakdown')}</summary>
       <div class="chiffrage-table-scroll"><table class="chiffrage-detail"><thead><tr>
         <th>${t('chiffrage.detail')}</th><th>${t('chiffrage.investment')}</th>
@@ -289,7 +344,11 @@ function summary() {
         ${buckets.map(([label, filter]) => `<tr><th>${escape(label)}</th>
           <td>${money(total(filter,'investment_pv'))}</td><td>${money(total(filter,'annual_pv'))}</td></tr>`).join('')}
         <tr><th>${t('chiffrage.total')}</th><td>${money(s.investment)}</td><td>${money(s.annual)}</td></tr>
-        </tbody></table></div></details>
+        </tbody></table></div>
+      <p class="chiffrage-margin-note">${t('chiffrage.year2')} : ${money(s.software_margin_year2)} · ${
+        t('chiffrage.year3')} : ${money(s.software_margin_year3plus)}</p>
+      <p class="chiffrage-margin-note">LCM Gold : ${money(s.lcm.gold?.effective_value)} · Platinum : ${
+        money(s.lcm.platinium?.effective_value)}</p></details>
     ${['gold','platinium'].map(key => s.lcm[key]?.source ? `<small>${key}: ${
       t('chiffrage.lcmEstimate')} · ${escape(s.lcm[key].source.method)} · ${
       s.lcm[key].source.sample_size ?? 0} ${t('chiffrage.contracts')}</small>` : '').join('')}
@@ -304,10 +363,16 @@ function lineDetail() {
   const ordered = [...result.lines].sort((a, b) => {
     const rank = line => {
       const position = result.lines.indexOf(line);
-      if (line.family !== 'prestations_module') return position;
-      const parent = result.lines.findIndex(item =>
-        `${item.family}/${item.product}/${item.item_code}` === line.item_code);
-      return parent < 0 ? position : parent + .5;
+      if (line.family === 'prestations_module') {
+        const parent = result.lines.find(item =>
+          `${item.family}/${item.product}/${item.item_code}` === line.item_code);
+        return parent ? rank(parent) + .1 : 2000 + position;
+      }
+      if (line.family === 'innosolv') return moduleOrder({ vendor: 'innosolv',
+        item_code: line.item_code });
+      if (line.family === 'abacus') return 1000 + moduleOrder({ vendor: 'abacus',
+        item_code: line.item_code });
+      return 2000 + position;
     };
     return rank(a) - rank(b);
   });
@@ -340,8 +405,9 @@ function renderEditor() {
       ${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}
       ${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}
       ${field('dimensions.employees', state.draft.dimensions.employees, t('chiffrage.employees'))}
-    </div></div>${productSection()}${publisherOverridesSection()}${technicalSection()}
-    ${serviceSection()}${extraSection()}${lcmSection()}<div id="chiffrageDetail">${lineDetail()}</div>
+    </div></div>${rateInventory()}${lcmSection()}${hostingSection()}${productSection()}
+    ${serviceSection()}${extraSection()}${technicalSection()}${publisherOverridesSection()}
+    <div id="chiffrageDetail">${lineDetail()}</div>
     <div class="chiffrage-actions"><button class="chiffrage-button primary" data-action="save">${t('chiffrage.save')}</button>
       ${state.quote ? `<button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button>
       <button class="chiffrage-button" data-action="archive">${t('chiffrage.archive')}</button>
@@ -404,6 +470,7 @@ function changeProduct(key, checked) {
     (item.item_code !== '129VD' || state.draft.canton === 'VD'))) {
     state.draft.modules.push({ vendor: item.vendor, product: item.product,
       item_code: item.item_code });
+    addModuleService(`${item.vendor}/${item.product}/${item.item_code}`);
   }
   state.draft.moduleServices = state.draft.moduleServices.filter(item =>
     state.draft.modules.some(module => item.item_code ===
@@ -466,6 +533,16 @@ root.addEventListener('input', event => {
   if (!path || !state.draft) return;
   setValue(path, event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     event.target.type === 'checkbox');
+  if (path.startsWith('moduleService.') && path.endsWith('.days')) {
+    const caption = event.target.closest('.chiffrage-module-service')?.querySelector('small');
+    if (caption) caption.textContent = `${localLabel('Prix par jour', 'Tagessatz')} : ${
+      money(state.catalog.parameters.day_rate)} · ${t('chiffrage.investment')} : ${
+      money(event.target.value === '' ? null : Number(event.target.value) * state.catalog.parameters.day_rate)}`;
+  }
+  if (path === 'dimensions.population' || path === 'lcm.gold' || path === 'lcm.platinium') {
+    const preview = root.querySelector('.chiffrage-lcm-prices');
+    if (preview) preview.innerHTML = lcmPrices();
+  }
   const result = root.querySelector('#chiffrageSummary');
   if (result) result.innerHTML = summary();
   const detail = root.querySelector('#chiffrageDetail');
@@ -482,7 +559,11 @@ root.addEventListener('change', event => {
     const [vendor, product, item_code] = event.target.dataset.module.split('/');
     state.draft.modules = state.draft.modules.filter(item =>
       !(item.vendor === vendor && item.product === product && item.item_code === item_code));
-    if (event.target.checked) state.draft.modules.push({ vendor, product, item_code });
+    if (event.target.checked) {
+      state.draft.modules.push({ vendor, product, item_code });
+      addModuleService(`${vendor}/${product}/${item_code}`);
+    } else state.draft.moduleServices = state.draft.moduleServices.filter(line =>
+      line.item_code !== `${vendor}/${product}/${item_code}`);
     renderEditor();
   }
   if (event.target.dataset.field?.endsWith('.level')) {
