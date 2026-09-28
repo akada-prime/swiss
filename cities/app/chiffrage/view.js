@@ -1,6 +1,6 @@
 import { t, number } from '../core/i18n.js?v=20260928-chiffrage-mobile';
 import { subscribePreferences } from '../core/preferences.js';
-import { calculateQuote, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20260928-offre-client';
+import { calculateQuote, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20260928-offre-client-3';
 
 const root = document.getElementById('chiffrageRoot');
 const runtime = window.PrimeCommunesRuntime;
@@ -219,6 +219,7 @@ function technicalSection() {
 
 function extraSection() {
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.partners')}</summary>
+    <p>${t('chiffrage.supportSplitHint')}</p>
     ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index })),
       ...state.draft.partners.map((line, index) => ({ ...line, kind: 'partners', index }))]
       .map(line => `<div class="chiffrage-line">
