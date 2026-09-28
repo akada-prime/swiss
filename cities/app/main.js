@@ -11,4 +11,4 @@ import './prime-communes-communes-1.2.js?v=20260928-chiffrage-mobile';
 import './prime-communes-news-2.0.js?v=20260928-chiffrage-mobile';
 import './prime-communes-stories-2.0.js?v=20260928-chiffrage-mobile';
 import './prime-communes-roadmap-1.2.js';
-import './chiffrage/view.js?v=20260928-offre-client';
+import './chiffrage/view.js?v=20260928-offre-client-2';
