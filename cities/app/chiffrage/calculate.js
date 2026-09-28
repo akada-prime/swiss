@@ -162,10 +162,10 @@ export function calculateOracle(input, rule) {
 }
 
 export function calculateLcm(population, rule, overrides = {}) {
-  // Commercial bands are labelled "Habitants <": the upper bound is exclusive.
+  // Commercial bands include their stated upper population bound.
   const inhabitants = finite(population, 'population');
   const entry = [...(rule ?? [])].sort((a, b) => a.up_to - b.up_to)
-    .find(candidate => inhabitants < finite(candidate.up_to, 'LCM boundary'));
+    .find(candidate => inhabitants <= finite(candidate.up_to, 'LCM boundary'));
   const block = entry?.up_to ?? null;
   const one = (key) => entry?.[key] == null ? (overrides[key] == null ? null :
     { calculated_value: null, override_value: finite(overrides[key], 'LCM override'),
