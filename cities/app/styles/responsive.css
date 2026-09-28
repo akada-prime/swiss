@@ -533,10 +533,36 @@
    Only the native [hidden] contract keeps a priority declaration. */
 :root {
   --pc-type-min: 12px;
+  --pc-type-label: 12px;
+  --pc-type-body: 14px;
+  --pc-type-action: 14px;
   --pc-control-height: 40px;
 }
 
 [hidden] { display: none !important; }
+
+/* Shared reading scale: uppercase labels, ordinary data and actionable text.
+   Large view headings keep their own hierarchy and compact status icons stay local. */
+:is(.portrait-heading p,.portrait-facts dt,.portrait-section-title>div>span,.portrait-ofs-match,
+  .delimo-control-eyebrow,.maplibre-metric p,.maplibre-view-switch>span,
+  .stats-prime-eyebrow,.stats-kpi>span,.stats-live,.map-impact p,
+  .news-kpi span,.news-level,.news-why span,.news-forecast article span,
+  .news-tool-panel>header span,.news-proof-line span,.news-change span,
+  .news-affected span,.news-qualification-panel label>span,.news-sobriety div span,
+  .news-card-proof>span,.news-card-proof>div>span,.news-method strong,
+  .story-hero>div>p,.story-fact>span,.story-reading-grid section>span,
+  .story-angles>header span,.story-deliverables b,.story-sources>strong,
+  .roadmap-principle span,.roadmap-stage header p,.roadmap-done,
+  .kpi-label,.client-pill,.drawer dt,.table-wrap th) {
+  font-size: var(--pc-type-label);
+}
+
+:is(.portrait-facts dd,.portrait-wiki-card p,.portrait-wiki-fallback p,.portrait-system-notes p,
+  .table-wrap td) { font-size: var(--pc-type-body); }
+
+:is(.portrait-heading span,.portrait-source,.portrait-system-notes span) { font-size: var(--pc-type-min); }
+
+:is(.portrait-edit,.chiffrage-button) { font-size: var(--pc-type-action); }
 
 .view-tab,
 .filter-toggle,
