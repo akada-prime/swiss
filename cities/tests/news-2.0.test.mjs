@@ -51,13 +51,13 @@ test('mobile header, footer evolution and return-to-top stay usable before rebui
   assert.match(styles, /components\.css/);
 });
 
-test('all six view headers share one responsive typography contract', async () => {
+test('all seven view headers share one responsive typography contract', async () => {
   const html = await read('index.html');
   const globals = await read('app/styles/foundation.css');
   const news = await read('app/styles/views/radar.css');
   const roadmap = await read('app/styles/views/roadmap.css');
-  assert.equal((html.match(/view-intro"/g) || []).length, 6);
-  assert.equal((html.match(/view-intro-copy"/g) || []).length, 6);
+  assert.equal((html.match(/view-intro"/g) || []).length, 7);
+  assert.equal((html.match(/view-intro-copy"/g) || []).length, 7);
   assert.match(globals, /\.view-intro-copy\{[^}]*font-size:16px/);
   assert.match(globals, /@media\(max-width:680px\)[\s\S]*\.view-intro-copy\{[^}]*font-size:16px/);
   assert.doesNotMatch(news, /\.news-intro(?:-copy)?\s*\{/);

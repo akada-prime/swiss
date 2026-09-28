@@ -1,4 +1,4 @@
-import {t, number, date} from './core/i18n.js?v=20260926-preferences-2';
+import {t, number, date} from './core/i18n.js?v=20260928-chiffrage-mobile';
 (() => {
   'use strict';
 

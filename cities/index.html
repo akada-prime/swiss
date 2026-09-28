@@ -28,7 +28,7 @@
       document.documentElement.lang = preference('prime-communes-language', ['fr', 'de'], 'fr');
     })();
   </script>
-  <link rel="stylesheet" href="app/styles/main.css?v=20260926-preferences-4">
+  <link rel="stylesheet" href="app/styles/main.css?v=20260928-chiffrage-mobile">
 <style>
 html[data-initial-view]:not([data-initial-view="communes"]) #communesView{display:none!important}
 html[data-initial-view="map"] #mapView,
@@ -329,6 +329,9 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
     </section>
   </section>
   <section id="chiffrageView" class="view chiffrage-view" hidden aria-label="Chiffrage">
+    <div class="chiffrage-intro view-intro"><div><h1><!--i18n:chiffrage.heroLead-->Chiffrer.<br><span><!--i18n:chiffrage.heroAccent-->Avec méthode.</span></h1></div>
+      <div class="view-intro-copy"><p class="eyebrow"><!--i18n:chiffrage.heroEyebrow-->Prime Communes · Chiffrage</p>
+        <p><!--i18n:chiffrage.heroDescription-->Partez d’une commune, composez ses solutions et ses prestations, puis ajustez le résultat avant l’export.</p></div></div>
     <div id="chiffrageRoot" aria-live="polite"></div>
   </section>
   <footer class="site-footer" aria-label="Informations légales et techniques">
@@ -346,6 +349,6 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
 <div id="drawerRoot"></div>
 <div id="portraitRoot"></div>
 <button class="back-to-top" id="backToTop" type="button" aria-label="Retour en haut" title="Retour en haut"><span aria-hidden="true">↑</span></button>
-<script type="module" src="app/main.js?v=20260926-auto-skin-1"></script>
+<script type="module" src="app/main.js?v=20260928-chiffrage-mobile"></script>
 </body>
 </html>

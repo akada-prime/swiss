@@ -1,4 +1,4 @@
-import { t, number } from '../core/i18n.js?v=20260926-preferences-2';
+import { t, number } from '../core/i18n.js?v=20260928-chiffrage-mobile';
 import { subscribePreferences } from '../core/preferences.js';
 import { calculateQuote, suggestedSqlUsers } from './calculate.js';
 
@@ -10,6 +10,7 @@ const sessionKey = 'prime-chiffrage-session';
 const state = { authenticated: false, loaded: false, catalog: null, versions: {},
   quotes: [], quote: null, draft: null, revision: null, title: '', archived: false,
   showArchived: false, mode: 'list', message: '', error: false, loading: null,
+  pendingCommune: null,
   session: sessionStorage.getItem(sessionKey) };
 const money = value => value == null ? '—' : `${number(value, {
   minimumFractionDigits: 0, maximumFractionDigits: 0 })} CHF`;
@@ -43,9 +44,8 @@ function notice(message, error = false) {
 }
 
 function header() {
-  return `<div class="chiffrage-header"><div><h1>${t('chiffrage.title')}</h1>
-    ${state.draft ? `<p>${escape(state.draft.name)} · OFS ${state.draft.bfs_id}
-      · ${t('chiffrage.revision', { revision: state.revision ?? '—' })}</p>` : ''}</div>
+  return `<div class="chiffrage-header">${state.draft ? `<p>${escape(state.draft.name)} · OFS ${state.draft.bfs_id}
+      · ${t('chiffrage.revision', { revision: state.revision ?? '—' })}</p>` : '<span></span>'}
     <div class="chiffrage-actions">${state.draft ? `<button class="chiffrage-button" data-action="list">${t('chiffrage.back')}</button>` : ''}
       <button class="chiffrage-button" data-action="logout">${t('chiffrage.logout')}</button></div></div>
     <p class="chiffrage-status${state.error ? ' error' : ''}" role="status">${escape(state.message)}</p>`;
@@ -102,6 +102,13 @@ function firstDraft(row) {
   state.mode = 'editor';
   notice('');
   renderEditor();
+}
+
+function openPendingCommune() {
+  if (!state.pendingCommune || !state.authenticated || !state.catalog) return;
+  const commune = state.pendingCommune;
+  state.pendingCommune = null;
+  firstDraft(commune);
 }
 
 function availableModules() {
@@ -358,7 +365,7 @@ function changeProduct(key, checked) {
 }
 
 async function load() {
-  if (state.loaded) return;
+  if (state.loaded) { openPendingCommune(); return; }
   if (state.loading) return state.loading;
   state.loading = (async () => {
     root.innerHTML = `<p>${t('chiffrage.loading')}</p>`;
@@ -372,6 +379,7 @@ async function load() {
     state.quotes = quotes;
     state.loaded = true;
     renderList();
+    openPendingCommune();
     } catch (error) {
     state.message = error.status === 401 ? '' : t('chiffrage.unavailable');
     state.error = error.status !== 401;
@@ -457,7 +465,7 @@ root.addEventListener('click', async event => {
     if (action === 'logout') {
       await api('logout', {}); state.session = null; sessionStorage.removeItem(sessionKey);
       state.loaded = false; state.authenticated = false;
-      state.catalog = null; state.quotes = []; state.draft = null;
+      state.catalog = null; state.quotes = []; state.draft = null; state.pendingCommune = null;
       state.message = ''; renderLogin(); return;
     }
     if (action === 'open') { await open(button.dataset.id); return; }
@@ -523,11 +531,18 @@ window.openDrawer = function openDrawerWithChiffrage(commune) {
   button.textContent = t('chiffrage.create');
   button.addEventListener('click', () => {
     window.closeDrawer();
-    document.querySelector('[data-view="chiffrage"]').click();
-    load().then(() => { if (state.authenticated && state.catalog) firstDraft(commune); });
+    document.dispatchEvent(new CustomEvent('prime:chiffrage-commune', { detail: commune }));
   });
   panel.querySelector('.drawer-pop')?.insertAdjacentElement('afterend', button);
 };
+
+document.addEventListener('prime:chiffrage-commune', event => {
+  const commune = event.detail;
+  if (!commune?.id) return;
+  state.pendingCommune = commune;
+  document.querySelector('[data-view="chiffrage"]').click();
+  void load();
+});
 
 document.querySelector('[data-view="chiffrage"]').addEventListener('click', load);
 window.addEventListener('popstate', () => {
