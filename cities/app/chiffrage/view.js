@@ -298,7 +298,7 @@ function lineDetail() {
 
 function renderEditor() {
   state.mode = 'editor';
-  root.innerHTML = header() + `<div class="chiffrage-layout"><div class="chiffrage-fields">
+  root.innerHTML = header() + `<div class="chiffrage-layout"><div id="chiffrageSummary">${summary()}</div><div class="chiffrage-fields">
     <div class="chiffrage-section"><div class="chiffrage-grid">
       <label>${t('chiffrage.name')}<input data-field="title" value="${escape(state.title)}"></label>
       <label>${t('chiffrage.catalog', { version: Object.keys(state.versions).join(' / ') })}</label>
@@ -313,7 +313,7 @@ function renderEditor() {
       <button class="chiffrage-button" data-action="archive">${t('chiffrage.archive')}</button>
       <button class="chiffrage-button" data-action="revisions">${t('chiffrage.revisions')}</button>
       <button class="chiffrage-button" data-action="export">${t('chiffrage.export')}</button>` : ''}</div>
-    <div id="chiffrageHistory"></div></div><div id="chiffrageSummary">${summary()}</div></div>`;
+    <div id="chiffrageHistory"></div></div></div>`;
 }
 
 function setValue(path, raw, isCheckbox = false) {
