@@ -8,6 +8,7 @@
 .chiffrage-view button{cursor:pointer}
 .chiffrage-button{min-height:40px;padding:9px 15px;border:1px solid var(--skin-border-soft);border-radius:9px;color:var(--skin-text);background:var(--skin-control)}
 .chiffrage-button.primary{color:#fff;border-color:transparent;background:var(--blue)}
+.chiffrage-button.chiffrage-danger{color:#bc4242;border-color:currentColor}
 .chiffrage-button:disabled{cursor:not-allowed;opacity:.5}
 .chiffrage-panel,.chiffrage-summary,.chiffrage-section{padding:20px;border:1px solid var(--skin-border-soft);border-radius:14px;background:var(--skin-tint)}
 .chiffrage-panel{width:100%;margin:0 0 32px}
