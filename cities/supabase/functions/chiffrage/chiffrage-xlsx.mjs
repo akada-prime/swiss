@@ -82,10 +82,12 @@ export function exportQuoteXlsx(quote) {
     ['Chiffrage Prime Communes', quote.title], ['Commune', input.name],
     ['OFS', input.bfs_id], ['Canton', input.canton],
     ['Population', input.dimensions.population], ['Compteurs', input.dimensions.meters],
+    ['Habitants soumis aux licences', input.dimensions.licensedPopulation ?? input.dimensions.population],
     ['Taxes', input.dimensions.taxes], ['Date de calcul', date],
     ['Révision', quote.snapshot.revision], ['Version tarifaire', versionText],
     ['Investissement', summary.investment], ['Coût annuel dès N+1', summary.annual],
-    ['TCO 5 ans hors LCM', summary.tco5y_excluding_lcm],
+    ['Total 5 ans HT, LCM retenu inclus', summary.tco5y ?? summary.tco5y_excluding_lcm],
+    ['Total 5 ans HT hors LCM', summary.tco5y_excluding_lcm],
     ['LCM Gold', summary.lcm.gold?.effective_value],
     ['Option Gold 5 ans', summary.lcm.gold?.five_year_option],
     ['LCM Platinium', summary.lcm.platinium?.effective_value],
@@ -120,6 +122,7 @@ export function exportQuoteXlsx(quote) {
   }
   const assumptions = [
     ['Hypothèse / source', 'Valeur'], ['Habitants', input.dimensions.population],
+    ['Habitants soumis aux licences', input.dimensions.licensedPopulation ?? input.dimensions.population],
     ['Compteurs', input.dimensions.meters], ['Taxes', input.dimensions.taxes],
     ['Employés', input.dimensions.employees], ['SQL users', input.sql?.users],
     ['SQL cores', input.sql?.cores],

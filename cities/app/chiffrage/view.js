@@ -1,6 +1,6 @@
 import { t, number } from '../core/i18n.js?v=20260928-chiffrage-mobile';
 import { subscribePreferences } from '../core/preferences.js';
-import { calculateQuote, suggestedSqlUsers } from './calculate.js';
+import { calculateQuote, licensedPopulation, suggestedSqlUsers } from './calculate.js';
 
 const root = document.getElementById('chiffrageRoot');
 const runtime = window.PrimeCommunesRuntime;
@@ -90,8 +90,8 @@ function firstDraft(row) {
     context: { integrator: row.integrator, software: row.software, erp: row.erp,
       hosting: row.hosting, notes: row.notes },
     dimensions: { population: Number(row.expectedPopulation ?? 0),
-      meters: Math.round(Number(row.expectedPopulation ?? 0) / 3),
-      taxes: Math.round(Number(row.expectedPopulation ?? 0) / 3), employees: 0 },
+      licensedPopulation: licensedPopulation(Number(row.expectedPopulation ?? 0)),
+      meters: 0, taxes: 0, employees: 0 },
     products: [], modules: [], moduleServices: [], services: [], primeLines: [],
     partners: [], pce: { finances: true, salaires: true, interfacePa: 0 },
     oracle: { full: 0, light: 0 }, sql: {}, lcm: {} };
@@ -140,8 +140,15 @@ function productSection() {
     `<details ${entries.some(item => selected.has(`${item.vendor}/${item.product}/${item.item_code}`)) ? 'open' : ''}>
       <summary>${escape(group)} · ${entries.length}</summary><div class="chiffrage-module-list">${entries.map(item => {
         const id = `${item.vendor}/${item.product}/${item.item_code}`;
-        return `<label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''}>
-          <span><small>${escape(item.item_code)} · ${escape(item.vendor)}</small><br>${escape(item.label_fr || item.label_de || item.item_code)}</span></label>`;
+        const current = state.draft.moduleServices.find(line => line.item_code === id);
+        return `<div class="chiffrage-module-entry"><label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''}>
+          <span><small>${escape(item.item_code)} · ${escape(item.vendor)}</small><br>${escape(item.label_fr || item.label_de || item.item_code)}</span></label>
+          ${selected.has(id) ? `<div class="chiffrage-module-service">
+            <label>${t('chiffrage.level')}<select data-field="moduleService.${escape(id)}.level">
+              ${['standard','enhanced','custom'].map(level => `<option value="${level}" ${
+                (current?.level ?? 'standard') === level ? 'selected' : ''}>${t('chiffrage.' + level)}</option>`).join('')}</select></label>
+            ${field(`moduleService.${id}.days`, current?.days, t('chiffrage.days'), { step: .5 })}
+          </div>` : ''}</div>`;
       }).join('')}</div></details>`).join('') || '—'}</div></details>`;
 }
 
@@ -165,19 +172,6 @@ function serviceSection() {
         ${field(`service.${id}.override`, current?.investment_override,
           t('chiffrage.override'))}</div>`;
     }).join('')}</details>`;
-}
-
-function moduleServiceSection() {
-  return `<details class="chiffrage-section"><summary>${t('chiffrage.moduleServices')}</summary>
-    ${state.draft.modules.map(module => {
-      const key = `${module.vendor}/${module.product}/${module.item_code}`;
-      const current = state.draft.moduleServices.find(item => item.item_code === key);
-      return `<div class="chiffrage-line"><strong>${escape(key)}</strong>
-        <label>${t('chiffrage.level')}<select data-field="moduleService.${escape(key)}.level">
-          ${['standard','enhanced','custom'].map(level => `<option value="${level}" ${
-            (current?.level ?? 'standard') === level ? 'selected' : ''}>${t('chiffrage.' + level)}</option>`).join('')}</select></label>
-        ${field(`moduleService.${key}.days`, current?.days, t('chiffrage.days'), { step: .5 })}</div>`;
-    }).join('') || '—'}</details>`;
 }
 
 function publisherOverridesSection() {
@@ -224,7 +218,7 @@ function technicalSection() {
 }
 
 function extraSection() {
-  return `<details class="chiffrage-section"><summary>${t('chiffrage.partners')}</summary>
+  return `<details class="chiffrage-section" open><summary>${t('chiffrage.partners')}</summary>
     ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index })),
       ...state.draft.partners.map((line, index) => ({ ...line, kind: 'partners', index }))]
       .map(line => `<div class="chiffrage-line">
@@ -240,13 +234,19 @@ function extraSection() {
         ${field(`${line.kind}.${line.index}.annual_pa`, line.annual_pa, t('chiffrage.annualPa'))}
         ${textField(`${line.kind}.${line.index}.note`, line.note, t('chiffrage.note'))}
         <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${line.kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div>`).join('')}
-    <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addPrime">${t('chiffrage.addLine')} Prime</button>
+    <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addHosting">${t('chiffrage.addHosting')}</button>
+      <button type="button" class="chiffrage-button" data-action="addLicense">${t('chiffrage.addPrimeLicense')}</button>
+      <button type="button" class="chiffrage-button" data-action="addSupport">${t('chiffrage.addPrimeSupport')}</button>
+      <button type="button" class="chiffrage-button" data-action="addPrime">${t('chiffrage.addLine')} Prime</button>
       <button type="button" class="chiffrage-button" data-action="addPartner">${t('chiffrage.addLine')} ${t('chiffrage.partner')}</button></div></details>`;
 }
 
 function lcmSection() {
   return `<details class="chiffrage-section"><summary>${t('chiffrage.lcm')}</summary>
-    <div class="chiffrage-grid">${field('lcm.gold', state.draft.lcm.gold,
+    <div class="chiffrage-grid"><label>${t('chiffrage.lcmSelection')}<select data-field="lcm.selection">
+      ${[['none', t('chiffrage.lcmNone')], ['gold','Gold'], ['platinium','Platinum']].map(([key,label]) =>
+        `<option value="${key}" ${(state.draft.lcm.selection ?? 'none') === key ? 'selected' : ''}>${label}</option>`).join('')}
+      </select></label>${field('lcm.gold', state.draft.lcm.gold,
       'LCM Gold · ' + t('chiffrage.override'))}
       ${field('lcm.platinium', state.draft.lcm.platinium,
         'LCM Platinium · ' + t('chiffrage.override'))}</div></details>`;
@@ -257,10 +257,25 @@ function summary() {
   try { result = calculateQuote(state.draft, state.catalog); }
   catch (error) { return `<aside class="chiffrage-summary"><p class="chiffrage-warning">${escape(error.message)}</p></aside>`; }
   const s = result.summary;
-  return `<aside class="chiffrage-summary"><dl>
+  const total = (filter, key) => result.lines.filter(filter)
+    .reduce((sum, line) => sum + (line[key] ?? 0), 0);
+  const buckets = [
+    [t('chiffrage.implementation'), line => ['prestations_module','prestations'].includes(line.family)],
+    [t('chiffrage.database'), line => line.family === 'technique'],
+    [t('chiffrage.licenses'), line => ['innosolv','abacus','pce'].includes(line.family) ||
+      line.family === 'prime' && line.category !== 'hosting'],
+    [t('chiffrage.hostingPartners'), line => line.family === 'partenaires' ||
+      line.category === 'hosting'],
+    ['LCM', line => line.family === 'lcm']
+  ].filter(([, filter]) => result.lines.some(filter));
+  return `<aside class="chiffrage-summary"><div class="chiffrage-summary-bases">
+    <span>${t('chiffrage.population')}: <strong>${number(state.draft.dimensions.population)}</strong></span>
+    <span>${t('chiffrage.licensedPopulation')}: <strong>${number(
+      state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population)}</strong></span>
+    <span>${t('chiffrage.meters')}: <strong>${number(state.draft.dimensions.meters ?? 0)}</strong></span></div><dl>
     <div><dt>${t('chiffrage.investment')}</dt><dd>${money(s.investment)}</dd></div>
     <div><dt>${t('chiffrage.annual')}</dt><dd>${money(s.annual)}</dd></div>
-    <div><dt>${t('chiffrage.tco')}</dt><dd>${money(s.tco5y_excluding_lcm)}</dd></div>
+    <div><dt>${t('chiffrage.tco')}</dt><dd>${money(s.tco5y)}</dd></div>
     <div><dt>${t('chiffrage.margin')}</dt><dd>${money(s.software_margin_5y)}</dd></div>
     <div><dt>${t('chiffrage.year2')}</dt><dd>${money(s.software_margin_year2)}</dd></div>
     <div><dt>${t('chiffrage.year3')}</dt><dd>${money(s.software_margin_year3plus)}</dd></div>
@@ -268,6 +283,14 @@ function summary() {
     <div><dt>${t('chiffrage.lcmFiveYears')} Gold</dt><dd>${money(s.lcm.gold?.five_year_option)}</dd></div>
     <div><dt>Platinium</dt><dd>${money(s.lcm.platinium?.effective_value)}</dd></div>
     <div><dt>${t('chiffrage.lcmFiveYears')} Platinium</dt><dd>${money(s.lcm.platinium?.five_year_option)}</dd></div></dl>
+    <details class="chiffrage-summary-breakdown" open><summary>${t('chiffrage.costBreakdown')}</summary>
+      <div class="chiffrage-table-scroll"><table class="chiffrage-detail"><thead><tr>
+        <th>${t('chiffrage.detail')}</th><th>${t('chiffrage.investment')}</th>
+        <th>${t('chiffrage.annual')}</th></tr></thead><tbody>
+        ${buckets.map(([label, filter]) => `<tr><th>${escape(label)}</th>
+          <td>${money(total(filter,'investment_pv'))}</td><td>${money(total(filter,'annual_pv'))}</td></tr>`).join('')}
+        <tr><th>${t('chiffrage.total')}</th><td>${money(s.investment)}</td><td>${money(s.annual)}</td></tr>
+        </tbody></table></div></details>
     ${['gold','platinium'].map(key => s.lcm[key]?.source ? `<small>${key}: ${
       t('chiffrage.lcmEstimate')} · ${escape(s.lcm[key].source.method)} · ${
       s.lcm[key].source.sample_size ?? 0} ${t('chiffrage.contracts')}</small>` : '').join('')}
@@ -279,13 +302,23 @@ function lineDetail() {
   let result;
   try { result = calculateQuote(state.draft, state.catalog); }
   catch { return ''; }
+  const ordered = [...result.lines].sort((a, b) => {
+    const rank = line => {
+      const position = result.lines.indexOf(line);
+      if (line.family !== 'prestations_module') return position;
+      const parent = result.lines.findIndex(item =>
+        `${item.family}/${item.product}/${item.item_code}` === line.item_code);
+      return parent < 0 ? position : parent + .5;
+    };
+    return rank(a) - rank(b);
+  });
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.detail')}</summary>
     <div class="chiffrage-table-scroll"><table class="chiffrage-detail"><thead><tr>
       <th>${t('chiffrage.modules')}</th><th>SW-ID / ID</th><th>${t('chiffrage.quantity')}</th><th>${t('chiffrage.investment')}</th>
       <th>${t('chiffrage.annual')} PV</th><th>${t('chiffrage.annual')} PA</th>
       <th>${t('chiffrage.annualMargin')}</th><th>${t('chiffrage.catalog', { version: '' })}</th>
-    </tr></thead><tbody>${result.lines.map(line => `<tr>
-      <td>${escape(line.label)}${line.supplier ? `<small> · ${escape(line.supplier)}</small>` : ''}</td><td>${escape(line.item_code ?? '—')}</td><td>${line.quantity ?? '—'}</td>
+    </tr></thead><tbody>${ordered.map(line => `<tr>
+      <td>${line.family === 'prestations_module' ? '↳ ' + t('chiffrage.moduleServices') + ' · ' : ''}${escape(line.label)}${line.supplier ? `<small> · ${escape(line.supplier)}</small>` : ''}</td><td>${escape(line.item_code ?? '—')}</td><td>${line.selected_days == null ? line.quantity ?? '—' : `${number(line.selected_days)} j`}</td>
       <td>${money(line.investment_pv)}</td><td>${money(line.annual_pv)}</td>
       <td>${money(line.annual_pa)}</td><td>${money(line.annual_pa == null ? null :
         (line.annual_pv ?? 0) - line.annual_pa)}</td>
@@ -303,10 +336,12 @@ function renderEditor() {
       <label>${t('chiffrage.name')}<input data-field="title" value="${escape(state.title)}"></label>
       <label>${t('chiffrage.catalog', { version: Object.keys(state.versions).join(' / ') })}</label>
       ${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}
+      ${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ??
+        state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}
       ${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}
       ${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}
       ${field('dimensions.employees', state.draft.dimensions.employees, t('chiffrage.employees'))}
-    </div></div>${productSection()}${publisherOverridesSection()}${moduleServiceSection()}${technicalSection()}
+    </div></div>${productSection()}${publisherOverridesSection()}${technicalSection()}
     ${serviceSection()}${extraSection()}${lcmSection()}<div id="chiffrageDetail">${lineDetail()}</div>
     <div class="chiffrage-actions"><button class="chiffrage-button primary" data-action="save">${t('chiffrage.save')}</button>
       ${state.quote ? `<button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button>
@@ -342,8 +377,21 @@ function setValue(path, raw, isCheckbox = false) {
     state.draft.modules[Number(parts[1])][parts[2]] = raw === '' ? null : Number(raw);
     return;
   }
-  if (parts.length === 2) state.draft[parts[0]][parts[1]] = isCheckbox ? Boolean(raw) :
-    raw === '' ? null : Number(raw);
+  if (parts.length === 2) {
+    if (path === 'dimensions.population') {
+      const oldDefault = licensedPopulation(state.draft.dimensions.population);
+      const follow = state.draft.dimensions.licensedPopulation === oldDefault;
+      state.draft.dimensions.population = raw === '' ? 0 : Number(raw);
+      if (follow) {
+        state.draft.dimensions.licensedPopulation = licensedPopulation(state.draft.dimensions.population);
+        const input = root.querySelector('[data-field="dimensions.licensedPopulation"]');
+        if (input) input.value = state.draft.dimensions.licensedPopulation;
+      }
+      return;
+    }
+    state.draft[parts[0]][parts[1]] = path === 'lcm.selection' ? raw :
+      isCheckbox ? Boolean(raw) : raw === '' ? null : Number(raw);
+  }
 }
 
 function changeProduct(key, checked) {
@@ -442,6 +490,10 @@ root.addEventListener('change', event => {
     setValue(event.target.dataset.field, event.target.value);
     root.querySelector('#chiffrageSummary').innerHTML = summary();
   }
+  if (event.target.dataset.field === 'lcm.selection') {
+    root.querySelector('#chiffrageSummary').innerHTML = summary();
+    root.querySelector('#chiffrageDetail').innerHTML = lineDetail();
+  }
 });
 
 root.addEventListener('click', async event => {
@@ -450,10 +502,16 @@ root.addEventListener('click', async event => {
   const action = button.dataset.action;
   if (action === 'new') { renderNew(); return; }
   if (action === 'list') { renderList(); return; }
-  if (action === 'addPrime' || action === 'addPartner') {
-    state.draft[action === 'addPrime' ? 'primeLines' : 'partners'].push({
-      family: action === 'addPrime' ? 'prime' : 'partenaires',
-      label: '', quantity: 1, investment_pv: 0, annual_pv: 0 });
+  if (['addPrime','addPartner','addHosting','addLicense','addSupport'].includes(action)) {
+    const partner = action === 'addPartner';
+    const preset = {
+      addHosting: { label: t('chiffrage.hosting'), category: 'hosting' },
+      addLicense: { label: t('chiffrage.primeLicense'), category: 'license' },
+      addSupport: { label: t('chiffrage.primeSupport'), category: 'support' }
+    }[action] ?? {};
+    state.draft[partner ? 'partners' : 'primeLines'].push({
+      family: partner ? 'partenaires' : 'prime', ...preset,
+      quantity: 1, investment_pv: 0, annual_pv: 0 });
     renderEditor(); return;
   }
   if (action === 'removeLine') {

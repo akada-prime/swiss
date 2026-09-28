@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculateQuote, calculatePce, calculateSql, calculateLcm, effective, priceCatalogItem,
+import { calculateQuote, calculatePce, calculateSql, calculateLcm, effective, licensedPopulation, priceCatalogItem,
   selectInnosolvItem } from '../app/chiffrage/calculate.js';
 
 test('catalog follows the declared tier rule, preserves its source and does not interpolate', () => {
@@ -124,4 +124,40 @@ test('standalone ERP and combined ERPs remain calculable, with quantity applied 
     oracle: { full: 1, light: 0 } }, catalog);
   assert.ok(combined.lines.some(line => line.item_code === 'finances'));
   assert.equal(combined.lines.find(line => line.item_code === 'oracle').investment_pv, 100);
+});
+
+test('licensed population is rounded for new quotes but old revisions retain their base', () => {
+  assert.equal(licensedPopulation(1100), 1500);
+  assert.equal(licensedPopulation(1900), 2000);
+  const catalog = { items: [{ vendor: 'innosolv', product: 'Gemeinde', item_code: '1',
+    label_fr: 'Base', pricing_rule: { kind: 'lookup', basis: 'population', tiers: [
+      { up_to: 1100, value: 100 }, { up_to: 1500, value: 150 },
+      { up_to: 2000, value: 200 }] } }],
+  parameters: { publisher_rent: { innosolv: { standard: { pa_rate: .2, pv_rate: .27 } } } } };
+  const input = { products: ['innosolv'], modules: [{ vendor: 'innosolv', product: 'Gemeinde', item_code: '1' }],
+    dimensions: { population: 1100 }, lcm: {}, sql: {} };
+  // SQL is part of an innosolv quote and must be explicitly priced.
+  catalog.parameters.sql = { suggestion: { lowerPopulation: 0, lowerUsers: 0,
+    upperPopulation: 5000, upperUsers: 5 }, core_from_population: 6000,
+  user_base: 0, price_per_user: 0, default_cores: 1, price_per_core: 0 };
+  assert.equal(calculateQuote(input, catalog).lines[0].license_value, 100);
+  assert.equal(calculateQuote({ ...input, dimensions: { population: 1100,
+    licensedPopulation: licensedPopulation(1100) } }, catalog).lines[0].license_value, 150);
+  assert.throws(() => calculateQuote({ ...input, dimensions: {
+    population: 1100, licensedPopulation: 1000 } }, catalog), /must cover/);
+});
+
+test('LCM enters annual total and five-year total only when selected', () => {
+  const input = { products: [], modules: [], dimensions: { population: 1900 },
+    lcm: { gold: 8000 } };
+  const catalog = { items: [], parameters: { lcm: [{ up_to: 5000,
+    gold: 6400, platinium: 15000 }] } };
+  const optional = calculateQuote(input, catalog);
+  assert.equal(optional.summary.annual, 0);
+  assert.equal(optional.summary.tco5y, 0);
+  const included = calculateQuote({ ...input, lcm: { gold: 8000, selection: 'gold' } }, catalog);
+  assert.equal(included.summary.annual, 8000);
+  assert.equal(included.summary.tco5y, 32000);
+  assert.equal(included.summary.tco5y_excluding_lcm, 0);
+  assert.deepEqual(included.summary.incomplete_costs, ['gold']);
 });

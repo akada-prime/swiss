@@ -14,6 +14,9 @@ const roundTo = (value, multiple) => {
   return Math.floor(value / step + 0.5) * step;
 };
 
+export const licensedPopulation = population =>
+  Math.ceil(Math.max(0, finite(population, 'population')) / 500) * 500;
+
 export function suggestedSqlUsers(population, rule) {
   const { lowerPopulation, lowerUsers, upperPopulation, upperUsers } = rule;
   const low = finite(lowerPopulation, 'lower population');
@@ -177,6 +180,11 @@ export function calculateLcm(population, rule, overrides = {}) {
 export function calculateQuote(input, catalog) {
   const lines = [];
   const choices = new Set(input.products ?? []);
+  // Historic revisions without an explicit licensing base keep their original prices.
+  const populationForLicenses = input.dimensions.licensedPopulation ??
+    input.dimensions.population;
+  if (!Number.isInteger(populationForLicenses) || populationForLicenses < input.dimensions.population)
+    throw new Error('Licensed population must cover commune population');
   for (const selected of input.modules ?? []) {
     if (!choices.has(selected.vendor)) continue;
     const item = catalog.items.find(candidate => candidate.vendor === selected.vendor &&
@@ -184,11 +192,14 @@ export function calculateQuote(input, catalog) {
       candidate.item_code === (selected.vendor === 'innosolv' && selected.item_code === '129' && input.canton === 'VD'
         ? '129VD' : selected.item_code));
     if (!item) throw new Error(`Missing catalog item ${selected.vendor}/${selected.item_code}`);
-    const priced = priceCatalogItem(item, input.dimensions);
+    const priced = priceCatalogItem(item, item.vendor === 'innosolv' &&
+      item.pricing_rule?.basis === 'population' ?
+      { ...input.dimensions, population: populationForLicenses } : input.dimensions);
     const rates = catalog.parameters.publisher_rent[selected.vendor]?.[item.rate_class ?? 'standard'];
     if (!rates) throw new Error(`Missing private rates for ${selected.vendor}/${item.rate_class ?? 'standard'}`);
     const rent = calculatePublisherRent(priced.value, rates);
-    lines.push({ family: selected.vendor, item_code: item.item_code, label: item.label_fr,
+    lines.push({ family: selected.vendor, product: item.product,
+      item_code: item.item_code, label: item.label_fr,
       license_value: priced.value, investment_pa: 0, investment_pv: 0,
       annual_pa: effective(rent.pa, selected.pa_override).effective_value,
       annual_pv: effective(rent.pv, selected.pv_override).effective_value,
@@ -221,6 +232,8 @@ export function calculateQuote(input, catalog) {
   }
   for (const entry of [...(input.moduleServices ?? []), ...(input.services ?? []),
     ...(input.primeLines ?? []), ...(input.partners ?? [])]) {
+    const moduleLine = entry.family === 'prestations_module' ?
+      lines.find(line => `${line.family}/${line.product}/${line.item_code}` === entry.item_code) : null;
     const quantity = entry.family === 'prime' || entry.family === 'partenaires' ?
       finite(entry.quantity ?? 1, 'line quantity') : 1;
     if (quantity < 0 || !Number.isInteger(quantity)) throw new Error('Invalid line quantity');
@@ -231,8 +244,10 @@ export function calculateQuote(input, catalog) {
       finite(catalog.parameters.day_rate, 'day rate');
     const investment = effective(serviceValue ?? finite(entry.investment_pv ?? 0,
       'investment PV'), entry.investment_override);
-    lines.push({ family: entry.family, item_code: entry.item_code ?? null,
-      label: entry.label, supplier: entry.supplier ?? null, note: entry.note ?? null,
+    lines.push({ family: entry.family, category: entry.category ?? null,
+      item_code: entry.item_code ?? null,
+      label: moduleLine?.label ?? entry.label, supplier: entry.supplier ?? null,
+      note: entry.note ?? null,
       quantity, investment_pa: optionalMoney(entry.investment_pa) == null ? null :
         optionalMoney(entry.investment_pa) * quantity,
       investment_pv: investment.effective_value * quantity,
@@ -243,6 +258,18 @@ export function calculateQuote(input, catalog) {
       suggested_days: suggestedDays, selected_days: days,
       calculated_investment: investment.calculated_value,
       overrides: { ...entry.overrides, investment: entry.investment_override ?? null } });
+  }
+  const lcm = calculateLcm(input.dimensions.population, catalog.parameters.lcm,
+    input.lcm ?? {});
+  const selectedLcm = input.lcm?.selection;
+  if (selectedLcm && selectedLcm !== 'none') {
+    if (!['gold', 'platinium'].includes(selectedLcm)) throw new Error('Invalid LCM selection');
+    const selectedPrice = lcm[selectedLcm];
+    if (!selectedPrice) throw new Error('Selected LCM price missing');
+    lines.push({ family: 'lcm', item_code: selectedLcm, label: `LCM ${selectedLcm}`,
+      investment_pa: 0, investment_pv: 0, annual_pa: null,
+      annual_pv: selectedPrice.effective_value, software: false,
+      explanation: { source: selectedPrice.source?.method ?? null } });
   }
   const sum = (key, subset = lines) => subset.reduce((total, line) => total + (line[key] ?? 0), 0);
   const investment = sum('investment_pv');
@@ -256,9 +283,10 @@ export function calculateQuote(input, catalog) {
   const softwarePv = sum('annual_pv', software);
   const publisherSoftwarePa = sum('annual_pa', software.filter(line =>
     line.family === 'innosolv' || line.family === 'abacus'));
-  const lcm = calculateLcm(input.dimensions.population, catalog.parameters.lcm,
-    input.lcm ?? {});
-  return { lines, summary: { investment, annual, tco5y_excluding_lcm: investment + annual * 4,
+  return { lines, summary: { investment, annual,
+    tco5y: investment + annual * 4,
+    tco5y_excluding_lcm: investment + (annual - (selectedLcm && selectedLcm !== 'none' ?
+      lcm[selectedLcm].effective_value : 0)) * 4,
     revenue5y: investment + annual * 4, known_costs5y: knownInvestmentCost +
       knownAnnualCost * 4 - publisherAnnualPa / 2,
     year2_margin_known: annual - knownAnnualCost + publisherAnnualPa / 2,
