@@ -219,3 +219,20 @@ html[data-skin="helvetia"] :is(.roadmap-version,.completed-11 .roadmap-version,.
 html[data-skin="helvetia"] :is(.completed-20 .roadmap-version,.history-stage.current .roadmap-version){color:#287057;background:#e8f3ed;border-color:#b9d8c8}
 html[data-skin="helvetia"] :is(.insight-card>strong,.map-impact p,.map-impact b,.map-tooltip small){color:var(--skin-accent-on-dark)}
 html[data-skin="helvetia"] .map-impact{border-color:var(--skin-metric-text);background:linear-gradient(135deg,#26313a,#372930)}
+
+/* Light portrait and explorer surfaces use the same panel → inset → text scale. */
+html[data-skin="helvetia"] :is(.portrait-public-context,.portrait-system){background:var(--skin-card);border-color:var(--skin-border-soft)}
+html[data-skin="helvetia"] :is(.portrait-facts>div,.portrait-system-notes,.portrait-wiki-fallback){background:var(--skin-tint);border-color:var(--skin-border-soft)}
+html[data-skin="helvetia"] :is(.portrait-facts dt,.portrait-section-title>div>span,.portrait-system-notes span,.portrait-source){color:var(--skin-muted)}
+html[data-skin="helvetia"] :is(.portrait-facts dd,.portrait-section-title h3,.portrait-system-notes p){color:var(--skin-text)}
+html[data-skin="helvetia"] :is(.portrait-heading span,.portrait-wiki-card p,.portrait-wiki-fallback p,.portrait-system-empty){color:var(--skin-secondary)}
+html[data-skin="helvetia"] :is(.portrait-no-ai,.portrait-ofs-match){color:#286f54;background:#e8f3ed;border-color:#b9d8c8}
+html[data-skin="helvetia"] .portrait-edit{color:var(--skin-text);background:var(--skin-control);border-color:var(--skin-border)}
+html[data-skin="helvetia"] .portrait-chiffrage{color:var(--skin-metric-text);background:var(--skin-accent-soft)}
+html[data-skin="helvetia"] .portrait-edit:is(:hover,:focus-visible){color:var(--skin-metric-text);background:var(--skin-accent-soft);border-color:var(--skin-accent)}
+html[data-skin="helvetia"] .portrait-edit:focus-visible{outline:2px solid var(--skin-focus);outline-offset:2px}
+html[data-skin="helvetia"] .table-wrap tbody tr{background:var(--skin-card)}
+html[data-skin="helvetia"] .table-wrap tbody tr:nth-child(even){background:var(--skin-tint)}
+html[data-skin="helvetia"] .table-wrap tbody tr:hover{background:var(--skin-accent-soft)}
+html[data-skin="helvetia"] :is(.table-wrap th,.table-wrap td){color:var(--skin-text)}
+html[data-skin="helvetia"] .commune-rank{color:var(--skin-metric-text);background:var(--skin-accent-soft);border-color:var(--skin-border)}

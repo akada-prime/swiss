@@ -148,6 +148,19 @@ elle ne constitue pas un gabarit pixel-perfect.
 - Texte principal : clair, contrasté, réservé au contenu ou à la décision.
 - Texte secondaire : visible sans concurrencer le contenu principal.
 - Microtexte critique : plancher de 12 px ; champs Natel à 16 px.
+- Échelle de lecture commune aux Skins : libellés en capitales à partir de
+  12 px, contenu et valeurs usuelles à partir de 14 px, actions textuelles à
+  partir de 14 px. Les grands titres gardent leur propre hiérarchie ; les
+  détails d'attribution ou icônes purement accessoires peuvent rester compacts.
+  Les tokens `--pc-type-*` portent ces rôles dans la couche responsive partagée.
+- Une étiquette ne doit pas gagner sa visibilité par la seule graisse ou par
+  un espacement extrême entre lettres ; vérifier sa taille et son contraste
+  réel sur PC et Natel.
+- Dans un Skin clair, panneaux, encarts et lignes alternées suivent les
+  surfaces sémantiques `--skin-card`, `--skin-tint` et `--skin-hover` ; texte
+  principal, secondaire et atténué suivent `--skin-text`, `--skin-secondary`
+  et `--skin-muted`. Un ancien fond sombre ne doit pas conserver un texte
+  prévu pour fond sombre lorsque le Skin est clair.
 - Contrôle interactif Natel : hauteur cible minimale de 40 px.
 - Action primaire : gradient Prime et verbe explicite.
 - Action secondaire : bordure et fond discret ; `Réinitialiser` doit rester
