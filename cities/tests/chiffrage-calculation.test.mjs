@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculateQuote, calculatePce, calculateSql, calculateLcm, effective, licensedPopulation, priceCatalogItem,
+import { calculateQuote, calculatePce, calculateSql, calculateLcm, calculatePublisherRent,
+  effective, licensedPopulation, priceCatalogItem,
   selectInnosolvItem } from '../app/chiffrage/calculate.js';
 
 test('catalog follows the declared tier rule, preserves its source and does not interpolate', () => {
@@ -98,6 +99,35 @@ test('LCM options preserve estimate provenance and stay outside the main TCO', (
   assert.equal(result.gold.five_year_option, 1000);
   assert.equal(result.gold.source.sample_size, 4);
   assert.equal(result.platinium.five_year_option, 1600);
+});
+
+test('Prime 2027 publisher rent uses 20% PA and 27% PV on the licence value', () => {
+  assert.deepEqual(calculatePublisherRent(5500, { pa_rate: .2, pv_rate: .27 }),
+    { pa: 1100, pv: 1485 });
+});
+
+test('LCM uses the strict Habitants < boundary, including irregular bands', () => {
+  const bands = [
+    [2000, 6400, 16000], [3000, 8000, 20000], [5000, 10000, 25000],
+    [8000, 12000, 35000], [12000, 15000, 50000],
+    [15000, 18000, 60000], [20000, 20000, 80000],
+    [30000, 24000, 100000]
+  ].map(([up_to, gold, platinium]) => ({ up_to, gold, platinium }));
+  for (const [population, band, gold, platinium] of [
+    [1999, 2000, 6400, 16000], [2000, 3000, 8000, 20000],
+    [2999, 3000, 8000, 20000], [3000, 5000, 10000, 25000],
+    [5000, 8000, 12000, 35000], [12000, 15000, 18000, 60000],
+    [29999, 30000, 24000, 100000]
+  ]) {
+    const result = calculateLcm(population, bands);
+    assert.equal(result.block, band);
+    assert.equal(result.gold.effective_value, gold);
+    assert.equal(result.platinium.effective_value, platinium);
+  }
+  const beyond = calculateLcm(30000, bands);
+  assert.equal(beyond.block, null);
+  assert.equal(beyond.missing_reference, true);
+  assert.equal(calculateLcm(30000, bands, { gold: 25000 }).gold.effective_value, 25000);
 });
 
 test('standalone ERP and combined ERPs remain calculable, with quantity applied to extra lines', () => {

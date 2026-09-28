@@ -1,6 +1,6 @@
 import { t, number } from '../core/i18n.js?v=20260928-chiffrage-mobile';
 import { subscribePreferences } from '../core/preferences.js';
-import { calculateQuote, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20260928-offre-client-3';
+import { calculateQuote, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20260928-tarif-lcm';
 
 const root = document.getElementById('chiffrageRoot');
 const runtime = window.PrimeCommunesRuntime;
@@ -94,9 +94,7 @@ function firstDraft(row) {
       meters: 0, taxes: 0, employees: 0 },
     products: [], modules: [], moduleServices: [], services: [], primeLines: [],
     partners: [], pce: { finances: true, salaires: true, interfacePa: 0 },
-    oracle: { full: 0, light: 0 }, sql: {},
-    lcm: { gold: Number(row.expectedPopulation ?? 0) > 0 &&
-      Number(row.expectedPopulation ?? 0) <= 5000 ? 8000 : null } };
+    oracle: { full: 0, light: 0 }, sql: {}, lcm: {} };
   state.title = `${row.name} — Variante 1`;
   state.revision = null;
   state.quote = null;
@@ -221,7 +219,6 @@ function technicalSection() {
 
 function extraSection() {
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.partners')}</summary>
-    <p>${t('chiffrage.supportSplitHint')}</p>
     ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index })),
       ...state.draft.partners.map((line, index) => ({ ...line, kind: 'partners', index }))]
       .map(line => `<div class="chiffrage-line">
@@ -239,14 +236,12 @@ function extraSection() {
         <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${line.kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div>`).join('')}
     <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addHosting">${t('chiffrage.addHosting')}</button>
       <button type="button" class="chiffrage-button" data-action="addLicense">${t('chiffrage.addPrimeLicense')}</button>
-      <button type="button" class="chiffrage-button" data-action="addSupport">${t('chiffrage.addPrimeSupport')}</button>
       <button type="button" class="chiffrage-button" data-action="addPrime">${t('chiffrage.addLine')} Prime</button>
       <button type="button" class="chiffrage-button" data-action="addPartner">${t('chiffrage.addLine')} ${t('chiffrage.partner')}</button></div></details>`;
 }
 
 function lcmSection() {
   return `<details class="chiffrage-section"><summary>${t('chiffrage.lcm')}</summary>
-    <p>${t('chiffrage.goldGuidance')}</p>
     <div class="chiffrage-grid"><label>${t('chiffrage.lcmSelection')}<select data-field="lcm.selection">
       ${[['none', t('chiffrage.lcmNone')], ['gold','Gold'], ['platinium','Platinum']].map(([key,label]) =>
         `<option value="${key}" ${(state.draft.lcm.selection ?? 'none') === key ? 'selected' : ''}>${label}</option>`).join('')}
@@ -506,12 +501,11 @@ root.addEventListener('click', async event => {
   const action = button.dataset.action;
   if (action === 'new') { renderNew(); return; }
   if (action === 'list') { renderList(); return; }
-  if (['addPrime','addPartner','addHosting','addLicense','addSupport'].includes(action)) {
+  if (['addPrime','addPartner','addHosting','addLicense'].includes(action)) {
     const partner = action === 'addPartner';
     const preset = {
       addHosting: { label: t('chiffrage.hosting'), category: 'hosting' },
-      addLicense: { label: t('chiffrage.primeLicense'), category: 'license' },
-      addSupport: { label: t('chiffrage.primeSupport'), category: 'support' }
+      addLicense: { label: t('chiffrage.primeLicense'), category: 'license' }
     }[action] ?? {};
     state.draft[partner ? 'partners' : 'primeLines'].push({
       family: partner ? 'partenaires' : 'prime', ...preset,

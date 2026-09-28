@@ -162,8 +162,11 @@ export function calculateOracle(input, rule) {
 }
 
 export function calculateLcm(population, rule, overrides = {}) {
-  const block = Math.ceil(finite(population, 'population') / 5000) * 5000;
-  const entry = rule?.find(candidate => candidate.up_to === block);
+  // Commercial bands are labelled "Habitants <": the upper bound is exclusive.
+  const inhabitants = finite(population, 'population');
+  const entry = [...(rule ?? [])].sort((a, b) => a.up_to - b.up_to)
+    .find(candidate => inhabitants < finite(candidate.up_to, 'LCM boundary'));
+  const block = entry?.up_to ?? null;
   const one = (key) => entry?.[key] == null ? (overrides[key] == null ? null :
     { calculated_value: null, override_value: finite(overrides[key], 'LCM override'),
       effective_value: finite(overrides[key], 'LCM override'), difference: null,
@@ -259,6 +262,7 @@ export function calculateQuote(input, catalog) {
       calculated_investment: investment.calculated_value,
       overrides: { ...entry.overrides, investment: entry.investment_override ?? null } });
   }
+  // Previously saved quotes can still contain the former split-support line.
   const primeSupport = lines.filter(line => line.family === 'prime' &&
     line.category === 'support').reduce((amount, line) => amount + (line.annual_pv ?? 0), 0);
   if (primeSupport) {
