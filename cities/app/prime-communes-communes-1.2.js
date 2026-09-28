@@ -1,4 +1,4 @@
-import {t} from './core/i18n.js?v=20260926-preferences-2';
+import {t} from './core/i18n.js?v=20260928-chiffrage-mobile';
 (() => {
   'use strict';
 
@@ -157,6 +157,7 @@ import {t} from './core/i18n.js?v=20260926-preferences-2';
           <p class="portrait-source">${t('communes.wikipediaSource')}</p>
         </section>
         ${portraitSystemMarkup(commune)}
+        <button class="portrait-edit portrait-chiffrage" type="button">${t('chiffrage.create')}</button>
         <button class="portrait-edit" type="button"><span aria-hidden="true">✎</span> ${t('communes.edit')}</button>
       </aside>
     </div>`;
@@ -165,7 +166,12 @@ import {t} from './core/i18n.js?v=20260926-preferences-2';
     root.querySelector('.portrait-settings').onclick = () => document.getElementById('settingsTrigger').click();
     root.querySelector('.portrait-close').onclick = closeCommunePortrait;
     root.querySelector('.portrait-backdrop').onclick = event => { if (event.target === event.currentTarget) closeCommunePortrait(); };
-    root.querySelector('.portrait-edit').onclick = () => {
+    root.querySelector('.portrait-chiffrage').onclick = () => {
+      closeCommunePortrait();
+      if (mobileSearchIsOpen()) closeMobileSearch();
+      document.dispatchEvent(new CustomEvent('prime:chiffrage-commune', { detail: commune }));
+    };
+    root.querySelector('.portrait-edit:not(.portrait-chiffrage)').onclick = () => {
       closeCommunePortrait();
       if (mobileSearchIsOpen()) closeMobileSearch();
       openDrawer(commune);

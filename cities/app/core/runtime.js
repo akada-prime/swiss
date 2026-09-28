@@ -1,4 +1,4 @@
-import { t, number, date } from './i18n.js?v=20260926-preferences-2';
+import { t, number, date } from './i18n.js?v=20260928-chiffrage-mobile';
 // Prime Communes 2.0 — shell and shared compatibility contract.
 
 const fmt={format:value=>number(value)},pct={format:value=>number(value,{minimumFractionDigits:1,maximumFractionDigits:1})};let all=[],primeOnly=false,eadminOnly=false,issuesOnly=false,districtsMode=false,marketOnly='',ofsMode=false,sortKey='population',sortDirection='desc',mapGeometry=null,mapMode='integrator',mapPerspective='impact',mapProduct='eAdmin',mapViewBox=null,mapInitialViewBox=null,mapFullViewBox=null,mapDragging=false,mapMoved=false,statsMetric='population',statsThreshold=0,lastReferenceDate='',lastDataSource='';
