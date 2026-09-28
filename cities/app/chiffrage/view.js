@@ -94,7 +94,9 @@ function firstDraft(row) {
       meters: 0, taxes: 0, employees: 0 },
     products: [], modules: [], moduleServices: [], services: [], primeLines: [],
     partners: [], pce: { finances: true, salaires: true, interfacePa: 0 },
-    oracle: { full: 0, light: 0 }, sql: {}, lcm: {} };
+    oracle: { full: 0, light: 0 }, sql: {},
+    lcm: { gold: Number(row.expectedPopulation ?? 0) > 0 &&
+      Number(row.expectedPopulation ?? 0) <= 5000 ? 8000 : null } };
   state.title = `${row.name} — Variante 1`;
   state.revision = null;
   state.quote = null;
@@ -244,6 +246,7 @@ function extraSection() {
 
 function lcmSection() {
   return `<details class="chiffrage-section"><summary>${t('chiffrage.lcm')}</summary>
+    <p>${t('chiffrage.goldGuidance')}</p>
     <div class="chiffrage-grid"><label>${t('chiffrage.lcmSelection')}<select data-field="lcm.selection">
       ${[['none', t('chiffrage.lcmNone')], ['gold','Gold'], ['platinium','Platinum']].map(([key,label]) =>
         `<option value="${key}" ${(state.draft.lcm.selection ?? 'none') === key ? 'selected' : ''}>${label}</option>`).join('')}

@@ -572,6 +572,7 @@ export default {
   "chiffrage.hostingPartners": "Hosting und Partner",
   "chiffrage.lcmSelection": "LCM im Angebot enthalten",
   "chiffrage.lcmNone": "Keine",
+  "chiffrage.goldGuidance": "Gold: 8’000 CHF Vorschlag bis 5’000 Einwohner für neue Kalkulationen. Betrag anpassbar; nur bei Auswahl von Gold in der Summe enthalten.",
   "chiffrage.addHosting": "Hosting hinzufügen",
   "chiffrage.addPrimeLicense": "Prime-Lizenz hinzufügen",
   "chiffrage.addPrimeSupport": "Jährlichen Prime-Support hinzufügen",
