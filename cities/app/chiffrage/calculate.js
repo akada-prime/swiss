@@ -183,6 +183,14 @@ export function calculateLcm(population, rule, overrides = {}) {
 export function calculateQuote(input, catalog) {
   const lines = [];
   const choices = new Set(input.products ?? []);
+  const commercial = input.commercial ?? {};
+  const rate = (key, defaultValue) => {
+    const value = finite(commercial[key] ?? defaultValue, key);
+    if (value < 0 || value >= 1) throw new Error(`Invalid ${key}`);
+    return value;
+  };
+  const dayRate = finite(commercial.dayRate ?? catalog.parameters.day_rate ?? 0, 'day rate');
+  if (dayRate < 0) throw new Error('Invalid day rate');
   // Historic revisions without an explicit licensing base keep their original prices.
   const populationForLicenses = input.dimensions.licensedPopulation ??
     input.dimensions.population;
@@ -200,7 +208,10 @@ export function calculateQuote(input, catalog) {
       { ...input.dimensions, population: populationForLicenses } : input.dimensions);
     const rates = catalog.parameters.publisher_rent[selected.vendor]?.[item.rate_class ?? 'standard'];
     if (!rates) throw new Error(`Missing private rates for ${selected.vendor}/${item.rate_class ?? 'standard'}`);
-    const rent = calculatePublisherRent(priced.value, rates);
+    const standard = (item.rate_class ?? 'standard') === 'standard';
+    const adjustedRates = standard ? { pa_rate: rate(`${selected.vendor}PaRate`, rates.pa_rate),
+      pv_rate: rate(`${selected.vendor}PvRate`, rates.pv_rate) } : rates;
+    const rent = calculatePublisherRent(priced.value, adjustedRates);
     lines.push({ family: selected.vendor, product: item.product,
       item_code: item.item_code, label: item.label_fr,
       license_value: priced.value, investment_pa: 0, investment_pv: 0,
@@ -214,7 +225,8 @@ export function calculateQuote(input, catalog) {
       .reduce((sum, line) => sum + line.annual_pa, 0);
     const pce = calculatePce({ ...input.pce,
       innosolvPaBase: input.pce?.innosolvPaBaseOverride ?? innosolvPaBase },
-    catalog.parameters.pce);
+    { ...catalog.parameters.pce,
+      pv_margin: rate('pcePvMargin', catalog.parameters.pce.pv_margin) });
     for (const key of ['finances', 'salaires']) if (input.pce[key]) {
       lines.push({ family: 'pce', item_code: key, label: key,
         investment_pa: 0, investment_pv: 0, annual_pa: pce.pa[key].effective_value,
@@ -243,8 +255,7 @@ export function calculateQuote(input, catalog) {
     const suggestedDays = entry.suggested_days ??
       catalog.parameters.service_presets?.[entry.level]?.[entry.item_code] ?? null;
     const days = entry.days ?? suggestedDays;
-    const serviceValue = days == null ? null : Number(days) *
-      finite(catalog.parameters.day_rate, 'day rate');
+    const serviceValue = days == null ? null : Number(days) * dayRate;
     const investment = effective(serviceValue ?? finite(entry.investment_pv ?? 0,
       'investment PV'), entry.investment_override);
     lines.push({ family: entry.family, category: entry.category ?? null,

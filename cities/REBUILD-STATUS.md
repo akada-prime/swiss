@@ -1,5 +1,14 @@
 # État de reprise — Prime Communes 2.0
 
+> **Chiffrage 3.0 — essai d’interface, 29.09.2026 :** l’éditeur réorganise le
+> chiffrage en Composer, Licences et options, Prestations, PV et taux, Analyse.
+> Le résumé client distingue investissement, annuel et cinq ans ; les marges et
+> coûts incomplets sont dans Analyse. Les taux commerciaux peuvent être adaptés
+> par chiffrage, avec recalcul identique côté client et serveur. Le choix ERP
+> relie les modules d’intégration innosolv 21 (Abacus) et 22 (ProConcept).
+> Les modules compteurs 501/502/533 restent bloqués tant que leurs règles
+> tarifaires Versorger sont non vérifiées. Aucun prix n’est déduit pour eux.
+
 > **Affinage 2.5 — 27.09.2026 :** le panneau Paramètres n’utilise plus d’emoji dépendant du rendu Windows ; la roadmap produit est volontairement synthétique, la 3.0 reste dédiée au Chiffrage et une 3.5 regroupe infrastructure Prime, accès et historique du marché.
 
 > **Jalon produit 2.5 — 27.09.2026 : terminé.** La roadmap affichée dans l’application est alignée sur le socle consolidé 2.5 ; la prochaine grande version est **3.0 — Chiffrage**. Les idées de copilote IA sont déplacées en brainstorming futur non planifié.

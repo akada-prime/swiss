@@ -106,6 +106,29 @@ test('Prime 2027 publisher rent uses 20% PA and 27% PV on the licence value', ()
     { pa: 1100, pv: 1485 });
 });
 
+test('quote commercial overrides change the versioned rates without mutating its catalog', () => {
+  const catalog = { items: [{ vendor: 'innosolv', product: 'Gemeinde', item_code: '1',
+    label_fr: 'Base', pricing_rule: { kind: 'lookup', basis: 'population',
+      tiers: [{ up_to: 2000, value: 1000 }] } }],
+  parameters: { day_rate: 1760, publisher_rent: { innosolv: { standard: {
+    pa_rate: .2, pv_rate: .27 } } }, sql: { suggestion: { lowerPopulation: 0,
+    lowerUsers: 0, upperPopulation: 2000, upperUsers: 1 }, core_from_population: 6000,
+    user_base: 0, price_per_user: 0, default_cores: 1, price_per_core: 0 } } };
+  const input = { products: ['innosolv'], dimensions: { population: 1800, licensedPopulation: 2000 },
+    modules: [{ vendor: 'innosolv', product: 'Gemeinde', item_code: '1' }], sql: {},
+    moduleServices: [{ family: 'prestations_module', item_code: 'innosolv/Gemeinde/1', days: 2 }] };
+  const initial = calculateQuote(input, catalog);
+  const changed = calculateQuote({ ...input, commercial: {
+    innosolvPaRate: .21, innosolvPvRate: .3, dayRate: 1800 } }, catalog);
+  assert.equal(initial.summary.annual, 270);
+  assert.equal(initial.summary.investment, 3520);
+  assert.equal(changed.summary.annual, 300);
+  assert.equal(changed.summary.investment, 3600);
+  assert.equal(changed.lines[0].annual_pa, 210);
+  assert.equal(catalog.parameters.publisher_rent.innosolv.standard.pv_rate, .27);
+  assert.throws(() => calculateQuote({ ...input, commercial: { innosolvPvRate: 1 } }, catalog), /Invalid innosolvPvRate/);
+});
+
 test('LCM includes the Habitants <= boundary, including irregular bands', () => {
   const bands = [
     [2000, 6400, 16000], [3000, 8000, 20000], [5000, 10000, 25000],
