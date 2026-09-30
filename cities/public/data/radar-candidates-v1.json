@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-09-28T11:42:24.272Z",
+    "generatedAt": "2026-09-30T11:10:40.806Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
@@ -2520,6 +2520,96 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : digital",
+      "status": "pending"
+    },
+    {
+      "id": "8cd028edb070674d5c705568407eda17a9bac2666884434808fea769c0d40dbe",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "ESP Ausserholligen, Gesamtleiter, Ladenwandgut",
+      "url": "https://www.simap.ch/fr/?search=343d0b78-7688-4de6-a742-9f083898c3b2",
+      "detectedAt": "2026-09-30T11:10:40.804Z",
+      "publicationDate": "2026-09-30",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "6c11b240d58be509d088b7be4fd5b7748530d3f079e166df3c5755680afb1c52",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Chef/fe de projet en location de services (LSE) - Modernisation du SI de Statistique Vaud",
+      "url": "https://www.simap.ch/fr/?search=842dadbc-f7b7-4b68-a414-cdb2a444a486",
+      "detectedAt": "2026-09-30T11:10:40.804Z",
+      "publicationDate": "2026-09-30",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : modernisation",
+      "status": "pending"
+    },
+    {
+      "id": "daef79139db1d46d31a686c5eea6e8c17b55835f25bbabc7ad91f513745c7d57",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Baumeisterarbeiten BHF Bümpliz Nord",
+      "url": "https://www.simap.ch/fr/?search=7fbfe9ff-3ce0-4e9f-b9a2-bfcc92f90c86",
+      "detectedAt": "2026-09-30T11:10:40.804Z",
+      "publicationDate": "2026-09-29",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "13a915aeca906c2a7d3d2127ef6b2b215c3ee36260a820c6aa5ab6a3c5198e91",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Bauherrenunterstützung Bahnhof Marin Epagnier",
+      "url": "https://www.simap.ch/fr/?search=2433e872-d8ad-493e-847f-3a9952c4f4ab",
+      "detectedAt": "2026-09-30T11:10:40.804Z",
+      "publicationDate": "2026-09-29",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "586bced9483881a658816b9361d4427e4bd960e5db785e7a084781c048e12038",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Ressources Cheffes ou chefs de projet et Business Analyst",
+      "url": "https://www.simap.ch/fr/?search=36b63a36-1766-4850-8ec0-a2ac668d170b",
+      "detectedAt": "2026-09-30T11:10:40.804Z",
+      "publicationDate": "2026-09-29",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "7fcb1d7025f16f39575624d6029a74ae6bec82e9967f9fbded60bfd7b837d7c9",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Appel d’offres pour la fourniture des licences et du support de la solution Abacus",
+      "url": "https://www.simap.ch/fr/?search=3ecd2c2e-c931-40d8-82f9-3c06cd723856",
+      "detectedAt": "2026-09-30T11:10:40.804Z",
+      "publicationDate": "2026-09-29",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
       "status": "pending"
     }
   ]
