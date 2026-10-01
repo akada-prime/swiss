@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-09-30T11:10:40.806Z",
+    "generatedAt": "2026-10-01T11:37:46.291Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
@@ -2610,6 +2610,81 @@
       "publicationDate": "2026-09-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "35b337708bba4a9178b93f6cdc17650caa353aef1f4b4fa4592970724f64fe16",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Gestion électronique de documents qualité (eQMS) pour le CHUV",
+      "url": "https://www.simap.ch/fr/?search=e164268c-5c1d-4538-ad75-ef48b7964f48",
+      "detectedAt": "2026-10-01T11:37:40.007Z",
+      "publicationDate": "2026-10-01",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "f2711c36953992fa5256f190f9e07e7bb621cf726d9d6dd2618d5812a9c3b8d6",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Projet informatique de gestion des identités",
+      "url": "https://www.simap.ch/fr/?search=6b3c8614-8647-4f7b-b4bd-5d7e2cf135c8",
+      "detectedAt": "2026-10-01T11:37:40.007Z",
+      "publicationDate": "2026-10-01",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "c9d6e56c42b4a2a3f6e0c6affaaa6d3c9485998a4ef15847000fadf34c541b68",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Attribution de 34 postes externes pour l’OCSIN (LSE 2026-01)",
+      "url": "https://www.simap.ch/fr/?search=10b23ca4-f4d4-40f9-9013-3434537f2019",
+      "detectedAt": "2026-10-01T11:37:40.007Z",
+      "publicationDate": "2026-10-01",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : numérique",
+      "status": "pending"
+    },
+    {
+      "id": "4f1d2e8aaabf1c4eaa04d8fcc96aee28a9ce8faf07ad8b6b475a551676ff2c82",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "RFI Cachet électronique",
+      "url": "https://www.simap.ch/fr/?search=c217154b-b431-433b-a506-5a06d810dba2",
+      "detectedAt": "2026-10-01T11:37:40.007Z",
+      "publicationDate": "2026-10-01",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : numérique",
+      "status": "pending"
+    },
+    {
+      "id": "d7332b4de4b4ca635fd1c472800014993e3110c4c3d34bc3a67630e29000f64a",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Staat Wallis – Wartungsvertrag – BKP 334 Sicherheitsausrüstung – Oberwallis",
+      "url": "https://www.simap.ch/fr/?search=b93ffe8c-5f1e-416c-9938-a6ba9d28474c",
+      "detectedAt": "2026-10-01T11:37:40.007Z",
+      "publicationDate": "2026-10-01",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
       "status": "pending"
     }
   ]
