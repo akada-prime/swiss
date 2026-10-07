@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-10-05T12:17:31.359Z",
+    "generatedAt": "2026-10-07T11:47:46.922Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
@@ -2833,6 +2833,66 @@
       "url": "https://www.simap.ch/fr/?search=e02bfd7f-d077-4011-a7e9-cb4165610d97",
       "detectedAt": "2026-10-05T12:17:17.936Z",
       "publicationDate": "2026-10-02",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "d3432167acb4939508e422faf1badb9e8c9c01a5f37da035a04bbecb97c9bcf3",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Aussengestaltung Gletsch / BKP 411 Baumeisterarbeiten",
+      "url": "https://www.simap.ch/fr/?search=bc4a52ee-2a33-40fb-912f-d4863b9285bf",
+      "detectedAt": "2026-10-07T11:47:46.918Z",
+      "publicationDate": "2026-10-07",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "4291c3ba0cdc0764d19d14bcdd0ebab74a50b4d0086d47b63b6e1819327afd5e",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "BKS-2319 Durchführung der Erhebung zu Familien und Generationen 2028 und der Erhebung zur Sprache, Religion und Kultur 2029.",
+      "url": "https://www.simap.ch/fr/?search=cbd6cc80-5792-4a2c-88f1-ec6b22ce3201",
+      "detectedAt": "2026-10-07T11:47:46.918Z",
+      "publicationDate": "2026-10-07",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "4166bb1d07d83775f7ba4401667bd3aaf795c56fdd557a08b097b78b1f38b420",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "UNIL - licences de virtualisation",
+      "url": "https://www.simap.ch/fr/?search=28924f2c-9875-4618-afde-d276d8e2beca",
+      "detectedAt": "2026-10-07T11:47:46.918Z",
+      "publicationDate": "2026-10-07",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "ee7e4ae64e01bdc4992598f8bc47ef9029a36463a52bf2822fe6e9c8ee54dbfb",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "ASSISTANCE AUX PRESTATIONS GÉOMATIQUES  Période 2027–2029",
+      "url": "https://www.simap.ch/fr/?search=be20c76f-3afd-47dc-b6c8-6f7b89b56a0b",
+      "detectedAt": "2026-10-07T11:47:46.918Z",
+      "publicationDate": "2026-10-06",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
       "status": "pending"
