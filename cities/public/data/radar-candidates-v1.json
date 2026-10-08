@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-10-07T11:47:46.922Z",
+    "generatedAt": "2026-10-08T12:02:26.863Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
@@ -2895,6 +2895,21 @@
       "publicationDate": "2026-10-06",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "07c5e7163c22179993c7e03cce1fa32714c88110043c02780f89fa34700b7ea7",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Intégration de la solution SAP Analytics Cloud for Planning et SAP Datasphere pour la République et Canton de Neuchâtel",
+      "url": "https://www.simap.ch/fr/?search=f589be44-4c1f-426d-8d46-6a93aefaec25",
+      "detectedAt": "2026-10-08T12:02:22.001Z",
+      "publicationDate": "2026-10-08",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : cloud",
       "status": "pending"
     }
   ]
