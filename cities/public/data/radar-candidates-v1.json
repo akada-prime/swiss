@@ -1,90 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-10-15T09:55:28.905Z",
+    "generatedAt": "2026-10-16T09:50:19.571Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "ccf04f09a5af99a1ddd853662efec17e0e6055d11caa29d50f5172e3435c07c5",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Bauherrenunterstützung und Projektmanagement Office BHU/PMO für das Projekt \"Sirius3 – Zentrales Aus- und Weiterbildungszentrum für Feuerwehr, Zivilschutz und Kantonspolizei",
-      "url": "https://www.simap.ch/fr/?search=764d5782-59c0-40f4-aadf-a1af4aab544d",
-      "detectedAt": "2026-09-21T20:44:27.463Z",
-      "publicationDate": "2026-09-21",
-      "bootstrapDays": 14,
-      "reason": "bootstrap D-14 · mot-clé déterministe : gestion",
-      "status": "discarded",
-      "reviewedAt": "2026-09-21T20:58:00Z",
-      "review": {
-        "decision": "discarded",
-        "reason": "Assistance à maîtrise d’ouvrage / PMO d’un projet immobilier et de formation ; hors périmètre numérique communal Prime."
-      }
-    },
-    {
-      "id": "b728c65a57571409778f049ba8c1484c9f96931ffeb8ea094a3cd47273a00d43",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "BKP 237 Gebäudeautomation -  APB-000274-30 Thun, Polygon, Sanierung Gebäudehülle Haustechnik",
-      "url": "https://www.simap.ch/fr/?search=62b3b23e-32e5-49e3-9186-b8810654953c",
-      "detectedAt": "2026-09-21T20:44:27.463Z",
-      "publicationDate": "2026-09-21",
-      "bootstrapDays": 14,
-      "reason": "bootstrap D-14 · mot-clé déterministe : automatisation",
-      "status": "discarded",
-      "reviewedAt": "2026-09-21T20:58:00Z",
-      "review": {
-        "decision": "discarded",
-        "reason": "Automatisation technique de bâtiment à Thoune ; pas une automatisation administrative ou logicielle."
-      }
-    },
-    {
-      "id": "af4a4b547bf6f7088bab3c138bb8c493f95f560f423fcf0a06c17f2214ea04f9",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Transformatoren Los 1 KW Hopflauenen und Los 2 KW Fuhren",
-      "url": "https://www.simap.ch/fr/?search=f8516779-4f63-4c3d-bcf6-f2d8b06ca7a4",
-      "detectedAt": "2026-09-21T20:44:27.463Z",
-      "publicationDate": "2026-09-19",
-      "bootstrapDays": 14,
-      "reason": "bootstrap D-14 · mot-clé déterministe : rh",
-      "status": "discarded",
-      "reviewedAt": "2026-09-21T20:58:00Z",
-      "review": {
-        "decision": "discarded",
-        "reason": "Transformateurs / infrastructure énergétique ; faux positif « rh » sans lien métier Prime."
-      }
-    },
-    {
-      "id": "2fdff685783fd857ccf69df8cbb9e24cf71128ef024255a05abcc3daca5a8471",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Benchmark Budget RH ECA",
-      "url": "https://www.simap.ch/fr/?search=16f52e88-2a3d-4b13-8c0c-c28300a5608d",
-      "detectedAt": "2026-09-21T20:44:27.463Z",
-      "publicationDate": "2026-09-19",
-      "bootstrapDays": 14,
-      "reason": "bootstrap D-14 · mot-clé déterministe : rh",
-      "status": "discarded",
-      "reviewedAt": "2026-09-21T20:58:00Z",
-      "review": {
-        "decision": "discarded",
-        "reason": "Sujet RH potentiellement pertinent, mais adjudicateur ECA Vaud et non commune ; hors périmètre actuel de Prime Communes."
-      }
-    },
     {
       "id": "81509938c102d2066b7e13c80869c114d483ddf310d078b39864c120e2164a2a",
       "sourceId": "simap-romandie",
@@ -3070,6 +2990,66 @@
       "publicationDate": "2026-10-13",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "9e233ac1cf09f6bac7257d82c0ec6a4be83bf0951c5d1ed655a6bca047d1af33",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Beschaffung Oberflächenbehandlung, Schweiss- und Werkstoffprüfung der Fahrleitungsmasten",
+      "url": "https://www.simap.ch/fr/?search=259f8217-9084-4def-851d-4296f722d919",
+      "detectedAt": "2026-10-16T09:50:19.568Z",
+      "publicationDate": "2026-10-16",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "7a7c5209369f949dc3939516cbeca75c4e887c10144642cec383bf45347b9584",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Appel d'offres public pour la mise en valeur et la création de contenu éditorial pour le portail Santé Genève (SaGE)",
+      "url": "https://www.simap.ch/fr/?search=13ddea55-2cbc-4b71-947b-4b07385e5572",
+      "detectedAt": "2026-10-16T09:50:19.568Z",
+      "publicationDate": "2026-10-16",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : portail",
+      "status": "pending"
+    },
+    {
+      "id": "6333841c2fa986cfd7239e70ef275dc7a68eb48474236ca4adb90779d534aa49",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Attribution de 52 postes externes pour l’OCSIN (LSE 2026-04)",
+      "url": "https://www.simap.ch/fr/?search=be55c522-37de-4e92-9e47-89b3c0733d5e",
+      "detectedAt": "2026-10-16T09:50:19.568Z",
+      "publicationDate": "2026-10-16",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "0326412613bbefe5f99e4fb9bbfd99a31d7421cebdb021b8414fc0a178558492",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Révision du cadastre des sites pollués par l’intégration des substances per- et polyfluoroalkylées (PFAS) et gestion des sites pollués / Location de services",
+      "url": "https://www.simap.ch/fr/?search=5f1a6d17-450a-427e-8696-6cdba3fd8411",
+      "detectedAt": "2026-10-16T09:50:19.568Z",
+      "publicationDate": "2026-10-16",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
       "status": "pending"
     }
   ]
