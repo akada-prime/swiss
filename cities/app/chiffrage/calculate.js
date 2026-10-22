@@ -193,6 +193,8 @@ export function calculateLcm(population, rule, overrides = {}) {
 export function calculateQuote(input, catalog) {
   const hosting = [...(input.primeLines ?? []), ...(input.partners ?? [])]
     .filter(line => line.category === 'hosting');
+  if (hostingIncluded(input) && hosting.some(line => line.reference_products?.some(product =>
+    !input.products.includes(product)))) throw new Error('Hosting reference scope changed');
   if (input.hosting?.included === true && (!hosting.length || hosting.some(line =>
     line.investment_pv == null || line.annual_pv == null)))
     throw new Error('Hosting prices required');

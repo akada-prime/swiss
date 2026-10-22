@@ -39,7 +39,8 @@ export function applyHosting(input, catalog) {
   if ([...(input.primeLines ?? []), ...(input.partners ?? [])].some(row => row.category === 'hosting')) return;
   const preset = catalog.parameters.hosting_presets?.find(row =>
     !row.products?.length || row.products.every(product => input.products.includes(product)));
-  if (preset) input.primeLines.push(...structuredClone(preset.lines));
+  if (preset) input.primeLines.push(...structuredClone(preset.lines).map(line => ({
+    ...line, reference_products: structuredClone(preset.products ?? []) })));
 }
 
 // Keep removed modules and their adjustments in the quote, outside the engine inputs.

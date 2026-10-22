@@ -750,5 +750,8 @@ export default {
   "chiffrage.serviceDaysRequired": "Teilinvestition: {count} Leistung(en) ohne Referenztage. Vor Abschluss oder Export ergänzen.",
   "chiffrage.completeServices": "Leistungen ergänzen",
   "chiffrage.groupedServices": "Paket-Tage unter Leistungen",
-  "chiffrage.exportInternal": "Intern exportieren · Einkaufspreise und Margen"
+  "chiffrage.exportInternal": "Intern exportieren · Einkaufspreise und Margen",
+  "chiffrage.hostingPrefilled": "Beträge aus der angegebenen privaten Referenz vorausgefüllt. Anpassungen gelten nur für diese Kalkulation.",
+  "chiffrage.hostingScopeChanged": "Der ERP-Umfang hat sich geändert. Hosting-Beträge bleiben erhalten; bestätigen Sie sie für diese Konfiguration oder passen Sie sie an.",
+  "chiffrage.confirmHosting": "Diese Beträge für den aktuellen Umfang bestätigen"
 };

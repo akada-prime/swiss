@@ -52,3 +52,9 @@ test('ERP-specific services remain in the snapshot but do not charge the other E
  assert.equal(calculateQuote(draft,catalog).lines.some(line=>line.item_code==='pce-setup'),false);
  assert.equal(draft.services.find(line=>line.item_code==='pce-setup').days,8);
 });
+test('a source-specific hosting amount cannot silently follow a change of ERP scope',()=>{
+ const draft=input();draft.hosting={included:true};draft.primeLines=[{family:'prime',category:'hosting',investment_pv:20,annual_pv:30,reference_products:['pce']}];
+ assert.throws(()=>calculateQuote(draft,catalog),/Hosting reference scope changed/);
+ draft.primeLines[0].reference_products=[];
+ assert.equal(calculateQuote(draft,catalog).summary.annual,30);
+});

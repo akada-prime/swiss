@@ -199,3 +199,19 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
 - Export client par liste positive, distinct de l'export interne complet.
 - Publication de production et activation privée non effectuées : voir
   `docs/chiffrage-configurateur.md` pour la coordination et les limites de source.
+
+### Recette du configurateur · préparation de publication
+
+- Les six formats ont été mesurés dans le navigateur : 360 × 780, 430 × 932,
+  768 × 1 024, 1 366 × 768, 1 920 × 1 080 et 2 560 × 1 440 ; aucun
+  débordement horizontal du configurateur.
+- Parcours réel sur données fictives : changement ERP avec interface, jours de
+  formation personnalisés conservés, GP recalculée, hébergement ajouté/retiré
+  sans duplication, sauvegarde et lien de reprise disponibles.
+- Accès interne : confirmation affichée, bandeau visible, puis retour client
+  retirant les champs PA/marges du DOM.
+- Contrôles finaux : 111 tests, build, trois révisions historiques inchangées.
+- Une référence d'hébergement liée à un ERP nécessite une confirmation explicite
+  si le périmètre change ; les montants ne sont ni effacés ni réappliqués.
+- SQL privé prêt pour import inactif, activation protégée et retour aux versions
+  antérieures ; aucune écriture ou activation de données effectuée.

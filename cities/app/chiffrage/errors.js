@@ -1,6 +1,7 @@
 // Only stable, non-sensitive error categories cross the API boundary.
 export function calculationError(error) {
   const message = error?.message ?? '';
+  if (message === 'Hosting reference scope changed') return { code: 'hostingScopeChanged' };
   if (message === 'Hosting prices required') return { code: 'hostingPricesRequired' };
   if (message.startsWith('SQL core price unconfirmed')) return { code: 'sqlPriceRequired' };
   if (message.startsWith('Licensed population')) return { code: 'populationInvalid' };

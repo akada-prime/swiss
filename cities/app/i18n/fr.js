@@ -750,5 +750,8 @@ export default {
   "chiffrage.serviceDaysRequired": "Investissement partiel : {count} prestation(s) sans jours de référence. Précisez-les avant de finaliser ou exporter.",
   "chiffrage.completeServices": "Compléter les prestations",
   "chiffrage.groupedServices": "jours du lot dans Prestations",
-  "chiffrage.exportInternal": "Exporter en interne · PA et marges"
+  "chiffrage.exportInternal": "Exporter en interne · PA et marges",
+  "chiffrage.hostingPrefilled": "Montants préremplis depuis la référence privée indiquée. Vos ajustements restent propres à ce chiffrage.",
+  "chiffrage.hostingScopeChanged": "Le périmètre ERP a changé. Les montants d’hébergement sont conservés ; confirmez leur validité pour cette configuration ou ajustez-les.",
+  "chiffrage.confirmHosting": "Valider ces montants pour ce périmètre"
 };
