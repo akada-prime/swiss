@@ -73,14 +73,22 @@ for path in args.workbook:
  # never once per selected option. Blank source cells are not converted to zero.
  if 'ABA_Client' in w.sheetnames:
   a=w['ABA_Client'];av=cached['ABA_Client'];parent=None
+  # The days column shifts between workbook editions. Locate it by the
+  # literal three-day reference in the first implementation package.
+  day_column=next((c for row in a for c in (30,31,32)
+   if str(row[1].value or '')=='Total Comptabilité financière' and num(a.cell(row[0].row,c).value)
+   and a.cell(row[0].row,c).value==3),None)
+  if day_column is None:raise ValueError(f'No Abacus day column in {path.name}')
   for row in a:
    r=row[0].row;sw=code(a.cell(r,1).value)
    if re.fullmatch(r'105\d+\.1',sw):parent=sw.split('.')[0]+'.'
-   text=str(a.cell(r,2).value or '');value=av.cell(r,31).value
+   text=str(a.cell(r,2).value or '')
+   # Cached monetary formulas in adjacent columns are never service days.
+   value=av.cell(r,day_column).value if num(a.cell(r,day_column).value) else None
    if text.startswith('Total ') and num(value) and parent:
     members=[item for item in items if item['vendor']=='abacus' and str(item['item_code']).startswith(parent)]
     if members:
-     profile['services'].append({'family':'prestations','item_code':f'abacus-{parent}','label':text.removeprefix('Total '),'days':value,'suggested_days':value,'requires_products':['abacus'],'requires_module_prefix':f'abacus/ERP/{parent}','explanation':{'source':f'{path.name}:ABA_Client:AE{r}'}})
+     profile['services'].append({'family':'prestations','item_code':f'abacus-{parent}','label':text.removeprefix('Total '),'days':value,'suggested_days':value,'requires_products':['abacus'],'requires_module_prefix':f'abacus/ERP/{parent}','explanation':{'source':f'{path.name}:ABA_Client:{a.cell(r,day_column).coordinate}'}})
      for item in members:
       key=f"abacus/ERP/{item['item_code']}";days[key]=0;profile['module_group_labels'][key]=text.removeprefix('Total ')
  if args.default_source in path.name:

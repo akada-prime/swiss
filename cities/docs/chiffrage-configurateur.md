@@ -79,15 +79,23 @@ combinaisons dont les valeurs manquent dans les sources.
 
 ## Publication
 
-Le frontend, les modules partagés de la fonction Edge et le nouvel export doivent
-être publiés ensemble. Déployer également `standards.js`, dépendance du moteur.
-La fonction conserve son contrôle de session et son origine GitHub Pages.
+La première version a été publiée le 22 octobre 2026 par le PR #41 :
+`main` 8058b15, fonction Edge v9, références privées activées. La fonction
+conserve son contrôle de session et son origine GitHub Pages.
+
+Une session navigateur ouverte avant l'activation avait conservé l'ancien
+catalogue et créé un chiffrage Bex avec ces versions. Chaque nouvelle création
+relit désormais le catalogue actif. Une révision déjà enregistrée garde ses
+versions ; l'action explicite « Créer la variante actuelle » charge les
+références présentes, conserve les jours et prix saisis et prépare un nouveau
+chiffrage sans toucher à l'original.
 
 Importer les nouveaux catalogues comme versions privées distinctes, vérifier leur
 contenu, puis activer le jeu retenu atomiquement. Ne jamais réécrire les versions
 référencées par les anciens chiffrages. Une reprise peut réactiver les anciennes
 versions sans supprimer les nouvelles ni leurs snapshots.
 
-`AGENTS.md` interdit le merge automatique et les modifications de données
-Supabase : ces opérations restent distinctes de la livraison du code en branche.
-Le développement et les vérifications se font sans écriture dans les données.
+Les valeurs Abacus de Fribourg dans `ABA_Client` possèdent une colonne
+monétaire supplémentaire avant les jours. Le préparateur reconnaît désormais
+la colonne des jours de chaque édition du classeur et ne traite jamais la
+valeur monétaire calculée comme une durée.
