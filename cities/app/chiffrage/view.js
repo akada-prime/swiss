@@ -204,8 +204,9 @@ function productSection() {
     const selectedIndex = state.draft.modules.findIndex(row => `${row.vendor}/${row.product}/${row.item_code}` === id);
     const selectedModule = state.draft.modules[selectedIndex];
     const days = current?.days ?? presetDays(id);
-    return `<div class="chiffrage-module-entry"><label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''} ${selected.has(id) && (id === 'innosolv/Gemeinde/1' || id === 'abacus/ERP/10503.1' || isEnergyModule(item) && state.draft.energy) ? 'disabled' : ''}>
-      <span><small>${escape(item.item_code)} · ${item.item_code === '1' && item.vendor === 'innosolv' ? t('chiffrage.workspace.3cef74c61d') : item.default_selected ? t('chiffrage.workspace.ef354927f1') : t('chiffrage.workspace.14eb14ece5')}</small><br>${escape(document.documentElement.lang === 'de' ? item.label_de || item.label_fr || item.item_code : item.label_fr || item.label_de || item.item_code)}</span></label>
+    const required = id === 'innosolv/Gemeinde/1' || id === 'abacus/ERP/10503.1' || isEnergyModule(item) && state.draft.energy;
+    return `<div class="chiffrage-module-entry"><label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''} ${selected.has(id) && required ? 'disabled' : ''}>
+      <span><small>${escape(item.item_code)} · ${required ? t('chiffrage.workspace.3cef74c61d') : item.default_selected ? t('chiffrage.workspace.ef354927f1') : t('chiffrage.workspace.14eb14ece5')}</small><br>${escape(document.documentElement.lang === 'de' ? item.label_de || item.label_fr || item.item_code : item.label_fr || item.label_de || item.item_code)}</span></label>
       ${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<p class="chiffrage-warning">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">
         ${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}
         ${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual') + ' PV')}

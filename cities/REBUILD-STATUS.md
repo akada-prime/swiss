@@ -229,3 +229,12 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
   remise explicitement distincte et modifiable selon la source.
 - 114 tests réussis, build réussi, trois révisions historiques inchangées.
 - Le rapprochement porte sur ce cas complet, pas sur tous les périmètres possibles.
+
+### Présentation finale
+
+- Les deux apparences ont été mesurées aux six formats ; FR et DE contrôlés,
+  dont DE à 360 et 1 366 px, sans débordement horizontal.
+- Aperçus de contrôle et captures réalisés sur données entièrement fictives,
+  avec le module de vue et le moteur réellement livrés.
+- PR de livraison : #41. Production et activation de la nouvelle version privée
+  en attente du GO ; aucune modification de données Supabase effectuée.
