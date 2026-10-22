@@ -1,6 +1,7 @@
 // Pure calculation domain. Real catalogs and commercial parameters are loaded
 // from the protected server store, never from this public source file.
 import { hostingIncluded } from './configuration.js';
+import { serviceApplies } from './standards.js';
 
 const finite = (value, name) => {
   const number = Number(value);
@@ -42,7 +43,12 @@ export function priceCatalogItem(item, dimensions) {
   if (!rule || !Array.isArray(rule.tiers) || !rule.tiers.length) {
     throw new Error(`Missing pricing rule for ${item.item_code}`);
   }
-  const quantity = finite(dimensions[rule.basis], rule.basis);
+  const rawQuantity = finite(dimensions[rule.basis], rule.basis);
+  const roundedQuantity = rule.quantity_round_to ? Math.ceil(rawQuantity / rule.quantity_round_to) * rule.quantity_round_to : rawQuantity;
+  const quantity = rawQuantity === 0 && rule.zero_is_free ? 0 : Math.max(roundedQuantity, rule.minimum_basis ?? 0);
+  if (quantity === 0 && rule.zero_is_free) return { value: 0, explanation: {
+    item_code: item.item_code, basis: rule.basis, quantity, source: item.source,
+    catalog_version: item.catalog_version, kind: rule.kind } };
   const tiers = [...rule.tiers].sort((a, b) => a.up_to - b.up_to);
   const tier = tiers.find(entry => quantity <= finite(entry.up_to, 'tier boundary'));
   if (!tier && rule.above_last?.kind === 'linear_tail_estimate') {
@@ -79,17 +85,20 @@ export function priceCatalogItem(item, dimensions) {
     } else {
       const fraction = (quantity - finite(lower.up_to, 'lower anchor')) /
         (finite(tier.up_to, 'upper anchor') - finite(lower.up_to, 'lower anchor'));
-      value = roundTo(finite(lower.value, 'lower tier value') + fraction *
-        (finite(tier.value, 'upper tier value') - finite(lower.value, 'lower tier value')),
-        rule.round_to);
+      const interpolated = finite(lower.value, 'lower tier value') + fraction *
+        (finite(tier.value, 'upper tier value') - finite(lower.value, 'lower tier value'));
+      value = rule.value_multiplier == null ? roundTo(interpolated, rule.round_to) : interpolated;
     }
   }
   else if (rule.kind === 'rounded_ratio') {
     value = roundTo(finite(tier.ratio, 'tier ratio') * finite(rule.reference_value, 'reference value'),
       rule.round_to);
   } else throw new Error(`Unsupported pricing rule: ${rule.kind}`);
+  // An explicit source multiplier is applied before the final price rounding.
+  if (rule.value_multiplier != null) value = roundTo(value * finite(rule.value_multiplier, 'source multiplier'), rule.round_to);
   return { value, explanation: { item_code: item.item_code, basis: rule.basis,
-    quantity, tier_up_to: tier.up_to, kind: rule.kind, source: item.source,
+    quantity, ...(quantity !== rawQuantity ? { entered_quantity: rawQuantity } : {}),
+    tier_up_to: tier.up_to, kind: rule.kind, source: item.source,
     catalog_version: item.catalog_version,
     source_grid_note: item.source_grid_note ?? null } };
 }
@@ -260,6 +269,8 @@ export function calculateQuote(input, catalog) {
   }
   for (const entry of [...(input.moduleServices ?? []), ...(input.services ?? []),
     ...(input.primeLines ?? []), ...(input.partners ?? [])]) {
+    if (!serviceApplies(entry, input)) continue;
+    if (input.projectManagement && entry.family === 'prestations' && entry.item_code === 'projet') continue;
     if (entry.category === 'hosting' && !hostingIncluded(input)) continue;
     const moduleLine = entry.family === 'prestations_module' ?
       lines.find(line => `${line.family}/${line.product}/${line.item_code}` === entry.item_code) : null;
@@ -286,6 +297,25 @@ export function calculateQuote(input, catalog) {
       suggested_days: suggestedDays, selected_days: days,
       calculated_investment: investment.calculated_value,
       overrides: { ...entry.overrides, investment: entry.investment_override ?? null } });
+  }
+  // New percentage-based GP is opt-in. Historic fixed project lines stay unchanged.
+  if (input.projectManagement) {
+    const gp = input.projectManagement;
+    const percentage = finite(gp.percent, 'project management percentage');
+    if (percentage < 0 || percentage > 100) throw new Error('Invalid project management percentage');
+    if (gp.basis !== 'prime_service_days' || !(gp.round_days > 0))
+      throw new Error('Invalid project management rule');
+    const included = lines.filter(line => ['prestations_module', 'prestations'].includes(line.family) &&
+      line.item_code !== 'projet' && line.selected_days != null &&
+      !(gp.exclude_codes ?? []).includes(line.item_code));
+    const basisDays = included.reduce((total, line) => total + finite(line.selected_days, 'service days'), 0);
+    const days = roundTo(basisDays * percentage / 100, gp.round_days);
+    lines.push({ family: 'prestations', item_code: 'projet', label: gp.label ?? 'Gestion de projet',
+      quantity: 1, selected_days: days, investment_pa: null, investment_pv: days * dayRate,
+      annual_pa: null, annual_pv: 0, software: false,
+      explanation: { kind: 'project_management', percent: percentage, basis: gp.basis,
+        basis_days: basisDays, basis_amount: basisDays * dayRate, round_days: gp.round_days,
+        included_codes: included.map(line => line.item_code), source: gp.source ?? null } });
   }
   // Previously saved quotes can still contain the former split-support line.
   const primeSupport = lines.filter(line => line.family === 'prime' &&
@@ -329,7 +359,12 @@ export function calculateQuote(input, catalog) {
   const softwarePv = sum('annual_pv', software);
   const publisherSoftwarePa = sum('annual_pa', software.filter(line =>
     line.family === 'innosolv' || line.family === 'abacus'));
-  return { lines, summary: { investment, annual,
+  const missingServiceDays = input.reference ? lines.filter(line =>
+    line.family === 'prestations_module' && line.selected_days == null).map(line => line.item_code) : [];
+  return { ...(missingServiceDays.length ? { status: 'incomplete',
+    issues: [{ code: 'serviceDaysRequired', items: missingServiceDays }] } : {}),
+    lines, summary: { investment, annual,
+      ...(input.reference ? { missing_service_days: missingServiceDays } : {}),
     tco5y: investment + annual * 4,
     tco5y_excluding_lcm: investment + (annual - (selectedLcm && selectedLcm !== 'none' ?
       lcm[selectedLcm].effective_value : 0)) * 4,

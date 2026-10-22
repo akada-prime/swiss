@@ -3,7 +3,7 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Chiffrage · aperçu de contrôle</title>
 <link rel="stylesheet" href="../app/styles/main.css">
-<style>body{margin:0;padding:16px}.preview-tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;font:14px system-ui}.preview-tools button,.preview-tools select{padding:8px;min-height:40px}iframe{display:block;border:1px solid #777;height:1900px;background:#141d2b}.preview-note{font:14px system-ui;color:var(--skin-muted)}</style>
+<style>body{margin:0;padding:16px}.preview-tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;font:14px system-ui}.preview-tools button,.preview-tools select{padding:8px;min-height:40px}iframe{display:block;border:1px solid #777;height:768px;background:#141d2b}.preview-note{font:14px system-ui;color:var(--skin-muted)}</style>
 </head><body>
 <script type="module">
 // Isolated QA fixture: invented prices and an in-memory API, never production data.
@@ -11,7 +11,7 @@ const params = new URLSearchParams(location.search);
 if (!params.has('frame')) {
   document.body.innerHTML = `<h1>Aperçu du chiffrage</h1><p class="preview-note">Commune et prix fictifs. Les sauvegardes de cet aperçu restent en mémoire.</p><div class="preview-tools"><label>Largeur <select id="width">${[360,430,768,1366,1920,2560].map(w => `<option ${w===1366?'selected':''}>${w}</option>`).join('')}</select></label><label>Apparence <select id="skin"><option value="prime-darkweb">Prime Dark</option><option value="helvetia">Helvetia Hell</option></select></label><label>Langue <select id="language"><option value="fr">Français</option><option value="de">Deutsch</option></select></label></div><iframe title="Chiffrage fictif" id="preview" width="1366" src="?frame=1&view=chiffrage"></iframe>`;
   const frame = document.querySelector('iframe');
-  document.querySelector('#width').onchange = e => frame.width = e.target.value;
+  document.querySelector('#width').onchange = e => { frame.width=e.target.value; frame.style.height=({360:780,430:932,768:1024,1366:768,1920:1080,2560:1440}[e.target.value])+'px'; };
   const reload = () => frame.src = `?frame=1&view=chiffrage&skin=${document.querySelector('#skin').value}&language=${document.querySelector('#language').value}`;
   document.querySelector('#skin').onchange = reload;
   document.querySelector('#language').onchange = reload;
@@ -34,8 +34,8 @@ if (!params.has('frame')) {
     item('abacus','ERP','TEST','Comptabilité'),...['501','502','533'].map(code => ({
       ...item('innosolv','Versorger',code,`Licence énergie ${code}`,false),
       pricing_rule:{kind:'unverified',basis:'meters',tiers:[{up_to:5000,value:1000}]}}))],
-    parameters: {day_rate:1000,publisher_rent:{innosolv:{standard:{pa_rate:.1,pv_rate:.2}},
-      abacus:{standard:{pa_rate:.1,pv_rate:.2}}},service_presets:{standard:{'innosolv/Gemeinde/1':2}},
+    parameters: {configuration_profiles:[{id:'demo',label:'Référence de démonstration',default:true,source:'Données fictives',services:[{family:'prestations',item_code:'reprise',label:'Reprise de données',days:3,suggested_days:3},{family:'prestations',item_code:'formation',label:'Formation',days:2,suggested_days:2},{family:'prestations',item_code:'demarrage',label:'Assistance au démarrage',days:2,suggested_days:2}],project_management:{percent:10,basis:'prime_service_days',round_days:1,exclude_codes:['deplacements']}}],hosting_presets:[{lines:[{family:'prime',category:'hosting',label:'Hébergement · démonstration',quantity:1,investment_pv:500,annual_pv:1200}]}],day_rate:1000,publisher_rent:{innosolv:{standard:{pa_rate:.1,pv_rate:.2}},
+      abacus:{standard:{pa_rate:.1,pv_rate:.2}}},service_presets:{standard:{'innosolv/Gemeinde/1':2,'innosolv/Gemeinde/21':1,'innosolv/Gemeinde/22':1,'abacus/ERP/TEST':3}},
       sql:{suggestion:{lowerPopulation:1000,lowerUsers:2,upperPopulation:9000,upperUsers:10},
         core_from_population:8000,user_base:100,price_per_user:20,default_cores:2,price_per_core:null},
       pce:{finance_ratio:.4,finance_adjustment:100,finance_round_to:100,salary_round_to:50,pv_margin:.2,pv_round_to:50},

@@ -176,3 +176,26 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
   API en mémoire, avec six largeurs, FR/DE, deux Skins et simulation d'erreurs.
 - Publication coordonnée nécessaire : frontend + fonction Edge et ses modules
   calculate/configuration/errors. Aucun déploiement ni merge de main automatique.
+
+## Refonte du configurateur · en cours · 22 octobre 2026
+
+- Espace de configuration unifié, synthèse latérale sur ordinateur, barre compacte sur Natel ; apparences et FR/DE préservés.
+- Présentation client par défaut. Les PA, coefficients et marges ne sont construits dans le DOM qu'après accès interne volontaire ; retour client explicite.
+- Références de prestations chargées uniquement depuis le catalogue privé, clonées dans chaque chiffrage ; réapplication confirmée et ajustements conservés lors des désactivations temporaires.
+- GP en pourcentage opt-in, assiette de jours Prime explicable, arrondi provenant de la référence ; compatibilité des anciennes lignes fixes.
+- Contrôles à ce stade : 105 tests réussis, build réussi. Recette visuelle en cours.
+- Aucun tarif privé, aucune source Excel commerciale dans le dépôt. Aucune modification de données Supabase.
+- Activation d'une nouvelle référence privée et publication coordonnée à préparer après vérification des sources ; les prix énergie restent non vérifiés.
+
+### Contrôle fonctionnel du configurateur
+
+- 110 tests réussis et build réussi ; contrôles financiers des trois anciennes
+  révisions : lignes et montants identiques avec le moteur antérieur.
+- 59 vérifications privées des arrondis énergie et de l'assiette GP, sans données
+  commerciales dans le dépôt ni écriture distante.
+- Préparation reproductible de quatre références privées ; source absente
+  explicitement signalée pour certaines prestations Abacus. Référence hébergement
+  limitée au périmètre prouvé par le fichier, aucune généralisation tarifaire.
+- Export client par liste positive, distinct de l'export interne complet.
+- Publication de production et activation privée non effectuées : voir
+  `docs/chiffrage-configurateur.md` pour la coordination et les limites de source.
