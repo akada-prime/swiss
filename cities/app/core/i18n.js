@@ -1,5 +1,5 @@
-import fr from '../i18n/fr.js?v=20261022-configurateur-prime-r2';
-import de from '../i18n/de.js?v=20261022-configurateur-prime-r2';
+import fr from '../i18n/fr.js?v=20261022-configurateur-prime-r3';
+import de from '../i18n/de.js?v=20261022-configurateur-prime-r3';
 import { getPreference, subscribePreferences } from './preferences.js';
 
 const catalogues = { fr, de };

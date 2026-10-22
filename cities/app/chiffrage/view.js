@@ -1,6 +1,6 @@
-import { t, number } from '../core/i18n.js?v=20261022-configurateur-prime-r2';
+import { t, number } from '../core/i18n.js?v=20261022-configurateur-prime-r3';
 import { subscribePreferences } from '../core/preferences.js';
-import { calculateQuote, calculateLcm, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261022-configurateur-prime-r2';
+import { calculateQuote, calculateLcm, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261022-configurateur-prime-r3';
 import { energyCodes, isEnergyModule, suggestedVolume, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js';
 import { calculationError } from './errors.js';
@@ -461,7 +461,8 @@ function lineLabel(line) {
   const key=line.family==='prestations_module' ? line.item_code : `${line.family}/${line.product}/${line.item_code}`;
   const item=state.catalog.items.find(item=>moduleId(item)===key);
   const label=document.documentElement.lang === 'de' ? item?.label_de || item?.label_fr : item?.label_fr || item?.label_de;
-  if(line.family==='prestations_module' && label) return `${line.item_code.includes('/Versorger/') ? localLabel('Énergie · ','Energie · ') : ''}${label}`;
+  if(label && (line.family==='prestations_module' || line.family==='innosolv' && line.product==='Versorger'))
+    return `${line.product==='Versorger' || line.item_code.includes('/Versorger/') ? localLabel('Énergie · ','Energie · ') : ''}${label}`;
   if(document.documentElement.lang !== 'de') return line.label;
   if(item?.label_de)return item.label_de;
   if(line.family==='prestations')return serviceTypes.find(([id])=>id===line.item_code)?.[2] ?? line.label;
@@ -492,16 +493,16 @@ function lineDetail() {
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.detail')}</summary>
     <div class="chiffrage-table-scroll"><table class="chiffrage-detail"><thead><tr>
       <th>${t('chiffrage.modules')}</th>${state.internal ? '<th>SW-ID / ID</th>' : ''}<th>${t('chiffrage.quantity')}</th><th>${t('chiffrage.investment')}</th>
-      <th>${t('chiffrage.annual')} PV</th>${state.internal ? `<th>${t('chiffrage.annual')} PA</th><th>${t('chiffrage.annualMargin')}</th>` : ''}<th>${t('chiffrage.catalog', { version: '' })}</th>
+      <th>${t('chiffrage.annual')} PV</th>${state.internal ? `<th>${t('chiffrage.annual')} PA</th><th>${t('chiffrage.annualMargin')}</th><th>${t('chiffrage.catalog', { version: '' })}</th>` : ''}
     </tr></thead><tbody>${ordered.map(line => `<tr>
       <td>${line.family === 'prestations_module' ? '↳ ' + t('chiffrage.moduleServices') + ' · ' : ''}${escape(lineLabel(line))}${line.supplier ? `<small> · ${escape(line.supplier)}</small>` : ''}</td>${state.internal ? `<td>${escape(line.item_code ?? '—')}</td>` : ''}<td>${line.selected_days == null ? line.quantity ?? '—' : `${number(line.selected_days)} j`}</td>
       <td>${money(line.investment_pv)}</td><td>${money(line.annual_pv)}</td>
       ${state.internal ? `<td>${money(line.annual_pa)}</td><td>${money(line.annual_pa == null ? null : (line.annual_pv ?? 0) - line.annual_pa)}</td>` : ''}
-      <td>${escape(line.explanation?.source ?? '—')}${line.explanation?.kind ? ` · ${escape(line.explanation.kind)}` : ''}
+      ${state.internal ? `<td>${escape(line.explanation?.source ?? '—')}${line.explanation?.kind ? ` · ${escape(line.explanation.kind)}` : ''}
         ${!state.internal || line.license_value == null ? '' : ` · ${t('chiffrage.theoreticalBase')} ${money(line.license_value)}`}
         ${!state.internal || line.overrides?.pa == null ? '' : ` · ${t('chiffrage.manualPa')}`}
         ${line.overrides?.pv == null ? '' : ` · ${t('chiffrage.manualPv')}`}
-        ${line.overrides?.investment == null ? '' : ` · ${t('chiffrage.theoreticalPv')} ${money(line.calculated_investment)}`}</td></tr>`).join('')}</tbody></table></div></details>`;
+        ${line.overrides?.investment == null ? '' : ` · ${t('chiffrage.theoreticalPv')} ${money(line.calculated_investment)}`}</td>` : ''}</tr>`).join('')}</tbody></table></div></details>`;
 }
 
 function renderEditor() {
@@ -804,7 +805,8 @@ root.addEventListener('click', async event => {
       if (!profile) throw new Error('Missing current reference');
       applyReference(draft,active.catalog,profile.id);
       draft.moduleServices=draft.moduleServices.map(line=>({...line,...(previousServices.get(line.item_code)?.days!=null?{days:previousServices.get(line.item_code).days}:{} )}));
-      draft.services=draft.services.map(line=>({...line,...(previousGlobal.get(line.item_code)?.days!=null?{days:previousGlobal.get(line.item_code).days}:{} )}));
+      draft.services=draft.services.map(line=>({...line,...(previousGlobal.get(line.item_code)?.days!=null?{days:previousGlobal.get(line.item_code).days}:{} ),...(previousGlobal.get(line.item_code)?.investment_override!=null?{investment_override:previousGlobal.get(line.item_code).investment_override}:{} )}));
+      for(const [code,line] of previousGlobal)if(!draft.services.some(item=>item.item_code===code) && !['projet','deplacements'].includes(code))draft.services.push(line);
       for(const kind of ['primeLines','partners'])for(const line of structuredClone(profile[kind==='primeLines'?'prime_lines':'partners']??[]))
         if(!draft[kind].some(existing=>existing.item_code===line.item_code || existing.label===line.label))draft[kind].push(line);
       if(hostingIncluded(draft))applyHosting(draft,active.catalog);
