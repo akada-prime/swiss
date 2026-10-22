@@ -176,3 +176,65 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
   API en mémoire, avec six largeurs, FR/DE, deux Skins et simulation d'erreurs.
 - Publication coordonnée nécessaire : frontend + fonction Edge et ses modules
   calculate/configuration/errors. Aucun déploiement ni merge de main automatique.
+
+## Refonte du configurateur · en cours · 22 octobre 2026
+
+- Espace de configuration unifié, synthèse latérale sur ordinateur, barre compacte sur Natel ; apparences et FR/DE préservés.
+- Présentation client par défaut. Les PA, coefficients et marges ne sont construits dans le DOM qu'après accès interne volontaire ; retour client explicite.
+- Références de prestations chargées uniquement depuis le catalogue privé, clonées dans chaque chiffrage ; réapplication confirmée et ajustements conservés lors des désactivations temporaires.
+- GP en pourcentage opt-in, assiette de jours Prime explicable, arrondi provenant de la référence ; compatibilité des anciennes lignes fixes.
+- Contrôles à ce stade : 105 tests réussis, build réussi. Recette visuelle en cours.
+- Aucun tarif privé, aucune source Excel commerciale dans le dépôt. Aucune modification de données Supabase.
+- Activation d'une nouvelle référence privée et publication coordonnée à préparer après vérification des sources ; les prix énergie restent non vérifiés.
+
+### Contrôle fonctionnel du configurateur
+
+- 110 tests réussis et build réussi ; contrôles financiers des trois anciennes
+  révisions : lignes et montants identiques avec le moteur antérieur.
+- 59 vérifications privées des arrondis énergie et de l'assiette GP, sans données
+  commerciales dans le dépôt ni écriture distante.
+- Préparation reproductible de quatre références privées ; source absente
+  explicitement signalée pour certaines prestations Abacus. Référence hébergement
+  limitée au périmètre prouvé par le fichier, aucune généralisation tarifaire.
+- Export client par liste positive, distinct de l'export interne complet.
+- Publication de production et activation privée non effectuées : voir
+  `docs/chiffrage-configurateur.md` pour la coordination et les limites de source.
+
+### Recette du configurateur · préparation de publication
+
+- Les six formats ont été mesurés dans le navigateur : 360 × 780, 430 × 932,
+  768 × 1 024, 1 366 × 768, 1 920 × 1 080 et 2 560 × 1 440 ; aucun
+  débordement horizontal du configurateur.
+- Parcours réel sur données fictives : changement ERP avec interface, jours de
+  formation personnalisés conservés, GP recalculée, hébergement ajouté/retiré
+  sans duplication, sauvegarde et lien de reprise disponibles.
+- Accès interne : confirmation affichée, bandeau visible, puis retour client
+  retirant les champs PA/marges du DOM.
+- Contrôles finaux : 111 tests, build, trois révisions historiques inchangées.
+- Une référence d'hébergement liée à un ERP nécessite une confirmation explicite
+  si le périmètre change ; les montants ne sont ni effacés ni réappliqués.
+- SQL privé prêt pour import inactif, activation protégée et retour aux versions
+  antérieures ; aucune écriture ou activation de données effectuée.
+
+### Rapprochement métier final
+
+- Contrôle d'une référence commerciale complète : écarts de 0,00 CHF pour
+  investissement, coût annuel et TCO cinq ans, sur le périmètre Excel fourni.
+- Nouvelle politique privée PCE : base des finances et options, interface séparée,
+  vente des salaires selon la formule source ; aucune modification des versions
+  historiques. SQL par utilisateur selon la même source, prix par cœur non inventé.
+- Options Prime et partenaires inclus au premier chiffrage selon la référence ;
+  jours et prix journalier propres aux partenaires, GP sans double comptage.
+- Déplacements calculés après GP sur les jours du projet, partenaires inclus ;
+  remise explicitement distincte et modifiable selon la source.
+- 114 tests réussis, build réussi, trois révisions historiques inchangées.
+- Le rapprochement porte sur ce cas complet, pas sur tous les périmètres possibles.
+
+### Présentation finale
+
+- Les deux apparences ont été mesurées aux six formats ; FR et DE contrôlés,
+  dont DE à 360 et 1 366 px, sans débordement horizontal.
+- Aperçus de contrôle et captures réalisés sur données entièrement fictives,
+  avec le module de vue et le moteur réellement livrés.
+- PR de livraison : #41. Production et activation de la nouvelle version privée
+  en attente du GO ; aucune modification de données Supabase effectuée.

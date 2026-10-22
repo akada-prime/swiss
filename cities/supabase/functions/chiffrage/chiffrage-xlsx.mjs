@@ -66,7 +66,7 @@ function zip(files) {
   return Buffer.concat([...pieces, centralBytes, end]);
 }
 
-export function exportQuoteXlsx(quote) {
+export function exportQuoteXlsx(quote, { internal = false } = {}) {
   const { input, result, catalog_versions: versions, created_at: revisionDate } = quote.snapshot;
   const { summary, lines } = result;
   const date = revisionDate ?? quote.updated_at;
@@ -134,14 +134,31 @@ export function exportQuoteXlsx(quote) {
     ['Révision', quote.snapshot.revision], ['Entrées complètes', JSON.stringify(input)],
     ['Résultats complets', JSON.stringify(result)]
   ];
+  // Client export is an allowlist. Hidden worksheets or full JSON snapshots
+  // would still expose purchase prices when the client opens the workbook.
+  const clientResume = resume.slice(0, 19);
+  clientResume.push(['Composante', 'Investissement HT', 'Annuel HT']);
+  for (const [family, [investment, annual]] of totals) clientResume.push([family, investment, annual]);
+  const clientDetail = [['Composante', 'Module', 'Identifiant', 'Prestataire', 'Jours', 'Investissement HT', 'Annuel HT'],
+    ...lines.map(line => [line.family, line.label, line.item_code, line.supplier,
+      line.selected_days, line.investment_pv, line.annual_pv])];
+  const clientAssumptions = [['Paramètre', 'Valeur'], ['Population', input.dimensions.population],
+    ['Habitants soumis aux licences', input.dimensions.licensedPopulation ?? input.dimensions.population],
+    ['Compteurs', input.dimensions.meters], ['Taxes', input.dimensions.taxes],
+    ['Date', date], ['Révision', quote.snapshot.revision], ['Référence de prestations', input.reference?.label],
+    ['Version tarifaire', versionText]];
+  const gp = lines.find(line => line.explanation?.kind === 'project_management');
+  if (gp) clientAssumptions.push(['GP (%)', gp.explanation.percent],
+    ['GP · assiette en jours Prime hors GP', gp.explanation.basis_days],
+    ['GP · arrondi en jours', gp.explanation.round_days]);
   const files = {
     '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>${[1,2,3].map(n => `<Override PartName="/xl/worksheets/sheet${n}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}</Types>`,
     '_rels/.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
     'xl/workbook.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Résumé" sheetId="1" r:id="rId1"/><sheet name="Détail" sheetId="2" r:id="rId2"/><sheet name="Hypothèses et sources" sheetId="3" r:id="rId3"/></sheets></workbook>`,
     'xl/_rels/workbook.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${[1,2,3].map(n => `<Relationship Id="rId${n}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${n}.xml"/>`).join('')}</Relationships>`,
-    'xl/worksheets/sheet1.xml': sheet(resume),
-    'xl/worksheets/sheet2.xml': sheet(detail),
-    'xl/worksheets/sheet3.xml': sheet(assumptions)
+    'xl/worksheets/sheet1.xml': sheet(internal ? resume : clientResume),
+    'xl/worksheets/sheet2.xml': sheet(internal ? detail : clientDetail),
+    'xl/worksheets/sheet3.xml': sheet(internal ? assumptions : clientAssumptions)
   };
   return zip(files);
 }

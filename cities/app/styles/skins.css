@@ -2,6 +2,12 @@
    their own meaning independently of the selected skin. */
 html[data-skin="prime-darkweb"] {
   color-scheme:dark;
+  --quote-surface:#10151e;--quote-nav:#0d121a;--quote-active:#202a38;
+  --quote-input:#151c27;--quote-input-border:#344052;
+  --quote-primary:linear-gradient(130deg,#1888e4,#3961d8);--quote-button-shadow:0 3px 12px #0062bd26;
+  --quote-tab-shadow:0 1px 4px #0005;--quote-summary:linear-gradient(155deg,#182337,#111824 70%);
+  --quote-summary-border:#314259;--quote-summary-shadow:0 16px 45px #0002;
+  --quote-number:#8dbfff;--quote-success:#76c8ab;--quote-warning:#dca655;--quote-danger:#f69797;
   --skin-page:#05080e;
   --skin-shell:linear-gradient(150deg,#07111e 0%,#080b14 33%,#0a0712 68%,#110805 100%);
   --skin-header:rgba(5,8,14,.7);
@@ -28,6 +34,12 @@ html[data-skin="prime-darkweb"] {
 }
 html[data-skin="helvetia"] {
   color-scheme:light;
+  --quote-surface:#fff;--quote-nav:#f7f8f9;--quote-active:#fff;
+  --quote-input:#fff;--quote-input-border:#cbd2d8;
+  --quote-primary:linear-gradient(130deg,#bc2c36,#9d2438);--quote-button-shadow:0 3px 10px #8d223218;
+  --quote-tab-shadow:0 1px 5px #1c2b3b12,0 0 0 1px #1c2b3b08;
+  --quote-summary:linear-gradient(160deg,#fff,#f7f8fa);--quote-summary-border:#cbd2d8;--quote-summary-shadow:0 12px 32px #253b4b09;
+  --quote-number:#942c3c;--quote-success:#287b60;--quote-warning:#a57019;--quote-danger:#af2835;
   --skin-page:#f5f6f6;
   --skin-shell:#f5f6f6;
   --skin-header:#fff;

@@ -211,7 +211,7 @@ export default async function handler(request) {
       if (!quote?.snapshot) return fail('Quote not found', 404);
       if (quote.snapshot.result?.status === 'incomplete')
         return json({ error: 'Incomplete quote', code: 'quoteIncomplete' }, 422);
-      const bytes = exportQuoteXlsx(quote);
+      const bytes = exportQuoteXlsx(quote, { internal: url.searchParams.get('scope') === 'internal' });
       return new Response(bytes, { headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'Content-Disposition': `attachment; filename="chiffrage-${quote.bfs_id}.xlsx"`,
