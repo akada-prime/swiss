@@ -1,5 +1,6 @@
 // Pure calculation domain. Real catalogs and commercial parameters are loaded
 // from the protected server store, never from this public source file.
+import { hostingIncluded } from './configuration.js';
 
 const finite = (value, name) => {
   const number = Number(value);
@@ -181,6 +182,11 @@ export function calculateLcm(population, rule, overrides = {}) {
 }
 
 export function calculateQuote(input, catalog) {
+  const hosting = [...(input.primeLines ?? []), ...(input.partners ?? [])]
+    .filter(line => line.category === 'hosting');
+  if (input.hosting?.included === true && (!hosting.length || hosting.some(line =>
+    line.investment_pv == null || line.annual_pv == null)))
+    throw new Error('Hosting prices required');
   const lines = [];
   const choices = new Set(input.products ?? []);
   const commercial = input.commercial ?? {};
@@ -203,7 +209,13 @@ export function calculateQuote(input, catalog) {
       candidate.item_code === (selected.vendor === 'innosolv' && selected.item_code === '129' && input.canton === 'VD'
         ? '129VD' : selected.item_code));
     if (!item) throw new Error(`Missing catalog item ${selected.vendor}/${selected.item_code}`);
-    const priced = priceCatalogItem(item, item.vendor === 'innosolv' &&
+    // An unverified source must never acquire an invented automatic price.
+    const manual = item.pricing_rule?.kind === 'unverified';
+    if (manual && (selected.pa_override == null || selected.pv_override == null))
+      throw new Error(`Manual publisher prices required: ${item.item_code}`);
+    const priced = manual ? { value: null, explanation: { kind: 'manual',
+      item_code: item.item_code, source: item.source, catalog_version: item.catalog_version,
+      basis: item.pricing_rule.basis, quantity: input.dimensions[item.pricing_rule.basis] } } : priceCatalogItem(item, item.vendor === 'innosolv' &&
       item.pricing_rule?.basis === 'population' ?
       { ...input.dimensions, population: populationForLicenses } : input.dimensions);
     const rates = catalog.parameters.publisher_rent[selected.vendor]?.[item.rate_class ?? 'standard'];
@@ -211,7 +223,8 @@ export function calculateQuote(input, catalog) {
     const standard = (item.rate_class ?? 'standard') === 'standard';
     const adjustedRates = standard ? { pa_rate: rate(`${selected.vendor}PaRate`, rates.pa_rate),
       pv_rate: rate(`${selected.vendor}PvRate`, rates.pv_rate) } : rates;
-    const rent = calculatePublisherRent(priced.value, adjustedRates);
+    const rent = manual ? { pa: selected.pa_override, pv: selected.pv_override } :
+      calculatePublisherRent(priced.value, adjustedRates);
     lines.push({ family: selected.vendor, product: item.product,
       item_code: item.item_code, label: item.label_fr,
       license_value: priced.value, investment_pa: 0, investment_pv: 0,
@@ -247,6 +260,7 @@ export function calculateQuote(input, catalog) {
   }
   for (const entry of [...(input.moduleServices ?? []), ...(input.services ?? []),
     ...(input.primeLines ?? []), ...(input.partners ?? [])]) {
+    if (entry.category === 'hosting' && !hostingIncluded(input)) continue;
     const moduleLine = entry.family === 'prestations_module' ?
       lines.find(line => `${line.family}/${line.product}/${line.item_code}` === entry.item_code) : null;
     const quantity = entry.family === 'prime' || entry.family === 'partenaires' ?
