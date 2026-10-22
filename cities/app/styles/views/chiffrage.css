@@ -17,10 +17,10 @@
 .chiffrage-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .chiffrage-grid label:not(.chiffrage-choice),.chiffrage-line label{display:flex;flex-direction:column;gap:6px;color:var(--skin-muted);font-size:14px}
 .chiffrage-view input,.chiffrage-view select{min-width:0;min-height:40px;padding:8px 10px;border:1px solid var(--skin-border-soft);border-radius:8px;background:var(--skin-control);color:var(--skin-text);font:inherit}
-.chiffrage-view input:not([type=checkbox]),.chiffrage-view select{width:100%}
-.chiffrage-view input[type=checkbox]{min-height:0;width:18px;height:18px;padding:0;accent-color:var(--blue)}
+.chiffrage-view input:not([type=checkbox]):not([type=radio]),.chiffrage-view select{width:100%}
+.chiffrage-view input:is([type=checkbox],[type=radio]){flex:0 0 18px;min-height:0;width:18px;height:18px;margin:0;padding:0;accent-color:var(--blue)}
 .chiffrage-status{min-height:22px;margin:12px 0;color:var(--skin-muted)}
-.chiffrage-status.error{color:#ef7474}
+.chiffrage-status.error{color:var(--skin-text);border-left:3px solid #bc4242;padding-left:12px}
 .chiffrage-list{display:grid;gap:10px}
 .chiffrage-list button{width:100%;padding:16px;text-align:left;border:1px solid var(--skin-border-soft);border-radius:10px;background:var(--skin-control);color:var(--skin-text)}
 .chiffrage-list small{display:block;margin-top:5px;color:var(--skin-muted)}
@@ -38,9 +38,16 @@
 .chiffrage-work-tabs button[aria-current=page]{background:var(--skin-control);border-color:var(--skin-border-soft);color:var(--skin-text);font-weight:700}
 .chiffrage-tab-panel{display:grid;gap:15px;min-width:0}
 .chiffrage-tab-panel[hidden]{display:none}
-.chiffrage-choice-group{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+.chiffrage-composer{display:grid;grid-template-columns:minmax(0,1fr);gap:15px;align-items:start}
+.chiffrage-composer>.chiffrage-section{margin:0}
+@media(min-width:1100px){.chiffrage-composer{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}.chiffrage-commune{grid-column:1/-1}.chiffrage-commune .chiffrage-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.chiffrage-solutions{grid-row:span 2}#chiffrageSummary{position:sticky;top:12px;z-index:10;background:var(--skin-card);border-radius:14px}}
+.chiffrage-choice-group{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;padding:0;border:0;min-width:0}
+.chiffrage-choice-group legend{margin:18px 0 9px;padding:0;font-size:16px;font-weight:700;color:var(--skin-text)}
 .chiffrage-choice-group .chiffrage-choice{min-height:44px;padding:8px 12px;background:var(--skin-control);border:1px solid var(--skin-border-soft);border-radius:9px;font-size:15px}
 .chiffrage-choice-group .chiffrage-choice:has(input:checked){border-color:var(--blue)}
+.chiffrage-choice-group .chiffrage-choice:has(input:focus-visible){outline:2px solid var(--blue);outline-offset:3px}
+.chiffrage-choice-group .chiffrage-choice:has(input:disabled){opacity:.55}
+.chiffrage-choice-group .chiffrage-choice{cursor:pointer;flex:0 1 auto}
 .chiffrage-choice-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px}
 .chiffrage-choice-row>span{color:var(--skin-muted);font-size:14px}
 .chiffrage-subdetail{margin-top:16px;border-top:1px solid var(--skin-border-soft);padding-top:12px}
@@ -79,10 +86,11 @@
 .chiffrage-rate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px 18px;margin-top:14px}
 .chiffrage-rate-grid span{display:flex;justify-content:space-between;gap:9px;border-bottom:1px solid var(--skin-border-soft);padding:5px 0}
 .chiffrage-rates>small{display:block;margin-top:12px;color:var(--skin-muted)}
-.chiffrage-hosting-line{grid-template-columns:repeat(5,minmax(105px,1fr));align-items:end}
-.chiffrage-hosting-line button{grid-column:1/-1;justify-self:start}
 .chiffrage-module-service label{display:flex;flex-direction:column;align-items:stretch;gap:6px;color:var(--skin-muted)}
 .chiffrage-line{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(2,minmax(90px,1fr));align-items:end;gap:10px;margin-top:10px}
+.chiffrage-hosting-line{grid-template-columns:repeat(2,minmax(0,1fr));align-items:end}
+.chiffrage-hosting-line label:first-child{grid-column:1/-1}
+.chiffrage-hosting-line button{grid-column:1/-1;justify-self:start}
 .chiffrage-warning{padding:10px 12px;border-left:3px solid #d8913d;border-radius:5px;background:var(--skin-control)}
 .chiffrage-search{margin-top:12px}
 @media(max-width:900px){.chiffrage-header{flex-direction:column}}

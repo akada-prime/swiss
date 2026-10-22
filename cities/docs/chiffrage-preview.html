@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr" data-skin="prime-darkweb">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chiffrage · aperçu de contrôle</title>
+<link rel="stylesheet" href="../app/styles/main.css">
+<style>body{margin:0;padding:16px}.preview-tools{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;font:14px system-ui}.preview-tools button,.preview-tools select{padding:8px;min-height:40px}iframe{display:block;border:1px solid #777;height:1900px;background:#141d2b}.preview-note{font:14px system-ui;color:var(--skin-muted)}</style>
+</head><body>
+<script type="module">
+// Isolated QA fixture: invented prices and an in-memory API, never production data.
+const params = new URLSearchParams(location.search);
+if (!params.has('frame')) {
+  document.body.innerHTML = `<h1>Aperçu du chiffrage</h1><p class="preview-note">Commune et prix fictifs. Les sauvegardes de cet aperçu restent en mémoire.</p><div class="preview-tools"><label>Largeur <select id="width">${[360,430,768,1366,1920,2560].map(w => `<option ${w===1366?'selected':''}>${w}</option>`).join('')}</select></label><label>Apparence <select id="skin"><option value="prime-darkweb">Prime Dark</option><option value="helvetia">Helvetia Hell</option></select></label><label>Langue <select id="language"><option value="fr">Français</option><option value="de">Deutsch</option></select></label></div><iframe title="Chiffrage fictif" id="preview" width="1366" src="?frame=1&view=chiffrage"></iframe>`;
+  const frame = document.querySelector('iframe');
+  document.querySelector('#width').onchange = e => frame.width = e.target.value;
+  const reload = () => frame.src = `?frame=1&view=chiffrage&skin=${document.querySelector('#skin').value}&language=${document.querySelector('#language').value}`;
+  document.querySelector('#skin').onchange = reload;
+  document.querySelector('#language').onchange = reload;
+} else {
+  localStorage.setItem('prime-communes-skin', params.get('skin') || 'prime-darkweb');
+  localStorage.setItem('prime-communes-language', params.get('language') || 'fr');
+  document.body.innerHTML = '<p class="preview-note">APERÇU · Commune et prix fictifs · aucune donnée enregistrée sur le serveur</p><button data-view="chiffrage" hidden>Chiffrage</button><section class="chiffrage-view"><div id="chiffrageRoot"></div></section>';
+  window.PrimeCommunesRuntime = {
+    escapeHtml: value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),
+    rows: [{ id: 9999, name: 'Démo-sur-Lac', canton: 'JU', expectedPopulation: 4501 }]
+  };
+  window.openDrawer = () => {};
+  window.SUPABASE_URL = 'https://chiffrage-preview.invalid';
+  const { calculateQuote } = await import('../app/chiffrage/calculate.js');
+  const item = (vendor,product,item_code,label_fr,default_selected=true) => ({ vendor,
+    product,item_code,label_fr,default_selected,pricing_rule:{kind:'lookup',basis:'population',
+      below_first:'hold',tiers:[{up_to:100000,value:1000}]}});
+  const catalog = { items: [item('innosolv','Gemeinde','1','Système de base'),
+    item('innosolv','Gemeinde','21','Intégration Abacus',false),item('innosolv','Gemeinde','22','Intégration ProConcept',false),
+    item('abacus','ERP','TEST','Comptabilité'),...['501','502','533'].map(code => ({
+      ...item('innosolv','Versorger',code,`Licence énergie ${code}`,false),
+      pricing_rule:{kind:'unverified',basis:'meters',tiers:[{up_to:5000,value:1000}]}}))],
+    parameters: {day_rate:1000,publisher_rent:{innosolv:{standard:{pa_rate:.1,pv_rate:.2}},
+      abacus:{standard:{pa_rate:.1,pv_rate:.2}}},service_presets:{standard:{'innosolv/Gemeinde/1':2}},
+      sql:{suggestion:{lowerPopulation:1000,lowerUsers:2,upperPopulation:9000,upperUsers:10},
+        core_from_population:8000,user_base:100,price_per_user:20,default_cores:2,price_per_core:null},
+      pce:{finance_ratio:.4,finance_adjustment:100,finance_round_to:100,salary_round_to:50,pv_margin:.2,pv_round_to:50},
+      oracle:{full_price:100,light_price:50,full_maintenance:10,light_maintenance:5},
+      lcm:[{up_to:5000,gold:1000,platinium:2000},{up_to:100000,gold:3000,platinium:5000}]}};
+  let saved = null, expired = false, listFailure = false;
+  const response = (value,status=200) => new Response(JSON.stringify(value),{status,
+    headers:{'content-type':'application/json'}});
+  window.fetch = async (url,options={}) => {
+    const action = new URL(url).searchParams.get('action');
+    if (action === 'login') { expired=false;return response({session:'synthetic-session'}); }
+    if (expired) return response({error:'Authentication required'},401);
+    if (action === 'status') return response({authenticated:true});
+    if (action === 'catalog') return response({active:{synthetic:'00000000-0000-4000-8000-000000000001'},catalog});
+    if (action === 'list') return listFailure ? response({},503) : response(saved?[saved]:[]);
+    if (action === 'quote') return response(saved);
+    if (action === 'save') {
+      const value=JSON.parse(options.body);let result;
+      try {result=calculateQuote(value.input,catalog);} catch {result={status:'incomplete'};}
+      saved={id:'synthetic-quote',title:value.title,current_revision:(saved?.current_revision??0)+1,
+        snapshot:{input:value.input,catalog_versions:value.catalog_versions,result},
+        commune_name:value.input.name,bfs_id:value.input.bfs_id};
+      return response({id:saved.id,revision:saved.current_revision,result});
+    }
+    if(action==='export')return response({code:'quoteIncomplete'},422);
+    return response({});
+  };
+  const tools=document.createElement('div'); tools.className='preview-tools';
+  tools.innerHTML='<button id="expired">Simuler une session expirée</button><button id="listFailure">Simuler une panne de liste après sauvegarde</button>';
+  document.body.prepend(tools);
+  tools.querySelector('#expired').onclick=()=>expired=true;
+  tools.querySelector('#listFailure').onclick=()=>listFailure=true;
+  await import('../app/chiffrage/view.js');
+  document.dispatchEvent(new CustomEvent('prime:chiffrage-commune',{
+    detail:window.PrimeCommunesRuntime.rows[0]}));
+}
+</script></body></html>

@@ -1,4 +1,4 @@
-import {t, number, date, locale} from './core/i18n.js?v=20260928-chiffrage-mobile';
+import {t, number, date, locale} from './core/i18n.js?v=20261022-chiffrage-configuration';
 (() => {
   'use strict';
 

@@ -1,6 +1,7 @@
 import { createHmac, createHash, randomUUID, timingSafeEqual } from 'node:crypto';
 import { Buffer } from 'node:buffer';
 import { calculateQuote } from '../../../app/chiffrage/calculate.js';
+import { calculationError } from '../../../app/chiffrage/errors.js';
 import { exportQuoteXlsx } from './chiffrage-xlsx.mjs';
 
 const json = (data, status = 200, headers = {}) => new Response(JSON.stringify(data), {
@@ -132,7 +133,13 @@ async function writeQuote(payload) {
     new Set(products).size !== products.length)
     throw new Error('Invalid product selection');
   const catalog = await loadCatalog(payload.catalog_versions);
-  const result = calculateQuote(input, catalog);
+  let result;
+  try { result = calculateQuote(input, catalog); }
+  catch (error) {
+    const issue = calculationError(error);
+    if (!payload.allow_incomplete || !issue) throw error;
+    result = { status: 'incomplete', issues: [issue] };
+  }
   const id = payload.id ?? randomUUID();
   const saved = await db('rpc/chiffrage_write', { method: 'POST', payload: {
     p_id: id, p_expected_revision: payload.expected_revision ?? null,
@@ -202,6 +209,8 @@ export default async function handler(request) {
     if (action === 'export' && request.method === 'GET') {
       const quote = await savedQuote(url.searchParams.get('id') ?? '');
       if (!quote?.snapshot) return fail('Quote not found', 404);
+      if (quote.snapshot.result?.status === 'incomplete')
+        return json({ error: 'Incomplete quote', code: 'quoteIncomplete' }, 422);
       const bytes = exportQuoteXlsx(quote);
       return new Response(bytes, { headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -211,6 +220,8 @@ export default async function handler(request) {
     }
     return fail('Unknown operation', 404);
   } catch (error) {
+    const detail = calculationError(error);
+    if (detail) return json({ error: 'Calculation requires attention', ...detail }, 422);
     return fail(error.status === 409 ? 'Revision conflict' : 'Operation failed',
       error.status ?? (error.message.startsWith('Storage operation') ? 503 : 400));
   }

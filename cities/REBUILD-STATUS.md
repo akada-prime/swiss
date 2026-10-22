@@ -149,3 +149,30 @@ La branche attendue est `rebuild/prime-communes-2.0`, propre et alignée sur son
 homologue distant. La prochaine action est une inspection humaine, complétée si
 possible par un contrôle Carte avec WebGL2 matériel. Ne pas rejouer l'audit ou
 la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
+# Chiffrage — corrections de configuration du 22 octobre 2026
+
+- Commune et volumes : compteurs et taxes suggérés à un tiers des habitants,
+  arrondi au multiple de 500 supérieur, avec respect des valeurs modifiées.
+- Énergie : sélection groupée des licences 501/502/533 du catalogue Versorger.
+  Les tarifs privés sont toujours marqués non validés : aucune interpolation
+  inventée ; PA/PV annuels manuels possibles et brouillon incomplet conservable.
+- Hébergement : Oui/Non avant les montants, exclusion effective des calculs sans
+  effacer les lignes, compatibilité avec les anciennes révisions. Aucun tarif
+  AZ n'est supposé. LCM : ajustements manuels repliés.
+- Choix radio/cases de même taille, composition en colonnes sur ordinateur,
+  empilement sur Natel. Les identifiants de cache sont synchronisés pour éviter
+  de mélanger les nouveaux messages avec un ancien module après publication.
+- Sauvegarde : brouillons explicitement incomplets sans faux total, refus de
+  l'export correspondant ; messages ciblés pour SQL, paliers, LCM et session.
+  Une panne de liste après une écriture réussie n'est plus présentée comme une
+  perte de la sauvegarde. Reconnexion possible sans perdre le formulaire.
+- Diagnostic en lecture seule : refus HTTP 400 observé sur une sauvegarde du
+  22 octobre ; deux causes reproduites (prix SQL par cœur manquant et palier
+  Abacus inférieur absent). Le contenu du brouillon refusé n'était pas disponible,
+  donc sa cause exacte n'est pas affirmée. Les trois révisions existantes ont
+  été recalculées localement avec leur catalogue privé, sans écriture distante.
+- Schéma, données privées et paramètres commerciaux distants inchangés.
+- Aperçu isolé : `docs/chiffrage-preview.html`, uniquement données fictives et
+  API en mémoire, avec six largeurs, FR/DE, deux Skins et simulation d'erreurs.
+- Publication coordonnée nécessaire : frontend + fonction Edge et ses modules
+  calculate/configuration/errors. Aucun déploiement ni merge de main automatique.
