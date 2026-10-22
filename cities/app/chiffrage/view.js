@@ -118,12 +118,13 @@ function firstDraft(row) {
   state.internal = false;
   state.dirty = false;
   const profile = referenceProfiles(state.catalog).find(row => row.default) ?? referenceProfiles(state.catalog)[0];
-  if (profile) { state.draft.reference = {id:profile.id}; Object.assign(state.draft.pce,profile.pce_defaults ?? {}); }
+  if (profile) { state.draft.reference = {id:profile.id}; Object.assign(state.draft.pce,profile.pce_defaults ?? {});
+    Object.assign(state.draft.oracle,profile.technical_defaults?.oracle ?? {}); }
   changeProduct('innosolv', true, false);
   const erp = String(row.erp ?? '').toLowerCase();
   if (/proconcept|pce/.test(erp)) chooseErp('pce', false);
   else if (/abacus/.test(erp)) chooseErp('abacus', false);
-  if (profile) applyReference(state.draft, state.catalog, profile.id);
+  if (profile) applyReference(state.draft, state.catalog, profile.id,{initializeScope:true});
   state.title = `${row.name} — Variante 1`;
   state.revision = null;
   state.quote = null;
@@ -248,6 +249,7 @@ function serviceSection(compact = false) {
     <p class="chiffrage-helper">${t('chiffrage.workspace.dbe3e236ca')}</p>
     <div class="chiffrage-service-grid">${types.map(([id, fr, german]) => {
       const current = state.draft.services.find(entry => entry.item_code === id);
+      if(id==='deplacements' && state.draft.travel) return `<div class="chiffrage-service-item"><strong>${escape(de?german:fr)}</strong>${field('travel.rate',state.draft.travel.rate,t('chiffrage.travelUnit'))}${field('travel.percent',state.draft.travel.percent,t('chiffrage.travelPercent'),{step:.5})}<label class="chiffrage-choice"><input type="checkbox" data-field="travel.waived" ${state.draft.travel.waived?'checked':''}>${t('chiffrage.travelWaived')}</label><small>${t('chiffrage.travelBasis')}</small></div>`;
       if (id === 'projet' && gp) return `<div class="chiffrage-service-item"><strong>${escape(de ? german : fr)}</strong>${field('projectManagement.percent', gp.percent, t('chiffrage.workspace.e34218e3b4'), {step:.5})}<small data-gp-explanation>${gpExplanation(gpLine)}</small></div>`;
       return `<div class="chiffrage-service-item"><strong>${escape(de ? german : fr)}</strong>${field(`service.${id}.days`, current?.days, t('chiffrage.days'), { step: .5 })}<small>${current?.suggested_days == null ? t('chiffrage.workspace.f65d0dc796') : `${t('chiffrage.workspace.f8130bb03a')} : ${number(current.suggested_days)} ${t('chiffrage.workspace.6abe3deea7')}`}</small>${!compact ? field(`service.${id}.override`, current?.investment_override, t('chiffrage.override'), {min:-1000000}) : ''}</div>`;
     }).join('')}</div>
@@ -291,6 +293,8 @@ function technicalSection() {
       ${field('sql.annualPv', state.draft.sql.annualPv, t('chiffrage.sqlAnnualPv'))}
       ${state.internal ? field('sql.annualPa', state.draft.sql.annualPa, t('chiffrage.sqlAnnualPa')) : ''}</div>` : ''}
     ${hasOracle ? `<div class="chiffrage-grid">
+      ${!state.draft.products.includes('innosolv') ? field('pce.financePvOverride',state.draft.pce.financePvOverride,t('chiffrage.pceFinanceAnnual'))+field('pce.salaryPvOverride',state.draft.pce.salaryPvOverride,t('chiffrage.pceSalaryAnnual')) : ''}
+      ${state.catalog.parameters.pce.finance_basis === 'innosolv_plus_options' ? field('pce.interfacePv',state.draft.pce.interfacePv ?? state.catalog.parameters.pce.interface_pv,t('chiffrage.pceInterfacePv')) : ''}
       ${field('oracle.full', state.draft.oracle.full, t('chiffrage.oracleFull'))}
       ${field('oracle.light', state.draft.oracle.light, t('chiffrage.oracleLight'))}
       ${field('oracle.investmentOverride', state.draft.oracle.investmentOverride, t('chiffrage.oracleInvestmentPv'))}
@@ -300,6 +304,9 @@ function technicalSection() {
       ${state.internal ? field('pce.interfacePa', state.draft.pce.interfacePa, 'Interface PCE–ISAG (PA)') : ''}</div>` : ''}</details>`;
 }
 
+function extraInvestment(line) {
+  return (line.investment_override ?? (line.days != null ? line.days*(line.unit_day_rate??dayRate())+(line.investment_fixed_pv??0) : line.investment_pv??0))*(line.quantity??1);
+}
 function extraSection() {
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.partners')}</summary>
     ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index }))
@@ -310,8 +317,11 @@ function extraSection() {
         ${textField(`${line.kind}.${line.index}.item_code`, line.item_code, t('chiffrage.internalCode'))}
         ${line.kind === 'partners' ? textField(`${line.kind}.${line.index}.supplier`, line.supplier, t('chiffrage.supplier')) : ''}
         ${field(`${line.kind}.${line.index}.quantity`, line.quantity ?? 1, t('chiffrage.quantity'))}
-        ${field(`${line.kind}.${line.index}.investment_pv`, line.investment_pv,
-          t('chiffrage.investment'))}
+        ${line.days != null ? field(`${line.kind}.${line.index}.days`,line.days,t('chiffrage.days'),{step:.5}) : ''}
+        ${line.unit_day_rate != null ? field(`${line.kind}.${line.index}.unit_day_rate`,line.unit_day_rate,t('chiffrage.serviceDayRate')) : ''}
+        ${field(`${line.kind}.${line.index}.${line.days != null ? 'investment_override' : 'investment_pv'}`, line.days != null ? line.investment_override : line.investment_pv,
+          t(line.days != null ? 'chiffrage.investmentOverride' : 'chiffrage.investment'))}
+        <small class="chiffrage-helper" data-extra-total="${line.kind}.${line.index}">${t('chiffrage.calculatedInvestment')} ${money(extraInvestment(line))}</small>
         ${state.internal ? field(`${line.kind}.${line.index}.investment_pa`, line.investment_pa, t('chiffrage.investmentPa')) : ''}
         ${field(`${line.kind}.${line.index}.annual_pv`, line.annual_pv,
           t('chiffrage.annual'))}
@@ -513,6 +523,7 @@ function refreshFinancials() {
   const detail=root.querySelector('#chiffrageDetail');
   if (detail) detail.innerHTML=lineDetail();
   let gpLine; try {gpLine=calculateQuote(state.draft,state.catalog).lines.find(row=>row.explanation?.kind==='project_management');} catch {}
+  root.querySelectorAll('[data-extra-total]').forEach(node=>{const [kind,index]=node.dataset.extraTotal.split('.');node.textContent=t('chiffrage.calculatedInvestment')+' '+money(extraInvestment(state.draft[kind][index]));});
   root.querySelectorAll('[data-gp-explanation]').forEach(node=>node.textContent=gpExplanation(gpLine));
 }
 

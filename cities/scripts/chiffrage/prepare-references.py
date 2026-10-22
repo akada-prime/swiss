@@ -29,7 +29,7 @@ for path in args.workbook:
  source=f'{path.name}:Licences&Presta';profile_id=hashlib.sha256(path.name.encode()).hexdigest()[:12]
  label=next((name for name in ['Tolochenaz','Haute-Sorne','Montagny','Fribourg'] if name.lower() in path.name.lower()),path.stem)
  profile={'id':profile_id,'label':f'Référence {label}', 'source':source,'source_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'default':args.default_source in path.name,'module_days':{},'module_group_labels':{},'services':[],'default_modules':{}}
- days=profile['module_days'];selected=[]
+ days=profile['module_days'];selected=[];literal_overrides={}
  for row in s.iter_rows(min_row=22):
   r=row[0].row;sw=code(s.cell(r,4).value)
   if sw not in ids:continue
@@ -39,7 +39,8 @@ for path in args.workbook:
   if str(s.cell(r,3).value).lower()=='x':
    if sw not in ['21','22','501','502','533']:selected.append(sw)
    literal=s.cell(r,10).value
-   if num(literal):days[key]=literal
+   if num(literal):literal_overrides[key]=literal
+ days.update(literal_overrides)
  if selected:profile['default_modules']['innosolv']=sorted(set(selected))
  for r in range(6,19):
   label_text=str(s.cell(r,7).value or '')
@@ -83,6 +84,36 @@ for path in args.workbook:
      for item in members:
       key=f"abacus/ERP/{item['item_code']}";days[key]=0;profile['module_group_labels'][key]=text.removeprefix('Total ')
  if args.default_source in path.name:
+  profile['technical_defaults']={'oracle':{'full':values['D6'].value,'light':0}}
+  sql_formula=str(s['M16'].value)
+  sql_match=re.search(r',([0-9.]+)\+\(([0-9.]+)\*D5\)',sql_formula)
+  if not sql_match:raise ValueError('Unrecognized source SQL user pricing')
+  parameters['sql'].update(user_base=float(sql_match[1]),price_per_user=float(sql_match[2]))
+  travel_row=next(r for r in range(6,23) if s.cell(r,7).value=='Déplacements')
+  discount_row=next(r for r in range(6,23) if s.cell(r,7).value=='Rabais Prime')
+  profile['travel_rule']={'basis':'project_days_including_partners_gp','rate':values['M3'].value,'percent':values['M10'].value*100,'round_to':values['M3'].value,'waived':str(s.cell(discount_row,9).value)==f'=-I{travel_row}','source':f'{source}:I{travel_row};I{discount_row}'}
+  # This commercial workbook explicitly separates finance, salary markup and
+  # its integration interface. Preserve older tariff versions unchanged.
+  finance_row=next(r for r in range(22,36) if s.cell(r,5).value=='Finances PCE')
+  salary_row=next(r for r in range(22,36) if s.cell(r,5).value=='Salaires PCE')
+  interface_row=next(r for r in range(22,36) if s.cell(r,5).value=='Interface PCE-ISAG')
+  if 'I'+str(salary_row)+'+(I'+str(salary_row)+'*$M$6)' not in str(s.cell(salary_row,11).value):raise ValueError('Unrecognized source PCE salary rule')
+  parameters['pce'].update(finance_basis='innosolv_plus_options',finance_ratio=values['M4'].value,pv_margin=values['M6'].value,salary_pv_method='markup',interface_pv=values.cell(interface_row,11).value,interface_pa=values.cell(interface_row,9).value,finance_base_item_codes=[code(s.cell(r,4).value) for r in range(22,45) if code(s.cell(r,4).value) in ids],source=f'{source}:I{finance_row}/K{finance_row}/I{salary_row}/K{salary_row}/K{interface_row}')
+  for family,heading,key in [('prime','Options Prime','prime_lines'),('partenaires','Options Partenaires','partners')]:
+   starts=[r for r in range(100,s.max_row+1) if s.cell(r,5).value==heading]
+   profile[key]=[]
+   if not starts:continue
+   start=starts[0]
+   end=next((r for r in range(start+1,s.max_row+1) if str(s.cell(r,5).value or '').startswith('Options ')),min(start+40,s.max_row+1))
+   for r in range(start+1,end):
+    if str(s.cell(r,3).value).lower()!='x':continue
+    label_text=s.cell(r,5).value;days_value=values.cell(r,10).value;annual=values.cell(r,11).value
+    if not isinstance(label_text,str) or not num(days_value) or not num(annual):continue
+    unit=values.cell(r,21).value;fixed=values.cell(r,13).value or 0
+    entry={'family':family,'category':'license' if family=='prime' else 'partner','item_code':f'reference-{family}-{r}','label':label_text,'quantity':values.cell(r,4).value or 1,'days':days_value,'annual_pv':annual,'investment_fixed_pv':fixed,'gp_included':family=='prime','explanation':{'source':f'{source}:J{r}/K{r}/M{r}/N{r}/U{r}'}}
+    if num(unit):entry['unit_day_rate']=unit
+    else:entry['investment_override']=(values.cell(r,14).value or 0)+fixed
+    profile[key].append(entry)
   full=values['D16'].value;erp=values['D17'].value;other=values['D18'].value
   if all(num(value) for value in [full,erp,other]):
    parameters['hosting_presets']=[{'label':f'Référence {label}','products':['innosolv','pce'],'lines':[{'family':'prime','category':'hosting','item_code':'hosting-reference','label':f'Hébergement · référence {label}','quantity':1,'investment_pv':full,'annual_pv':erp+other,'explanation':{'source':f'{source}:D16+D17+D18'}}]}]

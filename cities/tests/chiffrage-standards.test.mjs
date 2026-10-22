@@ -58,3 +58,15 @@ test('a source-specific hosting amount cannot silently follow a change of ERP sc
  draft.primeLines[0].reference_products=[];
  assert.equal(calculateQuote(draft,catalog).summary.annual,30);
 });
+test('Prime option services contribute to GP once; partner services retain their own sale day rate',()=>{
+ const draft=input();applyReference(draft,catalog,'synthetic');draft.primeLines=[{family:'prime',days:2,quantity:2,unit_day_rate:50,gp_included:true}];draft.partners=[{family:'partenaires',days:3,unit_day_rate:40}];
+ const result=calculateQuote(draft,catalog),gp=result.lines.find(line=>line.item_code==='projet');
+ assert.equal(gp.explanation.basis_days,9);assert.equal(gp.selected_days,2);
+ assert.equal(result.lines.find(line=>line.family==='partenaires').investment_pv,120);
+});
+test('source travel includes project and partner days after GP, and its explicit waiver is reversible',()=>{
+ const draft=input();applyReference(draft,catalog,'synthetic');draft.partners=[{family:'partenaires',days:2,unit_day_rate:40}];draft.travel={basis:'project_days_including_partners_gp',percent:50,rate:20,round_to:10,waived:true};
+ const result=calculateQuote(draft,catalog),travel=result.lines.find(line=>line.item_code==='deplacements');
+ assert.equal(travel.explanation.basis_days,8);assert.equal(travel.investment_pv,80);
+ const waived=result.summary.investment;draft.travel.waived=false;assert.equal(calculateQuote(draft,catalog).summary.investment,waived+80);
+});

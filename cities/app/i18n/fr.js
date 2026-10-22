@@ -753,5 +753,16 @@ export default {
   "chiffrage.exportInternal": "Exporter en interne · PA et marges",
   "chiffrage.hostingPrefilled": "Montants préremplis depuis la référence privée indiquée. Vos ajustements restent propres à ce chiffrage.",
   "chiffrage.hostingScopeChanged": "Le périmètre ERP a changé. Les montants d’hébergement sont conservés ; confirmez leur validité pour cette configuration ou ajustez-les.",
-  "chiffrage.confirmHosting": "Valider ces montants pour ce périmètre"
+  "chiffrage.confirmHosting": "Valider ces montants pour ce périmètre",
+  "chiffrage.serviceDayRate": "Prix de vente par jour · CHF",
+  "chiffrage.pceInterfacePv": "Interface ProConcept–innosolv · annuel CHF",
+  "chiffrage.travelUnit": "Prix unitaire · CHF",
+  "chiffrage.travelPercent": "Fréquence · % des jours",
+  "chiffrage.travelWaived": "Déplacements offerts",
+  "chiffrage.travelBasis": "Assiette : jours du projet, GP et partenaires inclus. Arrondi selon la référence privée.",
+  "chiffrage.investmentOverride": "Investissement · dérogation facultative",
+  "chiffrage.calculatedInvestment": "Investissement calculé :",
+  "chiffrage.pceFinanceAnnual": "Finances ProConcept · annuel CHF",
+  "chiffrage.pceSalaryAnnual": "Salaires ProConcept · annuel CHF",
+  "chiffrage.pceStandalonePrice": "Sans innosolv, cette référence ne définit pas de tarif ProConcept autonome. Renseignez le prix annuel des finances et/ou salaires dans Technique."
 };

@@ -120,8 +120,10 @@ export function calculatePce(input, parameters) {
   const base = finite(input.innosolvPaBase, 'innosolv PA base');
   const ratio = finite(parameters.finance_ratio, 'finance ratio');
   const adjustment = finite(parameters.finance_adjustment, 'finance adjustment');
-  const interfacePa = finite(input.interfacePa ?? 0, 'interface PA');
-  const beforeFinanceRounding = (base + adjustment) * ratio;
+  const sourceOptions = parameters.finance_basis === 'innosolv_plus_options';
+  const interfacePa = finite(sourceOptions ? input.interfacePv ?? parameters.interface_pv ?? 0 : input.interfacePa ?? 0, 'interface allocation');
+  const optionsBase = sourceOptions ? finite(input.innosolvOptionsPa ?? 0, 'innosolv options PA') : adjustment;
+  const beforeFinanceRounding = (base + optionsBase) * ratio;
   const financeRounded = roundTo(beforeFinanceRounding, parameters.finance_round_to);
   const financePa = financeRounded - interfacePa;
   const salaryBase = financeRounded / 2;
@@ -131,7 +133,8 @@ export function calculatePce(input, parameters) {
   const margin = finite(parameters.pv_margin, 'PCE PV margin');
   if (margin < 0 || margin >= 1) throw new Error('Invalid PCE PV margin');
   const financePv = roundTo(financeRounded / (1 - margin), parameters.pv_round_to) - interfacePa;
-  const salaryPv = roundTo(salaryPa / (1 - margin), parameters.pv_round_to);
+  const salaryPv = roundTo(parameters.salary_pv_method === 'markup' ? salaryPa * (1 + margin) :
+    salaryPa / (1 - margin), parameters.pv_round_to);
   const pv = { finances: effective(financePv, input.financePvOverride),
     salaires: effective(salaryPv, input.salaryPvOverride) };
   return { pa, pv, explanation: { innosolvPaBase: base, adjustment, ratio,
@@ -245,17 +248,30 @@ export function calculateQuote(input, catalog) {
       overrides: { pa: selected.pa_override ?? null, pv: selected.pv_override ?? null } });
   }
   if (choices.has('pce')) {
+    const independentSource = catalog.parameters.pce.finance_basis === 'innosolv_plus_options' && !choices.has('innosolv');
+    if (independentSource && (input.pce.finances && input.pce.financePvOverride == null ||
+      input.pce.salaires && input.pce.salaryPvOverride == null)) throw new Error('PCE standalone price required');
     const innosolvPaBase = lines.filter(line => line.family === 'innosolv')
       .reduce((sum, line) => sum + line.annual_pa, 0);
     const pce = calculatePce({ ...input.pce,
-      innosolvPaBase: input.pce?.innosolvPaBaseOverride ?? innosolvPaBase },
+      innosolvPaBase: input.pce?.innosolvPaBaseOverride ?? innosolvPaBase,
+      innosolvOptionsPa: lines.filter(line => line.family === 'innosolv' &&
+        !(catalog.parameters.pce.finance_base_item_codes ?? []).includes(line.item_code === '129VD' ? '129' : line.item_code))
+        .reduce((sum,line) => sum + line.annual_pa,0),
+      ...(catalog.parameters.pce.finance_basis === 'innosolv_plus_options' && !choices.has('innosolv') ? {interfacePv:0} : {}) },
     { ...catalog.parameters.pce,
       pv_margin: rate('pcePvMargin', catalog.parameters.pce.pv_margin) });
     for (const key of ['finances', 'salaires']) if (input.pce[key]) {
       lines.push({ family: 'pce', item_code: key, label: key,
-        investment_pa: 0, investment_pv: 0, annual_pa: pce.pa[key].effective_value,
+        investment_pa: 0, investment_pv: 0,
+        annual_pa: independentSource && input.pce[key === 'finances' ? 'financePaOverride' : 'salaryPaOverride'] == null ? null : pce.pa[key].effective_value,
         annual_pv: pce.pv[key].effective_value, software: true, explanation: pce.explanation });
     }
+    if (catalog.parameters.pce.finance_basis === 'innosolv_plus_options' && choices.has('innosolv'))
+      lines.push({family:'pce',item_code:'interface',label:'Interface ProConcept–innosolv',
+        investment_pa:0,investment_pv:0,
+        annual_pa:optionalMoney(input.pce?.interfacePa ?? catalog.parameters.pce.interface_pa),
+        annual_pv:finite(input.pce?.interfacePv ?? catalog.parameters.pce.interface_pv,'PCE interface PV'),software:true});
     const oracle = calculateOracle(input.oracle, catalog.parameters.oracle);
     lines.push({ family: 'technique', item_code: 'oracle', label: 'Oracle', software: false,
       investment_pa: optionalMoney(input.oracle.purchasePa), investment_pv: oracle.investment.effective_value,
@@ -272,6 +288,7 @@ export function calculateQuote(input, catalog) {
   for (const entry of [...(input.moduleServices ?? []), ...(input.services ?? []),
     ...(input.primeLines ?? []), ...(input.partners ?? [])]) {
     if (!serviceApplies(entry, input)) continue;
+    if (input.travel && entry.family === 'prestations' && entry.item_code === 'deplacements') continue;
     if (input.projectManagement && entry.family === 'prestations' && entry.item_code === 'projet') continue;
     if (entry.category === 'hosting' && !hostingIncluded(input)) continue;
     const moduleLine = entry.family === 'prestations_module' ?
@@ -282,7 +299,8 @@ export function calculateQuote(input, catalog) {
     const suggestedDays = entry.suggested_days ??
       catalog.parameters.service_presets?.[entry.level]?.[entry.item_code] ?? null;
     const days = entry.days ?? suggestedDays;
-    const serviceValue = days == null ? null : Number(days) * dayRate;
+    const serviceValue = days == null ? null : Number(days) * finite(entry.unit_day_rate ?? dayRate, 'service day rate') +
+      finite(entry.investment_fixed_pv ?? 0, 'fixed license investment');
     const investment = effective(serviceValue ?? finite(entry.investment_pv ?? 0,
       'investment PV'), entry.investment_override);
     lines.push({ family: entry.family, category: entry.category ?? null,
@@ -296,6 +314,7 @@ export function calculateQuote(input, catalog) {
         optionalMoney(entry.annual_pa) * quantity,
       annual_pv: finite(entry.annual_pv ?? 0, 'annual PV') * quantity,
       software: false, explanation: entry.explanation ?? null,
+      ...(entry.gp_included ? {gp_included:true} : {}),
       suggested_days: suggestedDays, selected_days: days,
       calculated_investment: investment.calculated_value,
       overrides: { ...entry.overrides, investment: entry.investment_override ?? null } });
@@ -307,10 +326,10 @@ export function calculateQuote(input, catalog) {
     if (percentage < 0 || percentage > 100) throw new Error('Invalid project management percentage');
     if (gp.basis !== 'prime_service_days' || !(gp.round_days > 0))
       throw new Error('Invalid project management rule');
-    const included = lines.filter(line => ['prestations_module', 'prestations'].includes(line.family) &&
+    const included = lines.filter(line => (['prestations_module', 'prestations'].includes(line.family) || line.gp_included) &&
       line.item_code !== 'projet' && line.selected_days != null &&
       !(gp.exclude_codes ?? []).includes(line.item_code));
-    const basisDays = included.reduce((total, line) => total + finite(line.selected_days, 'service days'), 0);
+    const basisDays = included.reduce((total, line) => total + finite(line.selected_days, 'service days') * (line.quantity ?? 1), 0);
     const days = roundTo(basisDays * percentage / 100, gp.round_days);
     lines.push({ family: 'prestations', item_code: 'projet', label: gp.label ?? 'Gestion de projet',
       quantity: 1, selected_days: days, investment_pa: null, investment_pv: days * dayRate,
@@ -318,6 +337,21 @@ export function calculateQuote(input, catalog) {
       explanation: { kind: 'project_management', percent: percentage, basis: gp.basis,
         basis_days: basisDays, basis_amount: basisDays * dayRate, round_days: gp.round_days,
         included_codes: included.map(line => line.item_code), source: gp.source ?? null } });
+  }
+  if (input.travel) {
+    const travel = input.travel;
+    if (travel.basis !== 'project_days_including_partners_gp' || !(travel.round_to > 0))
+      throw new Error('Invalid travel rule');
+    const basisDays = lines.reduce((sum,line) => sum + (line.selected_days ?? 0) * (line.quantity ?? 1),0);
+    const unit = finite(travel.rate,'travel unit price'), percent = finite(travel.percent,'travel percentage');
+    if (unit < 0 || percent < 0 || percent > 100) throw new Error('Invalid travel price');
+    const amount = roundTo(basisDays * percent / 100 * unit, travel.round_to);
+    lines.push({family:'prestations',item_code:'deplacements',label:'Déplacements',
+      investment_pa:null,investment_pv:amount,annual_pa:0,annual_pv:0,software:false,
+      explanation:{kind:'travel',basis_days:basisDays,percent,unit_price:unit,source:travel.source}});
+    if (travel.waived) lines.push({family:'prestations',item_code:'deplacements-offerts',label:'Déplacements offerts',
+      investment_pa:0,investment_pv:-amount,annual_pa:0,annual_pv:0,software:false,
+      explanation:{kind:'travel_waiver',source:travel.source}});
   }
   // Previously saved quotes can still contain the former split-support line.
   const primeSupport = lines.filter(line => line.family === 'prime' &&

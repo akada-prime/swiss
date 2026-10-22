@@ -239,3 +239,9 @@ test('Prime support splits existing innosolv annual PV without changing revenue 
   assert.throws(() => calculateQuote({ ...input, primeLines: [{ family: 'prime',
     category: 'support', annual_pv: 300 }] }, catalog), /exceeds/);
 });
+test('a new source version separates PCE options basis, interface allocation and salary markup without changing legacy versions',()=>{
+ const source={finance_basis:'innosolv_plus_options',salary_pv_method:'markup',finance_ratio:.5,finance_adjustment:0,finance_round_to:100,salary_round_to:50,pv_margin:.2,pv_round_to:50,interface_pv:100};
+ const result=calculatePce({innosolvPaBase:1000,innosolvOptionsPa:200},source);
+ assert.equal(result.pa.finances.effective_value,500);assert.equal(result.pv.finances.effective_value,650);
+ assert.equal(result.pa.salaires.effective_value,300);assert.equal(result.pv.salaires.effective_value,350);
+});

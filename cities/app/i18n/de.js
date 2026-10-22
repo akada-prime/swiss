@@ -753,5 +753,16 @@ export default {
   "chiffrage.exportInternal": "Intern exportieren · Einkaufspreise und Margen",
   "chiffrage.hostingPrefilled": "Beträge aus der angegebenen privaten Referenz vorausgefüllt. Anpassungen gelten nur für diese Kalkulation.",
   "chiffrage.hostingScopeChanged": "Der ERP-Umfang hat sich geändert. Hosting-Beträge bleiben erhalten; bestätigen Sie sie für diese Konfiguration oder passen Sie sie an.",
-  "chiffrage.confirmHosting": "Diese Beträge für den aktuellen Umfang bestätigen"
+  "chiffrage.confirmHosting": "Diese Beträge für den aktuellen Umfang bestätigen",
+  "chiffrage.serviceDayRate": "Verkaufspreis pro Tag · CHF",
+  "chiffrage.pceInterfacePv": "Schnittstelle ProConcept–innosolv · jährlich CHF",
+  "chiffrage.travelUnit": "Einheitspreis · CHF",
+  "chiffrage.travelPercent": "Häufigkeit · % der Tage",
+  "chiffrage.travelWaived": "Reisen kostenlos",
+  "chiffrage.travelBasis": "Basis: Projekttage inklusive Projektleitung und Partner. Rundung gemäss privater Referenz.",
+  "chiffrage.investmentOverride": "Investition · optionale Abweichung",
+  "chiffrage.calculatedInvestment": "Berechnete Investition:",
+  "chiffrage.pceFinanceAnnual": "ProConcept Finanzen · jährlich CHF",
+  "chiffrage.pceSalaryAnnual": "ProConcept Löhne · jährlich CHF",
+  "chiffrage.pceStandalonePrice": "Ohne innosolv definiert diese Referenz keinen eigenständigen ProConcept-Tarif. Erfassen Sie die jährlichen Finanz-/Lohnpreise unter Technik."
 };

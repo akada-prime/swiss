@@ -21,12 +21,17 @@ export function serviceDays(catalog, id, profileId) {
     presets[id.replace('/Versorger/', '/Gemeinde/')] :
     id.endsWith('/129VD') ? presets[id.replace('/129VD', '/129')] : null);
 }
-export function applyReference(input, catalog, profileId) {
+export function applyReference(input, catalog, profileId, { initializeScope = false } = {}) {
   const profile = referenceProfiles(catalog).find(row => row.id === profileId);
   if (!profile) return false;
   input.reference = { id: profile.id, label: profile.label, source: profile.source };
   input.services = structuredClone(profile.services ?? []);
   input.projectManagement = structuredClone(profile.project_management ?? null);
+  input.travel = structuredClone(profile.travel_rule ?? null);
+  if (initializeScope) {
+    input.primeLines.push(...structuredClone(profile.prime_lines ?? []));
+    input.partners.push(...structuredClone(profile.partners ?? []));
+  }
   input.moduleServices = input.modules.map(item => {
     const id = moduleId(item), days = serviceDays(catalog, id, profile.id);
     return { family: 'prestations_module', item_code: id, label: id,

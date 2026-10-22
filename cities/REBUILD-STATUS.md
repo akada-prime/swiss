@@ -215,3 +215,17 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
   si le périmètre change ; les montants ne sont ni effacés ni réappliqués.
 - SQL privé prêt pour import inactif, activation protégée et retour aux versions
   antérieures ; aucune écriture ou activation de données effectuée.
+
+### Rapprochement métier final
+
+- Contrôle d'une référence commerciale complète : écarts de 0,00 CHF pour
+  investissement, coût annuel et TCO cinq ans, sur le périmètre Excel fourni.
+- Nouvelle politique privée PCE : base des finances et options, interface séparée,
+  vente des salaires selon la formule source ; aucune modification des versions
+  historiques. SQL par utilisateur selon la même source, prix par cœur non inventé.
+- Options Prime et partenaires inclus au premier chiffrage selon la référence ;
+  jours et prix journalier propres aux partenaires, GP sans double comptage.
+- Déplacements calculés après GP sur les jours du projet, partenaires inclus ;
+  remise explicitement distincte et modifiable selon la source.
+- 114 tests réussis, build réussi, trois révisions historiques inchangées.
+- Le rapprochement porte sur ce cas complet, pas sur tous les périmètres possibles.

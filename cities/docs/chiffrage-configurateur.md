@@ -62,6 +62,21 @@ il ne constitue pas un nouveau tarif universel pour les autres combinaisons.
 contre un changement des versions actives, et le retour aux versions précédentes.
 Il réutilise le catalogue Abacus existant et ne supprime aucune version.
 
+## Rapprochement Excel
+
+Le contrôle privé de la référence commerciale complète retenue retrouve exactement
+l'investissement, l'annuel et le TCO sur cinq ans, au centime. Il inclut les options
+Prime présélectionnées, les prestations de partenaires à leur propre prix journalier,
+Oracle, SQL, l'hébergement et les déplacements avec leur remise explicite.
+
+Le contrôle a corrigé, dans une nouvelle version privée uniquement, la distinction
+entre la base des finances ProConcept, l'allocation de son interface et la règle de
+vente des salaires. Les jours personnalisés figurant dans le corps de l'Excel
+priment sur la grille de jours standard du même fichier. Les versions antérieures
+ne sont pas réécrites. `compare-reference.py` permet de répéter le rapprochement
+avec les fichiers privés, à périmètre identique. Ce contrôle ne certifie pas les
+combinaisons dont les valeurs manquent dans les sources.
+
 ## Publication
 
 Le frontend, les modules partagés de la fonction Edge et le nouvel export doivent
