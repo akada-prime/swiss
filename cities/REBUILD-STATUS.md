@@ -238,3 +238,20 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
   avec le module de vue et le moteur réellement livrés.
 - PR de livraison : #41. Production et activation de la nouvelle version privée
   en attente du GO ; aucune modification de données Supabase effectuée.
+
+### Publication et retours Natel · 22 octobre 2026
+
+- PR #41 fusionné dans `main` (`8058b15`) ; CI et Pages réussis, fonction
+  `chiffrage` version 9 et références privées du configurateur actives.
+- Le premier essai Bex a conservé un ancien catalogue dans un onglet déjà
+  ouvert. Les nouvelles créations rechargent désormais les versions actives.
+- Une ancienne révision propose une variante explicite avec la référence
+  actuelle ; le snapshot original et les valeurs saisies restent intacts.
+- Sur Natel, contrôles ERP homogènes, lignes de prestations par module
+  compactées, chiffres alignés et répétitions supprimées. Les noms métiers
+  remplacent les codes techniques dans le détail client.
+- La synthèse affiche le prix LCM disponible même lorsqu'un autre élément
+  rend le chiffrage incomplet.
+- Préparation Excel : les jours Abacus du fichier Fribourg étaient lus depuis
+  une colonne monétaire à cause d'un décalage. La colonne de jours est
+  identifiée par le libellé et sa valeur source, puis contrôlée séparément.
