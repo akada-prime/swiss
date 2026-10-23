@@ -36,7 +36,9 @@ export function customerModuleScope(input, catalog) {
       // Critical: only the parent .1 of the Abacus module group is visible.
       // Never send individual Abacus function / submodule labels.
       const family=String(module.item_code).split('.')[0];
-      display=byCode.get(`abacus/${module.product}/${family}.1`) ?? original;
+      display=byCode.get(`abacus/${module.product}/${family}.1`) ??
+        (module.item_code.endsWith('.1') ? original :
+          {label_fr:'Autres fonctions Abacus',label_de:'Weitere Abacus-Funktionen'});
     }
     add(module.vendor,display.label_fr || display.label_de,display.label_de || display.label_fr);
   }
