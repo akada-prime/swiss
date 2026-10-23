@@ -445,7 +445,7 @@
   .view-tabs,.sync-state{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.065)}
   .view-tab{color:#afbac9;font-size:13.5px}
   .view-tab:hover{color:#f4f7fa;background:var(--skin-border-soft)}
-  .view-tab.active{background:rgba(24,126,201,.27);box-shadow:inset 0 0 0 1px rgba(83,181,246,.28),0 7px 24px rgba(0,0,0,.13)}
+  .view-tab.active{box-shadow:inset 0 0 0 1px var(--pc-control-selected-border),0 7px 24px rgba(0,0,0,.13)}
   .sync-state{color:#bdc7d3}
 
   .view-intro-copy,.intro-copy{color:#c2cbd7}
@@ -624,6 +624,10 @@
     padding: 0 6px;
     font-size: 12px;
   }
+
+  /* Seven choices: the configurator is a deliberate full-width final row,
+     never a stranded button occupying one third of the navigation. */
+  .view-tab[data-view="chiffrage"]{grid-column:1/-1}
 
   .news-nav-badge { display: none; }
 
