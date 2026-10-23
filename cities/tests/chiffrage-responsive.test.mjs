@@ -24,3 +24,16 @@ test('detailed calculation rows become labeled two-column cards on narrow screen
   assert.match(css, /@media\(max-width:600px\)\{[\s\S]*?\.chiffrage-line-detail tr\{display:grid/);
   assert.match(css, /content:attr\(data-label\)/);
 });
+
+
+test('shared Prime controls and quote typography do not require cascade overrides', () => {
+  const skin = readFileSync(new URL('../app/styles/skins.css', import.meta.url), 'utf8');
+  const index = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(css, /!important/);
+  assert.match(css, /\.chiffrage-work-tabs button\[aria-current=page\]\{background:var\(--skin-accent-soft\);color:var\(--skin-accent\)/);
+  assert.match(css, /\.chiffrage-button\.quiet\{background:var\(--skin-control\);border-color:var\(--skin-border-soft\)/);
+  assert.match(css, /chiffrage-mobile-summary-figures strong\{[^}]*font-size:clamp\(27px,7\.2vw,33px\)/);
+  assert.match(skin, /html\[data-skin="helvetia"\][\s\S]*?--quote-input:#f4f6f8;--quote-input-border:#b9c3ca/);
+  assert.doesNotMatch(view, /class="chiffrage-saved-formula"/);
+  assert.match(index, /main\.css\?v=20261023-beta-visual-r7/);
+});
