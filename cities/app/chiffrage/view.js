@@ -155,7 +155,8 @@ function renderList() {
       `<article class="chiffrage-list-item"><button data-action="open" data-id="${escape(row.id)}"><span class="chiffrage-saved-heading"><span data-list-canton>${listCanton(communes().find(item => Number(item.id) === Number(row.bfs_id))?.canton)}</span><strong>${escape(row.title)}</strong></span>
       <small>${escape(row.commune_name)} · OFS ${row.bfs_id} · ${t('chiffrage.revision', {
         revision: row.current_revision })}</small><span class="chiffrage-saved-figures" data-list-figures aria-live="polite">${t('chiffrage.ui.savedLoading')}</span></button>
-    <button type="button" class="chiffrage-button chiffrage-share-list" data-action="shareOffer" data-id="${escape(row.id)}" disabled>${localLabel('Vérification de l’offre…','Angebot wird geprüft…')}</button>
+    <div class="chiffrage-list-share-actions"><button type="button" class="chiffrage-button chiffrage-share-list" data-action="shareOffer" data-id="${escape(row.id)}" disabled>${localLabel('Vérification de l’offre…','Angebot wird geprüft…')}</button>
+      <button type="button" class="chiffrage-button chiffrage-manage-list" data-action="manageShares" data-id="${escape(row.id)}">${localLabel('Liens et ouvertures','Links und Aufrufe')} ↗</button></div>
     <div class="chiffrage-share-result" data-share-result aria-live="polite"></div></article>`).join('') : `<p>${t('chiffrage.empty')}</p>`}</div><div id="chiffrageShareResult" aria-live="polite"></div>`;
   const byId = new Map(rows.map(row => [String(row.id), row]));
   listObserver = new IntersectionObserver(entries => {
@@ -1238,6 +1239,17 @@ function startShareClipboard() {
 function dateLabel(value) {
   return new Date(value).toLocaleDateString(document.documentElement.lang === 'de' ? 'de-CH' : 'fr-CH');
 }
+function dateTimeLabel(value) {
+  return new Date(value).toLocaleString(document.documentElement.lang === 'de' ? 'de-CH' : 'fr-CH',
+    { day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit' });
+}
+function shareCloseControl() {
+  return `<button type="button" class="chiffrage-button quiet chiffrage-share-close" data-action="closeSharePanel">${localLabel('Fermer','Schließen')} ×</button>`;
+}
+function linkCount(value) {
+  const n = Number(value ?? 0);
+  return `${Number.isFinite(n) && n > 0 ? Math.trunc(n) : 0} ${localLabel('ouverture(s)','Aufruf(e)')}`;
+}
 
 root.addEventListener('click', async event => {
   const base = event.target.closest('[data-compare-base]');
@@ -1305,12 +1317,14 @@ root.addEventListener('click', async event => {
       clipboard?.resolve(url);
       if (preview && !preview.closed) preview.location.replace(url);
       const container = sharePanel(`<section class="chiffrage-share-panel">
-        <h3>${localLabel('Offre client prête à partager','Kundenangebot zum Teilen bereit')}</h3>
+        <div class="chiffrage-share-panel-heading"><h3>${localLabel('Offre client prête à partager','Kundenangebot zum Teilen bereit')}</h3>${shareCloseControl()}</div>
         <p>${localLabel('Lecture seule · révision figée','Schreibgeschützt · feste Version')} ${shared.revision} · ${localLabel('Expire le','Gültig bis')} ${dateLabel(shared.expires_at)}</p>
         <label>${localLabel('Lien privé','Privater Link')}<input class="chiffrage-share-url" value="${escape(url)}" readonly></label>
         <div class="chiffrage-share-actions"><button class="chiffrage-button" data-action="copySharedOffer">${localLabel('Copier le lien','Link kopieren')}</button>
         <a class="chiffrage-button primary" href="${escape(url)}" target="_blank" rel="noopener noreferrer">${localLabel('Ouvrir l’offre client','Kundenangebot öffnen')} ↗</a></div>
         <p class="chiffrage-share-copy-status" role="status">${localLabel('Lien créé. Ouverture de l’onglet client…','Link erstellt. Kundenansicht wird geöffnet…')}</p>
+        <div class="chiffrage-share-monitor"><span>${localLabel('Ouvertures depuis la publication','Aufrufe seit Veröffentlichung')} : <strong>${linkCount(shared.open_count)}</strong></span>
+        <button type="button" class="chiffrage-button" data-action="manageShares" data-id="${escape(id)}">${localLabel('Actualiser / gérer les liens','Aktualisieren / Links verwalten')} ↻</button></div>
         <p class="chiffrage-helper">${localLabel('Ce lien donne accès uniquement à cette offre.','Dieser Link öffnet nur dieses Angebot.')}</p>
       </section>`, button);
       if (clipboard) void clipboard.result.then(copied => {
@@ -1339,6 +1353,11 @@ root.addEventListener('click', async event => {
     } finally { if(button.isConnected) button.disabled=false; }
     return;
   }
+  if (action === 'closeSharePanel') {
+    const container=button.closest('[data-share-result],#chiffrageShareResult');
+    if (container) container.replaceChildren();
+    return;
+  }
   if (action === 'copySharedOffer') {
     const url=button.closest('.chiffrage-share-panel')?.querySelector('.chiffrage-share-url');
     if (!url) return;
@@ -1353,23 +1372,62 @@ root.addEventListener('click', async event => {
     }
     return;
   }
+
   if (action === 'manageShares') {
-    if (!state.quote) return;
-    const links=await api('sharedOffers',undefined,{id:state.quote});
-    const now=Date.now();
-    sharePanel(`<section class="chiffrage-share-panel"><h3>${localLabel('Liens clients','Kundenlinks')}</h3>
-      ${links.length ? links.map(row=>`<div class="chiffrage-share-link">
-        <span>${localLabel('Révision','Version')} ${row.revision} · ${localLabel('Expire le','Gültig bis')} ${dateLabel(row.expires_at)}
-          <small>${row.revoked_at ? localLabel('Révoqué','Widerrufen') : new Date(row.expires_at).getTime()<now ? localLabel('Expiré','Abgelaufen') : localLabel('Actif','Aktiv')}</small></span>
-        ${!row.revoked_at && new Date(row.expires_at).getTime()>now ? `<button class="chiffrage-button" data-action="revokeSharedOffer" data-link-id="${escape(row.id)}">${localLabel('Révoquer','Widerrufen')}</button>` : ''}</div>`).join('') : localLabel('Aucun lien publié.','Keine freigegebenen Links.')}
-      </section>`);
+    const id=button.dataset.id ?? state.quote;
+    if (!id) return;
+    const existing=button.closest('.chiffrage-share-panel');
+    // The header/footer button acts as a toggle; refresh control does not.
+    if (existing?.dataset.shareMode === 'manage' && button.dataset.refresh !== 'true') {
+      existing.closest('[data-share-result],#chiffrageShareResult')?.replaceChildren();
+      return;
+    }
+    button.disabled = true;
+    try {
+      const links=await api('sharedOffers',undefined,{id});
+      const now=Date.now();
+      const active=links.filter(row=>!row.revoked_at && new Date(row.expires_at).getTime()>now);
+      const total=active.reduce((sum,row)=>sum+Number(row.open_count ?? 0),0);
+      sharePanel(`<section class="chiffrage-share-panel" data-share-mode="manage" data-share-id="${escape(id)}">
+        <div class="chiffrage-share-panel-heading"><h3>${localLabel('Liens clients','Kundenlinks')}</h3>${shareCloseControl()}</div>
+        <p class="chiffrage-share-monitor">
+          ${localLabel('Ouvertures des liens actifs','Aufrufe aktiver Links')} : <strong>${linkCount(total)}</strong>
+          <span class="chiffrage-share-help">${localLabel('Non uniques · tes essais et aperçus comptent aussi. Pas de suivi individuel.','Nicht eindeutig · eigene Tests zählen mit. Keine Besucherverfolgung.')}</span>
+        </p>
+        <button type="button" class="chiffrage-button" data-action="manageShares" data-refresh="true" data-id="${escape(id)}">${localLabel('Actualiser les compteurs','Aufrufe aktualisieren')} ↻</button>
+        <div class="chiffrage-share-link-list">${active.length ? active.map(row=>`<div class="chiffrage-share-link" data-link-id="${escape(row.id)}">
+          <span><strong>${localLabel('Révision','Version')} ${row.revision}</strong>
+            <small>${localLabel('Expire le','Gültig bis')} ${dateLabel(row.expires_at)}</small>
+            <span class="chiffrage-share-counter">${linkCount(row.open_count)}</span>
+            ${row.last_opened_at ? `<small>${localLabel('Dernière ouverture','Letzter Aufruf')} : ${dateTimeLabel(row.last_opened_at)}</small>` : `<small>${localLabel('Pas encore ouvert','Noch nicht geöffnet')}</small>`}
+          </span>
+          <button type="button" class="chiffrage-button chiffrage-danger" data-action="revokeSharedOffer" data-id="${escape(id)}" data-link-id="${escape(row.id)}">${localLabel('Supprimer le lien','Link löschen')}</button>
+        </div>`).join('') : `<p>${localLabel('Aucun lien actif.','Keine aktiven Links.')}</p>`}</div>
+        <p class="chiffrage-share-feedback" role="status"></p>
+      </section>`,button);
+    } catch(error) {
+      sharePanel(`<div class="chiffrage-share-error" role="alert">${localLabel('Impossible de charger les ouvertures.','Aufrufe konnten nicht geladen werden.')}</div><button class="chiffrage-button" data-action="closeSharePanel">${localLabel('Fermer','Schließen')} ×</button>`,button);
+    } finally { if(button.isConnected) button.disabled=false; }
     return;
   }
   if (action === 'revokeSharedOffer') {
-    if (!state.quote || !window.confirm(localLabel('Révoquer définitivement ce lien client ?','Diesen Kundenlink unwiderruflich sperren?'))) return;
-    await api('revokeOffer',{id:state.quote,link_id:button.dataset.linkId});
-    const manage=root.querySelector('[data-action="manageShares"]');
-    if(manage) manage.click();
+    const id=button.dataset.id ?? state.quote;
+    const linkId=button.dataset.linkId;
+    if(!id || !linkId) return;
+    // One action: immediately revoke at the server, then remove from active list.
+    // Keep the DB tombstone for traceability, but never expose the token again.
+    button.disabled=true;
+    try {
+      await api('revokeOffer',{id,link_id:linkId});
+      const manage=button.closest('.chiffrage-share-panel')?.querySelector('[data-action="manageShares"][data-refresh="true"]');
+      if (manage) manage.click();
+      else sharePanel(`<div class="chiffrage-share-progress" role="status">${localLabel('Lien supprimé et immédiatement désactivé.','Link entfernt und sofort gesperrt.')}</div>
+        ${shareCloseControl()}`,button);
+    } catch(error) {
+      button.disabled=false;
+      const feedback=button.closest('.chiffrage-share-panel')?.querySelector('.chiffrage-share-feedback');
+      if (feedback) feedback.textContent=localLabel('Échec de la suppression : le lien peut encore être actif. Réessaie.','Löschen fehlgeschlagen: Link kann noch aktiv sein.');
+    }
     return;
   }
 
