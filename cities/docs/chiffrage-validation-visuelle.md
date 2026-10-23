@@ -34,6 +34,7 @@ Elle conserve le moteur, les catalogues et les snapshots. Le GO de reprise compr
 - `npm run build` : réussi ; avertissements CSS `@theme` / `@tailwind` déjà présents dans la base.
 - Six tailles : 360×780, 430×932, 768×1024, 1366×768, 1920×1080, 2560×1440.
 - Matrice source statique, comparable au mode GitHub Pages : 144 contrôles, sans débordement horizontal global ni erreur JavaScript.
+- Contrôle ciblé de montants à six chiffres (988’888 CHF d’investissement et 188’888 CHF annuels ajoutés à une ligne) sur 360, 430 et 1366 px ; libellés annuels compacts sur Natel.
 - Inspection visuelle de l’offre desktop/Natel, des licences chargées et de la comparaison ; correction d’un écrasement des intitulés financiers sur Natel et d’un conflit de cascade responsive découvert pendant la recette.
 - Vérifications fonctionnelles sur les jours personnalisés, leur indicateur, les titres, les lignes partenaires, la sauvegarde, la relecture et la référence de comparaison.
 - Le moteur `calculate.js`, ses règles de configuration et ses standards ne sont pas modifiés ; les fonctions serveur et les données métier ne sont pas modifiées.

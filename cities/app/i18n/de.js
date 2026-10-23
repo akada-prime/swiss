@@ -819,5 +819,7 @@ export default {
   "chiffrage.ui.travel.rate": "Anreise · gewählter Tarif",
   "chiffrage.ui.travel.percent": "Anreise · %",
   "chiffrage.ui.travel.waived": "Anreise erlassen",
-  "chiffrage.ui.priceEffect": "Auswirkung der letzten Änderung:"
+  "chiffrage.ui.priceEffect": "Auswirkung der letzten Änderung:",
+  "chiffrage.ui.annualShort": "Jährlich",
+  "chiffrage.ui.perYear": "Jahr"
 };

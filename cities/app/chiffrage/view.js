@@ -228,7 +228,7 @@ function productSection() {
     const required = id === 'innosolv/Gemeinde/1' || id === 'abacus/ERP/10503.1' || isEnergyModule(item) && state.draft.energy;
     return `<div class="chiffrage-module-entry"><label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''} ${selected.has(id) && required ? 'disabled' : ''}>
       <span class="chiffrage-module-name">${escape(document.documentElement.lang === 'de' ? item.label_de || item.label_fr || t('chiffrage.ui.unavailableModule') : item.label_fr || item.label_de || t('chiffrage.ui.unavailableModule'))}<small>${required ? t('chiffrage.workspace.3cef74c61d') : item.default_selected ? t('chiffrage.workspace.ef354927f1') : t('chiffrage.workspace.14eb14ece5')}</small></span></label>
-      ${selected.has(id) ? `<span class="chiffrage-module-price"><span data-module-price="${escape(id)}">${money(financial?.annual_pv)}</span><small>${t('chiffrage.annual')}</small></span>` : '<span></span>'}
+      ${selected.has(id) ? `<span class="chiffrage-module-price"><span data-module-price="${escape(id)}">${money(financial?.annual_pv)}</span><small>${t('chiffrage.ui.annualShort')}</small></span>` : '<span></span>'}
       ${selected.has(id) ? `<div class="chiffrage-module-service">
         <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" data-missing-days="${days == null}" data-proposed-days="${escape(presetDays(id) ?? '')}" class="${current?.days != null && current.days !== presetDays(id) ? 'is-adjusted' : ''}" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j</span></label>
         ${referenceProfiles(state.catalog).find(row=>row.id===state.draft.reference?.id)?.module_group_labels?.[id] ? `<small>${t('chiffrage.groupedServices')}</small>` : ''}
@@ -336,7 +336,7 @@ function extraSection() {
     ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index }))
       .filter(line => line.category !== 'hosting'),
       ...state.draft.partners.map((line, index) => ({ ...line, kind: 'partners', index }))]
-      .map(line => `<details class="chiffrage-extra-row" ${!line.label?'open':''}><summary><span data-extra-title="${line.kind}.${line.index}">${escape(line.label || t('chiffrage.lineLabel'))}</span><strong data-extra-summary="${line.kind}.${line.index}">${money(extraInvestment(line))}</strong><span data-extra-annual="${line.kind}.${line.index}">${money(line.annual_pv)} / ${t('chiffrage.annual')}</span></summary><div class="chiffrage-line">
+      .map(line => `<details class="chiffrage-extra-row" ${!line.label?'open':''}><summary><span data-extra-title="${line.kind}.${line.index}">${escape(line.label || t('chiffrage.lineLabel'))}</span><strong data-extra-summary="${line.kind}.${line.index}">${money(extraInvestment(line))}</strong><span data-extra-annual="${line.kind}.${line.index}">${money(line.annual_pv)} / ${t('chiffrage.ui.perYear')}</span></summary><div class="chiffrage-line">
         ${textField(`${line.kind}.${line.index}.label`, line.label, t('chiffrage.lineLabel'))}
         ${state.internal ? textField(`${line.kind}.${line.index}.item_code`, line.item_code, t('chiffrage.internalCode')) : ''}
         ${line.kind === 'partners' ? textField(`${line.kind}.${line.index}.supplier`, line.supplier, t('chiffrage.supplier')) : ''}
@@ -565,10 +565,10 @@ function comparisonLabel(row) {
 }
 function comparisonValue(value, row) {
   if (value == null) return `<span class="chiffrage-compare-muted">${t('chiffrage.ui.unspecified')}</span>`;
-  if (row.kind === 'module') return `${t(value.selected ? 'chiffrage.yes' : 'chiffrage.no')}${value.selected ? `<span class="chiffrage-compare-subvalue">${money(value.investment)} · ${money(value.annual)} / ${t('chiffrage.annual')}</span>` : ''}`;
+  if (row.kind === 'module') return `${t(value.selected ? 'chiffrage.yes' : 'chiffrage.no')}${value.selected ? `<span class="chiffrage-compare-subvalue">${money(value.investment)} · ${money(value.annual)} / ${t('chiffrage.ui.perYear')}</span>` : ''}`;
   if (row.kind === 'boolean') return t(value ? 'chiffrage.yes' : 'chiffrage.no');
   if (row.kind === 'service') return `${value.days == null ? t('chiffrage.ui.unspecified') : `${number(value.days)} ${t('chiffrage.days')}`}<span class="chiffrage-compare-subvalue">${money(value.amount)}</span>`;
-  if (row.kind === 'extra') return `${money(value.investment)}<span class="chiffrage-compare-subvalue">${money(value.annual)} / ${t('chiffrage.annual')}</span>`;
+  if (row.kind === 'extra') return `${money(value.investment)}<span class="chiffrage-compare-subvalue">${money(value.annual)} / ${t('chiffrage.ui.perYear')}</span>`;
   if (row.key === 'lcm') return escape(({ none: t('chiffrage.lcmNone'), gold: 'Gold', platinium: 'Platinum' })[value] ?? value);
   if (typeof value === 'boolean') return t(value ? 'chiffrage.yes' : 'chiffrage.no');
   return escape(typeof value === 'number' ? number(value) : value);
@@ -726,7 +726,7 @@ function refreshFinancials() {
   if (offer) offer.innerHTML=offerSection();
   let gpLine; try {gpLine=calculateQuote(state.draft,state.catalog).lines.find(row=>row.explanation?.kind==='project_management');} catch {}
   root.querySelectorAll('[data-extra-total]').forEach(node=>{const [kind,index]=node.dataset.extraTotal.split('.');node.textContent=t('chiffrage.calculatedInvestment')+' '+money(extraInvestment(state.draft[kind][index]));});
-  for (const [attribute, render] of [['extraTitle', row => row.label || t('chiffrage.lineLabel')], ['extraSummary', row => money(extraInvestment(row))], ['extraAnnual', row => `${money(row.annual_pv)} / ${t('chiffrage.annual')}`]]) {
+  for (const [attribute, render] of [['extraTitle', row => row.label || t('chiffrage.lineLabel')], ['extraSummary', row => money(extraInvestment(row))], ['extraAnnual', row => `${money(row.annual_pv)} / ${t('chiffrage.ui.perYear')}`]]) {
     const name = attribute.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
     root.querySelectorAll(`[data-${name}]`).forEach(node => {
       const [kind,index] = node.dataset[attribute].split('.');

@@ -819,5 +819,7 @@ export default {
   "chiffrage.ui.travel.rate": "Déplacements · tarif retenu",
   "chiffrage.ui.travel.percent": "Déplacements · %",
   "chiffrage.ui.travel.waived": "Déplacements offerts",
-  "chiffrage.ui.priceEffect": "Effet du dernier changement :"
+  "chiffrage.ui.priceEffect": "Effet du dernier changement :",
+  "chiffrage.ui.annualShort": "Annuel",
+  "chiffrage.ui.perYear": "an"
 };
