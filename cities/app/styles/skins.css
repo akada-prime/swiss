@@ -160,8 +160,8 @@ html[data-skin="light"] .save-button{background:var(--skin-accent);color:#fff}
 html[data-skin="helvetia"],html[data-skin="light"]{--pc-text:var(--skin-text);--pc-muted:var(--skin-muted);--pc-card-bg:var(--skin-card);--pc-card-line:var(--skin-border-soft)}
 html[data-skin="helvetia"] :is(.view-intro-copy,.intro-copy,.intro-count,.kpi-card p,.result-line,.table-limit,.stats-card p,.news-panel p,.story-panel p,.roadmap-panel p,.maplibre-metric span,.maplibre-metric small),
 html[data-skin="light"] :is(.view-intro-copy,.intro-copy,.intro-count,.kpi-card p,.result-line,.table-limit,.stats-card p,.news-panel p,.story-panel p,.roadmap-panel p,.maplibre-metric span,.maplibre-metric small){color:var(--skin-secondary)}
-html[data-skin="helvetia"] :is(.view-tab,.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small),
-html[data-skin="light"] :is(.view-tab,.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small){color:var(--skin-muted)}
+html[data-skin="helvetia"] :is(.view-tab:not(.active),.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small),
+html[data-skin="light"] :is(.view-tab:not(.active),.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small){color:var(--skin-muted)}
 html[data-skin="helvetia"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.nav-tab.active),
 html[data-skin="light"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.nav-tab.active){color:var(--skin-text)}
 html[data-skin="helvetia"] :is(.eyebrow,.stats-kpi>strong,.maplibre-metric strong){color:var(--skin-accent)}
@@ -202,7 +202,7 @@ html[data-skin="light"] :is(.filters option,.news-qualification-panel option){ba
 
 /* Helvetia Hell: readable neutral chrome and Prime figures on light surfaces.
    Map geography and the meanings of business/status colours remain untouched. */
-html[data-skin="helvetia"] :is(.maplibre-view-buttons button,.stats-segment button){color:var(--skin-secondary)}
+html[data-skin="helvetia"] :is(.maplibre-view-buttons button,.stats-segment button:not(.active)){color:var(--skin-secondary)}
 html[data-skin="helvetia"] :is(.maplibre-view-buttons button:not(.active):hover,.maplibre-view-buttons button:not(.active):focus-visible){color:var(--skin-text);background:var(--skin-hover)}
 html[data-skin="helvetia"] .map-autocomplete strong{color:var(--skin-text)}
 html[data-skin="helvetia"] .map-autocomplete b{color:var(--skin-secondary)}
