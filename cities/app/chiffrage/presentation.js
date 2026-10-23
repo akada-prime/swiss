@@ -3,6 +3,62 @@ import { hostingIncluded } from './configuration.js';
 import { moduleId } from './standards.js';
 
 export const productNames = { innosolv: 'innosolvcity', abacus: 'Abacus', pce: 'ProConcept' };
+// Domain summaries describe selected scope, including free/overridden modules.
+export function offerThemes(input, catalog, language = 'fr') {
+  const label = item => item?.[`label_${language}`] || item?.label_fr || item?.label_de || '';
+  const names = language === 'de' ? {
+    finance:'Finanzen', payroll:'Löhne', hr:'Personal', banking:'eBanking', energy:'Energie',
+    population:'Einwohner', taxes:'Steuern und Gebühren', digital:'eAdministration',
+    documents:'Dokumentenverwaltung', communal:'Gemeindeverwaltung', interfaces:'Schnittstellen'
+  } : { finance:'Finances', payroll:'Salaires', hr:'RH', banking:'eBanking', energy:'Énergie',
+    population:'Population', taxes:'Impôts et taxes', digital:'eAdministration',
+    documents:'Gestion documentaire', communal:'Gestion communale', interfaces:'Interfaces' };
+  const domain = text => {
+    const value = text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+    return /ebanking|e-banking|paiement|zahlungsverkehr|electronic banking/.test(value) ? 'banking' :
+      /salair|lohn|payroll/.test(value) ? 'payroll' :
+      /ressources humaines|human resources|personal|\brh\b/.test(value) ? 'hr' :
+      /financ|comptab|buchhaltung|debitor|kreditor|anlagen/.test(value) ? 'finance' :
+      /energie|energy|compteur|zahler/.test(value) ? 'energy' :
+      /habitant|population|einwohner/.test(value) ? 'population' :
+      /impot|taxe|steuer|gebuhr/.test(value) ? 'taxes' :
+      /eadmin|guichet|online-schalter/.test(value) ? 'digital' :
+      /document|archiv/.test(value) ? 'documents' :
+      /interface|integration|schnittstelle/.test(value) ? 'interfaces' : null;
+  };
+  const groups = new Map();
+  const add = (vendor, theme) => {
+    if (!groups.has(vendor)) groups.set(vendor, new Set());
+    groups.get(vendor).add(theme);
+  };
+  for (const selected of input.modules ?? []) {
+    if (!input.products?.includes(selected.vendor)) continue;
+    const code = selected.vendor === 'innosolv' && selected.item_code === '129' && input.canton === 'VD' ? '129VD' : selected.item_code;
+    const item = catalog.items?.find(row => row.vendor === selected.vendor &&
+      (!selected.product || row.product === selected.product) && row.item_code === code);
+    if (!item) continue;
+    const parent = item.vendor === 'abacus' ? catalog.items.find(row => row.vendor === 'abacus' &&
+      row.product === item.product && row.item_code === `${item.item_code.split('.')[0]}.1`) : null;
+    const recognized = domain(label(item));
+    const fallback = domain(label(parent));
+    add(item.vendor, names[recognized || fallback] || (parent ? label(parent) :
+      names[item.product === 'Versorger' ? 'energy' : 'communal']));
+  }
+  if (input.products?.includes('pce')) {
+    if (input.pce?.finances) add('pce', names.finance);
+    if (input.pce?.salaires) add('pce', names.payroll);
+  }
+  return [...groups].map(([vendor, themes]) => ({ vendor, name:productNames[vendor] ?? vendor, themes:[...themes] }));
+}
+
+// Read the stored revision only: never use today's catalog to price an old offer.
+export function savedQuoteFigures(snapshot) {
+  const result = snapshot?.result, s = result?.summary;
+  const valid = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;
+  if (!s || !valid(s.investment) || !valid(s.annual)) return null;
+  return { investment:s.investment, annual:s.annual, tco5y:s.investment + 4 * s.annual,
+    incomplete:result.status === 'incomplete' };
+}
 export const stableValue = value => JSON.stringify(value, (_, entry) => entry &&
   typeof entry === 'object' && !Array.isArray(entry) ?
   Object.fromEntries(Object.entries(entry).sort(([a], [b]) => a.localeCompare(b))) : entry);

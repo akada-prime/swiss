@@ -1,0 +1,365 @@
+{
+  "checks": [
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 360,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 430,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 768,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1366,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1920,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 2560,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 360,
+      "view": "offer",
+      "scroll": 360,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 430,
+      "view": "offer",
+      "scroll": 430,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 768,
+      "view": "offer",
+      "scroll": 768,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1366,
+      "view": "offer",
+      "scroll": 1366,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1920,
+      "view": "offer",
+      "scroll": 1920,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 2560,
+      "view": "offer",
+      "scroll": 2560,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 360,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 430,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 768,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1366,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1920,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 2560,
+      "view": "list"
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 360,
+      "view": "offer",
+      "scroll": 360,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 430,
+      "view": "offer",
+      "scroll": 430,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 768,
+      "view": "offer",
+      "scroll": 768,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1366,
+      "view": "offer",
+      "scroll": 1366,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1920,
+      "view": "offer",
+      "scroll": 1920,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 2560,
+      "view": "offer",
+      "scroll": 2560,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 360,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 430,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 768,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1366,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1920,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 2560,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 360,
+      "view": "offer",
+      "scroll": 360,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 430,
+      "view": "offer",
+      "scroll": 430,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 768,
+      "view": "offer",
+      "scroll": 768,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1366,
+      "view": "offer",
+      "scroll": 1366,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1920,
+      "view": "offer",
+      "scroll": 1920,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 2560,
+      "view": "offer",
+      "scroll": 2560,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 360,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 430,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 768,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1366,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1920,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 2560,
+      "view": "list"
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 360,
+      "view": "offer",
+      "scroll": 360,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 430,
+      "view": "offer",
+      "scroll": 430,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 768,
+      "view": "offer",
+      "scroll": 768,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1366,
+      "view": "offer",
+      "scroll": 1366,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1920,
+      "view": "offer",
+      "scroll": 1920,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 2560,
+      "view": "offer",
+      "scroll": 2560,
+      "green": "rgb(68, 220, 152)",
+      "themeCount": 7
+    }
+  ],
+  "errors": []
+}

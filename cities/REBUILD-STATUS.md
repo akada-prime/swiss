@@ -1,5 +1,16 @@
 # État de reprise — Prime Communes 2.0
 
+> **Chiffrage · offre et liste, 23.10.2026 (r5) :** repère vert agrandi,
+> fond avec le PNG original du symbole Prime, trois compositions documentées.
+> L’offre résume les thèmes des solutions sélectionnées sans limiter la liste
+> aux quatorze premières lignes. La liste affiche le canton, l’investissement,
+> l’annuel et le total cinq ans (investissement + quatre annuités), depuis les
+> révisions enregistrées, avec chargement paresseux limité à trois lectures.
+> Prix indisponibles et totaux provisoires restent explicites. Références
+> tarifaires consultables dans un volet replié. Moteur et données inchangés.
+> Validation : 126 tests, build, 48 contrôles de rendu, erreur de lecture et
+> état incomplet. Voir [la recette r5](docs/chiffrage-affinage-r5.md).
+
 > **Chiffrage · hébergement Abacus, 23.10.2026 :** Alex confirme la même règle
 > d'hébergement que ProConcept. La version commerciale privée r3 reprend le
 > montant ProConcept pour Abacus, sans changer les autres paramètres ni les

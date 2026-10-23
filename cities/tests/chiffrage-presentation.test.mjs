@@ -49,3 +49,44 @@ test('communal arms require an unambiguous matching OFS identity and a current c
 test('tariff version object ordering does not create a false difference', () => {
   assert.equal(stableValue({innosolv:'v1',abacus:'v2'}),stableValue({abacus:'v2',innosolv:'v1'}));
 });
+
+import { offerThemes, savedQuoteFigures } from '../app/chiffrage/presentation.js';
+
+test('offer themes cover every selected supplier without clipping, including zero-priced modules', () => {
+  const items = [
+    {vendor:'innosolv',product:'Gemeinde',item_code:'1',label_fr:'Système de base'},
+    ...Array.from({length:119},(_,n)=>({vendor:'abacus',product:'ERP',item_code:`10540.${n+1}`,label_fr:n?'Option de paie':'Comptabilité des salaires'})),
+    {vendor:'abacus',product:'ERP',item_code:'10510.1',label_fr:'Comptabilité financière'},
+    {vendor:'abacus',product:'ERP',item_code:'10510.2',label_fr:'eBanking'},
+    {vendor:'abacus',product:'ERP',item_code:'10540.120',label_fr:'Ressources humaines'}
+  ];
+  const input={products:['innosolv','abacus','pce'],modules:items.map(({vendor,product,item_code})=>({vendor,product,item_code})),pce:{finances:true,salaires:false}};
+  const before=JSON.stringify(input);
+  const groups=offerThemes(input,{items});
+  assert.deepEqual(groups.map(group=>group.name),['innosolvcity','Abacus','ProConcept']);
+  assert.deepEqual(groups[1].themes,['Salaires','Finances','eBanking','RH']);
+  assert.deepEqual(groups[2].themes,['Finances']);
+  assert.equal(JSON.stringify(input),before);
+});
+
+test('unselected capabilities are never advertised and localized parent domains summarize options', () => {
+  const items=[{vendor:'abacus',product:'ERP',item_code:'10.1',label_fr:'Gestion des projets',label_de:'Projektverwaltung'},
+    {vendor:'abacus',product:'ERP',item_code:'10.2',label_fr:'Option longue et détaillée'}];
+  const groups=offerThemes({modules:[items[1]],products:['abacus']},{items},'de');
+  assert.deepEqual(groups[0].themes,['Projektverwaltung']);
+  assert.deepEqual(offerThemes({products:['pce'],pce:{finances:false,salaires:false}},{items}),[]);
+});
+
+test('saved financial cards use retained amounts and the four-annuity convention', () => {
+  const snapshot={result:{status:'incomplete',summary:{investment:127840,annual:36944}}};
+  assert.deepEqual(savedQuoteFigures(snapshot),{investment:127840,annual:36944,tco5y:275616,incomplete:true});
+  assert.equal(savedQuoteFigures(null),null);
+  assert.equal(savedQuoteFigures({result:{summary:{investment:0,annual:null}}}),null);
+  assert.equal(savedQuoteFigures({result:{summary:{investment:0,annual:Infinity}}}),null);
+  assert.equal(savedQuoteFigures({result:{summary:{investment:0,annual:0}}}).tco5y,0);
+});
+
+test('retained modules from a disabled product stay outside the offer scope', () => {
+  const items=[{vendor:'abacus',product:'ERP',item_code:'1.1',label_fr:'Salaires'}];
+  assert.deepEqual(offerThemes({modules:items,products:[]},{items}),[]);
+});
