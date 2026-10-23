@@ -105,3 +105,19 @@
 
 @media(prefers-reduced-motion:reduce){.chiffrage-view *{scroll-behavior:auto;transition:none}}
 html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
+
+
+/* Client-share action is deliberately separate from the editable quote card. */
+.chiffrage-list-item{min-width:0;border:1px solid var(--skin-border);border-radius:12px;background:var(--quote-surface);overflow:hidden}
+.chiffrage-list-item>[data-action="open"]{border:0;border-radius:0}
+.chiffrage-list-item>.chiffrage-share-list{width:calc(100% - 32px);margin:0 16px 14px;border:1px solid var(--skin-border-soft)}
+.chiffrage-share-panel{display:grid;gap:14px;margin:20px 0;padding:20px;border:1px solid var(--skin-border);border-radius:14px;background:var(--quote-surface)}
+.chiffrage-share-panel h3{margin:0;font-size:var(--pc-section-heading-size);color:var(--skin-text)}
+.chiffrage-share-panel p{margin:0;color:var(--skin-secondary);line-height:1.5}
+.chiffrage-share-panel label{display:grid;gap:7px;color:var(--skin-secondary);min-width:0}
+.chiffrage-share-panel input{width:100%;min-width:0;padding:12px;border:1px solid var(--pc-field-border);border-radius:var(--pc-field-radius);background:var(--pc-field-bg);color:var(--skin-text);font-size:16px}
+.chiffrage-share-actions{display:flex;flex-wrap:wrap;gap:10px}
+.chiffrage-share-actions a.chiffrage-button{text-decoration:none}
+.chiffrage-share-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--skin-border-soft)}
+.chiffrage-share-link small{display:block;color:var(--skin-muted)}
+@media(max-width:600px){.chiffrage-share-actions .chiffrage-button{flex:1 1 auto}}
