@@ -5,7 +5,8 @@ import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updat
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js';
 import { calculationError } from './errors.js';
 import bundledCoats from './coats.js';
-import { comparisonRows, mapLocation, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, financialCategory } from './presentation.js?v=20261023-chiffrage-structure-r6';
+import { comparisonRows, mapLocation, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel } from './presentation.js?v=20261023-chiffrage-structure-r6';
+import { commercialPriceGroup, offerPriceGroups } from './commercial-breakdown.js?v=20261024-commercial-r1';
 
 const root = document.getElementById('chiffrageRoot');
 const runtime = window.PrimeCommunesRuntime;
@@ -649,7 +650,11 @@ function refreshFinancialSummary() {
 }
 
 function financialBuckets(result) {
-  return [['licenses',t('chiffrage.licenses')],['services',t('chiffrage.workspace.53df292761')],['database',t('chiffrage.database')],['hosting',t('chiffrage.hosting')],['primePartners',t('chiffrage.ui.primePartners')],['lcm','LCM']].map(([key,label])=>[label,line=>financialCategory(line)===key]).filter(([,filter])=>result.lines.some(filter));
+  // A single commercial hierarchy also drives the frozen client publication.
+  // Each service category has its own price; no more lump-sum "Mise en œuvre".
+  return offerPriceGroups.map(([key,fr,de])=>[
+    localLabel(fr,de),line=>commercialPriceGroup(line)===key
+  ]).filter(([,filter])=>result.lines.some(filter));
 }
 
 function displayReference(reference) {
