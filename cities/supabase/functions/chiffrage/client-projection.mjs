@@ -13,11 +13,15 @@ export function publicOfferFromSaved(quote) {
   const buckets = { solutions: { investment: 0, annual: 0 },
     partners: { investment: 0, annual: 0 }, hosting: { investment: 0, annual: 0 } };
   for (const line of snapshot.result.lines) {
-    if (!finite(line.investment_pv) || !finite(line.annual_pv)) return null;
+    // A stored, finalized calculation may legitimately omit a non-applicable
+    // selling amount (e.g. SQL annual = null). The price engine totals it as 0.
+    // Missing required prices are rejected upstream via result.status='incomplete'.
+    if (line.investment_pv != null && !finite(line.investment_pv)) return null;
+    if (line.annual_pv != null && !finite(line.annual_pv)) return null;
     const kind = line.category === 'hosting' ? 'hosting' :
       line.family === 'partenaires' ? 'partners' : 'solutions';
-    buckets[kind].investment += line.investment_pv;
-    buckets[kind].annual += line.annual_pv;
+    buckets[kind].investment += line.investment_pv ?? 0;
+    buckets[kind].annual += line.annual_pv ?? 0;
   }
   const investment = Object.values(buckets).reduce((sum, x) => sum + x.investment, 0);
   const annual = Object.values(buckets).reduce((sum, x) => sum + x.annual, 0);
