@@ -254,3 +254,13 @@ test('share panels are dismissible and link revocation is a single server action
   assert.match(revoke,/await api\('revokeOffer'/);
   assert.doesNotMatch(revoke,/window\.confirm/);
 });
+
+
+test('nighttime customer offer headings retain readable contrast in every skin',()=>{
+  const css=readFileSync(new URL('../app/styles/client-offer.css',import.meta.url),'utf8');
+  const page=readFileSync(new URL('../offre.html',import.meta.url),'utf8');
+  assert.match(css,/html\[data-skin\] \.client-offer \.client-offer-body :is\(h3,h4\)\{color:#f8fbff\}/);
+  assert.match(css,/background:linear-gradient\(155deg,#253955/);
+  assert.doesNotMatch(css,/!important/);
+  assert.match(page,/client-offer\.css\?v=20261024-moonlight-r3/);
+});
