@@ -72,5 +72,6 @@ test('customer standalone page does not load editor scripts, navigation or priva
   assert.doesNotMatch(client,/calculateQuote|sessionStorage|localStorage|innerHTML\s*=\s*JSON\.stringify/);
   assert.match(html,/name="robots" content="noindex/);
   assert.match(html,/referrer" content="no-referrer"/);
+  assert.match(html,/connect-src 'self' https:\/\/ozdvmllgxduzquiujcbg\.supabase\.co/);
   assert.match(client,/action=clientOffer/);
 });
