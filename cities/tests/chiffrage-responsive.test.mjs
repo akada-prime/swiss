@@ -49,5 +49,5 @@ test('Chiffrage shares the same large two-line hero as the other Prime Communes 
   assert.doesNotMatch(css, /\.chiffrage-view \.chiffrage-intro h1/);
   assert.doesNotMatch(css, /\.chiffrage-view \.chiffrage-intro\{display:flex/);
   assert.doesNotMatch(css, /\.chiffrage-view \.view-intro-copy \.eyebrow\{display:none/);
-  assert.match(main, /chiffrage\.css\?v=20261023-design-system-r9/);
+  assert.match(main, /chiffrage\.css\?v=20261024-client-offer-v1/);
 });
