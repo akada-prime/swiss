@@ -92,5 +92,6 @@ export function publicOfferFromSaved(quote, catalog) {
 }
 export function publicLinkMetadata(row) {
   return {id:row.id,revision:row.revision,created_at:row.created_at,
-    expires_at:row.expires_at,revoked_at:row.revoked_at};
+    expires_at:row.expires_at,revoked_at:row.revoked_at,
+    open_count:Number(row.open_count ?? 0),last_opened_at:row.last_opened_at ?? null};
 }

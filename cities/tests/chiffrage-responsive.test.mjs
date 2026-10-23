@@ -35,7 +35,7 @@ test('shared Prime controls and quote typography do not require cascade override
   assert.match(css, /chiffrage-mobile-summary-figures strong\{[^}]*font-size:clamp\(27px,7\.2vw,33px\)/);
   assert.match(skin, /html\[data-skin="helvetia"\][\s\S]*?--pc-field-bg:#f4f6f8;--pc-field-border:#b9c3ca/);
   assert.doesNotMatch(view, /class="chiffrage-saved-formula"/);
-  assert.match(index, /main\.css\?v=20261024-offer-scope-r2/);
+  assert.match(index, /main\.css\?v=20261024-share-counter-r3/);
 });
 
 
@@ -49,5 +49,5 @@ test('Chiffrage shares the same large two-line hero as the other Prime Communes 
   assert.doesNotMatch(css, /\.chiffrage-view \.chiffrage-intro h1/);
   assert.doesNotMatch(css, /\.chiffrage-view \.chiffrage-intro\{display:flex/);
   assert.doesNotMatch(css, /\.chiffrage-view \.view-intro-copy \.eyebrow\{display:none/);
-  assert.match(main, /chiffrage\.css\?v=20261024-offer-scope-r2/);
+  assert.match(main, /chiffrage\.css\?v=20261024-share-counter-r3/);
 });

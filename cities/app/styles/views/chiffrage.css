@@ -131,3 +131,23 @@ html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
 .chiffrage-share-error strong{color:var(--quote-warning);display:block;margin-bottom:5px}
 .chiffrage-share-error p{margin:0;line-height:1.5;color:var(--skin-secondary)}
 .chiffrage-share-copy-status{font-weight:600}
+
+
+/* Share-panel lifecycle and anonymous aggregate counter, inheriting Prime tokens. */
+.chiffrage-list-share-actions{display:grid;gap:8px;padding:0 16px 15px}
+.chiffrage-list-share-actions>.chiffrage-button{width:100%;margin:0;padding:12px 15px;text-align:center}
+.chiffrage-list-share-actions>.chiffrage-share-list{width:100%;margin:0}
+.chiffrage-share-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.chiffrage-share-panel-heading .chiffrage-share-close{margin-left:auto;flex-shrink:0}
+.chiffrage-share-monitor{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 0}
+.chiffrage-share-monitor strong,.chiffrage-share-counter{font-size:17px;font-weight:750;color:var(--skin-accent);font-variant-numeric:tabular-nums}
+.chiffrage-share-help{font-size:12px;color:var(--skin-muted);flex-basis:100%;line-height:1.45}
+.chiffrage-share-link-list{display:grid;gap:0}
+.chiffrage-share-link span{min-width:0;overflow-wrap:anywhere}
+.chiffrage-share-link .chiffrage-share-counter{display:block;margin:6px 0 3px}
+.chiffrage-share-feedback:not(:empty){color:var(--quote-warning);font-weight:600}
+.chiffrage-share-panel button:disabled{opacity:.6;cursor:progress}
+@media(max-width:600px){
+ .chiffrage-share-link{flex-wrap:wrap;gap:12px}
+ .chiffrage-share-link>.chiffrage-button{width:100%}
+}

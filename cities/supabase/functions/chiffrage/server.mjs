@@ -167,12 +167,11 @@ async function clientOffer(request) {
   const token = sessionToken(request);
   if (!/^[A-Za-z0-9_-]{43}$/.test(token)) return fail('Offer link unavailable', 404);
   const tokenHash = createHash('sha256').update(token).digest('hex');
-  const rows = await db('chiffrage_client_links', { query: {
-    select: 'payload,expires_at,revoked_at', token_hash: `eq.${tokenHash}`, limit: '1' } });
-  const row = rows[0];
-  if (!row || row.revoked_at || new Date(row.expires_at).getTime() <= Date.now())
-    return fail('Offer link unavailable', 404);
-  return json(row.payload, 200, { 'Referrer-Policy': 'no-referrer',
+  // Verify capability and atomically count its opening, without visitor data.
+  const payload = await db('rpc/record_chiffrage_client_open', {
+    method: 'POST', payload: { p_token_hash: tokenHash } });
+  if (!payload) return fail('Offer link unavailable', 404);
+  return json(payload, 200, { 'Referrer-Policy': 'no-referrer',
     'Content-Security-Policy': 'default-src \'none\'' });
 }
 
@@ -190,7 +189,7 @@ async function publishClientOffer(payload) {
   const tokenHash = createHash('sha256').update(token).digest('hex');
   const expires = new Date(Date.now() + linkDurationMs).toISOString();
   const rows = await db('chiffrage_client_links', { method: 'POST', returning: true, query: {
-    select: 'id,revision,expires_at,created_at,revoked_at' }, payload: {
+    select: 'id,revision,expires_at,created_at,revoked_at,open_count,last_opened_at' }, payload: {
     chiffrage_id: quote.id, revision: quote.snapshot.revision,
     token_hash: tokenHash, payload: projection, expires_at: expires } });
   return json({ ...publicLinkMetadata(rows[0]), token }, 201);
@@ -199,7 +198,7 @@ async function publishClientOffer(payload) {
 async function sharedClientLinks(id) {
   if (!uuidPattern.test(id ?? '')) return fail('Invalid quote id', 400);
   const rows = await db('chiffrage_client_links', { query: {
-    select: 'id,revision,created_at,expires_at,revoked_at',
+    select: 'id,revision,created_at,expires_at,revoked_at,open_count,last_opened_at',
     chiffrage_id: `eq.${id}`, order: 'created_at.desc', limit: '50' } });
   return json(rows.map(publicLinkMetadata));
 }
@@ -208,7 +207,7 @@ async function revokeClientLink(payload) {
   if (!uuidPattern.test(payload?.id ?? '') || !uuidPattern.test(payload?.link_id ?? ''))
     return fail('Invalid link reference', 400);
   const rows = await db('chiffrage_client_links', { method: 'PATCH', returning: true,
-    query: { select: 'id,revision,created_at,expires_at,revoked_at',
+    query: { select: 'id,revision,created_at,expires_at,revoked_at,open_count,last_opened_at',
       id: `eq.${payload.link_id}`, chiffrage_id: `eq.${payload.id}` },
     payload: { revoked_at: new Date().toISOString() } });
   return rows.length ? json(publicLinkMetadata(rows[0])) : fail('Offer link unavailable', 404);
