@@ -1,0 +1,41 @@
+/* Client publication: preserve the canonical Prime offer visuals.
+   No internal app shell, toolbar, editor forms or actions are ever rendered. */
+.client-offer-page{margin:0;background:var(--skin-page);color:var(--skin-text)}
+.client-offer-shell{width:min(1180px,100%);margin:0 auto;padding:clamp(0px,3vw,44px) clamp(0px,3vw,32px) 70px;min-height:100dvh}
+.client-offer{border-radius:clamp(0px,1.8vw,20px);overflow:hidden;border:1px solid var(--skin-border-soft);box-shadow:var(--skin-shadow)}
+.client-offer .chiffrage-offer-hero{--prime-offer-mark:url('../../public/prime-one-negative.png')}
+.client-offer .chiffrage-offer-brand img{width:190px;height:auto;min-height:72px;object-fit:contain}
+.client-offer .chiffrage-offer-brand{max-width:78%}
+.client-offer .chiffrage-offer-identity{min-height:68px}
+.client-offer .chiffrage-offer-place{margin-top:36px}
+.client-offer .client-offer-revision{font-size:14px;color:#c3d1e8;margin-top:8px}
+.client-offer .chiffrage-offer-horizon{margin-bottom:0}
+.client-offer-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:38px}
+.client-offer-products{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.client-offer-products span{border:1px solid var(--skin-border);background:var(--skin-tint);border-radius:9px;padding:10px 13px;font-weight:650}
+.client-offer-footer{padding:20px 28px;text-align:center;color:var(--skin-secondary);font-size:12px;border-top:1px solid var(--skin-border)}
+.client-offer-loading{padding:36px;text-align:center;color:var(--skin-secondary)}
+.client-offer-message{max-width:680px;margin:10vh auto;padding:36px;border-radius:18px;background:#101c34;color:#fff}
+.client-offer-message h1{font-size:clamp(29px,5vw,42px);margin-top:28px}
+.client-offer-message p{line-height:1.6;color:#c3d1e8}
+.client-offer .chiffrage-offer-breakdown{min-width:0}
+.client-offer .chiffrage-offer-breakdown :is(th,td){overflow-wrap:break-word}
+@media(max-width:850px){
+  .client-offer-shell{padding:0 0 48px}
+  .client-offer{border:0;border-radius:0}
+  .client-offer-body{grid-template-columns:1fr;gap:32px}
+}
+@media(max-width:600px){
+  .client-offer .chiffrage-offer-brand img{width:164px}
+  .client-offer .chiffrage-offer-place{margin-top:35px}
+  .client-offer .chiffrage-offer-hero h2{font-size:clamp(30px,8.1vw,48px)}
+  .client-offer .chiffrage-offer-figures strong{font-size:clamp(32px,9vw,54px);white-space:normal;overflow-wrap:normal}
+  .client-offer .chiffrage-offer-map{width:142px}
+  .client-offer .chiffrage-offer-identity{min-height:68px}
+  .client-offer .chiffrage-offer-figures{margin-top:38px}
+}
+@media print{
+  .client-offer-page{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .client-offer-shell{width:100%;padding:0}
+  .client-offer{box-shadow:none;border:0}
+}
