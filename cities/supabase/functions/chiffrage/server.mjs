@@ -1,4 +1,4 @@
-import { createHmac, createHash, randomUUID, timingSafeEqual } from 'node:crypto';
+import { createHmac, createHash, randomUUID, randomBytes, timingSafeEqual } from 'node:crypto';
 import { Buffer } from 'node:buffer';
 import { calculateQuote } from '../../../app/chiffrage/calculate.js';
 import { calculationError } from '../../../app/chiffrage/errors.js';
