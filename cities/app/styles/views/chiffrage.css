@@ -121,3 +121,13 @@ html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
 .chiffrage-share-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--skin-border-soft)}
 .chiffrage-share-link small{display:block;color:var(--skin-muted)}
 @media(max-width:600px){.chiffrage-share-actions .chiffrage-button{flex:1 1 auto}}
+
+
+/* Publishing actions have explicit, local feedback: no more silent header-only errors. */
+.chiffrage-list-item .chiffrage-share-result:not(:empty){padding:0 16px 15px}
+.chiffrage-share-list:disabled{opacity:.64;cursor:not-allowed}
+.chiffrage-share-progress{margin:0;padding:13px 16px;border:1px solid var(--skin-border-soft);border-radius:10px;color:var(--skin-secondary);background:var(--skin-control)}
+.chiffrage-share-error{padding:13px 16px;border:1px solid var(--skin-danger);border-radius:10px;background:var(--skin-control);color:var(--skin-text)}
+.chiffrage-share-error strong{color:var(--skin-danger);display:block;margin-bottom:5px}
+.chiffrage-share-error p{margin:0;line-height:1.5;color:var(--skin-secondary)}
+.chiffrage-share-copy-status{font-weight:600}
