@@ -110,7 +110,7 @@ html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
 /* Client-share action is deliberately separate from the editable quote card. */
 .chiffrage-list-item{min-width:0;border:1px solid var(--skin-border);border-radius:12px;background:var(--quote-surface);overflow:hidden}
 .chiffrage-list-item>[data-action="open"]{border:0;border-radius:0}
-.chiffrage-list-item>.chiffrage-share-list{width:calc(100% - 32px);margin:0 16px 14px;border:1px solid var(--skin-border-soft)}
+.chiffrage-list-item>.chiffrage-share-list{width:calc(100% - 32px);margin:0 16px 14px;padding:11px 14px;text-align:center;border:1px solid var(--skin-border-soft)}
 .chiffrage-share-panel{display:grid;gap:14px;margin:20px 0;padding:20px;border:1px solid var(--skin-border);border-radius:14px;background:var(--quote-surface)}
 .chiffrage-share-panel h3{margin:0;font-size:var(--pc-section-heading-size);color:var(--skin-text)}
 .chiffrage-share-panel p{margin:0;color:var(--skin-secondary);line-height:1.5}
