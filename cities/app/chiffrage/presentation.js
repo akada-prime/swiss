@@ -3,6 +3,24 @@ import { hostingIncluded } from './configuration.js';
 import { moduleId } from './standards.js';
 
 export const productNames = { innosolv: 'innosolvcity', abacus: 'Abacus', pce: 'ProConcept' };
+export function referenceLabel(reference, catalog, language = 'fr') {
+  if (!reference) return '—';
+  const profile = catalog?.parameters?.configuration_profiles?.find(row => row.id === reference.id);
+  const translated = reference[`label_${language}`] || profile?.[`label_${language}`];
+  if (translated) return translated;
+  const label = reference.label || profile?.label || '—';
+  return language === 'de' ? label.replace(/^Référence de démonstration$/i, 'Demonstrationsreferenz')
+    .replace(/^Référence\b/i, 'Referenz') : label;
+}
+
+export function financialCategory(line) {
+  if (line.category === 'hosting') return 'hosting';
+  if (line.software) return 'licenses';
+  if (['prestations', 'prestations_module'].includes(line.family)) return 'services';
+  if (line.family === 'technique') return 'database';
+  if (['prime', 'partenaires'].includes(line.family)) return 'primePartners';
+  return line.family === 'lcm' ? 'lcm' : null;
+}
 // Domain summaries describe selected scope, including free/overridden modules.
 export function offerThemes(input, catalog, language = 'fr') {
   const label = item => item?.[`label_${language}`] || item?.label_fr || item?.label_de || '';

@@ -90,3 +90,33 @@ test('retained modules from a disabled product stay outside the offer scope', ()
   const items=[{vendor:'abacus',product:'ERP',item_code:'1.1',label_fr:'Salaires'}];
   assert.deepEqual(offerThemes({modules:items,products:[]},{items}),[]);
 });
+
+import { referenceLabel, financialCategory } from '../app/chiffrage/presentation.js';
+
+test('reference display localizes generated labels while preserving the saved source', () => {
+  const reference={id:'tolo',label:'Référence Tolochenaz'};
+  const before=JSON.stringify(reference);
+  assert.equal(referenceLabel(reference,null,'de'),'Referenz Tolochenaz');
+  assert.equal(referenceLabel(reference,null,'fr'),'Référence Tolochenaz');
+  assert.equal(referenceLabel({label:'Offre personnalisée Alex'},null,'de'),'Offre personnalisée Alex');
+  assert.equal(referenceLabel(reference,{parameters:{configuration_profiles:[{id:'tolo',label_de:'Vorlage Tolochenaz'}]}},'de'),'Vorlage Tolochenaz');
+  assert.equal(JSON.stringify(reference),before);
+});
+
+test('hosting stays separate and Prime plus partners share one financial bucket without losing amounts', () => {
+  const lines=[
+    {family:'innosolv',software:true,investment_pv:0,annual_pv:100},
+    {family:'prestations_module',investment_pv:200,annual_pv:0},
+    {family:'technique',investment_pv:300,annual_pv:30},
+    {family:'prime',category:'hosting',investment_pv:400,annual_pv:40},
+    {family:'partenaires',category:'hosting',investment_pv:500,annual_pv:50},
+    {family:'prime',investment_pv:600,annual_pv:60},
+    {family:'partenaires',investment_pv:700,annual_pv:70},
+    {family:'lcm',investment_pv:0,annual_pv:80}
+  ];
+  const grouped=Map.groupBy(lines,financialCategory);
+  assert.equal(grouped.has(null),false);
+  assert.deepEqual(grouped.get('hosting'),[lines[3],lines[4]]);
+  assert.deepEqual(grouped.get('primePartners'),[lines[5],lines[6]]);
+  for(const key of ['investment_pv','annual_pv'])assert.equal([...grouped.values()].flat().reduce((s,l)=>s+l[key],0),lines.reduce((s,l)=>s+l[key],0));
+});

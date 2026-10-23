@@ -1,5 +1,15 @@
 # État de reprise — Prime Communes 2.0
 
+> **Chiffrage · cadre commun bêta design, 23.10.2026 (r6) :** les six onglets
+> partagent l’en-tête issu de l’Offre. Navigation et identité précèdent une grille
+> de contenu indépendante ; le résumé Natel suit le contenu. Plus de bandeau
+> tarifaire au-dessus des onglets ni de deuxième champ de titre dans Projet.
+> Hébergement et « Prime et partenaires » sont deux postes distincts dans les
+> trois présentations financières. Les messages suivent les changements FR/DE,
+> avec suffixe de copie localisé et affichage localisé des références prévues.
+> 128 tests, build, 144 contrôles de structure et parcours d’édition/comparaison
+> réussis. [Recette r6](docs/chiffrage-structure-r6.md). Moteur inchangé.
+
 > **Chiffrage · offre et liste, 23.10.2026 (r5) :** repère vert agrandi,
 > fond avec le PNG original du symbole Prime, trois compositions documentées.
 > L’offre résume les thèmes des solutions sélectionnées sans limiter la liste

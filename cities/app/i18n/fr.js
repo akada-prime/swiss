@@ -827,5 +827,17 @@ export default {
   "chiffrage.ui.savedTco": "Total sur 5 ans",
   "chiffrage.ui.provisional": "provisoire",
   "chiffrage.ui.savedFormula": "HT · investissement + 4 × annuel",
-  "chiffrage.ui.tariffReferences": "Références tarifaires"
+  "chiffrage.ui.tariffReferences": "Références tarifaires",
+  "chiffrage.ui.projectDimensions": "Les dimensions du projet",
+  "chiffrage.ui.primePartners": "Prime et partenaires",
+  "chiffrage.ui.copySuffix": "copie",
+  "chiffrage.ui.workspaceBrand": "Communes / Chiffrage",
+  "chiffrage.ui.heading.composer": "Votre projet prend forme.",
+  "chiffrage.ui.heading.modules": "Les solutions de votre projet.",
+  "chiffrage.ui.heading.prestations": "Votre accompagnement.",
+  "chiffrage.ui.heading.offer": "Votre projet, en chiffres.",
+  "chiffrage.ui.heading.compare": "Vos variantes, côte à côte.",
+  "chiffrage.ui.heading.analysis": "La synthèse de votre projet.",
+  "chiffrage.ui.heading.rates": "Les paramètres de votre projet.",
+  "chiffrage.ui.exTax": "HT"
 };
