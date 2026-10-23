@@ -107,6 +107,33 @@ Règles :
   passe par les tokens de Skin. Les couleurs de statut, de données, de carte,
   de fournisseurs et de produits gardent leur sens indépendamment du Skin.
 
+### Contrat visuel partagé — bêta 2026
+
+Les réglages de la vue Chiffrage ne doivent pas réinventer les contrôles ordinaires.
+Le propriétaire canonique de chaque choix visuel est désormais défini :
+
+| Aspect | Propriétaire | Contrat |
+|---|---|---|
+| Grands titres de vue | `foundation.css` (et `view-intro`) | Un même `h1` et un même retour à la ligne pour les sept vues ; pas de plafond de taille par vue |
+| États sélectionnés | `components.css` | `view-tab.active`, `stats-segment button.active` et `chiffrage-work-tabs button[aria-current=page]` utilisent `--pc-control-selected-*` |
+| Champs éditables | `skins.css` → `components.css` / vues | `--pc-field-bg` et `--pc-field-border` sont les surfaces sémantiques communes aux filtres, aux Stats et au Chiffrage |
+| Titres de section | `components.css` | `--pc-section-heading-size`, sans échelle concurrente par écran |
+| Mobile | `responsive.css` | Trois colonnes de navigation, la septième entrée Chiffrage sur une ligne complète, aucune valeur de thème codée en dur |
+| Mise en page métier | `views/*.css` | Chaque vue conserve ses grilles, ses surfaces spéciales et sa densité spécifique, sans redéfinir les états de base |
+
+Les tokens `--quote-*` restent des alias de compatibilité pour la présentation
+financière, qui possède légitimement ses accents numériques propres. Les champs
+de devis utilisent les tokens `--pc-field-*` et les onglets les états communs.
+Les couleurs de statuts et les données cartographiques ne changent pas.
+Les seules utilisations autorisées de `!important` restent les protections
+existantes des éléments masqués et du premier affichage.
+
+Avant de créer une nouvelle règle de vue pour un bouton, un champ, un titre ou
+un état actif, vérifier que le composant partagé ne couvre pas déjà son besoin.
+La recette de cette consolidation porte sur les vues Stats, Communes et
+Chiffrage en Helvetia et Prime Dark, à 360, 430, 768, 1366 et 1920 px.
+Les contrôles statiques ne remplacent pas la vérification sur iPhone.
+
 ## Préférences et langues
 
 `app/core/preferences.js` expose `getPreference`, `setPreference` et un abonnement
