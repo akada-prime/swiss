@@ -45,3 +45,12 @@ test('design contract does not introduce any new important declaration', () => {
   for (const src of [shared, foundation, quote, skin]) assert.doesNotMatch(src, /!important/);
   assert.equal((responsive.match(/!important/g) || []).length, 1);
 });
+
+
+test('primary actions share one skin gradient across editor and communal drawer', () => {
+  for (const skinName of ['prime-darkweb','helvetia','light']) {
+    assert.match(skin, new RegExp('html\\[data-skin="' + skinName + '"\\][\\s\\S]*?--pc-primary-action:'));
+  }
+  assert.match(foundation, /\.save-button\{[^}]*background:var\(--pc-primary-action\)/);
+  assert.match(quote, /\.chiffrage-button\.primary\{[^}]*background:var\(--pc-primary-action\)/);
+});
