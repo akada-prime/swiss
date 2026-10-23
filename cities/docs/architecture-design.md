@@ -117,6 +117,7 @@ Le propriétaire canonique de chaque choix visuel est désormais défini :
 | Grands titres de vue | `foundation.css` (et `view-intro`) | Un même `h1` et un même retour à la ligne pour les sept vues ; pas de plafond de taille par vue |
 | États sélectionnés | `components.css` | `view-tab.active`, `stats-segment button.active` et `chiffrage-work-tabs button[aria-current=page]` utilisent `--pc-control-selected-*` |
 | Champs éditables | `skins.css` → `components.css` / vues | `--pc-field-bg` et `--pc-field-border` sont les surfaces sémantiques communes aux filtres, aux Stats et au Chiffrage |
+| Actions principales | `skins.css` → composants des vues | `--pc-primary-action` définit le même dégradé pour l'enregistrement communal et les commandes Chiffrage |
 | Titres de section | `components.css` | `--pc-section-heading-size`, sans échelle concurrente par écran |
 | Mobile | `responsive.css` | Trois colonnes de navigation, la septième entrée Chiffrage sur une ligne complète, aucune valeur de thème codée en dur |
 | Mise en page métier | `views/*.css` | Chaque vue conserve ses grilles, ses surfaces spéciales et sa densité spécifique, sans redéfinir les états de base |
