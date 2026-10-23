@@ -285,3 +285,19 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
   apparence claire/allemand à 360 px contrôlés sans débordement. Le repère
   territorial et le contraste du titre en clair ont été corrigés. L’interface réelle
   authentifiée et les tarifs privés restent à contrôler après publication.
+
+### Chiffrage · reprise visuelle · 23 octobre 2026
+
+- Reprise de la livraison #45 : logo officiel, tableaux alignés, titres lisibles,
+  licences et partenaires compacts, comparaison structurée de 2–3 variantes.
+- Chemins publics corrigés pour la carte, les emblèmes cantonaux et le logo,
+  selon le mode source GitHub Pages ou le build Vite. Six blasons communaux
+  vérifiés et stockés avec leur provenance ; recherche OFS vérifiée pour les autres.
+- Résultats sauvegardés utilisés en priorité en comparaison, requêtes concurrentes
+  protégées et variations financières visibles après modification.
+- 122 tests et build réussis ; matrice statique de 144 contrôles (six largeurs,
+  deux apparences, FR/DE), plus parcours de saisie/sauvegarde/comparaison sur
+  données fictives. Captures et limites : `docs/chiffrage-validation-visuelle.md`.
+- Moteur et catalogues privés inchangés. Pas de modification de données live.
+  Les catalogues privés, le rapprochement Excel et l’export réel n’ont pas été
+  revérifiés faute de session privée ; ne pas annoncer une recette métier complète.

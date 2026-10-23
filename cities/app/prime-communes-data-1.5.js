@@ -1,4 +1,4 @@
-import {t, number, date} from './core/i18n.js?v=20261022-configurateur-prime-r3';
+import {t, number, date} from './core/i18n.js?v=20261023-chiffrage-visuel-r4';
 (() => {
   'use strict';
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-skin="prime-darkweb">
+<html data-chiffrage-assets="../" lang="fr" data-skin="prime-darkweb">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Chiffrage · aperçu de contrôle</title>
 <link rel="stylesheet" href="../app/styles/main.css">
@@ -21,7 +21,7 @@ if (!params.has('frame')) {
   document.body.innerHTML = '<p class="preview-note">APERÇU · Commune et prix fictifs · aucune donnée enregistrée sur le serveur</p><button data-view="chiffrage" hidden>Chiffrage</button><section class="chiffrage-view"><div id="chiffrageRoot"></div></section>';
   window.PrimeCommunesRuntime = {
     escapeHtml: value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),
-    rows: [{ id: 9999, name: 'Démo-sur-Lac', canton: 'JU', expectedPopulation: 4501 }]
+    rows: [{ id: 6757, name: 'Saignelégier', canton: 'JU', expectedPopulation: 4501 }]
   };
   window.openDrawer = () => {};
   window.SUPABASE_URL = 'https://chiffrage-preview.invalid';
@@ -41,19 +41,60 @@ if (!params.has('frame')) {
       pce:{finance_ratio:.4,finance_adjustment:100,finance_round_to:100,salary_round_to:50,pv_margin:.2,pv_round_to:50},
       oracle:{full_price:100,light_price:50,full_maintenance:10,light_maintenance:5},
       lcm:[{up_to:5000,gold:1000,platinium:2000},{up_to:100000,gold:3000,platinium:5000}]}};
+  // Real municipality for geographic QA; every price, volume and quotation below is invented.
+  const domains = [
+    ['10510','Comptabilité financière','Finanzbuchhaltung'],
+    ['10520','Comptabilité des débiteurs','Debitorenbuchhaltung'],
+    ['10530','Comptabilité des créanciers','Kreditorenbuchhaltung'],
+    ['10540','Comptabilité des salaires','Lohnbuchhaltung'],
+    ['10570','Comptabilité des immobilisations','Anlagenbuchhaltung'],
+    ['10566','Gestion des projets','Projektverwaltung']
+  ];
+  const options = [
+    ['Budgétisation étendue','Erweiterte Budgetierung'],['Contrôle des visas et validation','Visumskontrolle und Freigabe'],
+    ['Archivage électronique des documents','Elektronische Dokumentenarchivierung'],
+    ['Interface AbaConnect avec le logiciel communal','AbaConnect-Schnittstelle zur Gemeindesoftware'],
+    ['Rapports et analyses métier','Fachberichte und Auswertungen'],['Reprise et contrôle des données','Datenübernahme und Kontrolle']
+  ];
+  for (const [code, fr, de] of domains) {
+    const entries = [[`${code}.1`,fr,de], ...options.map(([fr,de],i)=>[`${code}.${201+i}`,fr,de])];
+    for (const [code,fr,de] of entries) {
+      catalog.items.push({...item('abacus','ERP',code,fr),label_de:de,catalog_version:'QA · tarifs fictifs'});
+      catalog.parameters.service_presets.standard[`abacus/ERP/${code}`]=1;
+    }
+  }
+  catalog.items.forEach(row=>{row.label_de ??= row.label_fr;row.catalog_version ??= 'QA · tarifs fictifs';});
+  const makeSample = index => {
+    const modules = catalog.items.filter(row=>row.vendor==='abacus' || row.item_code==='1')
+      .filter((row,i)=>index!==1 || i%3!==1).map(({vendor,product,item_code})=>({vendor,product,item_code}));
+    const input = {bfs_id:6757,name:'Saignelégier',canton:'JU',reference:{id:'demo',label:'Référence de démonstration'},
+      dimensions:{population:4501,licensedPopulation:4501,meters:5000,taxes:5000,employees:index===2?60:40},
+      products:['innosolv','abacus',...(index===2?['pce']:[])],modules,
+      moduleServices:modules.map(row=>({family:'prestations_module',item_code:`${row.vendor}/${row.product}/${row.item_code}`,label:'Prestations de démonstration',days:1,suggested_days:1})),
+      services:[{family:'prestations',item_code:'formation',label:'Formation',days:index===2?8:4,suggested_days:4}],
+      primeLines:Array.from({length:5},(_,i)=>({family:'prime',item_code:`demo-${i}`,label:['Guichet virtuel et démarches en ligne','Signature électronique','Archivage et gestion documentaire','Connecteur de paiement','Interface partenaire'][i],investment_pv:1000+i*500,annual_pv:100+i*50,quantity:1})),
+      partners:[],pce:{finances:true,salaires:false,interfacePa:0},oracle:{full:5,light:0},sql:{},lcm:{selection:index===2?'gold':'none'},energy:false,hosting:{included:false}};
+    const result=calculateQuote(input,catalog);
+    if(index===2 && params.get('incomplete')==='1')result.status='incomplete';
+    return {id:`synthetic-${index}`,title:index===2?'Accompagnement renforcé':'Saignelégier — Variante 1',current_revision:index+1,commune_name:input.name,bfs_id:input.bfs_id,
+      snapshot:{input,catalog_versions:{synthetic:'00000000-0000-4000-8000-000000000001'},result}};
+  };
+  const samples=[0,1,2].map(makeSample);
   let saved = null, expired = false, listFailure = false;
   const response = (value,status=200) => new Response(JSON.stringify(value),{status,
     headers:{'content-type':'application/json'}});
   const fetchAsset=window.fetch.bind(window);
   window.fetch = async (url,options={}) => {
-    const action = new URL(url).searchParams.get('action');
+    const target = new URL(url,location.href);
+    if (target.hostname === 'www.wikidata.org') return fetchAsset(url,options);
+    const action = target.searchParams.get('action');
     if (!action && new URL(url).pathname.endsWith('/swiss-map-v1.json')) return fetchAsset(url,options);
     if (action === 'login') { expired=false;return response({session:'synthetic-session'}); }
     if (expired) return response({error:'Authentication required'},401);
     if (action === 'status') return response({authenticated:true});
     if (action === 'catalog') return response({active:{synthetic:'00000000-0000-4000-8000-000000000001'},catalog});
-    if (action === 'list') return listFailure ? response({},503) : response(saved?[saved]:[]);
-    if (action === 'quote') return response(saved);
+    if (action === 'list') return listFailure ? response({},503) : response([...samples,...(saved?[saved]:[])]);
+    if (action === 'quote') return response(samples.find(row=>row.id===target.searchParams.get('id'))??saved);
     if (action === 'save') {
       const value=JSON.parse(options.body);let result;
       try {result=calculateQuote(value.input,catalog);} catch {result={status:'incomplete'};}
@@ -71,7 +112,7 @@ if (!params.has('frame')) {
   tools.querySelector('#expired').onclick=()=>expired=true;
   tools.querySelector('#listFailure').onclick=()=>listFailure=true;
   await import('../app/chiffrage/view.js');
-  document.dispatchEvent(new CustomEvent('prime:chiffrage-commune',{
+  if(params.get('scenario')!=='loaded')document.dispatchEvent(new CustomEvent('prime:chiffrage-commune',{
     detail:window.PrimeCommunesRuntime.rows[0]}));
 }
 </script></body></html>

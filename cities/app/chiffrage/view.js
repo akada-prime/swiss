@@ -1,9 +1,11 @@
-import { t, number } from '../core/i18n.js?v=20261022-configurateur-prime-r3';
+import { t, number } from '../core/i18n.js?v=20261023-chiffrage-visuel-r4';
 import { subscribePreferences } from '../core/preferences.js';
-import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261022-configurateur-prime-r3';
+import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261023-chiffrage-visuel-r4';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js';
 import { calculationError } from './errors.js';
+import bundledCoats from './coats.js';
+import { comparisonRows, mapLocation, verifiedCoat, stableValue, productNames } from './presentation.js';
 
 const root = document.getElementById('chiffrageRoot');
 const runtime = window.PrimeCommunesRuntime;
@@ -25,6 +27,9 @@ const textField = (key, value, label) =>
 const localLabel = (fr, de) => document.documentElement.lang === 'de' ? de : fr;
 const cantonName = code => ({ JU: 'Jura', VD: 'Vaud', GE: 'Genève', FR: 'Fribourg',
   NE: 'Neuchâtel', VS: 'Valais', BE: 'Berne' })[code] ?? code;
+// GitHub Pages serves the source tree; Vite copies public assets to the build root.
+const assetPrefix = document.querySelector('script[type="module"][src*="/assets/"]') ? '' : 'public/';
+const assetUrl = path => new URL(assetPrefix + path, new URL(document.documentElement.dataset.chiffrageAssets || './', document.baseURI)).href;
 const tariffLabel = catalog => [...new Set((catalog?.items??[]).map(item=>item.catalog_version).filter(Boolean))].slice(0,3).join(' · ') || '—';
 const errorMessage = error => {
   if (error.status === 401) return t('chiffrage.sessionExpired');
@@ -125,7 +130,7 @@ async function firstDraft(row) {
     hosting: { included: false } };
   state.internal = false;
   state.dirty = false;
-  state.comparison=[];state.comparisonData=[];
+  state.comparison=[];state.comparisonData=[];state.comparisonLoading=false;++comparisonRequest;state.lastFinancial=null;state.priceFeedback='';clearTimeout(priceFeedbackTimer);
   const profile = referenceProfiles(state.catalog).find(row => row.default) ?? referenceProfiles(state.catalog)[0];
   if (profile) { state.draft.reference = {id:profile.id}; Object.assign(state.draft.pce,profile.pce_defaults ?? {});
     Object.assign(state.draft.oracle,profile.technical_defaults?.oracle ?? {}); }
@@ -134,7 +139,7 @@ async function firstDraft(row) {
   if (/proconcept|pce/.test(erp)) chooseErp('pce', false);
   else if (/abacus/.test(erp)) chooseErp('abacus', false);
   if (profile) applyReference(state.draft, state.catalog, profile.id,{initializeScope:true});
-  state.title = `${row.name} — Variante 1`;
+  state.title = `${row.name} — ${t('chiffrage.ui.variant')} ${1 + state.quotes.filter(quote => Number(quote.bfs_id) === Number(row.id)).length}`;
   state.revision = null;
   state.quote = null;
   state.archived = false;
@@ -211,23 +216,24 @@ function productSection() {
       localLabel('Autres fonctions Abacus','Weitere Abacus-Funktionen')) :
     item.product==='Versorger' ? localLabel('Énergie','Energie') :
       localLabel('Gestion communale','Gemeindeverwaltung');
+  let calculated;
+  try { calculated = calculateQuote(state.draft, state.catalog); } catch { /* Unknown amounts stay explicit. */ }
   const entry = item => {
     const id = `${item.vendor}/${item.product}/${item.item_code}`;
     const current = state.draft.moduleServices.find(line => line.item_code === id);
     const selectedIndex = state.draft.modules.findIndex(row => `${row.vendor}/${row.product}/${row.item_code}` === id);
     const selectedModule = state.draft.modules[selectedIndex];
     const days = current?.days ?? presetDays(id);
+    const financial = calculated?.lines.find(line => `${line.family}/${line.product}/${line.item_code}` === id);
     const required = id === 'innosolv/Gemeinde/1' || id === 'abacus/ERP/10503.1' || isEnergyModule(item) && state.draft.energy;
     return `<div class="chiffrage-module-entry"><label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''} ${selected.has(id) && required ? 'disabled' : ''}>
-      <span class="chiffrage-module-name">${escape(document.documentElement.lang === 'de' ? item.label_de || item.label_fr || item.item_code : item.label_fr || item.label_de || item.item_code)}<small>${required ? t('chiffrage.workspace.3cef74c61d') : item.default_selected ? t('chiffrage.workspace.ef354927f1') : t('chiffrage.workspace.14eb14ece5')}</small></span></label>
-      ${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<p class="chiffrage-warning">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">
-        ${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}
-        ${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual') + ' PV')}
-      </div>` : ''}
+      <span class="chiffrage-module-name">${escape(document.documentElement.lang === 'de' ? item.label_de || item.label_fr || t('chiffrage.ui.unavailableModule') : item.label_fr || item.label_de || t('chiffrage.ui.unavailableModule'))}<small>${required ? t('chiffrage.workspace.3cef74c61d') : item.default_selected ? t('chiffrage.workspace.ef354927f1') : t('chiffrage.workspace.14eb14ece5')}</small></span></label>
+      ${selected.has(id) ? `<span class="chiffrage-module-price"><span data-module-price="${escape(id)}">${money(financial?.annual_pv)}</span><small>${t('chiffrage.ui.annualShort')}</small></span>` : '<span></span>'}
       ${selected.has(id) ? `<div class="chiffrage-module-service">
-        <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j</span></label>
+        <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" data-missing-days="${days == null}" data-proposed-days="${escape(presetDays(id) ?? '')}" class="${current?.days != null && current.days !== presetDays(id) ? 'is-adjusted' : ''}" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j</span></label>
         ${referenceProfiles(state.catalog).find(row=>row.id===state.draft.reference?.id)?.module_group_labels?.[id] ? `<small>${t('chiffrage.groupedServices')}</small>` : ''}
-      </div>` : ''}</div>`;
+      </div>` : ''}
+      ${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
   };
   return `<section class="chiffrage-section chiffrage-catalog"><p class="chiffrage-kicker">${localLabel('Périmètre logiciel','Softwareumfang')}</p><h2>${t('chiffrage.workspace.f492367598')}</h2>
     <p class="chiffrage-helper">${localLabel('Les modules retenus en premier. Ouvre les options pour compléter le périmètre.','Gewählte Module zuerst. Weitere Optionen bei Bedarf öffnen.')}</p>
@@ -330,9 +336,9 @@ function extraSection() {
     ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index }))
       .filter(line => line.category !== 'hosting'),
       ...state.draft.partners.map((line, index) => ({ ...line, kind: 'partners', index }))]
-      .map(line => `<div class="chiffrage-line">
+      .map(line => `<details class="chiffrage-extra-row" ${!line.label?'open':''}><summary><span data-extra-title="${line.kind}.${line.index}">${escape(line.label || t('chiffrage.lineLabel'))}</span><strong data-extra-summary="${line.kind}.${line.index}">${money(extraInvestment(line))}</strong><span data-extra-annual="${line.kind}.${line.index}">${money(line.annual_pv)} / ${t('chiffrage.ui.perYear')}</span></summary><div class="chiffrage-line">
         ${textField(`${line.kind}.${line.index}.label`, line.label, t('chiffrage.lineLabel'))}
-        ${textField(`${line.kind}.${line.index}.item_code`, line.item_code, t('chiffrage.internalCode'))}
+        ${state.internal ? textField(`${line.kind}.${line.index}.item_code`, line.item_code, t('chiffrage.internalCode')) : ''}
         ${line.kind === 'partners' ? textField(`${line.kind}.${line.index}.supplier`, line.supplier, t('chiffrage.supplier')) : ''}
         ${field(`${line.kind}.${line.index}.quantity`, line.quantity ?? 1, t('chiffrage.quantity'))}
         ${line.days != null ? field(`${line.kind}.${line.index}.days`,line.days,t('chiffrage.days'),{step:.5}) : ''}
@@ -345,7 +351,7 @@ function extraSection() {
           t('chiffrage.annual'))}
         ${state.internal ? field(`${line.kind}.${line.index}.annual_pa`, line.annual_pa, t('chiffrage.annualPa')) : ''}
         ${textField(`${line.kind}.${line.index}.note`, line.note, t('chiffrage.note'))}
-        <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${line.kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div>`).join('')}
+        <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${line.kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`).join('')}
     <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addLicense">${t('chiffrage.addPrimeLicense')}</button>
       <button type="button" class="chiffrage-button" data-action="addPrime">${t('chiffrage.addLine')} Prime</button>
       <button type="button" class="chiffrage-button" data-action="addPartner">${t('chiffrage.addLine')} ${t('chiffrage.partner')}</button></div></details>`;
@@ -395,25 +401,61 @@ function lcmSection() {
         'LCM Platinum · CHF')}</div><p class="chiffrage-helper">${localLabel('Valeurs de la référence, modifiables pour cette variante.','Referenzwerte, für diese Variante anpassbar.')}</p></details>`;
 }
 
+const coats = new Map();
+let mapLoading = null;
 function territoryMap() {
-  if (!state.map) return `<span>${escape(cantonName(state.draft.canton))}</span>`;
-  const selected=state.map.municipalities.find(row=>Number(row.id)===state.draft.bfs_id);
-  if (!selected) return `<span>${escape(cantonName(state.draft.canton))}</span>`;
-  const coords=[...selected.d.matchAll(/(-?\d+),(-?\d+)/g)].map(match=>[Number(match[1]),Number(match[2])]);
-  const x=coords.reduce((sum,point)=>sum+point[0],0)/coords.length;
-  const y=coords.reduce((sum,point)=>sum+point[1],0)/coords.length;
-  const cantons=state.map.cantons.filter(row=>['VD','GE','FR','NE','JU','VS','BE'].includes(row.code));
-  return `<svg viewBox="2480000 -1305000 235000 195000" role="img" aria-label="${escape(state.draft.name)} · ${escape(state.draft.canton)}"><g class="chiffrage-map-region">${cantons.map(row=>`<path d="${escape(row.d)}"/>`).join('')}</g><path class="chiffrage-map-selected" d="${escape(selected.d)}"/><circle class="chiffrage-map-point" cx="${x}" cy="${y}" r="2400"/></svg>`;
+  const point = mapLocation(state.map, state.draft.bfs_id);
+  if (!point) return `<span class="chiffrage-map-fallback">${t('chiffrage.ui.mapUnavailable')}</span>`;
+  return `<svg viewBox="${point.viewBox}" role="img" aria-label="${escape(t('chiffrage.ui.mapLabel', { name: state.draft.name }))}"><g class="chiffrage-map-region">${state.map.cantons.map(row => `<path d="${escape(row.d)}"/>`).join('')}</g><path class="chiffrage-map-selected" d="${escape(point.selected.d)}"/><circle class="chiffrage-map-point" cx="${point.x}" cy="${point.y}" r="3500"/></svg>`;
+}
+function territoryIdentity() {
+  const coat = coats.get(Number(state.draft.bfs_id));
+  const canton = String(state.draft.canton).toLowerCase();
+  return `<div class="chiffrage-identity"><div class="chiffrage-communal-coat" data-coat-container>${coat?.filename ? `<a href="${escape(coat.source)}" target="_blank" rel="noopener noreferrer" title="${escape(t('chiffrage.ui.coatSource'))}"><img data-communal-coat="${Number(state.draft.bfs_id)}" src="${escape(coat.url)}" alt="${escape(t('chiffrage.ui.coatLabel', { name: state.draft.name }))}" width="44" height="52"></a>` : `<span class="chiffrage-coat-fallback">${t(coat === undefined ? 'chiffrage.ui.coatLoading' : 'chiffrage.ui.coatUnavailable')}</span>`}</div><span class="chiffrage-canton"><img src="${escape(assetUrl(`cantons/${canton}.svg`))}" alt="${escape(t('chiffrage.ui.cantonLabel', { name: cantonName(state.draft.canton) }))}" width="22" height="27">${escape(cantonName(state.draft.canton))}</span></div>`;
+}
+function updateTerritory() {
+  if (!state.draft) return;
+  root.querySelectorAll('[data-territory]').forEach(node => node.innerHTML = territoryMap());
+  root.querySelectorAll('[data-identity]').forEach(node => node.innerHTML = territoryIdentity());
 }
 async function loadTerritory() {
-  if (state.map) return;
-  try {
-    const response=await fetch(new URL('data/swiss-map-v1.json',document.baseURI));
-    if (!response.ok) return;
-    state.map=await response.json();
-    root.querySelectorAll('[data-territory]').forEach(node=>node.innerHTML=territoryMap());
-  } catch { /* The canton label remains as the geographical fallback. */ }
+  if (!state.map && !mapLoading && !state.mapAttempted) { state.mapAttempted = true; mapLoading = (async () => {
+    try {
+      const response = await fetch(assetUrl('data/swiss-map-v1.json'));
+      if (response.ok) state.map = await response.json();
+    } catch { /* A named unavailable state remains visible. */ }
+    finally { mapLoading = null; }
+  })(); }
+  if (mapLoading) await mapLoading;
+  updateTerritory();
 }
+async function loadCoat(commune) {
+  const id = Number(commune.bfs_id);
+  if (coats.has(id)) return;
+  if (bundledCoats[id]) { coats.set(id, { ...bundledCoats[id], url: assetUrl(bundledCoats[id].asset) }); updateTerritory(); return; }
+  coats.set(id, undefined);
+  const json = async params => {
+    const url = new URL('https://www.wikidata.org/w/api.php');
+    for (const [key, value] of Object.entries({ origin: '*', format: 'json', ...params })) url.searchParams.set(key, value);
+    const response = await fetch(url, { signal: AbortSignal.timeout(20000) });
+    if (!response.ok) throw new Error('Coat source unavailable');
+    return response.json();
+  };
+  try {
+    const search = await json({ action: 'wbsearchentities', search: commune.name, language: 'fr', type: 'item', limit: 8 });
+    const ids = (search.search ?? []).map(row => row.id).filter(id => /^Q\d+$/.test(id));
+    if (!ids.length) throw new Error('No verified municipality');
+    const data = await json({ action: 'wbgetentities', ids: ids.join('|'), props: 'claims' });
+    const coat = verifiedCoat(data.entities, id);
+    coats.set(id, coat ? { ...coat, url: `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(coat.filename)}?width=100` } : null);
+  } catch { coats.set(id, null); }
+  updateTerritory();
+}
+root.addEventListener('error', event => {
+  if (!event.target.matches?.('[data-communal-coat]')) return;
+  coats.set(Number(event.target.dataset.communalCoat), null);
+  updateTerritory();
+}, true);
 
 function composerSection() {
   const products = state.draft.products;
@@ -425,7 +467,7 @@ function composerSection() {
   const erp = products.includes('pce') && products.includes('abacus') ? 'both' : products.includes('pce') ? 'pce' : products.includes('abacus') ? 'abacus' : 'none';
   const choices = (name, values, selected, attr, disabled=false) => `<div class="chiffrage-choice-group">${values.map(([value,label]) => `<label class="chiffrage-choice"><input type="radio" name="chiffrage-${name}" ${attr}="${value}" ${String(selected) === String(value) ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span>${label}</span></label>`).join('')}</div>`;
   const profiles = referenceProfiles(state.catalog);
-  return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><div class="chiffrage-section-heading"><div><p class="chiffrage-kicker">01 · ${t('chiffrage.workspace.7f4dc1fe42')}</p><h2>${escape(state.draft.name)}</h2><p class="chiffrage-helper">${escape(cantonName(state.draft.canton))} · OFS ${state.draft.bfs_id}</p></div><div class="chiffrage-territory" data-territory>${territoryMap()}</div></div>
+  return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><div class="chiffrage-section-heading"><div><p class="chiffrage-kicker">01 · ${t('chiffrage.workspace.7f4dc1fe42')}</p><h2>${escape(state.draft.name)}</h2><p class="chiffrage-helper">${escape(cantonName(state.draft.canton))} · OFS ${state.draft.bfs_id}</p></div><div class="chiffrage-territorial-context"><div data-identity>${territoryIdentity()}</div><div class="chiffrage-territory" data-territory>${territoryMap()}</div></div></div>
     <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('sql.users', state.draft.sql.users ?? sqlUsers,t('chiffrage.sqlUsers'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}</div>
     ${products.includes('pce') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('oracle.full',state.draft.oracle.full,t('chiffrage.oracleFull'))}${field('oracle.light',state.draft.oracle.light,t('chiffrage.oracleLight'))}</div>` : ''}
     ${products.includes('innosolv') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('sql.override',sqlPrice,t('chiffrage.sqlInvestmentPv'))}</div>` : ''}
@@ -442,23 +484,43 @@ function composerSection() {
     ${serviceSection(true)}</div>`;
 }
 
+let priceFeedbackTimer;
+function recordPriceChange(summary) {
+  const previous = state.lastFinancial;
+  state.lastFinancial = { investment: summary.investment, annual: summary.annual };
+  if (!previous) return;
+  const changes = [['investment','chiffrage.investment'],['annual','chiffrage.annual']].flatMap(([key,label]) => {
+    const delta = summary[key] - previous[key];
+    return Number.isFinite(delta) && Math.abs(delta) >= 1 ? [`${t(label)} ${delta>0?'+':''}${money(delta)}`] : [];
+  });
+  if (!changes.length) return;
+  state.priceFeedback = `${t('chiffrage.ui.priceEffect')} ${changes.join(' · ')}`;
+  clearTimeout(priceFeedbackTimer);
+  priceFeedbackTimer = setTimeout(() => {
+    state.priceFeedback = '';
+    root.querySelectorAll('[data-price-feedback]').forEach(node => node.textContent = '');
+  }, 4500);
+}
+
 function summary() {
   let result;
   try { result = calculateQuote(state.draft, state.catalog); }
   catch (error) { return `<aside class="chiffrage-summary"><p class="chiffrage-kicker">${t('chiffrage.workspace.947be926eb')}</p><h2>${t('chiffrage.workspace.9b7132a4e5')}</h2><p class="chiffrage-warning">${escape(errorMessage(error))}</p><p class="chiffrage-helper">LCM · ${lcmPrices()}</p><button class="chiffrage-button" data-editor-tab="composer">${t('chiffrage.hosting')} / LCM →</button><button class="chiffrage-button" data-editor-tab="modules">${t('chiffrage.workspace.f492367598')} →</button><button class="chiffrage-button" data-editor-tab="prestations">${t('chiffrage.workspace.0438aab9f9')} →</button></aside><div class="chiffrage-mobile-total"><button data-editor-tab="analysis">${t('chiffrage.workspace.57d80505fd')} →</button></div>`; }
   const s = result.summary;
+  recordPriceChange(s);
   const buckets = financialBuckets(result);
   const incomplete=result.status==='incomplete';
   return `<aside class="chiffrage-summary"><div class="chiffrage-summary-heading"><p class="chiffrage-kicker">${t('chiffrage.workspace.947be926eb')}</p><span class="chiffrage-live">${t('chiffrage.workspace.3994ec3759')}</span></div>
     <p class="chiffrage-summary-context">${escape(state.draft.name)} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</p>
     <dl class="chiffrage-totals"><div><dt>${incomplete ? localLabel('Investissement calculé à ce stade','Bisher berechnete Investition') : t('chiffrage.investment')} <small>CHF HT</small></dt><dd>${money(s.investment).replace(' CHF','')}</dd></div><div><dt>${t('chiffrage.annual')} <small>CHF HT · ${t('chiffrage.workspace.fe85c43980')}</small></dt><dd>${money(s.annual).replace(' CHF','')}</dd></div></dl>
+    <p class="chiffrage-price-feedback" data-price-feedback role="status">${escape(state.priceFeedback || '')}</p>
     ${incomplete ? `<p class="chiffrage-warning">${s.missing_service_days?.length ? t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length}) : ''} ${s.missing_technical?.length ? localLabel('Prix SQL à préciser : investissement non final.','SQL-Preis ergänzen: Investition noch nicht endgültig.') : ''} ${s.missing_hosting?localLabel('Montants d’hébergement à préciser.','Hostingbeträge ergänzen.'):''}</p><button class="chiffrage-button" data-editor-tab="${s.missing_hosting?'composer':s.missing_technical?.length?'prestations':'modules'}">${localLabel('Compléter le chiffrage','Kalkulation ergänzen')} →</button>` : ''}
     <div class="chiffrage-cost-lines">${buckets.map(([label, filter])=>`<div><span>${escape(label)}</span><span>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.investment_pv??0),0))}<small>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.annual_pv??0),0))} / ${t('chiffrage.workspace.de73eac0c3')}</small></span></div>`).join('')}</div>
     <div class="chiffrage-five-year"><span>${incomplete?localLabel('5 ans · calculé à ce stade','5 Jahre · bisher berechnet'):t('chiffrage.workspace.b1aaf814f0')}</span><strong>${money(s.tco5y)}</strong></div>
     <p class="chiffrage-helper">${t('chiffrage.workspace.a855306547')}</p>
     <button class="chiffrage-button" data-editor-tab="analysis">${t('chiffrage.workspace.a602bde342')} →</button>
     <div class="chiffrage-summary-foot">${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')} · ${localLabel('Base de prestations','Leistungsgrundlage')} : ${escape(state.draft.reference?.label ?? '—')}</div></aside>
-    <div class="chiffrage-mobile-total"><button data-editor-tab="offer"><span>${incomplete?localLabel('Investissement en cours','Investition im Aufbau'):t('chiffrage.investment')}<strong>${money(s.investment)}</strong></span><span>${t('chiffrage.annual')}<strong>${money(s.annual)}</strong></span><b>↗</b></button></div>`;
+    <div class="chiffrage-mobile-total"><button data-editor-tab="offer"><span>${incomplete?localLabel('Investissement en cours','Investition im Aufbau'):t('chiffrage.investment')}<strong>${money(s.investment)}</strong></span><span>${t('chiffrage.annual')}<strong>${money(s.annual)}</strong></span><b>↗</b></button><p class="chiffrage-price-feedback" data-price-feedback role="status">${escape(state.priceFeedback || '')}</p></div>`;
 }
 function financialBuckets(result) {
   return [[t('chiffrage.licenses'),line=>line.software || line.family === 'prime' && line.category !== 'hosting'],[t('chiffrage.workspace.53df292761'),line=>['prestations','prestations_module'].includes(line.family)],[t('chiffrage.database'),line=>line.family==='technique'],[t('chiffrage.hosting'),line=>line.category==='hosting'],[t('chiffrage.partners'),line=>line.family==='partenaires' && line.category!=='hosting'],['LCM',line=>line.family==='lcm']].filter(([,filter])=>result.lines.some(filter));
@@ -472,28 +534,72 @@ function offerSection() {
   const buckets=financialBuckets(result);
   const selected=result.lines.filter(line=>line.software && (line.annual_pv??0)>0);
   return `<article class="chiffrage-offer"><header class="chiffrage-offer-hero">
-    <div class="chiffrage-offer-brand"><span>Prime<span class="chiffrage-prime-dot">.</span></span><small>${localLabel('COMMUNES / PROPOSITION','GEMEINDEN / ANGEBOT')}</small></div>
-    <div class="chiffrage-offer-map" data-territory>${territoryMap()}</div><p class="chiffrage-offer-place">${escape(state.draft.name)} <span>${escape(cantonName(state.draft.canton))} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</span></p>
+    <div class="chiffrage-offer-brand"><img src="${escape(assetUrl('prime-logo-negative.svg'))}" width="137" height="60" alt="Prime Technologies"><span>${t('chiffrage.ui.offerBrand')}</span></div>
+    <div class="chiffrage-offer-map" data-territory>${territoryMap()}</div><div class="chiffrage-offer-identity" data-identity>${territoryIdentity()}</div><p class="chiffrage-offer-place">${escape(state.draft.name)} <span>${escape(cantonName(state.draft.canton))} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</span></p>
     <h2>${localLabel('Votre projet, en chiffres.','Ihr Projekt in Zahlen.')}</h2>
     <p class="chiffrage-offer-reference">${localLabel('Base de prestations','Leistungsgrundlage')} : <strong>${escape(state.draft.reference?.label??'—')}</strong> · ${localLabel('Tarifs','Tarife')} : ${escape(tariffLabel(state.catalog))}${state.dirty?` · ${localLabel('Modifications en cours','Änderungen in Bearbeitung')}`:''}</p>
     <div class="chiffrage-offer-figures"><div><span>${incomplete?localLabel('Investissement calculé à ce stade','Bisher berechnete Investition'):localLabel('Investissement initial','Anfangsinvestition')}</span><strong>${money(s.investment)}</strong><small>HT · ${localLabel('une fois','einmalig')}</small></div><div><span>${localLabel('Coût annuel récurrent','Wiederkehrende Jahreskosten')}</span><strong>${money(s.annual)}</strong><small>HT · ${localLabel('dès la 2e année','ab dem 2. Jahr')}</small></div></div>
     <div class="chiffrage-offer-horizon"><span>${localLabel('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${money(s.tco5y)}</strong></div>
     ${incomplete?`<p class="chiffrage-offer-caveat">${localLabel('Chiffrage à compléter :','Kalkulation ergänzen:')} ${s.missing_service_days?.length??0} ${localLabel('prestations sans jours','Leistungen ohne Tage')}${s.missing_technical?.length?` · SQL ${localLabel('sans prix confirmé','ohne bestätigten Preis')}`:''}${s.missing_hosting?` · ${t('chiffrage.hosting')} ${localLabel('sans prix','ohne Preis')}`:''}.</p>`:''}
     </header><div class="chiffrage-offer-body"><section><p class="chiffrage-kicker">${localLabel('Votre périmètre','Ihr Umfang')}</p><h3>${localLabel('Les solutions retenues','Gewählte Lösungen')}</h3><p>${state.draft.products.map(p=>({innosolv:'innosolvcity',pce:'ProConcept',abacus:'Abacus'}[p]??p)).join(' · ')||'—'} · ${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')}</p><p>LCM ${escape(({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection)} · ${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p><div class="chiffrage-offer-modules">${selected.slice(0,14).map(line=>`<span>${escape(lineLabel(line))}</span>`).join('')}</div></section>
-    <section><p class="chiffrage-kicker">${localLabel('Lecture du prix','Preisaufteilung')}</p><h3>${localLabel('D’où viennent ces montants','Zusammensetzung der Beträge')}</h3><div class="chiffrage-offer-breakdown">${buckets.map(([label,filter])=>`<div><span>${escape(label)}</span><strong>${money(result.lines.filter(filter).reduce((sum,line)=>sum+(line.investment_pv??0),0))}</strong><strong>${money(result.lines.filter(filter).reduce((sum,line)=>sum+(line.annual_pv??0),0))}</strong></div>`).join('')}<div class="chiffrage-offer-breakdown-total"><span>${t('chiffrage.total')}</span><strong>${money(s.investment)}</strong><strong>${money(s.annual)}</strong></div></div><p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
+    <section><p class="chiffrage-kicker">${localLabel('Lecture du prix','Preisaufteilung')}</p><h3>${localLabel('D’où viennent ces montants','Zusammensetzung der Beträge')}</h3><div class="chiffrage-table-scroll"><table class="chiffrage-detail chiffrage-financial-breakdown chiffrage-offer-breakdown"><thead><tr><th>${t('chiffrage.detail')}</th><th>${t('chiffrage.investment')}</th><th>${t('chiffrage.annual')}</th></tr></thead><tbody>${buckets.map(([label,filter])=>`<tr><th scope="row">${escape(label)}</th><td><span class="chiffrage-financial-label">${t('chiffrage.investment')}</span>${money(result.lines.filter(filter).reduce((sum,line)=>sum+(line.investment_pv??0),0))}</td><td><span class="chiffrage-financial-label">${t('chiffrage.annual')}</span>${money(result.lines.filter(filter).reduce((sum,line)=>sum+(line.annual_pv??0),0))}</td></tr>`).join('')}<tr class="chiffrage-offer-breakdown-total"><th scope="row">${t('chiffrage.total')}</th><td><span class="chiffrage-financial-label">${t('chiffrage.investment')}</span>${money(s.investment)}</td><td><span class="chiffrage-financial-label">${t('chiffrage.annual')}</span>${money(s.annual)}</td></tr></tbody></table></div><p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
 }
 
+function variantName(row) {
+  const same = state.quotes.filter(item => Number(item.bfs_id) === Number(state.draft.bfs_id) && !item.archived);
+  return `${t('chiffrage.ui.variant')} ${same.findIndex(item => item.id === row.id) + 1} · ${row.title}`;
+}
+function comparisonLabel(row) {
+  if (['modules', 'services'].includes(row.group) && row.label) {
+    const item = row.label;
+    const name = document.documentElement.lang === 'de' ? item.label_de || item.label_fr || item.label || t('chiffrage.ui.unavailableModule') :
+      item.label_fr || item.label_de || item.label || t('chiffrage.ui.unavailableModule');
+    const parent = item.vendor === 'abacus' && !String(item.item_code).endsWith('.1') ?
+      (state.comparisonData ?? []).flatMap(row => row.catalog.items ?? []).find(row => row.vendor === 'abacus' && row.item_code === `${item.item_code.split('.')[0]}.1`) : null;
+    const domain = parent ? (document.documentElement.lang === 'de' ? parent.label_de || parent.label_fr : parent.label_fr || parent.label_de) : '';
+    return domain ? `${domain} · ${name}` : name;
+  }
+  if (row.kind === 'extra') return row.label.label;
+  if (row.group === 'modules') return t('chiffrage.ui.unavailableModule');
+  return t(`chiffrage.ui.${row.key}`);
+}
+function comparisonValue(value, row) {
+  if (value == null) return `<span class="chiffrage-compare-muted">${t('chiffrage.ui.unspecified')}</span>`;
+  if (row.kind === 'module') return `${t(value.selected ? 'chiffrage.yes' : 'chiffrage.no')}${value.selected ? `<span class="chiffrage-compare-subvalue">${money(value.investment)} · ${money(value.annual)} / ${t('chiffrage.ui.perYear')}</span>` : ''}`;
+  if (row.kind === 'boolean') return t(value ? 'chiffrage.yes' : 'chiffrage.no');
+  if (row.kind === 'service') return `${value.days == null ? t('chiffrage.ui.unspecified') : `${number(value.days)} ${t('chiffrage.days')}`}<span class="chiffrage-compare-subvalue">${money(value.amount)}</span>`;
+  if (row.kind === 'extra') return `${money(value.investment)}<span class="chiffrage-compare-subvalue">${money(value.annual)} / ${t('chiffrage.ui.perYear')}</span>`;
+  if (row.key === 'lcm') return escape(({ none: t('chiffrage.lcmNone'), gold: 'Gold', platinium: 'Platinum' })[value] ?? value);
+  if (typeof value === 'boolean') return t(value ? 'chiffrage.yes' : 'chiffrage.no');
+  return escape(typeof value === 'number' ? number(value) : value);
+}
 function comparisonSection() {
-  const candidates=state.quotes.filter(row=>row.bfs_id===state.draft.bfs_id && !row.archived);
-  const chosen=state.comparisonData??[];
-  const ids=new Set(state.comparison);
-  return `<section class="chiffrage-section chiffrage-compare"><p class="chiffrage-kicker">${localLabel('Décider ensemble','Gemeinsam entscheiden')}</p><h2>${localLabel('Comparer les variantes','Varianten vergleichen')}</h2><p class="chiffrage-helper">${localLabel('Choisis deux ou trois variantes enregistrées de cette commune.','Zwei oder drei gespeicherte Varianten dieser Gemeinde wählen.')}</p>
-    <div class="chiffrage-compare-pick">${candidates.map(row=>`<label class="chiffrage-choice"><input type="checkbox" data-compare="${escape(row.id)}" ${ids.has(row.id)?'checked':''} ${!ids.has(row.id)&&ids.size>=3?'disabled':''}>${escape(row.title)}</label>`).join('')||localLabel('Enregistre une première variante pour comparer.','Eine Variante speichern, um zu vergleichen.')}</div>
-    ${chosen.length?`<div class="chiffrage-compare-scroll"><div class="chiffrage-compare-grid" style="--compare-count:${chosen.length}"><div class="chiffrage-compare-label">${localLabel('Variante','Variante')}</div>${chosen.map(row=>`<h3>${escape(row.title)}</h3>`).join('')}
-    ${[[localLabel('Investissement initial','Anfangsinvestition'),'investment'],[localLabel('Annuel dès N+1','Jährlich ab N+1'),'annual'],[localLabel('Coût total sur 5 ans','Gesamtkosten über 5 Jahre'),'tco5y']].map(([label,key])=>`<div class="chiffrage-compare-label">${label}</div>${chosen.map((row,index)=>{const amount=row.result?.summary[key],base=chosen[0].result?.summary[key];return `<strong>${money(amount)}${index && amount!=null && base!=null?`<small class="chiffrage-compare-delta">${amount-base>0?'+':''}${money(amount-base)}</small>`:''}</strong>`;}).join('')}`).join('')}
-    <div class="chiffrage-compare-label">${localLabel('Périmètre','Umfang')}</div>${chosen.map(row=>`<div>${row.differences.map(label=>`<span class="chiffrage-compare-difference">${escape(label)}</span>`).join('')||'—'}</div>`).join('')}
-    <div class="chiffrage-compare-label">${localLabel('Base / tarifs','Grundlage / Tarife')}</div>${chosen.map(row=>`<div class="chiffrage-compare-meta">${escape(row.reference)}<br>${escape(row.tariff)}${row.result?.status==='incomplete'||!row.result?`<br><strong>${localLabel('À compléter','Unvollständig')}</strong>`:''}</div>`).join('')}</div></div>
-    ${new Set(chosen.map(row=>row.versions)).size>1?`<p class="chiffrage-warning">${localLabel('Versions tarifaires différentes : les écarts de prix ne proviennent pas uniquement du périmètre.','Unterschiedliche Tarifversionen: Preisunterschiede liegen nicht nur am Umfang.')}</p>`:''}`:''}</section>`;
+  const candidates = state.quotes.filter(row => Number(row.bfs_id) === Number(state.draft.bfs_id) && !row.archived);
+  const chosen = state.comparisonData ?? [], ids = new Set(state.comparison);
+  const rows = comparisonRows(chosen);
+  const different = rows.filter(row => row.different), common = rows.filter(row => !row.different);
+  const table = entries => `<table class="chiffrage-comparison-table" style="--compare-count:${chosen.length}"><thead><tr><th scope="col">${t('chiffrage.ui.choice')}</th>${chosen.map((row,index) => `<th scope="col">${index+1} · ${escape(row.title)}</th>`).join('')}</tr></thead><tbody>${['scope','modules','dimensions','services','hosting'].map(group => {
+    const selected = entries.filter(row => row.group === group);
+    return selected.length ? `<tr class="chiffrage-comparison-group"><th colspan="${chosen.length+1}">${t(`chiffrage.ui.group.${group}`)}</th></tr>${selected.map(row => `<tr><th scope="row">${escape(comparisonLabel(row))}</th>${row.values.map((value,index) => `<td data-variant="${index+1}" class="${index && stableValue(value)!==stableValue(row.values[0]) ? 'chiffrage-comparison-changed' : ''}">${comparisonValue(value,row)}</td>`).join('')}</tr>`).join('')}` : '';
+  }).join('')}</tbody></table>`;
+  const versionsDiffer = new Set(chosen.map(row => stableValue(row.versions))).size > 1;
+  const referencesDiffer = new Set(chosen.map(row => row.input.reference?.id ?? '')).size > 1;
+  return `<section class="chiffrage-section chiffrage-compare"><p class="chiffrage-kicker">${t('chiffrage.ui.decideTogether')}</p><h2>${t('chiffrage.ui.compareTitle')}</h2><p class="chiffrage-helper">${t('chiffrage.ui.compareHelp')}</p>
+    <div class="chiffrage-compare-pick">${candidates.map(row => `<label class="chiffrage-choice"><input type="checkbox" data-compare="${escape(row.id)}" ${ids.has(row.id)?'checked':''} ${!ids.has(row.id)&&ids.size>=3?'disabled':''}><span>${escape(variantName(row))}<small>${t('chiffrage.revision',{revision:row.current_revision})}</small></span></label>`).join('') || t('chiffrage.ui.saveToCompare')}</div>
+    ${state.comparisonLoading ? `<p class="chiffrage-helper" role="status">${t('chiffrage.ui.loadingComparison')}</p>` : ''}
+    ${chosen.length ? `<div class="chiffrage-comparison-cards" style="--compare-count:${chosen.length}">${chosen.map((row,index) => {
+      const incomplete = !row.result || row.result.status === 'incomplete';
+      return `<article class="chiffrage-comparison-card${index===0?' is-reference':''}"><div class="chiffrage-comparison-card-heading"><span class="chiffrage-comparison-number">${index+1}</span><h3>${escape(row.title)}</h3></div><p class="chiffrage-helper">${t('chiffrage.revision',{revision:row.revision})} · ${t(incomplete?'chiffrage.ui.incomplete':'chiffrage.ui.complete')}</p>
+      ${index===0 ? `<span class="chiffrage-comparison-base">${t('chiffrage.ui.referenceVariant')}</span>` : `<button type="button" class="chiffrage-inline" data-compare-base="${escape(row.id)}">${t('chiffrage.ui.useAsReference')}</button>`}
+      <dl>${[['investment','investment'],['annual','annual'],['tco5y','tco']].map(([key,label]) => {
+        const amount = row.result?.summary?.[key], base = chosen[0]?.result?.summary?.[key];
+        const comparable = index && !incomplete && chosen[0].result?.status !== 'incomplete' && amount != null && base != null;
+        const delta = comparable ? amount-base : null;
+        return `<div><dt>${t(`chiffrage.${label}`)}${incomplete?` · ${t('chiffrage.ui.partial')}`:''}</dt><dd>${money(amount)}</dd><small class="chiffrage-compare-delta" ${delta==null?'aria-hidden="true"':''}>${delta!=null?`${t('chiffrage.ui.globalDelta')} ${delta>0?'+':''}${money(delta)}`:'&nbsp;'}</small></div>`;
+      }).join('')}</dl><p class="chiffrage-comparison-reference">${t('chiffrage.ui.basis')}<strong>${escape(row.reference)}</strong></p><details class="chiffrage-comparison-tariff"><summary>${t('chiffrage.ui.tariffDetails')}</summary><p>${escape(row.tariff)}</p></details></article>`;
+    }).join('')}</div>
+    ${versionsDiffer || referencesDiffer ? `<p class="chiffrage-warning">${t('chiffrage.ui.differentBasis')}</p>` : ''}
+    ${chosen.length<2 ? `<p class="chiffrage-helper">${t('chiffrage.ui.chooseSecond')}</p>` : `<h3 class="chiffrage-comparison-heading">${t('chiffrage.ui.differences',{count:different.length})}</h3>${different.length ? table(different) : `<p class="chiffrage-helper">${t('chiffrage.ui.identicalScope')}</p>`}<details class="chiffrage-comparison-common"><summary>${t('chiffrage.ui.commonChoices',{count:common.length})}</summary>${table(common)}</details>`}` : ''}</section>`;
 }
 
 function analysis() {
@@ -515,12 +621,12 @@ function analysis() {
   ].filter(([, filter]) => result.lines.some(filter));
   return `${incomplete ? `<p class="chiffrage-warning">${t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length})}</p>` : ''}<section class="chiffrage-section"><h2>${t('chiffrage.workspace.98883312a6')}</h2>
     <div class="chiffrage-summary-breakdown">
-      <div class="chiffrage-table-scroll"><table class="chiffrage-detail"><thead><tr>
+      <div class="chiffrage-table-scroll"><table class="chiffrage-detail chiffrage-financial-breakdown"><thead><tr>
         <th>${t('chiffrage.detail')}</th><th>${t('chiffrage.investment')}</th>
         <th>${t('chiffrage.annual')}</th></tr></thead><tbody>
         ${buckets.map(([label, filter]) => `<tr><th>${escape(label)}</th>
-          <td>${money(total(filter,'investment_pv'))}</td><td>${money(total(filter,'annual_pv'))}</td></tr>`).join('')}
-        <tr><th>${t('chiffrage.total')}</th><td>${money(s.investment)}</td><td>${money(s.annual)}</td></tr>
+          <td><span class="chiffrage-financial-label">${t('chiffrage.investment')}</span>${money(total(filter,'investment_pv'))}</td><td><span class="chiffrage-financial-label">${t('chiffrage.annual')}</span>${money(total(filter,'annual_pv'))}</td></tr>`).join('')}
+        <tr><th>${t('chiffrage.total')}</th><td><span class="chiffrage-financial-label">${t('chiffrage.investment')}</span>${money(s.investment)}</td><td><span class="chiffrage-financial-label">${t('chiffrage.annual')}</span>${money(s.annual)}</td></tr>
         </tbody></table></div>
     </div></section>${state.internal ? `<section class="chiffrage-section"><h2>${t('chiffrage.workspace.df7d91fa23')}</h2>
     <p>${t('chiffrage.tco')} : <strong>${money(s.tco5y)}</strong></p>
@@ -589,7 +695,7 @@ function renderEditor() {
   if (state.editorTab === 'rates' && !state.internal) state.editorTab = 'composer';
   const tabs = [['composer',t('chiffrage.workspace.a9de3a2603')],['modules',t('chiffrage.workspace.613aec30d2')],['prestations',t('chiffrage.workspace.0370136a74')],['offer',localLabel('Offre','Angebot')],['compare',localLabel('Comparer','Vergleichen')],['analysis',t('chiffrage.workspace.ab761b3579')],...(state.internal ? [['rates',t('chiffrage.workspace.ef73fa64a4')]] : [])];
   const legacy=state.quote && (Object.entries(state.activeVersions).some(([key,id])=>state.versions[key]!==id) || !state.draft.reference);
-  root.innerHTML = `${state.internal ? `<div class="chiffrage-internal-banner"><strong>${t('chiffrage.workspace.fdbe31da16')}</strong><button class="chiffrage-button" data-action="clientMode">${t('chiffrage.workspace.689c8df402')}</button></div>` : ''}${header()}${legacy ? `<div class="chiffrage-standard-notice"><div><strong>${localLabel('Ancien standard','Älterer Standard')}</strong><p>${localLabel('Ce chiffrage conserve ses tarifs d’origine. Crée une variante avec les références actuelles et tes valeurs saisies.','Diese Kalkulation behält ihre bisherigen Tarife. Erstelle eine Variante mit aktuellen Referenzen und deinen Eingaben.')}</p></div><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></div>` : ''}<div class="chiffrage-reference-ribbon"><span>${localLabel('Base de prestations','Leistungsgrundlage')} <strong>${escape(state.draft.reference?.label??'—')}</strong></span><span>${localLabel('Tarifs versionnés','Versionierte Tarife')} · ${escape(tariffLabel(state.catalog))}</span>${state.dirty?`<em>${localLabel('Ajustements en cours','Änderungen in Bearbeitung')}</em>`:''}</div><div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}"><div class="chiffrage-workspace"><nav class="chiffrage-work-tabs" aria-label="${t('chiffrage.workspace.dd4e272518')}">${tabs.map(([key,label],i)=>`<button type="button" data-editor-tab="${key}" aria-current="${state.editorTab===key?'page':'false'}"><small>0${i+1}</small>${label}</button>`).join('')}</nav>
+  root.innerHTML = `${state.internal ? `<div class="chiffrage-internal-banner"><strong>${t('chiffrage.workspace.fdbe31da16')}</strong><button class="chiffrage-button" data-action="clientMode">${t('chiffrage.workspace.689c8df402')}</button></div>` : ''}${header()}${legacy ? `<div class="chiffrage-standard-notice"><div><strong>${localLabel('Ancien standard','Älterer Standard')}</strong><p>${localLabel('Ce chiffrage conserve ses tarifs d’origine. Crée une variante avec les références actuelles et tes valeurs saisies.','Diese Kalkulation behält ihre bisherigen Tarife. Erstelle eine Variante mit aktuellen Referenzen und deinen Eingaben.')}</p></div><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></div>` : ''}<div class="chiffrage-variant-title">${textField('title',state.title,t('chiffrage.name'))}</div><div class="chiffrage-reference-ribbon"><span>${localLabel('Base de prestations','Leistungsgrundlage')} <strong>${escape(state.draft.reference?.label??'—')}</strong></span><span>${localLabel('Tarifs versionnés','Versionierte Tarife')} · ${escape(tariffLabel(state.catalog))}</span>${state.dirty?`<em>${localLabel('Ajustements en cours','Änderungen in Bearbeitung')}</em>`:''}</div><div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}"><div class="chiffrage-workspace"><nav class="chiffrage-work-tabs" aria-label="${t('chiffrage.workspace.dd4e272518')}">${tabs.map(([key,label],i)=>`<button type="button" data-editor-tab="${key}" aria-current="${state.editorTab===key?'page':'false'}"><small>0${i+1}</small>${label}</button>`).join('')}</nav>
     <div class="chiffrage-fields"><div class="chiffrage-tab-panel" data-tab-panel="composer" ${state.editorTab==='composer'?'':'hidden'}>${composerSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}${state.draft.products.includes('pce') ? `<section class="chiffrage-section"><h2>ProConcept ERP</h2><div class="chiffrage-choice-group"><label class="chiffrage-choice"><input type="checkbox" data-field="pce.finances" ${state.draft.pce.finances?'checked':''}>${t('chiffrage.finances')}</label><label class="chiffrage-choice"><input type="checkbox" data-field="pce.salaires" ${state.draft.pce.salaires?'checked':''}>${t('chiffrage.payroll')}</label></div></section>`:''}${extraSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="prestations" ${state.editorTab==='prestations'?'':'hidden'}>${serviceSection()}${technicalSection()}</div>
@@ -601,8 +707,15 @@ function renderEditor() {
   for (const node of root.querySelectorAll('details')) if (openDetails.includes(node.querySelector('summary')?.textContent)) node.open=true;
   if (scroll) window.scrollTo({top:scroll,behavior:'instant'});
   if (!state.map) void loadTerritory();
+  void loadCoat(state.draft);
 }
 function refreshFinancials() {
+  let currentResult;
+  try { currentResult = calculateQuote(state.draft, state.catalog); } catch { /* Display unknown amounts. */ }
+  root.querySelectorAll('[data-module-price]').forEach(node => {
+    const line = currentResult?.lines.find(line => `${line.family}/${line.product}/${line.item_code}` === node.dataset.modulePrice);
+    node.textContent = money(line?.annual_pv);
+  });
   const summaryNode=root.querySelector('#chiffrageSummary');
   if (summaryNode) summaryNode.innerHTML=summary();
   const analysisNode=root.querySelector('#chiffrageAnalysis');
@@ -613,6 +726,13 @@ function refreshFinancials() {
   if (offer) offer.innerHTML=offerSection();
   let gpLine; try {gpLine=calculateQuote(state.draft,state.catalog).lines.find(row=>row.explanation?.kind==='project_management');} catch {}
   root.querySelectorAll('[data-extra-total]').forEach(node=>{const [kind,index]=node.dataset.extraTotal.split('.');node.textContent=t('chiffrage.calculatedInvestment')+' '+money(extraInvestment(state.draft[kind][index]));});
+  for (const [attribute, render] of [['extraTitle', row => row.label || t('chiffrage.lineLabel')], ['extraSummary', row => money(extraInvestment(row))], ['extraAnnual', row => `${money(row.annual_pv)} / ${t('chiffrage.ui.perYear')}`]]) {
+    const name = attribute.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
+    root.querySelectorAll(`[data-${name}]`).forEach(node => {
+      const [kind,index] = node.dataset[attribute].split('.');
+      node.textContent = render(state.draft[kind][index]);
+    });
+  }
   root.querySelectorAll('[data-gp-explanation]').forEach(node=>node.textContent=gpExplanation(gpLine));
   root.querySelectorAll('[data-service-total]').forEach(node=>{
     const row=state.draft.services.find(line=>line.item_code===node.dataset.serviceTotal);
@@ -780,7 +900,7 @@ async function open(id) {
   state.catalog = stored.catalog;
   history.replaceState(history.state,'',quoteAddress(id));
   state.editorTab = 'composer'; state.internal = false; state.dirty = false;
-  state.comparison=[];state.comparisonData=[];
+  state.comparison=[];state.comparisonData=[];state.comparisonLoading=false;++comparisonRequest;state.lastFinancial=null;state.priceFeedback='';clearTimeout(priceFeedbackTimer);
   renderEditor();
 }
 
@@ -813,6 +933,7 @@ root.addEventListener('input', event => {
   }
   const path = event.target.dataset.field;
   if (!path || !state.draft) return;
+  if (event.target.hasAttribute('data-proposed-days')) event.target.classList.toggle('is-adjusted', event.target.value !== '' && Number(event.target.value) !== Number(event.target.dataset.proposedDays));
   setValue(path, event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     event.target.type === 'checkbox');
   if (path === 'dimensions.population' || path === 'lcm.gold' || path === 'lcm.platinium') {
@@ -893,43 +1014,48 @@ root.addEventListener('change', event => {
   }
 });
 
+let comparisonRequest = 0;
 async function loadComparison() {
+  const request = ++comparisonRequest;
+  state.comparisonLoading = true;
+  if (state.editorTab === 'compare') renderEditor();
   try {
-    const rows=await Promise.all(state.comparison.map(id=>api('quote',undefined,{id})));
-    const data=await Promise.all(rows.map(async row=>{
-      const versions=row.snapshot.catalog_versions;
-      const catalog=await api('catalog',undefined,{versions:JSON.stringify(versions)});
-      const input=row.snapshot.input;
-      let result;try {result=calculateQuote(input,catalog.catalog);} catch {result=null;}
-      return {title:row.title,input,versions:JSON.stringify(versions),tariff:tariffLabel(catalog.catalog),
-        reference:input.reference?.label??'—',result,catalog:catalog.catalog};
+    const rows = await Promise.all(state.comparison.map(id => api('quote', undefined, {id})));
+    const data = await Promise.all(rows.map(async row => {
+      const versions = row.snapshot.catalog_versions;
+      const catalog = await api('catalog', undefined, { versions: JSON.stringify(versions) });
+      const input = row.snapshot.input;
+      let result = row.snapshot.result;
+      if (!result) { try { result = calculateQuote(input, catalog.catalog); } catch { result = null; } }
+      return { id: row.id, title: row.title, revision: row.current_revision,
+        input, versions, tariff: tariffLabel(catalog.catalog),
+        reference: input.reference?.label ?? referenceProfiles(catalog.catalog).find(profile => profile.id===input.reference?.id)?.label ?? t('chiffrage.ui.unspecified'),
+        result, catalog: catalog.catalog };
     }));
-    const base=data[0]?.input;
-    for(const row of data){
-      const selected=new Set(row.input.modules.map(moduleId));
-      const original=new Set(base?.modules.map(moduleId)??[]);
-      const names=ids=>ids.map(id=>{const item=row.catalog.items.find(item=>moduleId(item)===id);
-        return document.documentElement.lang==='de'?item?.label_de??item?.label_fr??id:item?.label_fr??item?.label_de??id;});
-      row.differences=[...names([...selected].filter(id=>!original.has(id))).map(name=>`+ ${name}`),
-        ...names([...original].filter(id=>!selected.has(id))).map(name=>`− ${name}`)];
-      for(const [key,label] of [['population',localLabel('Habitants','Einwohner')],['employees',localLabel('Collaborateurs','Mitarbeitende')],['meters',localLabel('Compteurs','Zähler')]])
-        if(base && row.input.dimensions[key]!==base.dimensions[key])row.differences.push(`${label} : ${number(row.input.dimensions[key])}`);
-      if(base && hostingIncluded(row.input)!==hostingIncluded(base))row.differences.push(`${t('chiffrage.hosting')} : ${t(hostingIncluded(row.input)?'chiffrage.yes':'chiffrage.no')}`);
-      if(base && row.input.lcm.selection!==base.lcm.selection)row.differences.push(`LCM : ${row.input.lcm.selection??'—'}`);
-      const days=input=>[...(input.moduleServices??[]),...(input.services??[])].reduce((sum,line)=>sum+(line.days??0),0);
-      if(base && days(row.input)!==days(base))row.differences.push(`${t('chiffrage.days')} : ${number(days(row.input))}`);
+    if (request !== comparisonRequest) return;
+    state.comparisonData = data;
+  } catch (error) { if (request === comparisonRequest) { state.comparisonData = []; notice(errorMessage(error), true); } }
+  finally {
+    if (request === comparisonRequest) {
+      state.comparisonLoading = false;
+      if (state.mode === 'editor' && state.editorTab === 'compare') renderEditor();
     }
-    state.comparisonData=data;
-    if(state.mode==='editor' && state.editorTab==='compare')renderEditor();
-  }catch(error){notice(errorMessage(error),true);}
+  }
 }
 
 root.addEventListener('click', async event => {
+  const base = event.target.closest('[data-compare-base]');
+  if (base) {
+    state.comparison = [base.dataset.compareBase, ...state.comparison.filter(id => id !== base.dataset.compareBase)];
+    await loadComparison(); return;
+  }
   const tab = event.target.closest('[data-editor-tab]');
   if (tab && state.mode === 'editor') {
     state.editorTab = tab.dataset.editorTab;
     renderEditor();
-    root.querySelector('.chiffrage-work-tabs')?.scrollIntoView({block:'start',behavior:'smooth'});
+    const missing = tab.closest('.chiffrage-summary') ? root.querySelector('[data-tab-panel]:not([hidden]) [data-missing-days="true"]') : null;
+    if (missing) { missing.scrollIntoView({ block: 'center', behavior: 'smooth' }); missing.focus({ preventScroll: true }); }
+    else root.querySelector('.chiffrage-work-tabs')?.scrollIntoView({block:'start',behavior:'smooth'});
     return;
   }
   const button = event.target.closest('[data-action]');
