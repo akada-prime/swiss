@@ -35,5 +35,19 @@ test('shared Prime controls and quote typography do not require cascade override
   assert.match(css, /chiffrage-mobile-summary-figures strong\{[^}]*font-size:clamp\(27px,7\.2vw,33px\)/);
   assert.match(skin, /html\[data-skin="helvetia"\][\s\S]*?--quote-input:#f4f6f8;--quote-input-border:#b9c3ca/);
   assert.doesNotMatch(view, /class="chiffrage-saved-formula"/);
-  assert.match(index, /main\.css\?v=20261023-beta-visual-r7/);
+  assert.match(index, /main\.css\?v=20261023-hero-shared-r8/);
+});
+
+
+test('Chiffrage shares the same large two-line hero as the other Prime Communes views', () => {
+  const index = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  const foundation = readFileSync(new URL('../app/styles/foundation.css', import.meta.url), 'utf8');
+  const main = readFileSync(new URL('../app/styles/main.css', import.meta.url), 'utf8');
+  assert.match(index, /class="chiffrage-intro view-intro"/);
+  assert.match(index, /Chiffrer\.<br><span>[\s\S]*?En confiance\./);
+  assert.match(foundation, /h1\{margin:0;font-size:clamp\(46px,5vw,78px\)/);
+  assert.doesNotMatch(css, /\.chiffrage-view \.chiffrage-intro h1/);
+  assert.doesNotMatch(css, /\.chiffrage-view \.chiffrage-intro\{display:flex/);
+  assert.doesNotMatch(css, /\.chiffrage-view \.view-intro-copy \.eyebrow\{display:none/);
+  assert.match(main, /chiffrage\.css\?v=20261023-hero-shared-r8/);
 });
