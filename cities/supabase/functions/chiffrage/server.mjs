@@ -182,7 +182,7 @@ async function publishClientOffer(payload) {
   if (!quote?.snapshot || quote.archived) return fail('Quote not found', 404);
   const projection = publicOfferFromSaved(quote);
   if (!projection) return fail('Offer must be final and priced', 422);
-  const token = Buffer.from(crypto.getRandomValues(new Uint8Array(32))).toString('base64url');
+  const token = randomBytes(32).toString('base64url');
   const tokenHash = createHash('sha256').update(token).digest('hex');
   const expires = new Date(Date.now() + linkDurationMs).toISOString();
   const rows = await db('chiffrage_client_links', { method: 'POST', returning: true, query: {
