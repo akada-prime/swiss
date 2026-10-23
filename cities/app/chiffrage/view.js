@@ -1187,9 +1187,43 @@ function offerShareUrl(token) {
   url.hash = token;
   return url.href;
 }
-function sharePanel(content) {
-  const node=root.querySelector('#chiffrageShareResult');
-  if (node) { node.innerHTML=content; node.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+function sharePanel(content, source = null) {
+  // The original message was rendered after the entire list, out of sight.
+  // Keep confirmations AND errors next to the card the user actually tapped.
+  const node = source?.closest('.chiffrage-list-item')?.querySelector('[data-share-result]') ??
+    root.querySelector('#chiffrageShareResult');
+  if (node) {
+    node.innerHTML = content;
+    node.scrollIntoView({block:'nearest',behavior:'smooth'});
+  }
+  return node;
+}
+
+// Safari requires window.open and ClipboardItem.write to be invoked within
+// the click itself. Both must start BEFORE awaiting the publishing API.
+function openSharePreview() {
+  const preview = window.open('', '_blank');
+  if (!preview) return null;
+  try {
+    preview.opener = null;
+    preview.document.title = localLabel('Préparation de l’offre Prime…', 'Prime-Angebot vorbereiten…');
+    preview.document.body.textContent = localLabel('Préparation de votre offre client…',
+      'Ihr Kundenangebot wird vorbereitet…');
+    preview.document.body.style.cssText = 'font:18px system-ui;padding:35px;color:#172746';
+  } catch { /* Navigation after the response still works without a placeholder. */ }
+  return preview;
+}
+
+function startShareClipboard() {
+  if (!navigator.clipboard?.write || typeof ClipboardItem === 'undefined') return null;
+  let resolveLink, rejectLink;
+  const link = new Promise((resolve, reject) => { resolveLink = resolve; rejectLink = reject; });
+  try {
+    const item = new ClipboardItem({ 'text/plain': link.then(url =>
+      new Blob([url], { type: 'text/plain' })) });
+    const result = navigator.clipboard.write([item]).then(() => true, () => false);
+    return { resolve: resolveLink, reject: rejectLink, result };
+  } catch { return null; }
 }
 function dateLabel(value) {
   return new Date(value).toLocaleDateString(document.documentElement.lang === 'de' ? 'de-CH' : 'fr-CH');
@@ -1242,35 +1276,71 @@ root.addEventListener('click', async event => {
     state.dirty=true;renderEditor();return;
   }
 
+
   if (action === 'shareOffer') {
     const id = button.dataset.id ?? state.quote;
     if (!id) return;
     if (state.mode === 'editor' && state.dirty) {
-      notice(() => localLabel('Enregistre d’abord les modifications avant de partager l’offre.','Bitte zuerst die Änderungen speichern.'), true); return;
+      sharePanel(`<p class="chiffrage-warning">${localLabel('Enregistre d’abord tes modifications avant le partage.','Änderungen vor dem Teilen speichern.')}</p>`, button);
+      return;
     }
-    button.disabled=true;
+    // Must happen before the first await, otherwise iOS Safari blocks the tab.
+    const preview = openSharePreview();
+    const clipboard = startShareClipboard();
+    button.disabled = true;
+    sharePanel(`<p class="chiffrage-share-progress" role="status">${localLabel('Création du lien privé…','Privaten Link erstellen…')}</p>`, button);
     try {
       const shared = await api('publishOffer', { id });
       const url = offerShareUrl(shared.token);
-      sharePanel(`<section class="chiffrage-share-panel">
+      clipboard?.resolve(url);
+      if (preview && !preview.closed) preview.location.replace(url);
+      const container = sharePanel(`<section class="chiffrage-share-panel">
         <h3>${localLabel('Offre client prête à partager','Kundenangebot zum Teilen bereit')}</h3>
         <p>${localLabel('Lecture seule · révision figée','Schreibgeschützt · feste Version')} ${shared.revision} · ${localLabel('Expire le','Gültig bis')} ${dateLabel(shared.expires_at)}</p>
         <label>${localLabel('Lien privé','Privater Link')}<input class="chiffrage-share-url" value="${escape(url)}" readonly></label>
         <div class="chiffrage-share-actions"><button class="chiffrage-button" data-action="copySharedOffer">${localLabel('Copier le lien','Link kopieren')}</button>
-        <a class="chiffrage-button primary" href="${escape(url)}" target="_blank" rel="noopener noreferrer">${localLabel('Voir la version client','Kundenansicht öffnen')} ↗</a></div>
-        <p class="chiffrage-helper">${localLabel('Ce lien ne donne accès qu’à cette offre. Ne transmets pas le lien de reprise interne.','Dieser Link zeigt nur dieses Angebot. Den internen Bearbeitungslink nicht weitergeben.')}</p>
-        </section>`);
+        <a class="chiffrage-button primary" href="${escape(url)}" target="_blank" rel="noopener noreferrer">${localLabel('Ouvrir l’offre client','Kundenangebot öffnen')} ↗</a></div>
+        <p class="chiffrage-share-copy-status" role="status">${localLabel('Lien créé. Ouverture de l’onglet client…','Link erstellt. Kundenansicht wird geöffnet…')}</p>
+        <p class="chiffrage-helper">${localLabel('Ce lien donne accès uniquement à cette offre.','Dieser Link öffnet nur dieses Angebot.')}</p>
+      </section>`, button);
+      if (clipboard) void clipboard.result.then(copied => {
+        const status=container?.querySelector('.chiffrage-share-copy-status');
+        if (status) status.textContent = copied ?
+          localLabel('✓ Lien copié · nouvel onglet ouvert.','✓ Link kopiert · neuer Tab geöffnet.') :
+          localLabel('Lien prêt : touche « Copier le lien » pour le copier dans Safari.','Link bereit: Zum Kopieren « Link kopieren » wählen.');
+      });
+      else {
+        const status=container?.querySelector('.chiffrage-share-copy-status');
+        if (status) status.textContent = localLabel('Lien prêt : touche « Copier le lien » pour le copier.','Link bereit: Zum Kopieren « Link kopieren » wählen.');
+      }
+      if (!preview) {
+        const status=container?.querySelector('.chiffrage-share-copy-status');
+        if (status) status.textContent += ' ' + localLabel('Safari a bloqué l’onglet automatique : utilise « Ouvrir l’offre client ».','Safari hat den neuen Tab blockiert: « Kundenangebot öffnen » wählen.');
+      }
     } catch (error) {
-      notice(() => error.status === 422 ?
-        localLabel('Offre incomplète : termine les prix et enregistre-la avant de partager.','Unvollständiges Angebot: erst Preise bestätigen und speichern.') : errorMessage(error), true);
-    } finally {if(button.isConnected)button.disabled=false;}
+      clipboard?.reject(new Error('Offer publication failed'));
+      if (preview && !preview.closed) preview.close();
+      sharePanel(`<div class="chiffrage-share-error" role="alert">
+        <strong>${localLabel('Lien non créé','Link nicht erstellt')}</strong>
+        <p>${error.status === 422 ?
+          localLabel('Ce chiffrage est provisoire : finalise les montants et enregistre-le avant de le partager.','Dieser Entwurf ist unvollständig: Preise bestätigen und speichern.') :
+          localLabel('Une erreur est survenue lors de la publication. Réessaie ou vérifie la connexion.','Fehler beim Teilen. Bitte erneut versuchen oder Verbindung prüfen.')}</p>
+      </div>`, button);
+    } finally { if(button.isConnected) button.disabled=false; }
     return;
   }
   if (action === 'copySharedOffer') {
-    const url=root.querySelector('#chiffrageShareResult .chiffrage-share-url');
+    const url=button.closest('.chiffrage-share-panel')?.querySelector('.chiffrage-share-url');
     if (!url) return;
-    try { await navigator.clipboard.writeText(url.value); notice(() => localLabel('Lien client copié.','Kundenlink kopiert.')); }
-    catch { url.focus(); url.select(); notice(() => localLabel('Sélectionne puis copie le lien.','Link auswählen und kopieren.')); }
+    try {
+      await navigator.clipboard.writeText(url.value);
+      const status=button.closest('.chiffrage-share-panel')?.querySelector('.chiffrage-share-copy-status');
+      if(status) status.textContent=localLabel('✓ Lien copié dans le presse-papiers.','✓ Link in die Zwischenablage kopiert.');
+    } catch {
+      url.focus(); url.select();
+      const status=button.closest('.chiffrage-share-panel')?.querySelector('.chiffrage-share-copy-status');
+      if(status) status.textContent=localLabel('Safari bloque la copie automatique : maintiens ton doigt sur le lien sélectionné et choisis « Copier ».','Safari blockiert das Kopieren: Den ausgewählten Link gedrückt halten und « Kopieren » wählen.');
+    }
     return;
   }
   if (action === 'manageShares') {
