@@ -39,11 +39,11 @@ test('public projection exposes only three PV buckets and frozen commercial tota
     'issued_at','population','products','quote_title','revision','version'].sort());
 });
 
-test('incomplete, mismatched or null cost drafts are not shareable',()=>{
+test('incomplete or mismatched quote snapshots are not shareable',()=>{
   assert.equal(publicOfferFromSaved({...quote,snapshot:{...quote.snapshot,result:{...quote.snapshot.result,status:'incomplete'}}}),null);
   assert.equal(publicOfferFromSaved({...quote,snapshot:{...quote.snapshot,result:{...quote.snapshot.result,summary:{investment:999,annual:25}}}}),null);
   assert.equal(publicOfferFromSaved({...quote,snapshot:{...quote.snapshot,result:{...quote.snapshot.result,
-    lines:[{investment_pv:null,annual_pv:25}]}}}),null);
+    lines:[{investment_pv:'not-a-number',annual_pv:25}]}}}),null);
 });
 
 test('sharing management still requires editor authorization and same origin',async()=>{
@@ -74,4 +74,28 @@ test('customer standalone page does not load editor scripts, navigation or priva
   assert.match(html,/referrer" content="no-referrer"/);
   assert.match(html,/connect-src 'self' https:\/\/ozdvmllgxduzquiujcbg\.supabase\.co/);
   assert.match(client,/action=clientOffer/);
+});
+
+test('finalized SQL investment with null optional annual PV remains shareable',()=>{
+  const snapshot=structuredClone(quote.snapshot);
+  snapshot.result.lines.push({family:'technique',item_code:'sql',
+    investment_pv:0,annual_pv:null,investment_pa:null,annual_pa:null});
+  const published=publicOfferFromSaved({...quote,snapshot});
+  assert.ok(published);
+  assert.equal(published.amounts.annual,25);
+  assert.deepEqual(published.buckets.solutions,{investment:70,annual:25});
+  assert.ok(!JSON.stringify(published).includes('investment_pa'));
+});
+
+test('Safari creates the preview tab before async publishing, with inline feedback and direct copy',()=>{
+  const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
+  const share=view.slice(view.indexOf("if (action === 'shareOffer')"),view.indexOf("if (action === 'copySharedOffer')"));
+  assert.match(share,/const preview = openSharePreview\(\);/);
+  assert.match(share,/const clipboard = startShareClipboard\(\);/);
+  assert.ok(share.indexOf('openSharePreview()') < share.indexOf("await api('publishOffer'"));
+  assert.match(share,/sharePanel\(/);
+  assert.match(view,/new ClipboardItem/);
+  assert.match(view,/\[data-share-result\]/);
+  assert.match(view,/Brouillon à finaliser avant partage/);
+  assert.match(view,/shareButton\.disabled = !ready/);
 });
