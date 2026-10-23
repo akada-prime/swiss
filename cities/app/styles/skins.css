@@ -3,7 +3,8 @@
 html[data-skin="prime-darkweb"] {
   color-scheme:dark;
   --quote-surface:#10151e;--quote-nav:#0d121a;--quote-active:#202a38;
-  --quote-input:#151c27;--quote-input-border:#344052;
+  --pc-field-bg:#151c27;--pc-field-border:#344052;
+  --quote-input:var(--pc-field-bg);--quote-input-border:var(--pc-field-border);
   --quote-primary:linear-gradient(130deg,#1888e4,#3961d8);--quote-button-shadow:0 3px 12px #0062bd26;
   --quote-tab-shadow:0 1px 4px #0005;--quote-summary:linear-gradient(155deg,#182337,#111824 70%);
   --quote-summary-border:#314259;--quote-summary-shadow:0 16px 45px #0002;
@@ -35,7 +36,8 @@ html[data-skin="prime-darkweb"] {
 html[data-skin="helvetia"] {
   color-scheme:light;
   --quote-surface:#fff;--quote-nav:#f7f8f9;--quote-active:#fff;
-  --quote-input:#f4f6f8;--quote-input-border:#b9c3ca;
+  --pc-field-bg:#f4f6f8;--pc-field-border:#b9c3ca;
+  --quote-input:var(--pc-field-bg);--quote-input-border:var(--pc-field-border);
   --quote-primary:linear-gradient(130deg,#bc2c36,#9d2438);--quote-button-shadow:0 3px 10px #8d223218;
   --quote-tab-shadow:0 1px 5px #1c2b3b12,0 0 0 1px #1c2b3b08;
   --quote-summary:linear-gradient(160deg,#fff,#f7f8fa);--quote-summary-border:#cbd2d8;--quote-summary-shadow:0 12px 32px #253b4b09;
@@ -70,6 +72,7 @@ html[data-skin="helvetia"] {
 }
 html[data-skin="light"] {
   color-scheme:light;
+  --pc-field-bg:#f1f6fd;--pc-field-border:#b4c8e0;
   --skin-page:#f3f7fc;
   --skin-shell:linear-gradient(150deg,#f5f9fe,#eef5fc);
   --skin-header:#fff;
@@ -159,8 +162,8 @@ html[data-skin="helvetia"] :is(.view-intro-copy,.intro-copy,.intro-count,.kpi-ca
 html[data-skin="light"] :is(.view-intro-copy,.intro-copy,.intro-count,.kpi-card p,.result-line,.table-limit,.stats-card p,.news-panel p,.story-panel p,.roadmap-panel p,.maplibre-metric span,.maplibre-metric small){color:var(--skin-secondary)}
 html[data-skin="helvetia"] :is(.view-tab,.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small),
 html[data-skin="light"] :is(.view-tab,.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small){color:var(--skin-muted)}
-html[data-skin="helvetia"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.view-tab.active,.nav-tab.active),
-html[data-skin="light"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.view-tab.active,.nav-tab.active){color:var(--skin-text)}
+html[data-skin="helvetia"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.nav-tab.active),
+html[data-skin="light"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.nav-tab.active){color:var(--skin-text)}
 html[data-skin="helvetia"] :is(.eyebrow,.stats-kpi>strong,.maplibre-metric strong){color:var(--skin-accent)}
 html[data-skin="light"] :is(.eyebrow,.stats-kpi>strong,.maplibre-metric strong){color:var(--skin-accent)}
 html[data-skin="helvetia"] :is(th,.story-sources,.roadmap-stage header),html[data-skin="light"] :is(th,.story-sources,.roadmap-stage header){background:var(--skin-tint);border-color:var(--skin-border-soft)}
@@ -205,7 +208,6 @@ html[data-skin="helvetia"] .map-autocomplete strong{color:var(--skin-text)}
 html[data-skin="helvetia"] .map-autocomplete b{color:var(--skin-secondary)}
 html[data-skin="helvetia"] .map-autocomplete :is(button:hover,button.active){background:var(--skin-accent-soft)}
 html[data-skin="helvetia"] .view-intro-copy>strong{color:var(--skin-secondary)}
-html[data-skin="helvetia"] .stats-segment button.active{color:var(--skin-accent);background:var(--skin-accent-soft)}
 html[data-skin="helvetia"] :is(.kpi-label,.stats-kpi>span,.stats-prime-eyebrow){color:var(--skin-secondary)}
 html[data-skin="helvetia"] :is(.stats-kpi small,.stats-prime-meta,.territory-comparison span>small,.territory-comparison button>small,.stats-rank-label span,.stats-rank>small){color:var(--skin-secondary)}
 html[data-skin="helvetia"] :is(.territory-comparison button,.stats-segment){background:var(--skin-control);border-color:var(--skin-border-soft)}
