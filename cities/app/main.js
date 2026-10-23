@@ -11,4 +11,4 @@ import './prime-communes-communes-1.2.js?v=20261023-chiffrage-structure-r6';
 import './prime-communes-news-2.0.js?v=20261023-chiffrage-structure-r6';
 import './prime-communes-stories-2.0.js?v=20261023-chiffrage-structure-r6';
 import './prime-communes-roadmap-1.2.js';
-import './chiffrage/view.js?v=20261024-client-offer-v1';
+import './chiffrage/view.js?v=20261023-safari-share-r2';
