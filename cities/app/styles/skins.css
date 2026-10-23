@@ -35,7 +35,7 @@ html[data-skin="prime-darkweb"] {
 html[data-skin="helvetia"] {
   color-scheme:light;
   --quote-surface:#fff;--quote-nav:#f7f8f9;--quote-active:#fff;
-  --quote-input:#fff;--quote-input-border:#cbd2d8;
+  --quote-input:#f4f6f8;--quote-input-border:#b9c3ca;
   --quote-primary:linear-gradient(130deg,#bc2c36,#9d2438);--quote-button-shadow:0 3px 10px #8d223218;
   --quote-tab-shadow:0 1px 5px #1c2b3b12,0 0 0 1px #1c2b3b08;
   --quote-summary:linear-gradient(160deg,#fff,#f7f8fa);--quote-summary-border:#cbd2d8;--quote-summary-shadow:0 12px 32px #253b4b09;
