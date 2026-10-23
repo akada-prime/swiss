@@ -1,4 +1,4 @@
-import {t, number, date, locale} from './core/i18n.js?v=20261023-chiffrage-visuel-r5';
+import {t, number, date, locale} from './core/i18n.js?v=20261023-chiffrage-structure-r6';
 (() => {
   'use strict';
 

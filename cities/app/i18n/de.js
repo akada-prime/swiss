@@ -827,5 +827,17 @@ export default {
   "chiffrage.ui.savedTco": "Gesamt über 5 Jahre",
   "chiffrage.ui.provisional": "vorläufig",
   "chiffrage.ui.savedFormula": "Exkl. MwSt. · Investition + 4 × jährlich",
-  "chiffrage.ui.tariffReferences": "Tarifreferenzen"
+  "chiffrage.ui.tariffReferences": "Tarifreferenzen",
+  "chiffrage.ui.projectDimensions": "Die Grundlagen des Projekts",
+  "chiffrage.ui.primePartners": "Prime und Partner",
+  "chiffrage.ui.copySuffix": "Kopie",
+  "chiffrage.ui.workspaceBrand": "Gemeinden / Kalkulation",
+  "chiffrage.ui.heading.composer": "Ihr Projekt nimmt Form an.",
+  "chiffrage.ui.heading.modules": "Die Lösungen für Ihr Projekt.",
+  "chiffrage.ui.heading.prestations": "Ihre Projektbegleitung.",
+  "chiffrage.ui.heading.offer": "Ihr Projekt in Zahlen.",
+  "chiffrage.ui.heading.compare": "Ihre Varianten im Vergleich.",
+  "chiffrage.ui.heading.analysis": "Ihr Projekt im Überblick.",
+  "chiffrage.ui.heading.rates": "Die Parameter Ihres Projekts.",
+  "chiffrage.ui.exTax": "exkl. MwSt."
 };
