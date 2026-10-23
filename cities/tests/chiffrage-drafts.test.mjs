@@ -36,7 +36,9 @@ test('incomplete drafts save their inputs without invented totals and cannot be 
     assert.equal(stored,undefined);
     assert.equal((await save(true)).status,200);
     assert.deepEqual(stored.p_input,input);
-    assert.deepEqual(stored.p_result,{status:'incomplete',issues:[{code:'hostingPricesRequired'}]});
+    assert.equal(stored.p_result.status,'incomplete');
+    assert.deepEqual(stored.p_result.issues,[{code:'hostingPricesRequired'}]);
+    assert.equal(stored.p_result.summary.missing_hosting,true);
     const exported=await handler(new Request(`https://synthetic.supabase.co?action=export&id=${id}`,{headers}));
     assert.equal(exported.status,422);
     assert.equal((await exported.json()).code,'quoteIncomplete');

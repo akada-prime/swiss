@@ -1,7 +1,7 @@
 import { t, number } from '../core/i18n.js?v=20261022-configurateur-prime-r3';
 import { subscribePreferences } from '../core/preferences.js';
-import { calculateQuote, calculateLcm, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261022-configurateur-prime-r3';
-import { energyCodes, isEnergyModule, suggestedVolume, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
+import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261022-configurateur-prime-r3';
+import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js';
 import { calculationError } from './errors.js';
 
@@ -15,14 +15,17 @@ const state = { authenticated: false, loaded: false, catalog: null, versions: {}
   quotes: [], quote: null, draft: null, revision: null, title: '', archived: false,
   showArchived: false, mode: 'list', message: '', error: false, loading: null,
   pendingCommune: null, internal: false, dirty: false,
-  editorTab: 'composer', session: sessionStorage.getItem(sessionKey) };
-const money = value => value == null ? '—' : `${number(value, {
-  minimumFractionDigits: 0, maximumFractionDigits: 2 })} CHF`;
+  editorTab: 'composer', session: sessionStorage.getItem(sessionKey), comparison: [], map: null };
+const money = value => value == null ? '—' : `${number(Math.round(value), {
+  minimumFractionDigits: 0, maximumFractionDigits: 0 })} CHF`;
 const field = (key, value, label, { min = 0, step = 1 } = {}) =>
   `<label>${label}<input data-field="${key}" type="number" min="${min}" step="${step}" value="${escape(value ?? '')}"></label>`;
 const textField = (key, value, label) =>
   `<label>${label}<input data-field="${key}" value="${escape(value ?? '')}"></label>`;
 const localLabel = (fr, de) => document.documentElement.lang === 'de' ? de : fr;
+const cantonName = code => ({ JU: 'Jura', VD: 'Vaud', GE: 'Genève', FR: 'Fribourg',
+  NE: 'Neuchâtel', VS: 'Valais', BE: 'Berne' })[code] ?? code;
+const tariffLabel = catalog => [...new Set((catalog?.items??[]).map(item=>item.catalog_version).filter(Boolean))].slice(0,3).join(' · ') || '—';
 const errorMessage = error => {
   if (error.status === 401) return t('chiffrage.sessionExpired');
   if (error.status === 409) return t('chiffrage.revisionConflict');
@@ -58,7 +61,7 @@ function notice(message, error = false) {
 }
 
 function header() {
-  return `<div class="chiffrage-header"><div>${state.draft ? `<p class="chiffrage-kicker">${escape(state.draft.canton)} · OFS ${state.draft.bfs_id} · ${state.revision ? t('chiffrage.revision', { revision: state.revision }) : t('chiffrage.workspace.2005dfeb6b')}</p><h2>${escape(state.draft.name)}</h2>` : `<h2>${t('chiffrage.workspace.b246604ad2')}</h2>`}</div>
+  return `<div class="chiffrage-header"><div>${state.draft ? `<p class="chiffrage-kicker">${escape(cantonName(state.draft.canton))} · OFS ${state.draft.bfs_id} · ${state.revision ? t('chiffrage.revision', { revision: state.revision }) : t('chiffrage.workspace.2005dfeb6b')}</p><h2>${escape(state.draft.name)}</h2>` : `<h2>${t('chiffrage.workspace.b246604ad2')}</h2>`}</div>
     <div class="chiffrage-actions">${state.draft ? `<button class="chiffrage-button quiet" data-action="list">← ${t('chiffrage.back')}</button><button class="chiffrage-button primary" data-action="save">${t('chiffrage.save')}</button>` : ''}
       <button class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></div>
     <p class="chiffrage-status${state.error ? ' error' : ''}" role="status">${escape(state.message)}</p>`;
@@ -114,13 +117,15 @@ async function firstDraft(row) {
       hosting: row.hosting, notes: row.notes },
     dimensions: { population: Number(row.expectedPopulation ?? 0),
       licensedPopulation: licensedPopulation(Number(row.expectedPopulation ?? 0)),
-      meters: suggestedVolume(row.expectedPopulation), taxes: suggestedVolume(row.expectedPopulation), employees: 0 },
+      meters: suggestedVolume(row.expectedPopulation), taxes: suggestedVolume(row.expectedPopulation),
+      employees: suggestedEmployees(row.expectedPopulation) },
     products: [], modules: [], moduleServices: [], services: [], primeLines: [],
     partners: [], pce: { finances: true, salaires: false, interfacePa: 0 },
     oracle: { full: 0, light: 0 }, sql: {}, lcm: {}, energy: false,
     hosting: { included: false } };
   state.internal = false;
   state.dirty = false;
+  state.comparison=[];state.comparisonData=[];
   const profile = referenceProfiles(state.catalog).find(row => row.default) ?? referenceProfiles(state.catalog)[0];
   if (profile) { state.draft.reference = {id:profile.id}; Object.assign(state.draft.pce,profile.pce_defaults ?? {});
     Object.assign(state.draft.oracle,profile.technical_defaults?.oracle ?? {}); }
@@ -197,11 +202,15 @@ function productSection() {
   const modules = availableModules().sort((a, b) => moduleOrder(a) - moduleOrder(b));
   const groups = new Map();
   for (const item of modules) {
-    const key = item.vendor === 'abacus' ? `Abacus · ${item.item_code.split('.')[0]}` :
-      `${item.vendor} · ${item.product}`;
+    const key = item.vendor;
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(item);
   }
+  const domain = item => item.vendor === 'abacus' ?
+    (modules.find(row=>row.vendor==='abacus' && row.item_code===`${item.item_code.split('.')[0]}.1`)?.[document.documentElement.lang==='de'?'label_de':'label_fr'] ??
+      localLabel('Autres fonctions Abacus','Weitere Abacus-Funktionen')) :
+    item.product==='Versorger' ? localLabel('Énergie','Energie') :
+      localLabel('Gestion communale','Gemeindeverwaltung');
   const entry = item => {
     const id = `${item.vendor}/${item.product}/${item.item_code}`;
     const current = state.draft.moduleServices.find(line => line.item_code === id);
@@ -220,14 +229,16 @@ function productSection() {
         ${referenceProfiles(state.catalog).find(row=>row.id===state.draft.reference?.id)?.module_group_labels?.[id] ? `<small>${t('chiffrage.groupedServices')}</small>` : ''}
       </div>` : ''}</div>`;
   };
-  return `<section class="chiffrage-section"><h2>${t('chiffrage.workspace.f492367598')}</h2>
-    <p class="chiffrage-helper">${t('chiffrage.workspace.d6f943e350')} · ${t('chiffrage.workspace.e596f2a085')} : ${money(dayRate())}</p>
+  return `<section class="chiffrage-section chiffrage-catalog"><p class="chiffrage-kicker">${localLabel('Périmètre logiciel','Softwareumfang')}</p><h2>${t('chiffrage.workspace.f492367598')}</h2>
+    <p class="chiffrage-helper">${localLabel('Les modules retenus en premier. Ouvre les options pour compléter le périmètre.','Gewählte Module zuerst. Weitere Optionen bei Bedarf öffnen.')}</p>
       <div class="chiffrage-module-groups">${[...groups].map(([group, entries]) => {
         const included = entries.filter(item => selected.has(`${item.vendor}/${item.product}/${item.item_code}`));
         const other = entries.filter(item => !selected.has(`${item.vendor}/${item.product}/${item.item_code}`));
-        return `<div class="chiffrage-module-set"><h3>${escape(group)} · ${included.length} ${t('chiffrage.workspace.f8352fa70a')}</h3>
-          <div class="chiffrage-module-list">${included.map(entry).join('') || `<p class="chiffrage-helper">${t('chiffrage.workspace.72e8e5bef8')}</p>`}</div>
-          ${other.length ? `<details class="chiffrage-subdetail"><summary>${t('chiffrage.workspace.af758b49cd')} · ${other.length}</summary><div class="chiffrage-module-list">${other.map(entry).join('')}</div></details>` : ''}</div>`;
+        const brand = { innosolv:'innosolvcity', abacus:'Abacus', pce:'ProConcept' }[group] ?? group;
+        const domains=new Map();for(const item of included){const title=domain(item);if(!domains.has(title))domains.set(title,[]);domains.get(title).push(item);}
+        return `<div class="chiffrage-module-set"><h3><span>${escape(brand)}</span><small>${included.length} ${t('chiffrage.workspace.f8352fa70a')}</small></h3>
+          <div class="chiffrage-module-list">${[...domains].map(([title,items])=>`<div class="chiffrage-domain"><h4>${escape(title)}</h4>${items.map(entry).join('')}</div>`).join('')}</div>
+          ${other.length ? `<details class="chiffrage-subdetail"><summary>${t('chiffrage.workspace.af758b49cd')} · ${other.length}</summary><input class="chiffrage-module-search" data-module-search="${escape(group)}" type="search" placeholder="${localLabel('Chercher un module','Modul suchen')}" aria-label="${localLabel('Chercher un module','Modul suchen')}"><div class="chiffrage-module-list">${other.map(entry).join('')}</div></details>` : ''}</div>`;
       }).join('') || '—'}</div></section>`;
 }
 
@@ -253,8 +264,9 @@ function serviceSection(compact = false) {
     <div class="chiffrage-service-grid">${types.map(([id, fr, german]) => {
       const current = state.draft.services.find(entry => entry.item_code === id);
       if(id==='deplacements' && state.draft.travel) return `<div class="chiffrage-service-item"><strong>${escape(de?german:fr)}</strong>${field('travel.rate',state.draft.travel.rate,t('chiffrage.travelUnit'))}${field('travel.percent',state.draft.travel.percent,t('chiffrage.travelPercent'),{step:.5})}<label class="chiffrage-choice"><input type="checkbox" data-field="travel.waived" ${state.draft.travel.waived?'checked':''}>${t('chiffrage.travelWaived')}</label><small>${t('chiffrage.travelBasis')}</small></div>`;
-      if (id === 'projet' && gp) return `<div class="chiffrage-service-item"><strong>${escape(de ? german : fr)}</strong>${field('projectManagement.percent', gp.percent, t('chiffrage.workspace.e34218e3b4'), {step:.5})}<small data-gp-explanation>${gpExplanation(gpLine)}</small></div>`;
-      return `<div class="chiffrage-service-item"><strong>${escape(de ? german : fr)}</strong>${field(`service.${id}.days`, current?.days, t('chiffrage.days'), { step: .5 })}<small>${current?.suggested_days == null ? t('chiffrage.workspace.f65d0dc796') : `${t('chiffrage.workspace.f8130bb03a')} : ${number(current.suggested_days)} ${t('chiffrage.workspace.6abe3deea7')}`}</small>${!compact ? field(`service.${id}.override`, current?.investment_override, t('chiffrage.override'), {min:-1000000}) : ''}</div>`;
+      if (id === 'projet' && gp) return `<div class="chiffrage-service-item"><div class="chiffrage-service-title"><strong>${escape(de ? german : fr)}</strong><small data-gp-explanation>${gpExplanation(gpLine)}</small></div>${field('projectManagement.percent', gp.percent, '%', {step:.5})}<output>${money(gpLine?.investment_pv)}</output></div>`;
+      const amount = current?.investment_override ?? (current?.days ?? current?.suggested_days) * (current?.unit_day_rate ?? dayRate());
+      return `<div class="chiffrage-service-item"><div class="chiffrage-service-title"><strong>${escape(de ? german : fr)}</strong><small>${current?.suggested_days == null ? t('chiffrage.workspace.f65d0dc796') : `${t('chiffrage.workspace.f8130bb03a')} : ${number(current.suggested_days)} ${t('chiffrage.workspace.6abe3deea7')}`}</small></div>${field(`service.${id}.days`, current?.days, t('chiffrage.days'), { step: .5 })}<output data-service-total="${escape(id)}">${money(Number.isFinite(amount) ? amount : null)}</output>${!compact ? `<details class="chiffrage-service-adjust"><summary>${t('chiffrage.override')}</summary>${field(`service.${id}.override`, current?.investment_override, t('chiffrage.investment'), {min:-1000000})}</details>` : ''}</div>`;
     }).join('')}</div>
     ${!gp ? `<p class="chiffrage-warning">${t('chiffrage.workspace.15b2f96e28')}</p>` : ''}
     ${!compact ? `<div class="chiffrage-grid">${field('commercial.dayRate', dayRate(), t('chiffrage.workspace.6f34dc40d6'))}</div>` : ''}</section>`;
@@ -281,8 +293,11 @@ function technicalSection() {
   const hasSql = state.draft.products.includes('innosolv');
   const hasOracle = state.draft.products.includes('pce');
   let suggestion = null;
+  let sqlPrice = state.draft.sql.override ?? null;
   try { if (hasSql) suggestion = suggestedSqlUsers(state.draft.dimensions.population,
-    state.catalog.parameters.sql.suggestion); } catch { /* Missing private rule. */ }
+    state.catalog.parameters.sql.suggestion);
+    if(hasSql)sqlPrice=calculateSql({population:state.draft.dimensions.population,...state.draft.sql},state.catalog.parameters.sql).amount.effective_value;
+  } catch { /* Missing private rule. */ }
   return `<details class="chiffrage-section"><summary>${t('chiffrage.technical')}</summary>
     ${hasSql ? `<p>${t('chiffrage.sqlSuggested', { count: suggestion ?? '—' })}</p>
       ${state.draft.dimensions.population >= state.catalog.parameters.sql.core_from_population &&
@@ -291,7 +306,7 @@ function technicalSection() {
       <div class="chiffrage-grid">${field('sql.users', state.draft.sql.users ?? suggestion,
         t('chiffrage.sqlUsers'))}
       ${field('sql.cores', state.draft.sql.cores, t('chiffrage.sqlCores'))}
-      ${field('sql.override', state.draft.sql.override, t('chiffrage.sqlInvestmentPv'))}
+      ${field('sql.override', sqlPrice, t('chiffrage.sqlInvestmentPv'))}
       ${state.internal ? field('sql.purchasePa', state.draft.sql.purchasePa, t('chiffrage.sqlInvestmentPa')) : ''}
       ${field('sql.annualPv', state.draft.sql.annualPv, t('chiffrage.sqlAnnualPv'))}
       ${state.internal ? field('sql.annualPa', state.draft.sql.annualPa, t('chiffrage.sqlAnnualPa')) : ''}</div>` : ''}
@@ -368,26 +383,55 @@ function lcmPrices() {
     prices.block == null ? ` · ${t('chiffrage.lcmMissing')}` : ` · ≤ ${number(prices.block)} ${t('chiffrage.workspace.a46028df66')}`}`;
 }
 function lcmSection() {
+  const prices = calculateLcm(state.draft.dimensions.population,
+    state.catalog.parameters.lcm, state.draft.lcm);
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.lcm')}</summary>
     <p class="chiffrage-lcm-prices">${lcmPrices()}</p>
     <div class="chiffrage-grid"><label>${t('chiffrage.lcmSelection')}<select data-field="lcm.selection">
       ${[['none', t('chiffrage.lcmNone')], ['gold','Gold'], ['platinium','Platinum']].map(([key,label]) =>
         `<option value="${key}" ${(state.draft.lcm.selection ?? 'none') === key ? 'selected' : ''}>${label}</option>`).join('')}
-      </select></label></div><details class="chiffrage-subdetail"><summary>${t('chiffrage.lcmAdjust')}</summary><div class="chiffrage-grid">${field('lcm.gold', state.draft.lcm.gold,
-      'LCM Gold · ' + t('chiffrage.override'))}
-      ${field('lcm.platinium', state.draft.lcm.platinium,
-        'LCM Platinum · ' + t('chiffrage.override'))}</div></details></details>`;
+      </select></label></div><div class="chiffrage-grid chiffrage-lcm-values">${field('lcm.gold', prices.gold?.effective_value,
+      'LCM Gold · CHF')}${field('lcm.platinium', prices.platinium?.effective_value,
+        'LCM Platinum · CHF')}</div><p class="chiffrage-helper">${localLabel('Valeurs de la référence, modifiables pour cette variante.','Referenzwerte, für diese Variante anpassbar.')}</p></details>`;
+}
+
+function territoryMap() {
+  if (!state.map) return `<span>${escape(cantonName(state.draft.canton))}</span>`;
+  const selected=state.map.municipalities.find(row=>Number(row.id)===state.draft.bfs_id);
+  if (!selected) return `<span>${escape(cantonName(state.draft.canton))}</span>`;
+  const coords=[...selected.d.matchAll(/(-?\d+),(-?\d+)/g)].map(match=>[Number(match[1]),Number(match[2])]);
+  const x=coords.reduce((sum,point)=>sum+point[0],0)/coords.length;
+  const y=coords.reduce((sum,point)=>sum+point[1],0)/coords.length;
+  const cantons=state.map.cantons.filter(row=>['VD','GE','FR','NE','JU','VS','BE'].includes(row.code));
+  return `<svg viewBox="2480000 -1305000 235000 195000" role="img" aria-label="${escape(state.draft.name)} · ${escape(state.draft.canton)}"><g class="chiffrage-map-region">${cantons.map(row=>`<path d="${escape(row.d)}"/>`).join('')}</g><path class="chiffrage-map-selected" d="${escape(selected.d)}"/><circle class="chiffrage-map-point" cx="${x}" cy="${y}" r="2400"/></svg>`;
+}
+async function loadTerritory() {
+  if (state.map) return;
+  try {
+    const response=await fetch(new URL('data/swiss-map-v1.json',document.baseURI));
+    if (!response.ok) return;
+    state.map=await response.json();
+    root.querySelectorAll('[data-territory]').forEach(node=>node.innerHTML=territoryMap());
+  } catch { /* The canton label remains as the geographical fallback. */ }
 }
 
 function composerSection() {
   const products = state.draft.products;
+  let sqlPrice=null, sqlUsers=null;
+  try { if(products.includes('innosolv')){
+    const sql=calculateSql({population:state.draft.dimensions.population,...state.draft.sql},state.catalog.parameters.sql);
+    sqlPrice=sql.amount.effective_value;sqlUsers=sql.users;
+  } } catch { /* The technical section and summary explain missing reference values. */ }
   const erp = products.includes('pce') && products.includes('abacus') ? 'both' : products.includes('pce') ? 'pce' : products.includes('abacus') ? 'abacus' : 'none';
   const choices = (name, values, selected, attr, disabled=false) => `<div class="chiffrage-choice-group">${values.map(([value,label]) => `<label class="chiffrage-choice"><input type="radio" name="chiffrage-${name}" ${attr}="${value}" ${String(selected) === String(value) ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span>${label}</span></label>`).join('')}</div>`;
   const profiles = referenceProfiles(state.catalog);
-  return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><div class="chiffrage-section-heading"><div><p class="chiffrage-kicker">01 · ${t('chiffrage.workspace.7f4dc1fe42')}</p><h2>${t('chiffrage.workspace.8049a016ae')}</h2></div><span class="chiffrage-badge">${escape(state.draft.canton)}</span></div>
-    <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}</div>
+  return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><div class="chiffrage-section-heading"><div><p class="chiffrage-kicker">01 · ${t('chiffrage.workspace.7f4dc1fe42')}</p><h2>${escape(state.draft.name)}</h2><p class="chiffrage-helper">${escape(cantonName(state.draft.canton))} · OFS ${state.draft.bfs_id}</p></div><div class="chiffrage-territory" data-territory>${territoryMap()}</div></div>
+    <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('sql.users', state.draft.sql.users ?? sqlUsers,t('chiffrage.sqlUsers'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}</div>
+    ${products.includes('pce') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('oracle.full',state.draft.oracle.full,t('chiffrage.oracleFull'))}${field('oracle.light',state.draft.oracle.light,t('chiffrage.oracleLight'))}</div>` : ''}
+    ${products.includes('innosolv') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('sql.override',sqlPrice,t('chiffrage.sqlInvestmentPv'))}</div>` : ''}
+    <p class="chiffrage-helper">${localLabel('Collaborateurs estimés ; utilisateurs SQL et ERP à vérifier avec le client.','Mitarbeitende geschätzt; SQL- und ERP-Nutzer mit der Gemeinde prüfen.')}</p>
     <p class="chiffrage-helper" data-volume-suggestion>${t('chiffrage.volumeSuggested', { count: number(suggestedVolume(state.draft.dimensions.population)) })} <button type="button" class="chiffrage-inline" data-action="suggestVolumes">${t('chiffrage.useSuggestion')}</button></p>
-    <details class="chiffrage-subdetail"><summary>${t('chiffrage.workspace.d0d6bdb841')}</summary><div class="chiffrage-grid">${textField('title',state.title,t('chiffrage.name'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}</div></details></section>
+    <details class="chiffrage-subdetail"><summary>${t('chiffrage.workspace.d0d6bdb841')}</summary><div class="chiffrage-grid">${textField('title',state.title,t('chiffrage.name'))}</div></details></section>
     <section class="chiffrage-section chiffrage-solutions"><p class="chiffrage-kicker">02 · ${t('chiffrage.workspace.2a16c2c73f')}</p><h2>${t('chiffrage.workspace.45fb3f474a')}</h2>
     <div class="chiffrage-decision"><div><h3>${t('chiffrage.workspace.f8f770b589')}</h3><p class="chiffrage-helper">${t('chiffrage.workspace.b11d6c68f8')}</p></div><label class="chiffrage-choice chiffrage-toggle"><input type="checkbox" data-product="innosolv" ${products.includes('innosolv') ? 'checked' : ''}><span>innosolvcity</span></label></div>
     <div class="chiffrage-decision"><div><h3>ERP</h3><p class="chiffrage-helper">${t('chiffrage.workspace.0c12310977')}</p></div>${choices('erp',[['pce','ProConcept'],['abacus','Abacus'],['both',t('chiffrage.workspace.90db01b4a5')],['none',t('chiffrage.workspace.b2ed82f1bf')]],erp,'data-erp')}</div>
@@ -406,17 +450,50 @@ function summary() {
   const buckets = financialBuckets(result);
   const incomplete=result.status==='incomplete';
   return `<aside class="chiffrage-summary"><div class="chiffrage-summary-heading"><p class="chiffrage-kicker">${t('chiffrage.workspace.947be926eb')}</p><span class="chiffrage-live">${t('chiffrage.workspace.3994ec3759')}</span></div>
-    <dl class="chiffrage-totals"><div><dt>${t('chiffrage.investment')} <small>CHF HT</small></dt><dd>${incomplete?'≥ ':''}${money(s.investment).replace(' CHF','')}</dd></div><div><dt>${t('chiffrage.annual')} <small>CHF HT · ${t('chiffrage.workspace.fe85c43980')}</small></dt><dd>${money(s.annual).replace(' CHF','')}</dd></div></dl>
-    ${incomplete ? `<p class="chiffrage-warning">${t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length})}</p><button class="chiffrage-button" data-editor-tab="modules">${t('chiffrage.completeServices')} →</button>` : ''}
+    <p class="chiffrage-summary-context">${escape(state.draft.name)} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</p>
+    <dl class="chiffrage-totals"><div><dt>${incomplete ? localLabel('Investissement calculé à ce stade','Bisher berechnete Investition') : t('chiffrage.investment')} <small>CHF HT</small></dt><dd>${money(s.investment).replace(' CHF','')}</dd></div><div><dt>${t('chiffrage.annual')} <small>CHF HT · ${t('chiffrage.workspace.fe85c43980')}</small></dt><dd>${money(s.annual).replace(' CHF','')}</dd></div></dl>
+    ${incomplete ? `<p class="chiffrage-warning">${s.missing_service_days?.length ? t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length}) : ''} ${s.missing_technical?.length ? localLabel('Prix SQL à préciser : investissement non final.','SQL-Preis ergänzen: Investition noch nicht endgültig.') : ''} ${s.missing_hosting?localLabel('Montants d’hébergement à préciser.','Hostingbeträge ergänzen.'):''}</p><button class="chiffrage-button" data-editor-tab="${s.missing_hosting?'composer':s.missing_technical?.length?'prestations':'modules'}">${localLabel('Compléter le chiffrage','Kalkulation ergänzen')} →</button>` : ''}
     <div class="chiffrage-cost-lines">${buckets.map(([label, filter])=>`<div><span>${escape(label)}</span><span>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.investment_pv??0),0))}<small>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.annual_pv??0),0))} / ${t('chiffrage.workspace.de73eac0c3')}</small></span></div>`).join('')}</div>
-    <div class="chiffrage-five-year"><span>${t('chiffrage.workspace.b1aaf814f0')}</span><strong>${incomplete?'≥ ':''}${money(s.tco5y)}</strong></div>
+    <div class="chiffrage-five-year"><span>${incomplete?localLabel('5 ans · calculé à ce stade','5 Jahre · bisher berechnet'):t('chiffrage.workspace.b1aaf814f0')}</span><strong>${money(s.tco5y)}</strong></div>
     <p class="chiffrage-helper">${t('chiffrage.workspace.a855306547')}</p>
     <button class="chiffrage-button" data-editor-tab="analysis">${t('chiffrage.workspace.a602bde342')} →</button>
-    <div class="chiffrage-summary-foot">${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}<br>${state.draft.reference ? escape(state.draft.reference.label) : t('chiffrage.workspace.0b2e6af887')}</div></aside>
-    <div class="chiffrage-mobile-total"><button data-editor-tab="analysis"><span>${t('chiffrage.investment')}<strong>${incomplete?'≥ ':''}${money(s.investment)}</strong></span><span>${t('chiffrage.annual')}<strong>${money(s.annual)}</strong></span><b>↗</b></button></div>`;
+    <div class="chiffrage-summary-foot">${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')} · ${localLabel('Base de prestations','Leistungsgrundlage')} : ${escape(state.draft.reference?.label ?? '—')}</div></aside>
+    <div class="chiffrage-mobile-total"><button data-editor-tab="offer"><span>${incomplete?localLabel('Investissement en cours','Investition im Aufbau'):t('chiffrage.investment')}<strong>${money(s.investment)}</strong></span><span>${t('chiffrage.annual')}<strong>${money(s.annual)}</strong></span><b>↗</b></button></div>`;
 }
 function financialBuckets(result) {
   return [[t('chiffrage.licenses'),line=>line.software || line.family === 'prime' && line.category !== 'hosting'],[t('chiffrage.workspace.53df292761'),line=>['prestations','prestations_module'].includes(line.family)],[t('chiffrage.database'),line=>line.family==='technique'],[t('chiffrage.hosting'),line=>line.category==='hosting'],[t('chiffrage.partners'),line=>line.family==='partenaires' && line.category!=='hosting'],['LCM',line=>line.family==='lcm']].filter(([,filter])=>result.lines.some(filter));
+}
+
+function offerSection() {
+  let result;
+  try { result=calculateQuote(state.draft,state.catalog); }
+  catch(error) { return `<section class="chiffrage-section"><p class="chiffrage-warning">${escape(errorMessage(error))}</p></section>`; }
+  const s=result.summary, incomplete=result.status==='incomplete';
+  const buckets=financialBuckets(result);
+  const selected=result.lines.filter(line=>line.software && (line.annual_pv??0)>0);
+  return `<article class="chiffrage-offer"><header class="chiffrage-offer-hero">
+    <div class="chiffrage-offer-brand"><span>Prime<span class="chiffrage-prime-dot">.</span></span><small>${localLabel('COMMUNES / PROPOSITION','GEMEINDEN / ANGEBOT')}</small></div>
+    <div class="chiffrage-offer-map" data-territory>${territoryMap()}</div><p class="chiffrage-offer-place">${escape(state.draft.name)} <span>${escape(cantonName(state.draft.canton))} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</span></p>
+    <h2>${localLabel('Votre projet, en chiffres.','Ihr Projekt in Zahlen.')}</h2>
+    <p class="chiffrage-offer-reference">${localLabel('Base de prestations','Leistungsgrundlage')} : <strong>${escape(state.draft.reference?.label??'—')}</strong> · ${localLabel('Tarifs','Tarife')} : ${escape(tariffLabel(state.catalog))}${state.dirty?` · ${localLabel('Modifications en cours','Änderungen in Bearbeitung')}`:''}</p>
+    <div class="chiffrage-offer-figures"><div><span>${incomplete?localLabel('Investissement calculé à ce stade','Bisher berechnete Investition'):localLabel('Investissement initial','Anfangsinvestition')}</span><strong>${money(s.investment)}</strong><small>HT · ${localLabel('une fois','einmalig')}</small></div><div><span>${localLabel('Coût annuel récurrent','Wiederkehrende Jahreskosten')}</span><strong>${money(s.annual)}</strong><small>HT · ${localLabel('dès la 2e année','ab dem 2. Jahr')}</small></div></div>
+    <div class="chiffrage-offer-horizon"><span>${localLabel('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${money(s.tco5y)}</strong></div>
+    ${incomplete?`<p class="chiffrage-offer-caveat">${localLabel('Chiffrage à compléter :','Kalkulation ergänzen:')} ${s.missing_service_days?.length??0} ${localLabel('prestations sans jours','Leistungen ohne Tage')}${s.missing_technical?.length?` · SQL ${localLabel('sans prix confirmé','ohne bestätigten Preis')}`:''}${s.missing_hosting?` · ${t('chiffrage.hosting')} ${localLabel('sans prix','ohne Preis')}`:''}.</p>`:''}
+    </header><div class="chiffrage-offer-body"><section><p class="chiffrage-kicker">${localLabel('Votre périmètre','Ihr Umfang')}</p><h3>${localLabel('Les solutions retenues','Gewählte Lösungen')}</h3><p>${state.draft.products.map(p=>({innosolv:'innosolvcity',pce:'ProConcept',abacus:'Abacus'}[p]??p)).join(' · ')||'—'} · ${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')}</p><p>LCM ${escape(({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection)} · ${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p><div class="chiffrage-offer-modules">${selected.slice(0,14).map(line=>`<span>${escape(lineLabel(line))}</span>`).join('')}</div></section>
+    <section><p class="chiffrage-kicker">${localLabel('Lecture du prix','Preisaufteilung')}</p><h3>${localLabel('D’où viennent ces montants','Zusammensetzung der Beträge')}</h3><div class="chiffrage-offer-breakdown">${buckets.map(([label,filter])=>`<div><span>${escape(label)}</span><strong>${money(result.lines.filter(filter).reduce((sum,line)=>sum+(line.investment_pv??0),0))}</strong><strong>${money(result.lines.filter(filter).reduce((sum,line)=>sum+(line.annual_pv??0),0))}</strong></div>`).join('')}<div class="chiffrage-offer-breakdown-total"><span>${t('chiffrage.total')}</span><strong>${money(s.investment)}</strong><strong>${money(s.annual)}</strong></div></div><p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
+}
+
+function comparisonSection() {
+  const candidates=state.quotes.filter(row=>row.bfs_id===state.draft.bfs_id && !row.archived);
+  const chosen=state.comparisonData??[];
+  const ids=new Set(state.comparison);
+  return `<section class="chiffrage-section chiffrage-compare"><p class="chiffrage-kicker">${localLabel('Décider ensemble','Gemeinsam entscheiden')}</p><h2>${localLabel('Comparer les variantes','Varianten vergleichen')}</h2><p class="chiffrage-helper">${localLabel('Choisis deux ou trois variantes enregistrées de cette commune.','Zwei oder drei gespeicherte Varianten dieser Gemeinde wählen.')}</p>
+    <div class="chiffrage-compare-pick">${candidates.map(row=>`<label class="chiffrage-choice"><input type="checkbox" data-compare="${escape(row.id)}" ${ids.has(row.id)?'checked':''} ${!ids.has(row.id)&&ids.size>=3?'disabled':''}>${escape(row.title)}</label>`).join('')||localLabel('Enregistre une première variante pour comparer.','Eine Variante speichern, um zu vergleichen.')}</div>
+    ${chosen.length?`<div class="chiffrage-compare-scroll"><div class="chiffrage-compare-grid" style="--compare-count:${chosen.length}"><div class="chiffrage-compare-label">${localLabel('Variante','Variante')}</div>${chosen.map(row=>`<h3>${escape(row.title)}</h3>`).join('')}
+    ${[[localLabel('Investissement initial','Anfangsinvestition'),'investment'],[localLabel('Annuel dès N+1','Jährlich ab N+1'),'annual'],[localLabel('Coût total sur 5 ans','Gesamtkosten über 5 Jahre'),'tco5y']].map(([label,key])=>`<div class="chiffrage-compare-label">${label}</div>${chosen.map((row,index)=>{const amount=row.result?.summary[key],base=chosen[0].result?.summary[key];return `<strong>${money(amount)}${index && amount!=null && base!=null?`<small class="chiffrage-compare-delta">${amount-base>0?'+':''}${money(amount-base)}</small>`:''}</strong>`;}).join('')}`).join('')}
+    <div class="chiffrage-compare-label">${localLabel('Périmètre','Umfang')}</div>${chosen.map(row=>`<div>${row.differences.map(label=>`<span class="chiffrage-compare-difference">${escape(label)}</span>`).join('')||'—'}</div>`).join('')}
+    <div class="chiffrage-compare-label">${localLabel('Base / tarifs','Grundlage / Tarife')}</div>${chosen.map(row=>`<div class="chiffrage-compare-meta">${escape(row.reference)}<br>${escape(row.tariff)}${row.result?.status==='incomplete'||!row.result?`<br><strong>${localLabel('À compléter','Unvollständig')}</strong>`:''}</div>`).join('')}</div></div>
+    ${new Set(chosen.map(row=>row.versions)).size>1?`<p class="chiffrage-warning">${localLabel('Versions tarifaires différentes : les écarts de prix ne proviennent pas uniquement du périmètre.','Unterschiedliche Tarifversionen: Preisunterschiede liegen nicht nur am Umfang.')}</p>`:''}`:''}</section>`;
 }
 
 function analysis() {
@@ -446,7 +523,7 @@ function analysis() {
         <tr><th>${t('chiffrage.total')}</th><td>${money(s.investment)}</td><td>${money(s.annual)}</td></tr>
         </tbody></table></div>
     </div></section>${state.internal ? `<section class="chiffrage-section"><h2>${t('chiffrage.workspace.df7d91fa23')}</h2>
-    <p>${t('chiffrage.tco')} : <strong>${incomplete?'≥ ':''}${money(s.tco5y)}</strong></p>
+    <p>${t('chiffrage.tco')} : <strong>${money(s.tco5y)}</strong></p>
     <p>${t('chiffrage.margin')} · ${t('chiffrage.workspace.735185619f')} : <strong>${money(s.software_margin_5y)}</strong></p>
     <p class="chiffrage-margin-note">${t('chiffrage.year2')} : ${money(s.software_margin_year2)} · ${t('chiffrage.year3')} : ${money(s.software_margin_year3plus)}</p>
     <p class="chiffrage-margin-note">LCM Gold : ${money(s.lcm.gold?.effective_value)} · Platinum : ${money(s.lcm.platinium?.effective_value)}</p>
@@ -461,7 +538,7 @@ function lineLabel(line) {
   const key=line.family==='prestations_module' ? line.item_code : `${line.family}/${line.product}/${line.item_code}`;
   const item=state.catalog.items.find(item=>moduleId(item)===key);
   const label=document.documentElement.lang === 'de' ? item?.label_de || item?.label_fr : item?.label_fr || item?.label_de;
-  if(label && (line.family==='prestations_module' || line.family==='innosolv' && line.product==='Versorger'))
+  if(label && (line.family==='prestations_module' || line.family==='abacus' || line.family==='innosolv'))
     return `${line.product==='Versorger' || line.item_code.includes('/Versorger/') ? localLabel('Énergie · ','Energie · ') : ''}${label}`;
   if(document.documentElement.lang !== 'de') return line.label;
   if(item?.label_de)return item.label_de;
@@ -510,17 +587,20 @@ function renderEditor() {
   const openDetails = [...root.querySelectorAll('details[open]')].map(node=>node.querySelector('summary')?.textContent);
   state.mode = 'editor';
   if (state.editorTab === 'rates' && !state.internal) state.editorTab = 'composer';
-  const tabs = [['composer',t('chiffrage.workspace.a9de3a2603')],['modules',t('chiffrage.workspace.613aec30d2')],['prestations',t('chiffrage.workspace.0370136a74')],['analysis',t('chiffrage.workspace.ab761b3579')],...(state.internal ? [['rates',t('chiffrage.workspace.ef73fa64a4')]] : [])];
+  const tabs = [['composer',t('chiffrage.workspace.a9de3a2603')],['modules',t('chiffrage.workspace.613aec30d2')],['prestations',t('chiffrage.workspace.0370136a74')],['offer',localLabel('Offre','Angebot')],['compare',localLabel('Comparer','Vergleichen')],['analysis',t('chiffrage.workspace.ab761b3579')],...(state.internal ? [['rates',t('chiffrage.workspace.ef73fa64a4')]] : [])];
   const legacy=state.quote && (Object.entries(state.activeVersions).some(([key,id])=>state.versions[key]!==id) || !state.draft.reference);
-  root.innerHTML = `${state.internal ? `<div class="chiffrage-internal-banner"><strong>${t('chiffrage.workspace.fdbe31da16')}</strong><button class="chiffrage-button" data-action="clientMode">${t('chiffrage.workspace.689c8df402')}</button></div>` : ''}${header()}${legacy ? `<div class="chiffrage-standard-notice"><div><strong>${localLabel('Ancien standard','Älterer Standard')}</strong><p>${localLabel('Ce chiffrage conserve ses tarifs d’origine. Crée une variante avec les références actuelles et tes valeurs saisies.','Diese Kalkulation behält ihre bisherigen Tarife. Erstelle eine Variante mit aktuellen Referenzen und deinen Eingaben.')}</p></div><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></div>` : ''}<div class="chiffrage-layout"><div class="chiffrage-workspace"><nav class="chiffrage-work-tabs" aria-label="${t('chiffrage.workspace.dd4e272518')}">${tabs.map(([key,label],i)=>`<button type="button" data-editor-tab="${key}" aria-current="${state.editorTab===key?'page':'false'}"><small>0${i+1}</small>${label}</button>`).join('')}</nav>
+  root.innerHTML = `${state.internal ? `<div class="chiffrage-internal-banner"><strong>${t('chiffrage.workspace.fdbe31da16')}</strong><button class="chiffrage-button" data-action="clientMode">${t('chiffrage.workspace.689c8df402')}</button></div>` : ''}${header()}${legacy ? `<div class="chiffrage-standard-notice"><div><strong>${localLabel('Ancien standard','Älterer Standard')}</strong><p>${localLabel('Ce chiffrage conserve ses tarifs d’origine. Crée une variante avec les références actuelles et tes valeurs saisies.','Diese Kalkulation behält ihre bisherigen Tarife. Erstelle eine Variante mit aktuellen Referenzen und deinen Eingaben.')}</p></div><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></div>` : ''}<div class="chiffrage-reference-ribbon"><span>${localLabel('Base de prestations','Leistungsgrundlage')} <strong>${escape(state.draft.reference?.label??'—')}</strong></span><span>${localLabel('Tarifs versionnés','Versionierte Tarife')} · ${escape(tariffLabel(state.catalog))}</span>${state.dirty?`<em>${localLabel('Ajustements en cours','Änderungen in Bearbeitung')}</em>`:''}</div><div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}"><div class="chiffrage-workspace"><nav class="chiffrage-work-tabs" aria-label="${t('chiffrage.workspace.dd4e272518')}">${tabs.map(([key,label],i)=>`<button type="button" data-editor-tab="${key}" aria-current="${state.editorTab===key?'page':'false'}"><small>0${i+1}</small>${label}</button>`).join('')}</nav>
     <div class="chiffrage-fields"><div class="chiffrage-tab-panel" data-tab-panel="composer" ${state.editorTab==='composer'?'':'hidden'}>${composerSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}${state.draft.products.includes('pce') ? `<section class="chiffrage-section"><h2>ProConcept ERP</h2><div class="chiffrage-choice-group"><label class="chiffrage-choice"><input type="checkbox" data-field="pce.finances" ${state.draft.pce.finances?'checked':''}>${t('chiffrage.finances')}</label><label class="chiffrage-choice"><input type="checkbox" data-field="pce.salaires" ${state.draft.pce.salaires?'checked':''}>${t('chiffrage.payroll')}</label></div></section>`:''}${extraSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="prestations" ${state.editorTab==='prestations'?'':'hidden'}>${serviceSection()}${technicalSection()}</div>
+    <div class="chiffrage-tab-panel" data-tab-panel="offer" ${state.editorTab==='offer'?'':'hidden'}><div id="chiffrageOffer">${offerSection()}</div></div>
+    <div class="chiffrage-tab-panel" data-tab-panel="compare" ${state.editorTab==='compare'?'':'hidden'}>${comparisonSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="analysis" ${state.editorTab==='analysis'?'':'hidden'}><div id="chiffrageAnalysis">${analysis()}</div><div id="chiffrageDetail">${lineDetail()}</div></div>
     ${state.internal ? `<div class="chiffrage-tab-panel" data-tab-panel="rates" ${state.editorTab==='rates'?'':'hidden'}>${rateInventory()}${technicalSection()}${extraSection()}${hostingSection('internal')}${state.quote ? `<div class="chiffrage-section"><button class="chiffrage-button" data-action="exportInternal">${t('chiffrage.exportInternal')}</button></div>` : ''}</div>`:''}
     <footer class="chiffrage-editor-footer"><div class="chiffrage-actions"><button class="chiffrage-button primary" data-action="save">${t('chiffrage.save')}</button>${state.quote ? `<button class="chiffrage-button" data-action="export">${t('chiffrage.export')}</button><button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button><button class="chiffrage-button" data-action="copyLink">${t('chiffrage.resumeDesktop')}</button><details class="chiffrage-more"><summary>${t('chiffrage.workspace.93674815f7')}</summary><div class="chiffrage-actions"><button class="chiffrage-button" data-action="revisions">${t('chiffrage.revisions')}</button><button class="chiffrage-button" data-action="archive">${t('chiffrage.archive')}</button><button class="chiffrage-button chiffrage-danger" data-action="delete">${t('chiffrage.workspace.66e03d8bb9')}</button></div></details>`:''}</div><button class="chiffrage-inline" data-action="${state.internal?'clientMode':'internalMode'}">${state.internal?t('chiffrage.workspace.444c26c24e'):t('chiffrage.workspace.04c546339b')}</button></footer><div id="chiffrageHistory"></div></div></div><div id="chiffrageSummary">${summary()}</div></div>`;
   for (const node of root.querySelectorAll('details')) if (openDetails.includes(node.querySelector('summary')?.textContent)) node.open=true;
   if (scroll) window.scrollTo({top:scroll,behavior:'instant'});
+  if (!state.map) void loadTerritory();
 }
 function refreshFinancials() {
   const summaryNode=root.querySelector('#chiffrageSummary');
@@ -529,9 +609,16 @@ function refreshFinancials() {
   if (analysisNode) analysisNode.innerHTML=analysis();
   const detail=root.querySelector('#chiffrageDetail');
   if (detail) detail.innerHTML=lineDetail();
+  const offer=root.querySelector('#chiffrageOffer');
+  if (offer) offer.innerHTML=offerSection();
   let gpLine; try {gpLine=calculateQuote(state.draft,state.catalog).lines.find(row=>row.explanation?.kind==='project_management');} catch {}
   root.querySelectorAll('[data-extra-total]').forEach(node=>{const [kind,index]=node.dataset.extraTotal.split('.');node.textContent=t('chiffrage.calculatedInvestment')+' '+money(extraInvestment(state.draft[kind][index]));});
   root.querySelectorAll('[data-gp-explanation]').forEach(node=>node.textContent=gpExplanation(gpLine));
+  root.querySelectorAll('[data-service-total]').forEach(node=>{
+    const row=state.draft.services.find(line=>line.item_code===node.dataset.serviceTotal);
+    const days=row?.days ?? row?.suggested_days;
+    node.textContent=money(row?.investment_override ?? (days == null ? null : days*(row.unit_day_rate??dayRate())));
+  });
 }
 
 function setValue(path, raw, isCheckbox = false) {
@@ -571,13 +658,18 @@ function setValue(path, raw, isCheckbox = false) {
     state.draft[parts[0]] ??= {};
     if (path === 'dimensions.population') {
       updatePopulation(state.draft.dimensions, raw === '' ? 0 : Number(raw), licensedPopulation);
-      for (const key of ['licensedPopulation', 'meters', 'taxes']) {
+      for (const key of ['licensedPopulation', 'meters', 'taxes', 'employees']) {
         const input = root.querySelector(`[data-field="dimensions.${key}"]`);
         if (input) input.value = state.draft.dimensions[key] ?? '';
       }
       const suggestion = root.querySelector('[data-volume-suggestion]');
       if (suggestion) suggestion.firstChild.textContent = t('chiffrage.volumeSuggested', {
         count: number(suggestedVolume(state.draft.dimensions.population)) });
+      if (state.draft.sql.users == null) for (const input of root.querySelectorAll('[data-field="sql.users"]'))
+        input.value=suggestedSqlUsers(state.draft.dimensions.population,state.catalog.parameters.sql.suggestion);
+      const lcm=calculateLcm(state.draft.dimensions.population,state.catalog.parameters.lcm,state.draft.lcm);
+      for (const key of ['gold','platinium']) if(state.draft.lcm[key]==null)
+        for(const input of root.querySelectorAll(`[data-field="lcm.${key}"]`))input.value=lcm[key]?.effective_value??'';
       return;
     }
     state.draft[parts[0]][parts[1]] = path === 'lcm.selection' ? raw :
@@ -688,6 +780,7 @@ async function open(id) {
   state.catalog = stored.catalog;
   history.replaceState(history.state,'',quoteAddress(id));
   state.editorTab = 'composer'; state.internal = false; state.dirty = false;
+  state.comparison=[];state.comparisonData=[];
   renderEditor();
 }
 
@@ -711,6 +804,13 @@ root.addEventListener('submit', async event => {
 });
 
 root.addEventListener('input', event => {
+  if (event.target.dataset.moduleSearch) {
+    const query=event.target.value.toLocaleLowerCase(document.documentElement.lang);
+    event.target.closest('details')?.querySelectorAll('.chiffrage-module-entry').forEach(node=>{
+      node.hidden=!node.textContent.toLocaleLowerCase(document.documentElement.lang).includes(query);
+    });
+    return;
+  }
   const path = event.target.dataset.field;
   if (!path || !state.draft) return;
   setValue(path, event.target.type === 'checkbox' ? event.target.checked : event.target.value,
@@ -718,6 +818,11 @@ root.addEventListener('input', event => {
   if (path === 'dimensions.population' || path === 'lcm.gold' || path === 'lcm.platinium') {
     const preview = root.querySelector('.chiffrage-lcm-prices');
     if (preview) preview.innerHTML = lcmPrices();
+  }
+  if (['dimensions.population','sql.users'].includes(path) && state.draft.sql.override==null) {
+    try { const price=calculateSql({population:state.draft.dimensions.population,...state.draft.sql},state.catalog.parameters.sql).amount.effective_value;
+      root.querySelectorAll('[data-field="sql.override"]').forEach(input=>input.value=price??'');
+    } catch { /* Missing reference is shown in the financial summary. */ }
   }
   root.querySelectorAll('[data-field]').forEach(input => {
     if (input !== event.target && input.dataset.field === path) input.value = event.target.value;
@@ -727,6 +832,12 @@ root.addEventListener('input', event => {
 });
 
 root.addEventListener('change', event => {
+  if (event.target.dataset.compare) {
+    const id=event.target.dataset.compare;
+    state.comparison=event.target.checked ? [...state.comparison,id].slice(0,3) :
+      state.comparison.filter(value=>value!==id);
+    void loadComparison(); return;
+  }
   if (event.target.hasAttribute('data-reference')) {
     const id = event.target.value;
     if (!id) return;
@@ -781,6 +892,37 @@ root.addEventListener('change', event => {
     if (detail) detail.innerHTML = lineDetail();
   }
 });
+
+async function loadComparison() {
+  try {
+    const rows=await Promise.all(state.comparison.map(id=>api('quote',undefined,{id})));
+    const data=await Promise.all(rows.map(async row=>{
+      const versions=row.snapshot.catalog_versions;
+      const catalog=await api('catalog',undefined,{versions:JSON.stringify(versions)});
+      const input=row.snapshot.input;
+      let result;try {result=calculateQuote(input,catalog.catalog);} catch {result=null;}
+      return {title:row.title,input,versions:JSON.stringify(versions),tariff:tariffLabel(catalog.catalog),
+        reference:input.reference?.label??'—',result,catalog:catalog.catalog};
+    }));
+    const base=data[0]?.input;
+    for(const row of data){
+      const selected=new Set(row.input.modules.map(moduleId));
+      const original=new Set(base?.modules.map(moduleId)??[]);
+      const names=ids=>ids.map(id=>{const item=row.catalog.items.find(item=>moduleId(item)===id);
+        return document.documentElement.lang==='de'?item?.label_de??item?.label_fr??id:item?.label_fr??item?.label_de??id;});
+      row.differences=[...names([...selected].filter(id=>!original.has(id))).map(name=>`+ ${name}`),
+        ...names([...original].filter(id=>!selected.has(id))).map(name=>`− ${name}`)];
+      for(const [key,label] of [['population',localLabel('Habitants','Einwohner')],['employees',localLabel('Collaborateurs','Mitarbeitende')],['meters',localLabel('Compteurs','Zähler')]])
+        if(base && row.input.dimensions[key]!==base.dimensions[key])row.differences.push(`${label} : ${number(row.input.dimensions[key])}`);
+      if(base && hostingIncluded(row.input)!==hostingIncluded(base))row.differences.push(`${t('chiffrage.hosting')} : ${t(hostingIncluded(row.input)?'chiffrage.yes':'chiffrage.no')}`);
+      if(base && row.input.lcm.selection!==base.lcm.selection)row.differences.push(`LCM : ${row.input.lcm.selection??'—'}`);
+      const days=input=>[...(input.moduleServices??[]),...(input.services??[])].reduce((sum,line)=>sum+(line.days??0),0);
+      if(base && days(row.input)!==days(base))row.differences.push(`${t('chiffrage.days')} : ${number(days(row.input))}`);
+    }
+    state.comparisonData=data;
+    if(state.mode==='editor' && state.editorTab==='compare')renderEditor();
+  }catch(error){notice(errorMessage(error),true);}
+}
 
 root.addEventListener('click', async event => {
   const tab = event.target.closest('[data-editor-tab]');

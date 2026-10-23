@@ -4,6 +4,7 @@ export function calculationError(error) {
   if (message === 'PCE standalone price required') return { code: 'pceStandalonePrice' };
   if (message === 'Hosting reference scope changed') return { code: 'hostingScopeChanged' };
   if (message === 'Hosting prices required') return { code: 'hostingPricesRequired' };
+  if (message === 'Service days required') return { code: 'serviceDaysRequired' };
   if (message.startsWith('SQL core price unconfirmed')) return { code: 'sqlPriceRequired' };
   if (message.startsWith('Licensed population')) return { code: 'populationInvalid' };
   const manual = message.match(/^Manual publisher prices required: ([\w.]+)/);

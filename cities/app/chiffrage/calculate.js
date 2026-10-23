@@ -152,14 +152,13 @@ export function calculateSql(input, rule) {
   const pricePerCore = rule.price_per_core == null ? null :
     finite(rule.price_per_core, 'SQL price per core');
   const useCores = input.population >= threshold;
-  if (useCores && pricePerCore == null && input.override == null)
-    throw new Error('SQL core price unconfirmed: enter an investment PV');
+  const missingPrice = useCores && pricePerCore == null && input.override == null;
   const calculated = useCores && pricePerCore == null ? null :
     useCores ? cores * pricePerCore : base + users * userPrice;
   return { usersSuggested, users, cores, regime: useCores ? 'core' : 'user',
     amount: calculated == null ? { calculated_value: null,
-      override_value: finite(input.override, 'SQL investment PV'),
-      effective_value: finite(input.override, 'SQL investment PV'), difference: null } :
+      override_value: missingPrice ? null : finite(input.override, 'SQL investment PV'),
+      effective_value: missingPrice ? null : finite(input.override, 'SQL investment PV'), difference: null } :
       effective(calculated, input.override),
     explanation: { threshold, base, userPrice, cores, pricePerCore } };
 }
@@ -198,9 +197,8 @@ export function calculateQuote(input, catalog) {
     .filter(line => line.category === 'hosting');
   if (hostingIncluded(input) && hosting.some(line => line.reference_products?.some(product =>
     !input.products.includes(product)))) throw new Error('Hosting reference scope changed');
-  if (input.hosting?.included === true && (!hosting.length || hosting.some(line =>
-    line.investment_pv == null || line.annual_pv == null)))
-    throw new Error('Hosting prices required');
+  const missingHosting = input.hosting?.included === true && (!hosting.length || hosting.some(line =>
+    line.investment_pv == null || line.annual_pv == null));
   const lines = [];
   const choices = new Set(input.products ?? []);
   const commercial = input.commercial ?? {};
@@ -395,12 +393,18 @@ export function calculateQuote(input, catalog) {
   const softwarePv = sum('annual_pv', software);
   const publisherSoftwarePa = sum('annual_pa', software.filter(line =>
     line.family === 'innosolv' || line.family === 'abacus'));
+  const missingTechnical = lines.filter(line => line.family === 'technique' && line.investment_pv == null)
+    .map(line => line.item_code);
   const missingServiceDays = input.reference ? lines.filter(line =>
     line.family === 'prestations_module' && line.selected_days == null).map(line => line.item_code) : [];
-  return { ...(missingServiceDays.length ? { status: 'incomplete',
-    issues: [{ code: 'serviceDaysRequired', items: missingServiceDays }] } : {}),
+  return { ...(missingServiceDays.length || missingTechnical.length || missingHosting ? { status: 'incomplete',
+    issues: [...(missingServiceDays.length ? [{ code: 'serviceDaysRequired', items: missingServiceDays }] : []),
+      ...(missingTechnical.length ? [{ code: 'technicalPriceRequired', items: missingTechnical }] : []),
+      ...(missingHosting ? [{ code: 'hostingPricesRequired' }] : [])] } : {}),
     lines, summary: { investment, annual,
       ...(input.reference ? { missing_service_days: missingServiceDays } : {}),
+    missing_technical: missingTechnical,
+    missing_hosting: missingHosting,
     tco5y: investment + annual * 4,
     tco5y_excluding_lcm: investment + (annual - (selectedLcm && selectedLcm !== 'none' ?
       lcm[selectedLcm].effective_value : 0)) * 4,
