@@ -1,5 +1,6 @@
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
 import verifiedCoats from './chiffrage/coats.js';
+import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261024-commercial-r1';
 
 const root = document.getElementById('offerClientRoot');
 const endpoint = 'https://ozdvmllgxduzquiujcbg.supabase.co/functions/v1/chiffrage?action=clientOffer';
@@ -41,7 +42,42 @@ const mapRegion = (map, offer) => {
 };
 function renderOffer(o, map) {
   const id=safeId(o.bfs_id), canton=safeCanton(o.canton), coat=verifiedCoats[id];
-  const buckets = ['solutions','partners','hosting'];
+  const names = new Map(offerPriceGroups.map(([key,fr,de])=>[key,label(fr,de)]));
+  const current = o.version >= 2 && Array.isArray(o.breakdown);
+  const rows = current ? o.breakdown : ['solutions','partners','hosting'].map(key=>({
+    key,investment:o.buckets?.[key]?.investment ?? 0,annual:o.buckets?.[key]?.annual ?? 0
+  }));
+  const legacyNames={solutions:label('Solutions Prime','Prime-Lösungen'),
+    partners:label('Partenaires','Partner'),hosting:label('Hébergement','Hosting')};
+  const row = entry => `<div class="client-offer-price-row">
+    <h4>${enc(names.get(entry.key) || legacyNames[entry.key] || entry.key)}</h4>
+    <div class="client-offer-price-values">
+      <div><small>${label('Investissement','Investition')}</small><strong>${money(entry.investment)}</strong></div>
+      <div><small>${label('Annuel dès N+1','Jährlich ab N+1')}</small><strong>${money(entry.annual)}</strong></div>
+    </div>
+  </div>`;
+  const content = (title, keys, hint) => {
+    const entries=rows.filter(x=>keys.includes(x.key));
+    return entries.length ? `<section class="client-offer-price-section">
+      <h3>${title}</h3>${hint ? `<p>${hint}</p>` : ''}
+      <div class="client-offer-price-list">${entries.map(row).join('')}</div>
+    </section>` : '';
+  };
+  const priceDetail = current ? [
+    content(label('Logiciels et maintenance','Software und Wartung'),['licenses'],''),
+    content(label('Votre accompagnement','Ihre Begleitung'),
+      ['implementation','migration','management','training','otherServices'],
+      label('Installation, reprise, conduite de projet et prise en main : chaque étape est chiffrée séparément.',
+        'Einrichtung, Migration, Projektleitung und Einführung: Jede Etappe ist separat ausgewiesen.')),
+    content(label('Technique et services associés','Technik und zusätzliche Leistungen'),
+      ['database','primePartners','lcm','hosting'],'')
+  ].join('') : content(label('Répartition du prix','Preisaufteilung'),
+    ['solutions','partners','hosting'],'');
+  const scope = current && Array.isArray(o.scope) ? o.scope.map(group=>`<div class="client-offer-module-group">
+    <h4>${enc(group.product)}</h4>
+    <ul>${group.items.map(entry=>`<li>${enc(label(entry.fr,entry.de))}</li>`).join('')}</ul>
+  </div>`).join('') :
+    `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
   root.innerHTML = `<article class="chiffrage-offer client-offer">
     <header class="chiffrage-offer-hero">
       <div class="chiffrage-offer-brand"><img src="public/prime-logo-negative.svg" alt="Prime Technologies" width="137" height="60"><span>${label('Communes / Proposition','Gemeinden / Angebot')}</span></div>
@@ -60,21 +96,14 @@ function renderOffer(o, map) {
       <div class="chiffrage-offer-horizon"><span>${label('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${money(o.amounts.tco5y)}</strong></div>
     </header>
     <div class="chiffrage-offer-body client-offer-body">
-      <section><p class="chiffrage-kicker">${label('Votre périmètre','Ihr Umfang')}</p>
-        <h3>${label('Les solutions retenues','Ausgewählte Lösungen')}</h3>
-        <div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>
+      <section class="client-offer-scope"><p class="chiffrage-kicker">${label('Votre périmètre','Ihr Umfang')}</p>
+        <h3>${label('Les solutions et modules retenus','Ausgewählte Lösungen und Module')}</h3>
+        <div class="client-offer-module-grid">${scope}</div>
+        ${o.lcm ? `<div class="client-offer-lcm"><span>LCM</span><strong>${enc(o.lcm)}</strong></div>` : ''}
       </section>
-      <section><p class="chiffrage-kicker">${label('Lecture du prix','Preisaufteilung')}</p>
-        <h3>${label('D’où viennent ces montants','Zusammensetzung der Beträge')}</h3>
-        <div class="chiffrage-table-scroll"><table class="chiffrage-detail chiffrage-financial-breakdown chiffrage-offer-breakdown">
-          <thead><tr><th>${label('Catégorie','Bereich')}</th><th>${label('Investissement','Investition')}</th><th>${label('Annuel','Jährlich')}</th></tr></thead>
-          <tbody>${buckets.map(key => `<tr><th scope="row">${label(title(key),{solutions:'Prime-Lösungen',partners:'Partner',hosting:'Hosting'}[key])}</th>
-            <td><span class="chiffrage-financial-label">${label('Investissement','Investition')}</span>${money(o.buckets[key]?.investment??0)}</td>
-            <td><span class="chiffrage-financial-label">${label('Annuel','Jährlich')}</span>${money(o.buckets[key]?.annual??0)}</td></tr>`).join('')}
-            <tr class="chiffrage-offer-breakdown-total"><th scope="row">${label('Total','Gesamt')}</th>
-            <td><span class="chiffrage-financial-label">${label('Investissement','Investition')}</span>${money(o.amounts.investment)}</td>
-            <td><span class="chiffrage-financial-label">${label('Annuel','Jährlich')}</span>${money(o.amounts.annual)}</td></tr>
-          </tbody></table></div>
+      <section class="client-offer-breakdown"><p class="chiffrage-kicker">${label('Lecture du prix','Preisaufteilung')}</p>
+        <h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
+        ${priceDetail}
       </section>
     </div>
     <footer class="client-offer-footer">© Prime Technologies SA · ${label('Proposition confidentielle','Vertrauliches Angebot')}</footer>
@@ -88,7 +117,7 @@ async function load() {
       cache: 'no-store', referrerPolicy:'no-referrer' });
     if (!response.ok) throw Error('unavailable');
     const offer = await response.json();
-    if (offer.version !== 1 || !offer.amounts || !offer.buckets) throw Error('invalid');
+    if (![1,2].includes(offer.version) || !offer.amounts || !offer.buckets) throw Error('invalid');
     let map=null;
     try {
       const m=await fetch('public/data/swiss-map-v1.json', { cache:'force-cache' });
