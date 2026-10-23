@@ -126,7 +126,7 @@ function listFigures(snapshot) {
   if (!s) return `<span>${t('chiffrage.ui.savedUnavailable')}</span>`;
   return `<span class="chiffrage-saved-tco"><span>${t('chiffrage.ui.savedTco')}${s.incomplete ? ` · ${t('chiffrage.ui.provisional')}` : ''}</span><b>${money(s.tco5y)}</b></span>
     <span class="chiffrage-saved-parts"><span>${t('chiffrage.investment')}<b>${money(s.investment)}</b></span><span>${t('chiffrage.annual')}<b>${money(s.annual)}</b></span></span>
-    <span class="chiffrage-saved-formula">${t('chiffrage.ui.savedFormula')}</span>`;
+    `;
 }
 function renderList() {
   listObserver?.disconnect();
