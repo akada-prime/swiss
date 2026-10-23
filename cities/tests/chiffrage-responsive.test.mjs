@@ -35,7 +35,7 @@ test('shared Prime controls and quote typography do not require cascade override
   assert.match(css, /chiffrage-mobile-summary-figures strong\{[^}]*font-size:clamp\(27px,7\.2vw,33px\)/);
   assert.match(skin, /html\[data-skin="helvetia"\][\s\S]*?--pc-field-bg:#f4f6f8;--pc-field-border:#b9c3ca/);
   assert.doesNotMatch(view, /class="chiffrage-saved-formula"/);
-  assert.match(index, /main\.css\?v=20261023-design-system-r9/);
+  assert.match(index, /main\.css\?v=20261024-client-offer-v1/);
 });
 
 
