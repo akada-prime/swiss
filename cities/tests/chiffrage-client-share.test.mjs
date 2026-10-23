@@ -254,3 +254,35 @@ test('share panels are dismissible and link revocation is a single server action
   assert.match(revoke,/await api\('revokeOffer'/);
   assert.doesNotMatch(revoke,/window\.confirm/);
 });
+
+
+test('successful customer view uses a private atomic counter RPC, never a visitor ledger',()=>{
+  const server=readFileSync(new URL('../supabase/functions/chiffrage/server.mjs',import.meta.url),'utf8');
+  const sql=readFileSync(new URL('../supabase/migrations/20261024140000_client_offer_open_counter.sql',import.meta.url),'utf8');
+  const projection=readFileSync(new URL('../supabase/functions/chiffrage/client-projection.mjs',import.meta.url),'utf8');
+  assert.match(server,/rpc\/record_chiffrage_client_open/);
+  assert.match(server,/method: 'POST', payload: \{ p_token_hash: tokenHash \}/);
+  assert.match(sql,/open_count = open_count \+ 1/);
+  assert.match(sql,/revoked_at is null[\s\S]*?expires_at > now\(\)/);
+  assert.match(sql,/revoke all on function public\.record_chiffrage_client_open\(text\)[\s\S]*?from public, anon, authenticated/);
+  assert.doesNotMatch(sql,/create table [^;]*(?:visitor|user_agent|ip_address)/i);
+  assert.match(projection,/open_count:Number\(row\.open_count \?\? 0\)/);
+  assert.match(projection,/last_opened_at:row\.last_opened_at/);
+});
+
+test('owner can fold shared links, revoke directly and refresh aggregate counts',()=>{
+  const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
+  assert.match(view,/data-action="closeSharePanel"/);
+  assert.match(view,/action === 'closeSharePanel'/);
+  assert.match(view,/data-action="manageShares"/);
+  assert.match(view,/data-action="revokeSharedOffer"/);
+  assert.match(view,/open_count/);
+  assert.match(view,/last_opened_at/);
+});
+
+test('midnight offer typography is legible in light-skin cascade without important',()=>{
+  const css=readFileSync(new URL('../app/styles/client-offer.css',import.meta.url),'utf8');
+  assert.match(css,/html\[data-skin\] \.client-offer \.client-offer-body :is\(h3,h4\)\{color:#f8fbff\}/);
+  assert.match(css,/background:linear-gradient\(155deg,#253955/);
+  assert.doesNotMatch(css,/!important/);
+});
