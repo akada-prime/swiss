@@ -157,7 +157,7 @@ html[data-skin="light"] .save-button{background:var(--skin-accent);color:#fff}
 
 /* Text on light surfaces. Existing status, series and product colours keep
    their semantic palette; shared labels use the skin's contrast contract. */
-html[data-skin="helvetia"],html[data-skin="light"]{--pc-text:var(--skin-text);--pc-muted:var(--skin-muted);--pc-card-bg:var(--skin-card);--pc-card-line:var(--skin-border-soft);--pc-field-bg:var(--skin-control)}
+html[data-skin="helvetia"],html[data-skin="light"]{--pc-text:var(--skin-text);--pc-muted:var(--skin-muted);--pc-card-bg:var(--skin-card);--pc-card-line:var(--skin-border-soft)}
 html[data-skin="helvetia"] :is(.view-intro-copy,.intro-copy,.intro-count,.kpi-card p,.result-line,.table-limit,.stats-card p,.news-panel p,.story-panel p,.roadmap-panel p,.maplibre-metric span,.maplibre-metric small),
 html[data-skin="light"] :is(.view-intro-copy,.intro-copy,.intro-count,.kpi-card p,.result-line,.table-limit,.stats-card p,.news-panel p,.story-panel p,.roadmap-panel p,.maplibre-metric span,.maplibre-metric small){color:var(--skin-secondary)}
 html[data-skin="helvetia"] :is(.view-tab,.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small),
