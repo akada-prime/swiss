@@ -280,6 +280,8 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
   deux ou trois variantes enregistrées de la commune, écarts de montants et de
   périmètre, signalement des versions tarifaires différentes.
 - Vérification : 116 tests, build, rapprochement Tolochenaz à 0,00 CHF sur le
-  périmètre déjà fourni. Recette navigateur locale indisponible dans cet
-  environnement (Chromium absent et navigateur distant isolé du serveur local) ;
-  parcours visuel en production à contrôler après publication.
+  périmètre déjà fourni. Aperçu fictif servi sur un commit immuable dans le
+  navigateur distant : configuration desktop, offre, les six largeurs et
+  apparence claire/allemand à 360 px contrôlés sans débordement. Le repère
+  territorial et le contraste du titre en clair ont été corrigés. L’interface réelle
+  authentifiée et les tarifs privés restent à contrôler après publication.

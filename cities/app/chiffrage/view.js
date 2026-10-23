@@ -394,9 +394,10 @@ function lcmSection() {
 }
 
 function territoryMap() {
-  if (!state.map) return `<span>${escape(state.draft.canton)}</span>`;
+  const cantonName={JU:'Jura',VD:'Vaud',GE:'Genève',FR:'Fribourg',NE:'Neuchâtel',VS:'Valais',BE:'Berne'}[state.draft.canton]??state.draft.canton;
+  if (!state.map) return `<span>${escape(cantonName)}</span>`;
   const selected=state.map.municipalities.find(row=>Number(row.id)===state.draft.bfs_id);
-  if (!selected) return `<span>${escape(state.draft.canton)}</span>`;
+  if (!selected) return `<span>${escape(cantonName)}</span>`;
   const coords=[...selected.d.matchAll(/(-?\d+),(-?\d+)/g)].map(match=>[Number(match[1]),Number(match[2])]);
   const x=coords.reduce((sum,point)=>sum+point[0],0)/coords.length;
   const y=coords.reduce((sum,point)=>sum+point[1],0)/coords.length;
