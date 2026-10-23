@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { suggestedVolume, updatePopulation, setEnergy, hostingIncluded } from '../app/chiffrage/configuration.js';
+import { suggestedVolume, suggestedEmployees, updatePopulation, setEnergy, hostingIncluded } from '../app/chiffrage/configuration.js';
 import { calculateQuote, licensedPopulation } from '../app/chiffrage/calculate.js';
 import { calculationError } from '../app/chiffrage/errors.js';
 
@@ -17,6 +17,25 @@ test('population changes update suggestions but retain human volumes and histori
   const historic = { population: 1403, meters: 0, taxes: 468 };
   updatePopulation(historic, 2000, licensedPopulation);
   assert.deepEqual(historic, { population: 2000, meters: 0, taxes: 468 });
+});
+
+test('staff estimate follows the given steps and keeps a human value', () => {
+  for(const [population,expected] of [[999,10],[1000,20],[2000,25],[3000,30],
+    [4000,40],[5000,50],[10000,100]])assert.equal(suggestedEmployees(population),expected);
+  const dimensions={population:3000,employees:30};
+  updatePopulation(dimensions,4000,licensedPopulation);
+  assert.equal(dimensions.employees,40);
+  dimensions.employees=37;
+  updatePopulation(dimensions,5000,licensedPopulation);
+  assert.equal(dimensions.employees,37);
+});
+
+test('missing hosting prices keep the known amounts and mark the quote incomplete', () => {
+  const input={...draft(),hosting:{included:true},primeLines:[{family:'prime',category:'hosting',
+    label:'Hosting',investment_pv:null,annual_pv:null}],partners:[]};
+  const result=calculateQuote(input,catalog);
+  assert.equal(result.status,'incomplete');
+  assert.equal(result.summary.missing_hosting,true);
 });
 
 const catalog = { items: ['501','502','533'].map(item_code => ({ vendor: 'innosolv',
@@ -70,7 +89,7 @@ test('hosting choice excludes retained rows from investment, annual, TCO and cos
   input.hosting.included = true;
   assert.deepEqual(calculateQuote(input, simpleCatalog), historic);
   input.primeLines = [];
-  assert.throws(() => calculateQuote(input, simpleCatalog), /Hosting prices required/);
+  assert.equal(calculateQuote(input, simpleCatalog).status, 'incomplete');
 });
 
 test('known calculation failures produce safe actionable categories without leaking internal errors', () => {

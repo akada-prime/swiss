@@ -55,8 +55,12 @@ Un zéro saisi volontairement reste une valeur valide.
 
 Les quatre Excel sont des références commerciales nommées, pas une nouvelle
 loi population/jours. Certaines options Abacus n'ont pas de jours explicites.
-L'hébergement retrouvé dans l'exemple retenu est limité à son périmètre ERP :
-il ne constitue pas un nouveau tarif universel pour les autres combinaisons.
+L'hébergement ProConcept provient de l'exemple Tolochenaz. Alex a confirmé le
+23 octobre 2026 que l'hébergement Abacus reprend le même investissement et le
+même annuel. Un second préréglage privé, limité au choix Abacus, reprend donc
+les montants de cette référence ; le choix simultané des deux ERP ne crée qu'une
+seule ligne. Les autres combinaisons sans ces ERP ne reçoivent aucun tarif
+inventé. Les lignes déjà personnalisées conservent leurs montants.
 
 `prepare-release.mjs` prépare l'import inactif, l'activation atomique protégée
 contre un changement des versions actives, et le retour aux versions précédentes.
@@ -99,3 +103,10 @@ Les valeurs Abacus de Fribourg dans `ABA_Client` possèdent une colonne
 monétaire supplémentaire avant les jours. Le préparateur reconnaît désormais
 la colonne des jours de chaque édition du classeur et ne traite jamais la
 valeur monétaire calculée comme une durée.
+
+Le 23 octobre 2026, la version commerciale privée `innosolv-2027-configurateur-20261023-r3`
+a ajouté le préréglage d'hébergement Abacus en reprenant à l'identique les
+montants du préréglage ProConcept. Les autres paramètres et l'ancien préréglage
+sont inchangés. Les anciens chiffrages restent figés sur leur version ; une
+variante explicite permet d'appliquer la nouvelle référence sans écraser les
+montants saisis manuellement.

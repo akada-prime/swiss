@@ -1,5 +1,11 @@
 # État de reprise — Prime Communes 2.0
 
+> **Chiffrage · hébergement Abacus, 23.10.2026 :** Alex confirme la même règle
+> d'hébergement que ProConcept. La version commerciale privée r3 reprend le
+> montant ProConcept pour Abacus, sans changer les autres paramètres ni les
+> anciens chiffrages. Vérification de l'égalité des montants et de l'absence de
+> doublon si les deux ERP sont choisis.
+
 > **Chiffrage 3.0 — essai d’interface, 29.09.2026 :** l’éditeur réorganise le
 > chiffrage en Composer, Licences et options, Prestations, PV et taux, Analyse.
 > Le résumé client distingue investissement, annuel et cinq ans ; les marges et
@@ -255,3 +261,43 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
 - Préparation Excel : les jours Abacus du fichier Fribourg étaient lus depuis
   une colonne monétaire à cause d'un décalage. La colonne de jours est
   identifiée par le libellé et sa valeur source, puis contrôlée séparément.
+
+### Configurateur · présentation de l’offre et corrections · 23 octobre 2026
+
+- Évolution du moteur partagé : SQL sans prix par cœur et hébergement sans
+  référence laissent les montants connus visibles, avec état incomplet et export
+  bloqué. Aucun tarif SQL extrapolé de Fribourg ni modification des catalogues
+  privés et des anciennes révisions.
+- Estimation des collaborateurs selon la grille fournie, en conservant les
+  nombres personnalisés. Gold et Platinum, SQL et hébergement montrent les
+  valeurs effectives directement dans leurs contrôles.
+- Choix initiaux, dimensionnement et références visibles ensemble ; modules
+  retenus par logiciel et domaine, recherche des options ; prestations en
+  lignes compactes. Carte communale issue de la géométrie publique existante,
+  avec repli sur le canton sans faux blason.
+- Une vue Offre client distincte utilise les mêmes résultats : investissement,
+  annuel dès la deuxième année et un seul coût sur cinq ans. Comparaison de
+  deux ou trois variantes enregistrées de la commune, écarts de montants et de
+  périmètre, signalement des versions tarifaires différentes.
+- Vérification : 116 tests, build, rapprochement Tolochenaz à 0,00 CHF sur le
+  périmètre déjà fourni. Aperçu fictif servi sur un commit immuable dans le
+  navigateur distant : configuration desktop, offre, les six largeurs et
+  apparence claire/allemand à 360 px contrôlés sans débordement. Le repère
+  territorial et le contraste du titre en clair ont été corrigés. L’interface réelle
+  authentifiée et les tarifs privés restent à contrôler après publication.
+
+### Chiffrage · reprise visuelle · 23 octobre 2026
+
+- Reprise de la livraison #45 : logo officiel, tableaux alignés, titres lisibles,
+  licences et partenaires compacts, comparaison structurée de 2–3 variantes.
+- Chemins publics corrigés pour la carte, les emblèmes cantonaux et le logo,
+  selon le mode source GitHub Pages ou le build Vite. Six blasons communaux
+  vérifiés et stockés avec leur provenance ; recherche OFS vérifiée pour les autres.
+- Résultats sauvegardés utilisés en priorité en comparaison, requêtes concurrentes
+  protégées et variations financières visibles après modification.
+- 122 tests et build réussis ; matrice statique de 144 contrôles (six largeurs,
+  deux apparences, FR/DE), plus parcours de saisie/sauvegarde/comparaison sur
+  données fictives. Captures et limites : `docs/chiffrage-validation-visuelle.md`.
+- Moteur et catalogues privés inchangés. Pas de modification de données live.
+  Les catalogues privés, le rapprochement Excel et l’export réel n’ont pas été
+  revérifiés faute de session privée ; ne pas annoncer une recette métier complète.

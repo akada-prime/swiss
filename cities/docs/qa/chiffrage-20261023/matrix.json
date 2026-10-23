@@ -1,0 +1,1278 @@
+{
+  "results": [
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 360,
+      "tab": "composer",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 360,
+      "tab": "modules",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 360,
+      "tab": "prestations",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 360,
+      "tab": "offer",
+      "scroll": 360,
+      "heroScroll": 282,
+      "heroWidth": 282
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 360,
+      "tab": "analysis",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 360,
+      "tab": "compare",
+      "scroll": 360,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 430,
+      "tab": "composer",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 430,
+      "tab": "modules",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 430,
+      "tab": "prestations",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 430,
+      "tab": "offer",
+      "scroll": 430,
+      "heroScroll": 352,
+      "heroWidth": 352
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 430,
+      "tab": "analysis",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 430,
+      "tab": "compare",
+      "scroll": 430,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 768,
+      "tab": "composer",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 768,
+      "tab": "modules",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 768,
+      "tab": "prestations",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 768,
+      "tab": "offer",
+      "scroll": 768,
+      "heroScroll": 657,
+      "heroWidth": 657
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 768,
+      "tab": "analysis",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 768,
+      "tab": "compare",
+      "scroll": 768,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1366,
+      "tab": "composer",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1366,
+      "tab": "modules",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1366,
+      "tab": "prestations",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1366,
+      "tab": "offer",
+      "scroll": 1366,
+      "heroScroll": 1195,
+      "heroWidth": 1195
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1366,
+      "tab": "analysis",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1366,
+      "tab": "compare",
+      "scroll": 1366,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1920,
+      "tab": "composer",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1920,
+      "tab": "modules",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1920,
+      "tab": "prestations",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1920,
+      "tab": "offer",
+      "scroll": 1920,
+      "heroScroll": 1734,
+      "heroWidth": 1734
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1920,
+      "tab": "analysis",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1920,
+      "tab": "compare",
+      "scroll": 1920,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 2560,
+      "tab": "composer",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 2560,
+      "tab": "modules",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 2560,
+      "tab": "prestations",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 2560,
+      "tab": "offer",
+      "scroll": 2560,
+      "heroScroll": 2374,
+      "heroWidth": 2374
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 2560,
+      "tab": "analysis",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 2560,
+      "tab": "compare",
+      "scroll": 2560,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 360,
+      "tab": "composer",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 360,
+      "tab": "modules",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 360,
+      "tab": "prestations",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 360,
+      "tab": "offer",
+      "scroll": 360,
+      "heroScroll": 282,
+      "heroWidth": 282
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 360,
+      "tab": "analysis",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 360,
+      "tab": "compare",
+      "scroll": 360,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 430,
+      "tab": "composer",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 430,
+      "tab": "modules",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 430,
+      "tab": "prestations",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 430,
+      "tab": "offer",
+      "scroll": 430,
+      "heroScroll": 352,
+      "heroWidth": 352
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 430,
+      "tab": "analysis",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 430,
+      "tab": "compare",
+      "scroll": 430,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 768,
+      "tab": "composer",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 768,
+      "tab": "modules",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 768,
+      "tab": "prestations",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 768,
+      "tab": "offer",
+      "scroll": 768,
+      "heroScroll": 657,
+      "heroWidth": 657
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 768,
+      "tab": "analysis",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 768,
+      "tab": "compare",
+      "scroll": 768,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1366,
+      "tab": "composer",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1366,
+      "tab": "modules",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1366,
+      "tab": "prestations",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1366,
+      "tab": "offer",
+      "scroll": 1366,
+      "heroScroll": 1195,
+      "heroWidth": 1195
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1366,
+      "tab": "analysis",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1366,
+      "tab": "compare",
+      "scroll": 1366,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1920,
+      "tab": "composer",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1920,
+      "tab": "modules",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1920,
+      "tab": "prestations",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1920,
+      "tab": "offer",
+      "scroll": 1920,
+      "heroScroll": 1734,
+      "heroWidth": 1734
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1920,
+      "tab": "analysis",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1920,
+      "tab": "compare",
+      "scroll": 1920,
+      "cards": 3
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 2560,
+      "tab": "composer",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 2560,
+      "tab": "modules",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 2560,
+      "tab": "prestations",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 2560,
+      "tab": "offer",
+      "scroll": 2560,
+      "heroScroll": 2374,
+      "heroWidth": 2374
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 2560,
+      "tab": "analysis",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 2560,
+      "tab": "compare",
+      "scroll": 2560,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 360,
+      "tab": "composer",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 360,
+      "tab": "modules",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 360,
+      "tab": "prestations",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 360,
+      "tab": "offer",
+      "scroll": 360,
+      "heroScroll": 282,
+      "heroWidth": 282
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 360,
+      "tab": "analysis",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 360,
+      "tab": "compare",
+      "scroll": 360,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 430,
+      "tab": "composer",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 430,
+      "tab": "modules",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 430,
+      "tab": "prestations",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 430,
+      "tab": "offer",
+      "scroll": 430,
+      "heroScroll": 352,
+      "heroWidth": 352
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 430,
+      "tab": "analysis",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 430,
+      "tab": "compare",
+      "scroll": 430,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 768,
+      "tab": "composer",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 768,
+      "tab": "modules",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 768,
+      "tab": "prestations",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 768,
+      "tab": "offer",
+      "scroll": 768,
+      "heroScroll": 657,
+      "heroWidth": 657
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 768,
+      "tab": "analysis",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 768,
+      "tab": "compare",
+      "scroll": 768,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1366,
+      "tab": "composer",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1366,
+      "tab": "modules",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1366,
+      "tab": "prestations",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1366,
+      "tab": "offer",
+      "scroll": 1366,
+      "heroScroll": 1195,
+      "heroWidth": 1195
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1366,
+      "tab": "analysis",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1366,
+      "tab": "compare",
+      "scroll": 1366,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1920,
+      "tab": "composer",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1920,
+      "tab": "modules",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1920,
+      "tab": "prestations",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1920,
+      "tab": "offer",
+      "scroll": 1920,
+      "heroScroll": 1734,
+      "heroWidth": 1734
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1920,
+      "tab": "analysis",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1920,
+      "tab": "compare",
+      "scroll": 1920,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 2560,
+      "tab": "composer",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 2560,
+      "tab": "modules",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 2560,
+      "tab": "prestations",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 2560,
+      "tab": "offer",
+      "scroll": 2560,
+      "heroScroll": 2374,
+      "heroWidth": 2374
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 2560,
+      "tab": "analysis",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 2560,
+      "tab": "compare",
+      "scroll": 2560,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 360,
+      "tab": "composer",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 360,
+      "tab": "modules",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 360,
+      "tab": "prestations",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 360,
+      "tab": "offer",
+      "scroll": 360,
+      "heroScroll": 282,
+      "heroWidth": 282
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 360,
+      "tab": "analysis",
+      "scroll": 360,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 360,
+      "tab": "compare",
+      "scroll": 360,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 430,
+      "tab": "composer",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 430,
+      "tab": "modules",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 430,
+      "tab": "prestations",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 430,
+      "tab": "offer",
+      "scroll": 430,
+      "heroScroll": 352,
+      "heroWidth": 352
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 430,
+      "tab": "analysis",
+      "scroll": 430,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 430,
+      "tab": "compare",
+      "scroll": 430,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 768,
+      "tab": "composer",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 768,
+      "tab": "modules",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 768,
+      "tab": "prestations",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 768,
+      "tab": "offer",
+      "scroll": 768,
+      "heroScroll": 657,
+      "heroWidth": 657
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 768,
+      "tab": "analysis",
+      "scroll": 768,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 768,
+      "tab": "compare",
+      "scroll": 768,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1366,
+      "tab": "composer",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1366,
+      "tab": "modules",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1366,
+      "tab": "prestations",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1366,
+      "tab": "offer",
+      "scroll": 1366,
+      "heroScroll": 1195,
+      "heroWidth": 1195
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1366,
+      "tab": "analysis",
+      "scroll": 1366,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1366,
+      "tab": "compare",
+      "scroll": 1366,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1920,
+      "tab": "composer",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1920,
+      "tab": "modules",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1920,
+      "tab": "prestations",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1920,
+      "tab": "offer",
+      "scroll": 1920,
+      "heroScroll": 1734,
+      "heroWidth": 1734
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1920,
+      "tab": "analysis",
+      "scroll": 1920,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1920,
+      "tab": "compare",
+      "scroll": 1920,
+      "cards": 3
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 2560,
+      "tab": "composer",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 2560,
+      "tab": "modules",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 2560,
+      "tab": "prestations",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 2560,
+      "tab": "offer",
+      "scroll": 2560,
+      "heroScroll": 2374,
+      "heroWidth": 2374
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 2560,
+      "tab": "analysis",
+      "scroll": 2560,
+      "heroScroll": 0,
+      "heroWidth": 0
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 2560,
+      "tab": "compare",
+      "scroll": 2560,
+      "cards": 3
+    }
+  ],
+  "failures": [],
+  "errors": []
+}

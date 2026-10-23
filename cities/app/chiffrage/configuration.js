@@ -4,6 +4,14 @@ export const isEnergyModule = item => item.vendor === 'innosolv' &&
   item.product === 'Versorger' && energyCodes.includes(item.item_code);
 export const suggestedVolume = population =>
   Math.ceil(Math.max(0, Number(population) || 0) / 3 / 500) * 500;
+export const suggestedEmployees = population => {
+  const count = Math.max(0, Number(population) || 0);
+  if (count < 1000) return 10;
+  if (count < 2000) return 20;
+  if (count < 3000) return 25;
+  if (count < 4000) return 30;
+  return Math.min(100, Math.floor(count / 1000) * 10);
+};
 
 export function updatePopulation(dimensions, population, roundPopulation) {
   const previous = dimensions.population;
@@ -12,6 +20,8 @@ export function updatePopulation(dimensions, population, roundPopulation) {
   }
   if (dimensions.licensedPopulation === roundPopulation(previous))
     dimensions.licensedPopulation = roundPopulation(population);
+  if (dimensions.employees === suggestedEmployees(previous))
+    dimensions.employees = suggestedEmployees(population);
   dimensions.population = population;
 }
 
