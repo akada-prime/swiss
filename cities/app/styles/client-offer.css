@@ -43,7 +43,7 @@
 
 /* The customer detail continues the deep-blue Prime presentation.
    Richer commercial scope, but no internal editor controls or raw line data. */
-.client-offer .client-offer-body{display:grid;grid-template-columns:1fr;gap:38px;background:linear-gradient(160deg,#121c30 0%,#101a2b 60%,#162b43 100%);color:#edf4ff;padding:clamp(24px,4vw,60px)}
+.client-offer .client-offer-body{display:grid;grid-template-columns:1fr;gap:38px;background:linear-gradient(155deg,#253955 0%,#1a2f4d 60%,#243b5a 100%);color:#edf4ff;padding:clamp(24px,4vw,60px)}
 .client-offer .client-offer-body .chiffrage-kicker{color:#9db4d2;font-size:13px}
 .client-offer .client-offer-body h3{font-size:clamp(24px,3.1vw,34px);color:#fff;line-height:1.15;margin:0 0 22px}
 .client-offer .client-offer-scope{padding:0 0 32px;border-bottom:1px solid #d5e7fa30}
@@ -75,3 +75,14 @@
  .client-offer .client-offer-price-values strong{font-size:17px}
  .client-offer .client-offer-price-list{border-radius:12px}
 }
+
+
+/* Readable navy offer, including Helvetia/light theme selectors defined globally.
+   This is a scoped customer surface, not a new global typography cascade. */
+html[data-skin] .client-offer .client-offer-body :is(h3,h4){color:#f8fbff}
+html[data-skin] .client-offer .client-offer-body .client-offer-price-section h3{color:#deedff}
+html[data-skin] .client-offer .client-offer-body .client-offer-price-row h4{color:#f8fbff}
+html[data-skin] .client-offer .client-offer-body :is(p,li){color:#cad9ee}
+html[data-skin] .client-offer .client-offer-body .chiffrage-kicker{color:#bdcde3}
+.client-offer .client-offer-price-row{background:#1a2d48}
+.client-offer .client-offer-module-group{background:#ffffff0b;border-color:#c0d6ee50}
