@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import handler, { signSession } from '../supabase/functions/chiffrage/server.mjs';
-import { publicOfferFromSaved, customerModuleScope } from '../supabase/functions/chiffrage/client-projection.mjs';
+import { publicOfferFromSaved, publicLinkMetadata, customerModuleScope } from '../supabase/functions/chiffrage/client-projection.mjs';
 import { offerPriceGroups, publicPriceBreakdown } from '../app/chiffrage/commercial-breakdown.js';
 import { readFileSync } from 'node:fs';
 
@@ -171,4 +171,86 @@ test('internal quote and customer projection share the same price taxonomy',()=>
   assert.equal(offerPriceGroups.length,10);
   assert.ok(publicPriceBreakdown([{family:'lcm',annual_pv:8000,investment_pv:0}])
     .some(row=>row.key==='lcm'&&row.annual===8000));
+});
+
+
+test('an opening is counted atomically only after a valid token is accepted', async()=>{
+  const originalFetch=globalThis.fetch;
+  const token='A'.repeat(43);
+  let openings=0;
+  globalThis.fetch=async(url,options)=>{
+    const dest=String(url);
+    assert.match(dest,/\/rest\/v1\/rpc\/record_chiffrage_client_open/);
+    assert.equal(options.method,'POST');
+    const body=JSON.parse(options.body);
+    assert.match(body.p_token_hash,/^[a-f0-9]{64}$/);
+    assert.ok(!options.body.includes(token),'do not submit plaintext capability in RPC JSON');
+    openings++;
+    return new Response(JSON.stringify({version:2,amounts:{investment:110,annual:25},
+      breakdown:[],scope:[]}),{status:200,headers:{'Content-Type':'application/json'}});
+  };
+  try{
+    const endpoint='https://example.supabase.co/functions/v1/chiffrage?action=clientOffer';
+    const invalid=await handler(new Request(endpoint,{
+      headers:{Authorization:'Bearer unknown'}}));
+    assert.equal(invalid.status,404);
+    assert.equal(openings,0);
+    for(let i=0;i<2;i++){
+      const response=await handler(new Request(endpoint,{
+        headers:{Authorization:'Bearer '+token}}));
+      assert.equal(response.status,200);
+      assert.equal((await response.json()).version,2);
+    }
+    assert.equal(openings,2);
+  }finally{globalThis.fetch=originalFetch;}
+});
+
+test('revoked or expired link cannot be counted or read by the public endpoint',async()=>{
+  const originalFetch=globalThis.fetch;
+  let attempts=0;
+  globalThis.fetch=async()=>{attempts++;return new Response('null',{status:200,
+    headers:{'Content-Type':'application/json'}});};
+  try{
+    const response=await handler(new Request(
+      'https://example.supabase.co/functions/v1/chiffrage?action=clientOffer',{
+      headers:{Authorization:'Bearer '+'Z'.repeat(43)}}));
+    assert.equal(response.status,404);
+    assert.equal(attempts,1);
+  }finally{globalThis.fetch=originalFetch;}
+});
+
+test('owner statistics contain only aggregate count/time; customer page never sees them',()=>{
+  
+  const result=publicLinkMetadata({id:'id',revision:4,created_at:'c',expires_at:'e',
+    revoked_at:null,open_count:9,last_opened_at:'2026-10-23T21:00:00Z'});
+  assert.equal(result.open_count,9);
+  assert.equal(result.last_opened_at,'2026-10-23T21:00:00Z');
+  const projection=publicOfferFromSaved(quote,{items:[]});
+  assert.ok(!Object.hasOwn(projection,'open_count'));
+  assert.ok(!Object.hasOwn(projection,'last_opened_at'));
+  assert.doesNotMatch(JSON.stringify(projection),/visitor|fingerprint|tracking_id/i);
+});
+
+test('SQL counter has service-only execution and no per-visitor event table',()=>{
+  const sql=readFileSync(new URL('../supabase/migrations/20261024140000_client_offer_open_counter.sql',
+    import.meta.url),'utf8');
+  assert.match(sql,/open_count = open_count \+ 1/);
+  assert.match(sql,/revoked_at is null/);
+  assert.match(sql,/expires_at > now\(\)/);
+  assert.match(sql,/revoke all on function public\.record_chiffrage_client_open\(text\)/);
+  assert.match(sql,/grant execute on function public\.record_chiffrage_client_open\(text\) to service_role/);
+  assert.doesNotMatch(sql,/create table .*visitor|insert into .*events/i);
+});
+
+test('share panels are dismissible and link revocation is a single server action',()=>{
+  const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
+  assert.match(view,/data-action="closeSharePanel"/);
+  assert.match(view,/data-action="manageShares" data-id=/);
+  assert.match(view,/data-action="revokeSharedOffer"/);
+  assert.match(view,/data-action="manageShares" data-refresh="true"/);
+  assert.match(view,/linkCount\(row\.open_count\)/);
+  const revoke=view.slice(view.indexOf("if (action === 'revokeSharedOffer')"),
+    view.indexOf("if (action === 'copyLink')"));
+  assert.match(revoke,/await api\('revokeOffer'/);
+  assert.doesNotMatch(revoke,/window\.confirm/);
 });
