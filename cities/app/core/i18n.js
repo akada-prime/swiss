@@ -1,5 +1,5 @@
-import fr from '../i18n/fr.js?v=20261023-chiffrage-visuel-r4';
-import de from '../i18n/de.js?v=20261023-chiffrage-visuel-r4';
+import fr from '../i18n/fr.js?v=20261023-chiffrage-visuel-r5';
+import de from '../i18n/de.js?v=20261023-chiffrage-visuel-r5';
 import { getPreference, subscribePreferences } from './preferences.js';
 
 const catalogues = { fr, de };

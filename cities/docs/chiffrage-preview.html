@@ -93,7 +93,8 @@ if (!params.has('frame')) {
     if (expired) return response({error:'Authentication required'},401);
     if (action === 'status') return response({authenticated:true});
     if (action === 'catalog') return response({active:{synthetic:'00000000-0000-4000-8000-000000000001'},catalog});
-    if (action === 'list') return listFailure ? response({},503) : response([...samples,...(saved?[saved]:[])]);
+    if (action === 'list') return listFailure ? response({},503) : response([...samples,...(saved?[saved]:[])].map(({snapshot,...metadata})=>metadata));
+    if (action === 'quote' && params.get('snapshotFailure') === '1') return response({},503);
     if (action === 'quote') return response(samples.find(row=>row.id===target.searchParams.get('id'))??saved);
     if (action === 'save') {
       const value=JSON.parse(options.body);let result;

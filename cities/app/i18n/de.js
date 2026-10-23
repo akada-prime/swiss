@@ -821,5 +821,11 @@ export default {
   "chiffrage.ui.travel.waived": "Anreise erlassen",
   "chiffrage.ui.priceEffect": "Auswirkung der letzten Änderung:",
   "chiffrage.ui.annualShort": "Jährlich",
-  "chiffrage.ui.perYear": "Jahr"
+  "chiffrage.ui.perYear": "Jahr",
+  "chiffrage.ui.savedLoading": "Gespeicherte Beträge werden geladen…",
+  "chiffrage.ui.savedUnavailable": "Beträge nicht verfügbar · Kalkulation öffnen",
+  "chiffrage.ui.savedTco": "Gesamt über 5 Jahre",
+  "chiffrage.ui.provisional": "vorläufig",
+  "chiffrage.ui.savedFormula": "Exkl. MwSt. · Investition + 4 × jährlich",
+  "chiffrage.ui.tariffReferences": "Tarifreferenzen"
 };

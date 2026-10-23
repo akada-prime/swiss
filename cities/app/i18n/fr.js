@@ -821,5 +821,11 @@ export default {
   "chiffrage.ui.travel.waived": "Déplacements offerts",
   "chiffrage.ui.priceEffect": "Effet du dernier changement :",
   "chiffrage.ui.annualShort": "Annuel",
-  "chiffrage.ui.perYear": "an"
+  "chiffrage.ui.perYear": "an",
+  "chiffrage.ui.savedLoading": "Chargement des montants enregistrés…",
+  "chiffrage.ui.savedUnavailable": "Montants indisponibles · ouvrir le chiffrage",
+  "chiffrage.ui.savedTco": "Total sur 5 ans",
+  "chiffrage.ui.provisional": "provisoire",
+  "chiffrage.ui.savedFormula": "HT · investissement + 4 × annuel",
+  "chiffrage.ui.tariffReferences": "Références tarifaires"
 };
