@@ -44,8 +44,10 @@ if (!params.has('frame')) {
   let saved = null, expired = false, listFailure = false;
   const response = (value,status=200) => new Response(JSON.stringify(value),{status,
     headers:{'content-type':'application/json'}});
+  const fetchAsset=window.fetch.bind(window);
   window.fetch = async (url,options={}) => {
     const action = new URL(url).searchParams.get('action');
+    if (!action && new URL(url).pathname.endsWith('/swiss-map-v1.json')) return fetchAsset(url,options);
     if (action === 'login') { expired=false;return response({session:'synthetic-session'}); }
     if (expired) return response({error:'Authentication required'},401);
     if (action === 'status') return response({authenticated:true});

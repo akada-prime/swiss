@@ -140,6 +140,12 @@ async function writeQuote(payload) {
     if (!payload.allow_incomplete || !issue) throw error;
     result = { status: 'incomplete', issues: [issue] };
   }
+  if (result.status === 'incomplete' && !payload.allow_incomplete) {
+    const code=result.issues?.[0]?.code;
+    throw new Error(code === 'hostingPricesRequired' ? 'Hosting prices required' :
+      code === 'technicalPriceRequired' ? 'SQL core price unconfirmed: enter an investment PV' :
+        'Service days required');
+  }
   const id = payload.id ?? randomUUID();
   const saved = await db('rpc/chiffrage_write', { method: 'POST', payload: {
     p_id: id, p_expected_revision: payload.expected_revision ?? null,

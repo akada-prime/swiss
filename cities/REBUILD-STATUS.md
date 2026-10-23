@@ -261,3 +261,25 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
 - Préparation Excel : les jours Abacus du fichier Fribourg étaient lus depuis
   une colonne monétaire à cause d'un décalage. La colonne de jours est
   identifiée par le libellé et sa valeur source, puis contrôlée séparément.
+
+### Configurateur · présentation de l’offre et corrections · 23 octobre 2026
+
+- Évolution du moteur partagé : SQL sans prix par cœur et hébergement sans
+  référence laissent les montants connus visibles, avec état incomplet et export
+  bloqué. Aucun tarif SQL extrapolé de Fribourg ni modification des catalogues
+  privés et des anciennes révisions.
+- Estimation des collaborateurs selon la grille fournie, en conservant les
+  nombres personnalisés. Gold et Platinum, SQL et hébergement montrent les
+  valeurs effectives directement dans leurs contrôles.
+- Choix initiaux, dimensionnement et références visibles ensemble ; modules
+  retenus par logiciel et domaine, recherche des options ; prestations en
+  lignes compactes. Carte communale issue de la géométrie publique existante,
+  avec repli sur le canton sans faux blason.
+- Une vue Offre client distincte utilise les mêmes résultats : investissement,
+  annuel dès la deuxième année et un seul coût sur cinq ans. Comparaison de
+  deux ou trois variantes enregistrées de la commune, écarts de montants et de
+  périmètre, signalement des versions tarifaires différentes.
+- Vérification : 116 tests, build, rapprochement Tolochenaz à 0,00 CHF sur le
+  périmètre déjà fourni. Recette navigateur locale indisponible dans cet
+  environnement (Chromium absent et navigateur distant isolé du serveur local) ;
+  parcours visuel en production à contrôler après publication.
