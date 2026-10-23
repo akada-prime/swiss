@@ -145,3 +145,9 @@ revue du contenu visible côté client, vérification du comportement après
 révocation et contrôle sur Safari mobile/PC. Ne pas communiquer le lien de
 reprise interne.
 
+
+## Publication commerciale v2
+
+Les prix de vente restent issus des lignes enregistrées, sans recalcul des tarifs. Une taxonomie partagée décrit les licences, la mise en œuvre, la reprise, la gestion de projet, la formation/aide au démarrage, les autres prestations, les bases de données, Prime et partenaires, le LCM et l'hébergement. Le cumul doit rejoindre les totaux de la révision.
+
+La publication inclut uniquement les noms commerciaux des modules sélectionnés dans le catalogue versionné : innosolvcity par module, ProConcept par option et Abacus **par groupe parent seulement**. Les jours, codes, marges, PA et références privées restent côté serveur. LCM Gold/Platinum apparaît dans le périmètre et dans son poste financier propre. Les liens v1 demeurent lisibles et immuables ; seuls les nouveaux liens reçoivent la présentation v2.

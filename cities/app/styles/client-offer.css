@@ -39,3 +39,39 @@
   .client-offer-shell{width:100%;padding:0}
   .client-offer{box-shadow:none;border:0}
 }
+
+
+/* The customer detail continues the deep-blue Prime presentation.
+   Richer commercial scope, but no internal editor controls or raw line data. */
+.client-offer .client-offer-body{display:grid;grid-template-columns:1fr;gap:38px;background:linear-gradient(160deg,#121c30 0%,#101a2b 60%,#162b43 100%);color:#edf4ff;padding:clamp(24px,4vw,60px)}
+.client-offer .client-offer-body .chiffrage-kicker{color:#9db4d2;font-size:13px}
+.client-offer .client-offer-body h3{font-size:clamp(24px,3.1vw,34px);color:#fff;line-height:1.15;margin:0 0 22px}
+.client-offer .client-offer-scope{padding:0 0 32px;border-bottom:1px solid #d5e7fa30}
+.client-offer .client-offer-module-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,275px),1fr));gap:14px}
+.client-offer .client-offer-module-group{min-width:0;border:1px solid #a1c3e638;border-radius:15px;background:#fff0;padding:19px 20px}
+.client-offer .client-offer-module-group h4{margin:0 0 12px;font-size:19px;color:#fff}
+.client-offer .client-offer-module-group ul{padding-left:19px;margin:0;display:grid;gap:9px}
+.client-offer .client-offer-module-group li{font-size:14px;line-height:1.4;color:#d2e0ee}
+.client-offer .client-offer-products span{border:1px solid #8fb5da55;background:#ffffff10;color:#fff}
+.client-offer .client-offer-lcm{display:inline-flex;align-items:center;gap:12px;margin-top:16px;border:1px solid #acd8f755;border-radius:10px;padding:11px 16px;color:#aac1dc;background:#93bbe91c}
+.client-offer .client-offer-lcm strong{font-size:17px;color:#fff}
+.client-offer .client-offer-price-section{margin-top:22px}
+.client-offer .client-offer-price-section+.client-offer-price-section{border-top:1px solid #ffffff28;padding-top:24px;margin-top:26px}
+.client-offer .client-offer-price-section h3{font-size:21px;margin:0 0 12px;color:#dcecff}
+.client-offer .client-offer-price-section>p{margin:0 0 17px;font-size:14px;max-width:660px;line-height:1.6;color:#adc2dc}
+.client-offer .client-offer-price-list{display:grid;gap:1px;border:1px solid #ffffff29;border-radius:14px;overflow:hidden;background:#ffffff18}
+.client-offer .client-offer-price-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:center;gap:18px;padding:18px 20px;background:#101c31}
+.client-offer .client-offer-price-row h4{color:#f8fbff;margin:0;font-size:16px;line-height:1.45;font-weight:650}
+.client-offer .client-offer-price-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.client-offer .client-offer-price-values>div{min-width:0}
+.client-offer .client-offer-price-values small{display:block;color:#b7c8de;font-size:12px;margin-bottom:6px}
+.client-offer .client-offer-price-values strong{display:block;color:#f5f9ff;white-space:nowrap;font-size:clamp(13px,1.65vw,18px);font-weight:600;font-variant-numeric:tabular-nums}
+.client-offer .client-offer-footer{color:#c2d1e4;background:#132137;border-color:#ffffff22}
+@media(max-width:660px){
+ .client-offer .client-offer-body{padding:30px 22px;gap:26px}
+ .client-offer .client-offer-module-grid{grid-template-columns:1fr;gap:10px}
+ .client-offer .client-offer-module-group{padding:16px}
+ .client-offer .client-offer-price-row{grid-template-columns:1fr;gap:12px;padding:17px 15px}
+ .client-offer .client-offer-price-values strong{font-size:17px}
+ .client-offer .client-offer-price-list{border-radius:12px}
+}

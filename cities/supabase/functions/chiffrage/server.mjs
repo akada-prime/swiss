@@ -180,7 +180,11 @@ async function publishClientOffer(payload) {
   if (!uuidPattern.test(payload?.id ?? '')) return fail('Invalid quote id', 400);
   const quote = await savedQuote(payload.id);
   if (!quote?.snapshot || quote.archived) return fail('Quote not found', 404);
-  const projection = publicOfferFromSaved(quote);
+  // Resolve labels against the versions pinned to this saved revision.
+  // The private catalog never leaves this function: only the allowlisted
+  // display names are included in the customer snapshot.
+  const catalog = await loadCatalog(quote.snapshot.catalog_versions);
+  const projection = publicOfferFromSaved(quote, catalog);
   if (!projection) return fail('Offer must be final and priced', 422);
   const token = randomBytes(32).toString('base64url');
   const tokenHash = createHash('sha256').update(token).digest('hex');

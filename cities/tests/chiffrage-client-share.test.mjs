@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import handler, { signSession } from '../supabase/functions/chiffrage/server.mjs';
-import { publicOfferFromSaved } from '../supabase/functions/chiffrage/client-projection.mjs';
+import { publicOfferFromSaved, customerModuleScope } from '../supabase/functions/chiffrage/client-projection.mjs';
+import { offerPriceGroups, publicPriceBreakdown } from '../app/chiffrage/commercial-breakdown.js';
 import { readFileSync } from 'node:fs';
 
 const oldDeno=globalThis.Deno;
@@ -23,7 +24,7 @@ const quote={
         {family:'prime',category:'hosting',investment_pv:10,annual_pv:0,investment_pa:7}]}}
 };
 
-test('public projection exposes only three PV buckets and frozen commercial totals',()=>{
+test('public projection exposes only customer-safe PV totals and ten commercial price types',()=>{
   const clean=publicOfferFromSaved(quote);
   assert.deepEqual(clean.amounts,{investment:110,annual:25,tco5y:210});
   assert.deepEqual(clean.buckets,{
@@ -35,8 +36,13 @@ test('public projection exposes only three PV buckets and frozen commercial tota
   for(const forbidden of ['annual_pa','investment_pa','margin','catalog','referenc','dayrate','private','lines','input','secret']){
     assert.ok(!json.includes(forbidden),forbidden);
   }
+  assert.equal(clean.version,2);
+  assert.deepEqual(clean.scope,[]);
+  assert.equal(clean.lcm,null);
+  assert.equal(clean.hosting,true);
   assert.deepEqual(Object.keys(clean).sort(),['amounts','bfs_id','buckets','canton','commune',
-    'issued_at','population','products','quote_title','revision','version'].sort());
+    'issued_at','population','products','quote_title','revision','version',
+    'scope','lcm','hosting','breakdown'].sort());
 });
 
 test('incomplete or mismatched quote snapshots are not shareable',()=>{
@@ -98,4 +104,71 @@ test('Safari creates the preview tab before async publishing, with inline feedba
   assert.match(view,/\[data-share-result\]/);
   assert.match(view,/Brouillon à finaliser avant partage/);
   assert.match(view,/shareButton\.disabled = !ready/);
+});
+
+test('the four distinct accompaniment prices and LCM reconcile exactly without exposing PA',()=>{
+  const lines=[
+    {family:'innosolv',software:true,investment_pv:20,annual_pv:25},
+    {family:'prestations_module',investment_pv:50,annual_pv:0},
+    {family:'prestations',item_code:'reprise',investment_pv:20,annual_pv:0},
+    {family:'prestations',item_code:'projet',investment_pv:10,annual_pv:0},
+    {family:'prestations',item_code:'formation',investment_pv:10,annual_pv:0},
+    {family:'prestations',item_code:'demarrage',investment_pv:10,annual_pv:0},
+    {family:'technique',investment_pv:5,annual_pv:2},
+    {family:'lcm',item_code:'gold',investment_pv:0,annual_pv:8},
+    {family:'partenaires',investment_pv:30,annual_pv:0},
+    {family:'prime',category:'hosting',investment_pv:10,annual_pv:0}
+  ];
+  const snapshot=structuredClone(quote.snapshot);
+  snapshot.input.lcm={selection:'gold'};
+  snapshot.result.lines=lines;
+  snapshot.result.summary={investment:165,annual:35};
+  const published=publicOfferFromSaved({...quote,snapshot},{items:[]});
+  assert.ok(published);
+  assert.equal(published.lcm,'Gold');
+  assert.deepEqual(Object.fromEntries(published.breakdown.map(x=>[x.key,[x.investment,x.annual]])),{
+    licenses:[20,25],implementation:[50,0],migration:[20,0],management:[10,0],
+    training:[20,0],database:[5,2],primePartners:[30,0],lcm:[0,8],hosting:[10,0]
+  });
+  assert.equal(published.breakdown.reduce((sum,x)=>sum+x.investment,0),165);
+  assert.equal(published.breakdown.reduce((sum,x)=>sum+x.annual,0),35);
+  assert.equal(published.amounts.tco5y,305);
+});
+
+test('Abacus exposes only parent module groups, never individual functions',()=>{
+  const input={products:['abacus','innosolv','pce'],
+    modules:[{vendor:'abacus',product:'ERP',item_code:'10510.205'},
+      {vendor:'abacus',product:'ERP',item_code:'10510.208'},
+      {vendor:'abacus',product:'ERP',item_code:'10520.222'},
+      {vendor:'innosolv',product:'Gemeinde',item_code:'100'}],
+    pce:{finances:true,salaires:true}};
+  const catalog={items:[
+    {vendor:'abacus',product:'ERP',item_code:'10510.1',label_fr:'Comptabilité financière',label_de:'Finanzbuchhaltung'},
+    {vendor:'abacus',product:'ERP',item_code:'10510.205',label_fr:'Fonction interne A',label_de:'Intern A'},
+    {vendor:'abacus',product:'ERP',item_code:'10510.208',label_fr:'Fonction interne B',label_de:'Intern B'},
+    {vendor:'abacus',product:'ERP',item_code:'10520.1',label_fr:'Débiteurs',label_de:'Debitoren'},
+    {vendor:'abacus',product:'ERP',item_code:'10520.222',label_fr:'Fonction interne C',label_de:'Intern C'},
+    {vendor:'innosolv',product:'Gemeinde',item_code:'100',label_fr:'Habitants',label_de:'Einwohner'}]};
+  const result=customerModuleScope(input,catalog);
+  const abacus=result.find(x=>x.product==='Abacus');
+  assert.deepEqual(abacus.items.map(x=>x.fr),['Comptabilité financière','Débiteurs']);
+  assert.deepEqual(result.find(x=>x.product==='innosolvcity').items.map(x=>x.fr),['Habitants']);
+  assert.deepEqual(result.find(x=>x.product==='ProConcept').items.map(x=>x.fr),['Finances','Salaires']);
+  assert.ok(!JSON.stringify(result).includes('Fonction interne'));
+  assert.ok(!JSON.stringify(result).includes('10510'));
+  const fallback=customerModuleScope(input,{items:catalog.items.filter(x=>x.item_code!=='10510.1')});
+  assert.equal(fallback.find(x=>x.product==='Abacus').items[0].fr,'Autres fonctions Abacus');
+});
+
+test('internal quote and customer projection share the same price taxonomy',()=>{
+  const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
+  const client=readFileSync(new URL('../app/client-offer.js',import.meta.url),'utf8');
+  assert.match(view,/commercialPriceGroup\(line\)===key/);
+  assert.match(client,/offerPriceGroups/);
+  assert.match(client,/client-offer-module-group/);
+  assert.match(client,/client-offer-price-section/);
+  assert.match(client,/\[1,2\]\.includes\(offer.version\)/);
+  assert.equal(offerPriceGroups.length,10);
+  assert.ok(publicPriceBreakdown([{family:'lcm',annual_pv:8000,investment_pv:0}])
+    .some(row=>row.key==='lcm'&&row.annual===8000));
 });
