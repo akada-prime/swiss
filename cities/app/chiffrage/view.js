@@ -23,6 +23,8 @@ const field = (key, value, label, { min = 0, step = 1 } = {}) =>
 const textField = (key, value, label) =>
   `<label>${label}<input data-field="${key}" value="${escape(value ?? '')}"></label>`;
 const localLabel = (fr, de) => document.documentElement.lang === 'de' ? de : fr;
+const cantonName = code => ({ JU: 'Jura', VD: 'Vaud', GE: 'Genève', FR: 'Fribourg',
+  NE: 'Neuchâtel', VS: 'Valais', BE: 'Berne' })[code] ?? code;
 const tariffLabel = catalog => [...new Set((catalog?.items??[]).map(item=>item.catalog_version).filter(Boolean))].slice(0,3).join(' · ') || '—';
 const errorMessage = error => {
   if (error.status === 401) return t('chiffrage.sessionExpired');
@@ -59,7 +61,7 @@ function notice(message, error = false) {
 }
 
 function header() {
-  return `<div class="chiffrage-header"><div>${state.draft ? `<p class="chiffrage-kicker">${escape(state.draft.canton)} · OFS ${state.draft.bfs_id} · ${state.revision ? t('chiffrage.revision', { revision: state.revision }) : t('chiffrage.workspace.2005dfeb6b')}</p><h2>${escape(state.draft.name)}</h2>` : `<h2>${t('chiffrage.workspace.b246604ad2')}</h2>`}</div>
+  return `<div class="chiffrage-header"><div>${state.draft ? `<p class="chiffrage-kicker">${escape(cantonName(state.draft.canton))} · OFS ${state.draft.bfs_id} · ${state.revision ? t('chiffrage.revision', { revision: state.revision }) : t('chiffrage.workspace.2005dfeb6b')}</p><h2>${escape(state.draft.name)}</h2>` : `<h2>${t('chiffrage.workspace.b246604ad2')}</h2>`}</div>
     <div class="chiffrage-actions">${state.draft ? `<button class="chiffrage-button quiet" data-action="list">← ${t('chiffrage.back')}</button><button class="chiffrage-button primary" data-action="save">${t('chiffrage.save')}</button>` : ''}
       <button class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></div>
     <p class="chiffrage-status${state.error ? ' error' : ''}" role="status">${escape(state.message)}</p>`;
@@ -394,10 +396,9 @@ function lcmSection() {
 }
 
 function territoryMap() {
-  const cantonName={JU:'Jura',VD:'Vaud',GE:'Genève',FR:'Fribourg',NE:'Neuchâtel',VS:'Valais',BE:'Berne'}[state.draft.canton]??state.draft.canton;
-  if (!state.map) return `<span>${escape(cantonName)}</span>`;
+  if (!state.map) return `<span>${escape(cantonName(state.draft.canton))}</span>`;
   const selected=state.map.municipalities.find(row=>Number(row.id)===state.draft.bfs_id);
-  if (!selected) return `<span>${escape(cantonName)}</span>`;
+  if (!selected) return `<span>${escape(cantonName(state.draft.canton))}</span>`;
   const coords=[...selected.d.matchAll(/(-?\d+),(-?\d+)/g)].map(match=>[Number(match[1]),Number(match[2])]);
   const x=coords.reduce((sum,point)=>sum+point[0],0)/coords.length;
   const y=coords.reduce((sum,point)=>sum+point[1],0)/coords.length;
@@ -424,7 +425,7 @@ function composerSection() {
   const erp = products.includes('pce') && products.includes('abacus') ? 'both' : products.includes('pce') ? 'pce' : products.includes('abacus') ? 'abacus' : 'none';
   const choices = (name, values, selected, attr, disabled=false) => `<div class="chiffrage-choice-group">${values.map(([value,label]) => `<label class="chiffrage-choice"><input type="radio" name="chiffrage-${name}" ${attr}="${value}" ${String(selected) === String(value) ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span>${label}</span></label>`).join('')}</div>`;
   const profiles = referenceProfiles(state.catalog);
-  return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><div class="chiffrage-section-heading"><div><p class="chiffrage-kicker">01 · ${t('chiffrage.workspace.7f4dc1fe42')}</p><h2>${escape(state.draft.name)}</h2><p class="chiffrage-helper">${escape(state.draft.canton)} · OFS ${state.draft.bfs_id}</p></div><div class="chiffrage-territory" data-territory>${territoryMap()}</div></div>
+  return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><div class="chiffrage-section-heading"><div><p class="chiffrage-kicker">01 · ${t('chiffrage.workspace.7f4dc1fe42')}</p><h2>${escape(state.draft.name)}</h2><p class="chiffrage-helper">${escape(cantonName(state.draft.canton))} · OFS ${state.draft.bfs_id}</p></div><div class="chiffrage-territory" data-territory>${territoryMap()}</div></div>
     <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('sql.users', state.draft.sql.users ?? sqlUsers,t('chiffrage.sqlUsers'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}</div>
     ${products.includes('pce') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('oracle.full',state.draft.oracle.full,t('chiffrage.oracleFull'))}${field('oracle.light',state.draft.oracle.light,t('chiffrage.oracleLight'))}</div>` : ''}
     ${products.includes('innosolv') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('sql.override',sqlPrice,t('chiffrage.sqlInvestmentPv'))}</div>` : ''}
@@ -472,13 +473,13 @@ function offerSection() {
   const selected=result.lines.filter(line=>line.software && (line.annual_pv??0)>0);
   return `<article class="chiffrage-offer"><header class="chiffrage-offer-hero">
     <div class="chiffrage-offer-brand"><span>Prime<span class="chiffrage-prime-dot">.</span></span><small>${localLabel('COMMUNES / PROPOSITION','GEMEINDEN / ANGEBOT')}</small></div>
-    <div class="chiffrage-offer-map" data-territory>${territoryMap()}</div><p class="chiffrage-offer-place">${escape(state.draft.name)} <span>${escape(state.draft.canton)} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</span></p>
+    <div class="chiffrage-offer-map" data-territory>${territoryMap()}</div><p class="chiffrage-offer-place">${escape(state.draft.name)} <span>${escape(cantonName(state.draft.canton))} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</span></p>
     <h2>${localLabel('Votre projet, en chiffres.','Ihr Projekt in Zahlen.')}</h2>
     <p class="chiffrage-offer-reference">${localLabel('Base de prestations','Leistungsgrundlage')} : <strong>${escape(state.draft.reference?.label??'—')}</strong> · ${localLabel('Tarifs','Tarife')} : ${escape(tariffLabel(state.catalog))}${state.dirty?` · ${localLabel('Modifications en cours','Änderungen in Bearbeitung')}`:''}</p>
     <div class="chiffrage-offer-figures"><div><span>${incomplete?localLabel('Investissement calculé à ce stade','Bisher berechnete Investition'):localLabel('Investissement initial','Anfangsinvestition')}</span><strong>${money(s.investment)}</strong><small>HT · ${localLabel('une fois','einmalig')}</small></div><div><span>${localLabel('Coût annuel récurrent','Wiederkehrende Jahreskosten')}</span><strong>${money(s.annual)}</strong><small>HT · ${localLabel('dès la 2e année','ab dem 2. Jahr')}</small></div></div>
     <div class="chiffrage-offer-horizon"><span>${localLabel('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${money(s.tco5y)}</strong></div>
     ${incomplete?`<p class="chiffrage-offer-caveat">${localLabel('Chiffrage à compléter :','Kalkulation ergänzen:')} ${s.missing_service_days?.length??0} ${localLabel('prestations sans jours','Leistungen ohne Tage')}${s.missing_technical?.length?` · SQL ${localLabel('sans prix confirmé','ohne bestätigten Preis')}`:''}${s.missing_hosting?` · ${t('chiffrage.hosting')} ${localLabel('sans prix','ohne Preis')}`:''}.</p>`:''}
-    </header><div class="chiffrage-offer-body"><section><p class="chiffrage-kicker">${localLabel('Votre périmètre','Ihr Umfang')}</p><h3>${localLabel('Les solutions retenues','Gewählte Lösungen')}</h3><p>${state.draft.products.map(p=>({innosolv:'innosolvcity',pce:'ProConcept',abacus:'Abacus'}[p]??p)).join(' · ')||'—'} · ${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')}</p><p>LCM ${escape(state.draft.lcm.selection??'none')} · ${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p><div class="chiffrage-offer-modules">${selected.slice(0,14).map(line=>`<span>${escape(lineLabel(line))}</span>`).join('')}</div></section>
+    </header><div class="chiffrage-offer-body"><section><p class="chiffrage-kicker">${localLabel('Votre périmètre','Ihr Umfang')}</p><h3>${localLabel('Les solutions retenues','Gewählte Lösungen')}</h3><p>${state.draft.products.map(p=>({innosolv:'innosolvcity',pce:'ProConcept',abacus:'Abacus'}[p]??p)).join(' · ')||'—'} · ${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')}</p><p>LCM ${escape(({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection)} · ${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p><div class="chiffrage-offer-modules">${selected.slice(0,14).map(line=>`<span>${escape(lineLabel(line))}</span>`).join('')}</div></section>
     <section><p class="chiffrage-kicker">${localLabel('Lecture du prix','Preisaufteilung')}</p><h3>${localLabel('D’où viennent ces montants','Zusammensetzung der Beträge')}</h3><div class="chiffrage-offer-breakdown">${buckets.map(([label,filter])=>`<div><span>${escape(label)}</span><strong>${money(result.lines.filter(filter).reduce((sum,line)=>sum+(line.investment_pv??0),0))}</strong><strong>${money(result.lines.filter(filter).reduce((sum,line)=>sum+(line.annual_pv??0),0))}</strong></div>`).join('')}<div class="chiffrage-offer-breakdown-total"><span>${t('chiffrage.total')}</span><strong>${money(s.investment)}</strong><strong>${money(s.annual)}</strong></div></div><p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
 }
 
