@@ -1,13 +1,13 @@
 /* Prime Communes 2.0 — single deterministic style entry. */
-@import url('./foundation.css');
-@import url('./components.css');
+@import url('./foundation.css?v=20261023-design-system-r9');
+@import url('./components.css?v=20261023-design-system-r9');
 @import url('./product-assets.css');
 @import url('./views/map.css');
 @import url('./views/stats.css');
 @import url('./views/radar.css');
 @import url('./views/stories.css');
 @import url('./views/roadmap.css');
-@import url('./views/chiffrage.css?v=20261023-beta-visual-r7');
-@import url('./responsive.css');
-@import url('./skins.css?v=20261023-beta-visual-r7');
+@import url('./views/chiffrage.css?v=20261023-design-system-r9');
+@import url('./responsive.css?v=20261023-design-system-r9');
+@import url('./skins.css?v=20261023-design-system-r9');
 @import url('./settings.css');

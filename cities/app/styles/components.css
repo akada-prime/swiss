@@ -535,3 +535,26 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 .territory-comparison button>small{font-size:11px;line-height:1.4}
 .stats-rank-label span{font-size:11px}
 .stats-rank>small{font-size:10.5px;line-height:1.4}
+
+
+/* Shared visual primitives: one language for navigation, active choices and fields.
+   View styles own layout; the active/field treatment does not get reinvented. */
+:root{
+  --pc-section-heading-size:22px;
+  --pc-control-radius:11px;
+  --pc-field-radius:11px;
+  --pc-control-selected-bg:var(--skin-accent-soft);
+  --pc-control-selected-text:var(--skin-accent);
+  --pc-control-selected-border:var(--skin-accent);
+}
+:is(.view-tab.active,.stats-segment button.active,
+  .chiffrage-work-tabs button[aria-current="page"]){
+  color:var(--pc-control-selected-text);
+  background:var(--pc-control-selected-bg);
+}
+:is(.view-tab,.stats-segment button,.chiffrage-work-tabs button):focus-visible{
+  outline:2px solid var(--skin-focus);
+  outline-offset:2px;
+}
+:is(.stats-toolbar label,.filters label){border-color:var(--pc-field-border);border-radius:var(--pc-field-radius)}
+:is(.stats-toolbar label,.filters label){background:var(--pc-field-bg)}
