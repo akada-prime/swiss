@@ -1,5 +1,11 @@
 # État de reprise — Prime Communes 2.0
 
+> **Chiffrage · hébergement Abacus, 23.10.2026 :** Alex confirme la même règle
+> d'hébergement que ProConcept. La version commerciale privée r3 reprend le
+> montant ProConcept pour Abacus, sans changer les autres paramètres ni les
+> anciens chiffrages. Vérification de l'égalité des montants et de l'absence de
+> doublon si les deux ERP sont choisis.
+
 > **Chiffrage 3.0 — essai d’interface, 29.09.2026 :** l’éditeur réorganise le
 > chiffrage en Composer, Licences et options, Prestations, PV et taux, Analyse.
 > Le résumé client distingue investissement, annuel et cinq ans ; les marges et
