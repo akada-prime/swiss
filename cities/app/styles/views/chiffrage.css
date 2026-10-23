@@ -127,7 +127,7 @@ html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
 .chiffrage-list-item .chiffrage-share-result:not(:empty){padding:0 16px 15px}
 .chiffrage-share-list:disabled{opacity:.64;cursor:not-allowed}
 .chiffrage-share-progress{margin:0;padding:13px 16px;border:1px solid var(--skin-border-soft);border-radius:10px;color:var(--skin-secondary);background:var(--skin-control)}
-.chiffrage-share-error{padding:13px 16px;border:1px solid var(--skin-danger);border-radius:10px;background:var(--skin-control);color:var(--skin-text)}
-.chiffrage-share-error strong{color:var(--skin-danger);display:block;margin-bottom:5px}
+.chiffrage-share-error{padding:13px 16px;border:1px solid var(--quote-warning);border-radius:10px;background:var(--skin-control);color:var(--skin-text)}
+.chiffrage-share-error strong{color:var(--quote-warning);display:block;margin-bottom:5px}
 .chiffrage-share-error p{margin:0;line-height:1.5;color:var(--skin-secondary)}
 .chiffrage-share-copy-status{font-weight:600}
