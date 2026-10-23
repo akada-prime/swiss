@@ -792,14 +792,14 @@ function lineDetail() {
     return rank(a) - rank(b);
   });
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.detail')}</summary>
-    <div class="chiffrage-table-scroll"><table class="chiffrage-detail"><thead><tr>
+    <div class="chiffrage-table-scroll"><table class="chiffrage-detail chiffrage-line-detail"><thead><tr>
       <th>${t('chiffrage.modules')}</th>${state.internal ? '<th>SW-ID / ID</th>' : ''}<th>${t('chiffrage.quantity')}</th><th>${t('chiffrage.investment')}</th>
       <th>${t('chiffrage.annual')} PV</th>${state.internal ? `<th>${t('chiffrage.annual')} PA</th><th>${t('chiffrage.annualMargin')}</th><th>${t('chiffrage.catalog', { version: '' })}</th>` : ''}
     </tr></thead><tbody>${ordered.map(line => `<tr>
-      <td>${line.family === 'prestations_module' ? '↳ ' + t('chiffrage.moduleServices') + ' · ' : ''}${escape(lineLabel(line))}${line.supplier ? `<small> · ${escape(line.supplier)}</small>` : ''}</td>${state.internal ? `<td>${escape(line.item_code ?? '—')}</td>` : ''}<td>${line.selected_days == null ? line.quantity ?? '—' : `${number(line.selected_days)} j`}</td>
-      <td>${money(line.investment_pv)}</td><td>${money(line.annual_pv)}</td>
-      ${state.internal ? `<td>${money(line.annual_pa)}</td><td>${money(line.annual_pa == null ? null : (line.annual_pv ?? 0) - line.annual_pa)}</td>` : ''}
-      ${state.internal ? `<td>${escape(line.explanation?.source ?? '—')}${line.explanation?.kind ? ` · ${escape(line.explanation.kind)}` : ''}
+      <td data-label="${t('chiffrage.modules')}">${line.family === 'prestations_module' ? '↳ ' + t('chiffrage.moduleServices') + ' · ' : ''}${escape(lineLabel(line))}${line.supplier ? `<small> · ${escape(line.supplier)}</small>` : ''}</td>${state.internal ? `<td data-label="SW-ID / ID">${escape(line.item_code ?? '—')}</td>` : ''}<td data-label="${t('chiffrage.quantity')}">${line.selected_days == null ? line.quantity ?? '—' : `${number(line.selected_days)} j`}</td>
+      <td data-label="${t('chiffrage.investment')}">${money(line.investment_pv)}</td><td data-label="${t('chiffrage.annual')} PV">${money(line.annual_pv)}</td>
+      ${state.internal ? `<td data-label="${t('chiffrage.annual')} PA">${money(line.annual_pa)}</td><td data-label="${t('chiffrage.annualMargin')}">${money(line.annual_pa == null ? null : (line.annual_pv ?? 0) - line.annual_pa)}</td>` : ''}
+      ${state.internal ? `<td data-label="${t('chiffrage.catalog', { version: '' })}">${escape(line.explanation?.source ?? '—')}${line.explanation?.kind ? ` · ${escape(line.explanation.kind)}` : ''}
         ${!state.internal || line.license_value == null ? '' : ` · ${t('chiffrage.theoreticalBase')} ${money(line.license_value)}`}
         ${!state.internal || line.overrides?.pa == null ? '' : ` · ${t('chiffrage.manualPa')}`}
         ${line.overrides?.pv == null ? '' : ` · ${t('chiffrage.manualPv')}`}
