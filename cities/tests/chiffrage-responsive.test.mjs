@@ -30,12 +30,12 @@ test('shared Prime controls and quote typography do not require cascade override
   const skin = readFileSync(new URL('../app/styles/skins.css', import.meta.url), 'utf8');
   const index = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
   assert.doesNotMatch(css, /!important/);
-  assert.match(css, /\.chiffrage-work-tabs button\[aria-current=page\]\{background:var\(--skin-accent-soft\);color:var\(--skin-accent\)/);
+  assert.match(css, /\.chiffrage-work-tabs button\[aria-current=page\]\{box-shadow:var\(--quote-tab-shadow\)/);
   assert.match(css, /\.chiffrage-button\.quiet\{background:var\(--skin-control\);border-color:var\(--skin-border-soft\)/);
   assert.match(css, /chiffrage-mobile-summary-figures strong\{[^}]*font-size:clamp\(27px,7\.2vw,33px\)/);
-  assert.match(skin, /html\[data-skin="helvetia"\][\s\S]*?--quote-input:#f4f6f8;--quote-input-border:#b9c3ca/);
+  assert.match(skin, /html\[data-skin="helvetia"\][\s\S]*?--pc-field-bg:#f4f6f8;--pc-field-border:#b9c3ca/);
   assert.doesNotMatch(view, /class="chiffrage-saved-formula"/);
-  assert.match(index, /main\.css\?v=20261023-hero-shared-r8/);
+  assert.match(index, /main\.css\?v=20261023-design-system-r9/);
 });
 
 
@@ -49,5 +49,5 @@ test('Chiffrage shares the same large two-line hero as the other Prime Communes 
   assert.doesNotMatch(css, /\.chiffrage-view \.chiffrage-intro h1/);
   assert.doesNotMatch(css, /\.chiffrage-view \.chiffrage-intro\{display:flex/);
   assert.doesNotMatch(css, /\.chiffrage-view \.view-intro-copy \.eyebrow\{display:none/);
-  assert.match(main, /chiffrage\.css\?v=20261023-hero-shared-r8/);
+  assert.match(main, /chiffrage\.css\?v=20261023-design-system-r9/);
 });
