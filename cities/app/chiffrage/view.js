@@ -103,9 +103,21 @@ function readListSnapshot(row, node) {
       const canton = saved.snapshot?.input?.canton;
       if (canton) node.querySelector('[data-list-canton]').innerHTML = listCanton(canton);
       node.querySelector('[data-list-figures]').innerHTML = listFigures(saved.snapshot);
+      const shareButton = node.closest('.chiffrage-list-item')?.querySelector('[data-action="shareOffer"]');
+      if (shareButton) {
+        const figures = savedQuoteFigures(saved.snapshot);
+        const ready = Boolean(figures && !figures.incomplete);
+        shareButton.disabled = !ready;
+        shareButton.textContent = ready ? localLabel('Partager l’offre client','Kundenangebot teilen') + ' ↗' :
+          localLabel('Brouillon à finaliser avant partage','Entwurf vor dem Teilen abschließen');
+      }
     } catch {
       listSnapshots.delete(key);
-      if (node.isConnected) node.querySelector('[data-list-figures]').textContent = t('chiffrage.ui.savedUnavailable');
+      if (node.isConnected) {
+        node.querySelector('[data-list-figures]').textContent = t('chiffrage.ui.savedUnavailable');
+        const shareButton = node.closest('.chiffrage-list-item')?.querySelector('[data-action="shareOffer"]');
+        if (shareButton) shareButton.textContent = localLabel('Offre indisponible','Angebot nicht verfügbar');
+      }
     }
   });
   drainListSnapshots();
@@ -142,7 +154,8 @@ function renderList() {
       `<article class="chiffrage-list-item"><button data-action="open" data-id="${escape(row.id)}"><span class="chiffrage-saved-heading"><span data-list-canton>${listCanton(communes().find(item => Number(item.id) === Number(row.bfs_id))?.canton)}</span><strong>${escape(row.title)}</strong></span>
       <small>${escape(row.commune_name)} · OFS ${row.bfs_id} · ${t('chiffrage.revision', {
         revision: row.current_revision })}</small><span class="chiffrage-saved-figures" data-list-figures aria-live="polite">${t('chiffrage.ui.savedLoading')}</span></button>
-    <button type="button" class="chiffrage-button chiffrage-share-list" data-action="shareOffer" data-id="${escape(row.id)}">${localLabel('Partager l’offre client','Kundenangebot teilen')} ↗</button></article>`).join('') : `<p>${t('chiffrage.empty')}</p>`}</div><div id="chiffrageShareResult" aria-live="polite"></div>`;
+    <button type="button" class="chiffrage-button chiffrage-share-list" data-action="shareOffer" data-id="${escape(row.id)}" disabled>${localLabel('Vérification de l’offre…','Angebot wird geprüft…')}</button>
+    <div class="chiffrage-share-result" data-share-result aria-live="polite"></div></article>`).join('') : `<p>${t('chiffrage.empty')}</p>`}</div><div id="chiffrageShareResult" aria-live="polite"></div>`;
   const byId = new Map(rows.map(row => [String(row.id), row]));
   listObserver = new IntersectionObserver(entries => {
     for (const entry of entries) if (entry.isIntersecting) {
