@@ -120,3 +120,22 @@ test('hosting stays separate and Prime plus partners share one financial bucket 
   assert.deepEqual(grouped.get('primePartners'),[lines[5],lines[6]]);
   for(const key of ['investment_pv','annual_pv'])assert.equal([...grouped.values()].flat().reduce((s,l)=>s+l[key],0),lines.reduce((s,l)=>s+l[key],0));
 });
+
+import { implementationSummary, softwareMargins } from '../app/chiffrage/presentation.js';
+
+test('implementation summary includes grouped Abacus services even when its individual module rows have zero days',()=>{
+ const result={lines:[{family:'prestations_module',item_code:'abacus/ERP/A.1',selected_days:0,investment_pv:0},{family:'prestations',item_code:'abacus-A.',selected_days:3,investment_pv:300},{family:'prestations',item_code:'abacus-B.',selected_days:2,investment_pv:200},{family:'prestations_module',item_code:'innosolv/Gemeinde/1',selected_days:1,investment_pv:100},{family:'prestations',item_code:'formation',selected_days:4,investment_pv:400},{family:'prime',category:'hosting',selected_days:1,investment_pv:1000}]};
+ const rows=implementationSummary(result,['innosolv','abacus']);
+ assert.deepEqual(rows.find(x=>x.key==='abacus'),{key:'abacus',days:5,investment:500,incomplete:false});
+ assert.equal(rows.find(x=>x.key==='innosolv').days,1);
+ assert.equal(rows.find(x=>x.key==='common').investment,400);
+});
+test('missing implementation days and unknown publisher costs never look like confirmed zero or full margin',()=>{
+ const result={lines:[{family:'prestations_module',item_code:'abacus/ERP/A.1',selected_days:null,investment_pv:0},{software:true,annual_pa:null,annual_pv:100}],summary:{software_margin_year2:100,software_margin_year3plus:100,software_margin_5y:400}};
+ assert.equal(implementationSummary(result,['abacus'])[0].incomplete,true);
+ assert(softwareMargins(result).every(x=>x.value===null&&x.percent===null));
+});
+test('software margin cards keep four annuities and show actual PV margin rather than a markup coefficient',()=>{
+ const result={lines:[{software:true,annual_pa:20,annual_pv:27}],summary:{software_margin_year2:17,software_margin_year3plus:7,software_margin_5y:38}};
+ const rows=softwareMargins(result);assert.equal(rows[1].value,7);assert(Math.abs(rows[1].percent-7/27*100)<1e-10);assert(Math.abs(rows[2].percent-38/108*100)<1e-10);
+});

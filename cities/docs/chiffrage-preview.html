@@ -74,6 +74,7 @@ if (!params.has('frame')) {
       services:[{family:'prestations',item_code:'formation',label:'Formation',days:index===2?8:4,suggested_days:4}],
       primeLines:Array.from({length:5},(_,i)=>({family:'prime',item_code:`demo-${i}`,label:['Guichet virtuel et démarches en ligne','Signature électronique','Archivage et gestion documentaire','Connecteur de paiement','Interface partenaire'][i],investment_pv:1000+i*500,annual_pv:100+i*50,quantity:1})),
       partners:[],pce:{finances:true,salaires:false,interfacePa:0},oracle:{full:5,light:0},sql:{},lcm:{selection:index===2?'gold':'none'},energy:false,hosting:{included:false}};
+    if(params.get('case')==='grouped'){input.moduleServices.filter(row=>row.item_code.startsWith('abacus/')).forEach(row=>{row.days=0;row.suggested_days=0;});input.services.push({family:'prestations',item_code:'abacus-10510.',label:'Finances',days:3},{family:'prestations',item_code:'abacus-10520.',label:'Débiteurs',days:2});}
     if(params.get('case')==='bex') {
       input.name='Bex';input.bfs_id=5402;input.canton='VD';input.dimensions.population=9500;input.dimensions.licensedPopulation=10000;
       input.services.push({family:'prestations',item_code:'interfaces',label:'Interfaces',days:null,suggested_days:0});

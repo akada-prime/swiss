@@ -1,0 +1,65 @@
+{
+  "checks": [
+    {
+      "skin": "helvetia",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "skin": "helvetia",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "skin": "helvetia",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "skin": "helvetia",
+      "width": 1366,
+      "scroll": 1366
+    },
+    {
+      "skin": "helvetia",
+      "width": 1920,
+      "scroll": 1920
+    },
+    {
+      "skin": "helvetia",
+      "width": 2560,
+      "scroll": 2560
+    },
+    {
+      "skin": "prime-darkweb",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "skin": "prime-darkweb",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "skin": "prime-darkweb",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "skin": "prime-darkweb",
+      "width": 1366,
+      "scroll": 1366
+    },
+    {
+      "skin": "prime-darkweb",
+      "width": 1920,
+      "scroll": 1920
+    },
+    {
+      "skin": "prime-darkweb",
+      "width": 2560,
+      "scroll": 2560
+    }
+  ],
+  "errors": []
+}

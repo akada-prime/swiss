@@ -1,0 +1,269 @@
+{
+  "checks": [
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 360,
+      "scroll": 360,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 430,
+      "scroll": 430,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 768,
+      "scroll": 768,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1366,
+      "scroll": 1366,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1920,
+      "scroll": 1920,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 2560,
+      "scroll": 2560,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 360,
+      "scroll": 360,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 430,
+      "scroll": 430,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 768,
+      "scroll": 768,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1366,
+      "scroll": 1366,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1920,
+      "scroll": 1920,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 2560,
+      "scroll": 2560,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 360,
+      "scroll": 360,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 430,
+      "scroll": 430,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 768,
+      "scroll": 768,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1366,
+      "scroll": 1366,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1920,
+      "scroll": 1920,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 2560,
+      "scroll": 2560,
+      "values": [
+        "6 600 CHF",
+        "4 400 CHF",
+        "19 800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 360,
+      "scroll": 360,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 430,
+      "scroll": 430,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 768,
+      "scroll": 768,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1366,
+      "scroll": 1366,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1920,
+      "scroll": 1920,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 2560,
+      "scroll": 2560,
+      "values": [
+        "6'600 CHF",
+        "4'400 CHF",
+        "19'800 CHF"
+      ]
+    }
+  ],
+  "errors": []
+}
