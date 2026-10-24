@@ -1,5 +1,18 @@
 # État de reprise — Prime Communes 2.0
 
+> **Lecture des prestations et des marges · 24.10.2026 :** le résumé par solution
+> additionne les jours des lignes de module et des forfaits de groupes dans
+> Projet et Prestations, puis distingue les prestations communes. Les jours
+> connus restent visibles quand une option manque. L’accès interne conserve
+> son ouverture sur les taux et affiche d’abord les marges logicielles en CHF
+> et % du PV, selon les mesures existantes du moteur. Les coûts inconnus sont
+> explicités, sans présenter ces marges comme la marge globale du projet.
+> Une référence supplémentaire de prestations a été ajoutée dans une version
+> protégée, sans changement de taux, de référence par défaut ou d’anciennes
+> offres. Les données financières d’audit restent hors du dépôt public.
+> Validation : 160 tests, 24 parcours + 12 cas partiels, six largeurs, deux
+> apparences et FR/DE. [Recette](docs/chiffrage-lecture-prestations-marges.md).
+
 > **Check-up fonctionnel · 24.10.2026 :** reprise de la production `aec6d002`.
 > Les points bloquants sont listés et reliés aux champs précis, avec ouverture
 > des détails et focus. L’alerte SQL suit le prix retenu, y compris zéro, et se

@@ -3,6 +3,32 @@ import { hostingIncluded } from './configuration.js';
 import { moduleId } from './standards.js';
 
 export const productNames = { innosolv: 'innosolvcity', abacus: 'Abacus', pce: 'ProConcept' };
+export function implementationSummary(result, products = []) {
+  const groups = new Map(products.map(key => [key,{key,days:0,investment:0,incomplete:false}]));
+  for (const line of result?.lines ?? []) {
+    if (line.category === 'hosting' || !['prestations_module','prestations'].includes(line.family) && line.selected_days == null) continue;
+    const code = String(line.item_code ?? '');
+    const product = line.family === 'prestations_module' ? code.split('/')[0] :
+      code.startsWith('abacus-') ? 'abacus' : code.startsWith('pce-') ? 'pce' : 'common';
+    if (!groups.has(product)) groups.set(product,{key:product,days:0,investment:0,incomplete:false});
+    const row=groups.get(product);
+    row.days+=(line.selected_days??0)*(line.quantity??1);
+    row.investment+=line.investment_pv??0;
+    row.incomplete ||= line.selected_days == null && !['deplacements','deplacements-offerts'].includes(code);
+  }
+  return [...groups.values()];
+}
+
+export function softwareMargins(result) {
+  const lines=(result?.lines??[]).filter(line=>line.software);
+  const available=lines.length>0 && lines.every(line=>line.annual_pa != null && line.annual_pv != null);
+  const revenue=lines.reduce((sum,line)=>sum+(line.annual_pv??0),0);
+  return ['software_margin_year2','software_margin_year3plus','software_margin_5y'].map((key,index)=>{
+    const value=available ? result.summary?.[key] ?? null : null;
+    const denominator=revenue*(index===2?4:1);
+    return {key,value,percent:value!=null&&denominator>0?value/denominator*100:null};
+  });
+}
 export function referenceLabel(reference, catalog, language = 'fr') {
   if (!reference) return '—';
   const profile = catalog?.parameters?.configuration_profiles?.find(row => row.id === reference.id);
