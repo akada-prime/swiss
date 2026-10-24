@@ -3,8 +3,9 @@
 html[data-skin="prime-darkweb"] {
   color-scheme:dark;
   --quote-surface:#10151e;--quote-nav:#0d121a;--quote-active:#202a38;
-  --quote-input:#151c27;--quote-input-border:#344052;
-  --quote-primary:linear-gradient(130deg,#1888e4,#3961d8);--quote-button-shadow:0 3px 12px #0062bd26;
+  --pc-field-bg:#1c2a3a;--pc-field-border:#64768c;
+  --quote-input:var(--pc-field-bg);--quote-input-border:var(--pc-field-border);
+  --pc-primary-action:linear-gradient(130deg,#1888e4,#3961d8);--quote-primary:var(--pc-primary-action);--quote-button-shadow:0 3px 12px #0062bd26;
   --quote-tab-shadow:0 1px 4px #0005;--quote-summary:linear-gradient(155deg,#182337,#111824 70%);
   --quote-summary-border:#314259;--quote-summary-shadow:0 16px 45px #0002;
   --quote-number:#8dbfff;--quote-success:#76c8ab;--quote-warning:#dca655;--quote-danger:#f69797;
@@ -35,8 +36,9 @@ html[data-skin="prime-darkweb"] {
 html[data-skin="helvetia"] {
   color-scheme:light;
   --quote-surface:#fff;--quote-nav:#f7f8f9;--quote-active:#fff;
-  --quote-input:#fff;--quote-input-border:#cbd2d8;
-  --quote-primary:linear-gradient(130deg,#bc2c36,#9d2438);--quote-button-shadow:0 3px 10px #8d223218;
+  --pc-field-bg:#eaf0f5;--pc-field-border:#8193a3;
+  --quote-input:var(--pc-field-bg);--quote-input-border:var(--pc-field-border);
+  --pc-primary-action:linear-gradient(130deg,#bc2c36,#9d2438);--quote-primary:var(--pc-primary-action);--quote-button-shadow:0 3px 10px #8d223218;
   --quote-tab-shadow:0 1px 5px #1c2b3b12,0 0 0 1px #1c2b3b08;
   --quote-summary:linear-gradient(160deg,#fff,#f7f8fa);--quote-summary-border:#cbd2d8;--quote-summary-shadow:0 12px 32px #253b4b09;
   --quote-number:#942c3c;--quote-success:#287b60;--quote-warning:#a57019;--quote-danger:#af2835;
@@ -70,6 +72,7 @@ html[data-skin="helvetia"] {
 }
 html[data-skin="light"] {
   color-scheme:light;
+  --pc-field-bg:#f1f6fd;--pc-field-border:#b4c8e0;--pc-primary-action:linear-gradient(130deg,#2070bb,#355fbd);
   --skin-page:#f3f7fc;
   --skin-shell:linear-gradient(150deg,#f5f9fe,#eef5fc);
   --skin-header:#fff;
@@ -127,9 +130,7 @@ html[data-skin] .story-fact,
 html[data-skin] .story-reading-grid section,
 html[data-skin] .news-sobriety,
 html[data-skin] .roadmap-principle{background:var(--skin-tint);border-color:var(--skin-border-soft)}
-html[data-skin] input,
-html[data-skin] select,
-html[data-skin] textarea,
+html[data-skin] input,html[data-skin] select,html[data-skin] textarea{background:var(--pc-field-bg);color:var(--skin-text);border-color:var(--pc-field-border);color-scheme:inherit}
 html[data-skin] .filter-toggle,
 html[data-skin] .filters label,
 html[data-skin] .canton-district-group,
@@ -149,18 +150,18 @@ html[data-skin] .mobile-search-back{background:var(--skin-control);color:var(--s
 html[data-skin] .site-footer{color:var(--skin-muted);border-color:var(--skin-border)}
 html[data-skin="helvetia"] .ambient,html[data-skin="light"] .ambient{opacity:0}
 html[data-skin="helvetia"] .brand,html[data-skin="light"] .brand{filter:none}
-html[data-skin="helvetia"] .save-button{background:var(--skin-accent);color:#fff}
-html[data-skin="light"] .save-button{background:var(--skin-accent);color:#fff}
+html[data-skin="helvetia"] .save-button{background:var(--pc-primary-action);color:#fff}
+html[data-skin="light"] .save-button{background:var(--pc-primary-action);color:#fff}
 
 /* Text on light surfaces. Existing status, series and product colours keep
    their semantic palette; shared labels use the skin's contrast contract. */
-html[data-skin="helvetia"],html[data-skin="light"]{--pc-text:var(--skin-text);--pc-muted:var(--skin-muted);--pc-card-bg:var(--skin-card);--pc-card-line:var(--skin-border-soft);--pc-field-bg:var(--skin-control)}
+html[data-skin="helvetia"],html[data-skin="light"]{--pc-text:var(--skin-text);--pc-muted:var(--skin-muted);--pc-card-bg:var(--skin-card);--pc-card-line:var(--skin-border-soft)}
 html[data-skin="helvetia"] :is(.view-intro-copy,.intro-copy,.intro-count,.kpi-card p,.result-line,.table-limit,.stats-card p,.news-panel p,.story-panel p,.roadmap-panel p,.maplibre-metric span,.maplibre-metric small),
 html[data-skin="light"] :is(.view-intro-copy,.intro-copy,.intro-count,.kpi-card p,.result-line,.table-limit,.stats-card p,.news-panel p,.story-panel p,.roadmap-panel p,.maplibre-metric span,.maplibre-metric small){color:var(--skin-secondary)}
-html[data-skin="helvetia"] :is(.view-tab,.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small),
-html[data-skin="light"] :is(.view-tab,.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small){color:var(--skin-muted)}
-html[data-skin="helvetia"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.view-tab.active,.nav-tab.active),
-html[data-skin="light"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.view-tab.active,.nav-tab.active){color:var(--skin-text)}
+html[data-skin="helvetia"] :is(.view-tab:not(.active),.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small),
+html[data-skin="light"] :is(.view-tab:not(.active),.nav-tab,.filter-toggle,.filters label,.stats-toolbar label,.map-toolbar label,.result-line button,.news-filters button,.story-angle-tabs button,.roadmap-stage span,.roadmap-stage small){color:var(--skin-muted)}
+html[data-skin="helvetia"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.nav-tab.active),
+html[data-skin="light"] :is(h1,h2,h3,h4,th,td,td strong,.kpi-card strong,.stats-kpi strong,.stats-card strong,.story-hero h3,.story-fact h4,.roadmap-stage strong,.nav-tab.active){color:var(--skin-text)}
 html[data-skin="helvetia"] :is(.eyebrow,.stats-kpi>strong,.maplibre-metric strong){color:var(--skin-accent)}
 html[data-skin="light"] :is(.eyebrow,.stats-kpi>strong,.maplibre-metric strong){color:var(--skin-accent)}
 html[data-skin="helvetia"] :is(th,.story-sources,.roadmap-stage header),html[data-skin="light"] :is(th,.story-sources,.roadmap-stage header){background:var(--skin-tint);border-color:var(--skin-border-soft)}
@@ -199,13 +200,12 @@ html[data-skin="light"] :is(.filters option,.news-qualification-panel option){ba
 
 /* Helvetia Hell: readable neutral chrome and Prime figures on light surfaces.
    Map geography and the meanings of business/status colours remain untouched. */
-html[data-skin="helvetia"] :is(.maplibre-view-buttons button,.stats-segment button){color:var(--skin-secondary)}
+html[data-skin="helvetia"] :is(.maplibre-view-buttons button,.stats-segment button:not(.active)){color:var(--skin-secondary)}
 html[data-skin="helvetia"] :is(.maplibre-view-buttons button:not(.active):hover,.maplibre-view-buttons button:not(.active):focus-visible){color:var(--skin-text);background:var(--skin-hover)}
 html[data-skin="helvetia"] .map-autocomplete strong{color:var(--skin-text)}
 html[data-skin="helvetia"] .map-autocomplete b{color:var(--skin-secondary)}
 html[data-skin="helvetia"] .map-autocomplete :is(button:hover,button.active){background:var(--skin-accent-soft)}
 html[data-skin="helvetia"] .view-intro-copy>strong{color:var(--skin-secondary)}
-html[data-skin="helvetia"] .stats-segment button.active{color:var(--skin-accent);background:var(--skin-accent-soft)}
 html[data-skin="helvetia"] :is(.kpi-label,.stats-kpi>span,.stats-prime-eyebrow){color:var(--skin-secondary)}
 html[data-skin="helvetia"] :is(.stats-kpi small,.stats-prime-meta,.territory-comparison span>small,.territory-comparison button>small,.stats-rank-label span,.stats-rank>small){color:var(--skin-secondary)}
 html[data-skin="helvetia"] :is(.territory-comparison button,.stats-segment){background:var(--skin-control);border-color:var(--skin-border-soft)}

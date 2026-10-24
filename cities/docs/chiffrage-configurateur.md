@@ -110,3 +110,44 @@ montants du préréglage ProConcept. Les autres paramètres et l'ancien prérég
 sont inchangés. Les anciens chiffrages restent figés sur leur version ; une
 variante explicite permet d'appliquer la nouvelle référence sans écraser les
 montants saisis manuellement.
+
+
+## Lien client sécurisé — proposition figée
+
+L'éditeur et la page client sont deux applications distinctes, pas deux niveaux
+de visibilité d'un même composant.
+
+- **Créer** depuis une offre enregistrée complète (`publishOffer`) produit un
+  jeton 256 bits. Seule son empreinte SHA-256 est stockée. La publication référence
+  l'UUID du chiffrage et sa révision, et reste immuable après toute mise à jour.
+- **Lire** (`clientOffer`) est le seul endpoint accessible sans session éditeur :
+  jeton dans l'en-tête Authorization, une seule projection contrôlée par liste
+  positive en réponse. Pas de catalogues, pas de lignes du calcul, pas de coûts
+  PA, pas de marges, pas de jours ni de référence tarifaire.
+- La réponse ne contient que titre/identité de la commune, révision, produits
+  retenus, investissement et récurrence de vente, total sur cinq ans et trois
+  catégories **Solutions Prime / Partenaires / Hébergement**.
+- Le lien `cities/offre.html#JETON` ouvre une page autonome sans navigation vers
+  l'application et sans JS d'éditeur. Le fragment n'est pas transmis au serveur
+  GitHub Pages. La page applique une CSP stricte, `noindex` et `no-referrer`.
+- **Révoquer** (`revokeOffer`) et **Lister les liens** (`sharedOffers`) exigent
+  la session éditeur. Un lien expire après 90 jours ; une révocation le rend
+  immédiatement inutilisable.
+- RLS sur `public.chiffrage_client_links`, aucun droit `anon` ou
+  `authenticated`; seul le backend service_role accède à la table.
+- Les opérations internes originelles (sauvegarde, restauration, export, reprise
+  de session) gardent la protection actuelle et n'acceptent pas les jetons clients.
+- Le client ne reçoit jamais le JSON complet pour qu'un filtre CSS puisse le
+  masquer. C'est une exclusion au niveau de la donnée envoyée.
+
+Avant toute communication externe : recette d'une offre **complète**,
+revue du contenu visible côté client, vérification du comportement après
+révocation et contrôle sur Safari mobile/PC. Ne pas communiquer le lien de
+reprise interne.
+
+
+## Publication commerciale v2
+
+Les prix de vente restent issus des lignes enregistrées, sans recalcul des tarifs. Une taxonomie partagée décrit les licences, la mise en œuvre, la reprise, la gestion de projet, la formation/aide au démarrage, les autres prestations, les bases de données, Prime et partenaires, le LCM et l'hébergement. Le cumul doit rejoindre les totaux de la révision.
+
+La publication inclut uniquement les noms commerciaux des modules sélectionnés dans le catalogue versionné : innosolvcity par module, ProConcept par option et Abacus **par groupe parent seulement**. Les jours, codes, marges, PA et références privées restent côté serveur. LCM Gold/Platinum apparaît dans le périmètre et dans son poste financier propre. Les liens v1 demeurent lisibles et immuables ; seuls les nouveaux liens reçoivent la présentation v2.

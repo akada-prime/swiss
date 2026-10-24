@@ -1,4 +1,4 @@
-import {t} from './core/i18n.js?v=20261023-chiffrage-structure-r6';
+import {t} from './core/i18n.js?v=20261024-completion-r1';
 (() => {
   'use strict';
 

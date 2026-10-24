@@ -1,8 +1,9 @@
-import { createHmac, createHash, randomUUID, timingSafeEqual } from 'node:crypto';
+import { createHmac, createHash, randomUUID, randomBytes, timingSafeEqual } from 'node:crypto';
 import { Buffer } from 'node:buffer';
 import { calculateQuote } from '../../../app/chiffrage/calculate.js';
 import { calculationError } from '../../../app/chiffrage/errors.js';
 import { exportQuoteXlsx } from './chiffrage-xlsx.mjs';
+import { publicOfferFromSaved, publicLinkMetadata } from './client-projection.mjs';
 
 const json = (data, status = 200, headers = {}) => new Response(JSON.stringify(data), {
   status, headers: { 'Content-Type': 'application/json; charset=utf-8',
@@ -13,6 +14,8 @@ const env = name => Deno.env.get(name);
 const secret = () => env('SUPABASE_SERVICE_ROLE_KEY');
 const configured = () => ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY'].every(env);
 const sessionDurationMs = 12 * 60 * 60 * 1000;
+const linkDurationMs = 90 * 24 * 60 * 60 * 1000;
+const uuidPattern = /^[0-9a-f-]{36}$/i;
 
 export function signSession(now = Date.now()) {
   const payload = Buffer.from(JSON.stringify({ exp: now + sessionDurationMs,
@@ -157,12 +160,66 @@ async function writeQuote(payload) {
   return { ...saved, result };
 }
 
+
+// This endpoint uses a 256-bit bearer capability, NOT an editor session.
+// The database stores its SHA-256 hash and a preapproved, frozen allowlist only.
+async function clientOffer(request) {
+  const token = sessionToken(request);
+  if (!/^[A-Za-z0-9_-]{43}$/.test(token)) return fail('Offer link unavailable', 404);
+  const tokenHash = createHash('sha256').update(token).digest('hex');
+  // Verify capability and atomically count its opening, without visitor data.
+  const payload = await db('rpc/record_chiffrage_client_open', {
+    method: 'POST', payload: { p_token_hash: tokenHash } });
+  if (!payload) return fail('Offer link unavailable', 404);
+  return json(payload, 200, { 'Referrer-Policy': 'no-referrer',
+    'Content-Security-Policy': 'default-src \'none\'' });
+}
+
+async function publishClientOffer(payload) {
+  if (!uuidPattern.test(payload?.id ?? '')) return fail('Invalid quote id', 400);
+  const quote = await savedQuote(payload.id);
+  if (!quote?.snapshot || quote.archived) return fail('Quote not found', 404);
+  // Resolve labels against the versions pinned to this saved revision.
+  // The private catalog never leaves this function: only the allowlisted
+  // display names are included in the customer snapshot.
+  const catalog = await loadCatalog(quote.snapshot.catalog_versions);
+  const projection = publicOfferFromSaved(quote, catalog);
+  if (!projection) return fail('Offer must be final and priced', 422);
+  const token = randomBytes(32).toString('base64url');
+  const tokenHash = createHash('sha256').update(token).digest('hex');
+  const expires = new Date(Date.now() + linkDurationMs).toISOString();
+  const rows = await db('chiffrage_client_links', { method: 'POST', returning: true, query: {
+    select: 'id,revision,expires_at,created_at,revoked_at,open_count,last_opened_at' }, payload: {
+    chiffrage_id: quote.id, revision: quote.snapshot.revision,
+    token_hash: tokenHash, payload: projection, expires_at: expires } });
+  return json({ ...publicLinkMetadata(rows[0]), token }, 201);
+}
+
+async function sharedClientLinks(id) {
+  if (!uuidPattern.test(id ?? '')) return fail('Invalid quote id', 400);
+  const rows = await db('chiffrage_client_links', { query: {
+    select: 'id,revision,created_at,expires_at,revoked_at,open_count,last_opened_at',
+    chiffrage_id: `eq.${id}`, order: 'created_at.desc', limit: '50' } });
+  return json(rows.map(publicLinkMetadata));
+}
+
+async function revokeClientLink(payload) {
+  if (!uuidPattern.test(payload?.id ?? '') || !uuidPattern.test(payload?.link_id ?? ''))
+    return fail('Invalid link reference', 400);
+  const rows = await db('chiffrage_client_links', { method: 'PATCH', returning: true,
+    query: { select: 'id,revision,created_at,expires_at,revoked_at,open_count,last_opened_at',
+      id: `eq.${payload.link_id}`, chiffrage_id: `eq.${payload.id}` },
+    payload: { revoked_at: new Date().toISOString() } });
+  return rows.length ? json(publicLinkMetadata(rows[0])) : fail('Offer link unavailable', 404);
+}
+
 export default async function handler(request) {
   if (!configured()) return fail('Chiffrage server is not configured', 503);
   const url = new URL(request.url);
   const action = url.searchParams.get('action') || 'status';
   if (request.method === 'POST' && !sameOrigin(request)) return fail('Forbidden origin', 403);
   try {
+    if (action === 'clientOffer' && request.method === 'GET') return clientOffer(request);
     if (action === 'login' && request.method === 'POST') {
       const { code } = await body(request);
       const allowed = await db('rpc/chiffrage_record_login_with_key', {
@@ -203,6 +260,12 @@ export default async function handler(request) {
     }
     if (action === 'save' && request.method === 'POST')
       return json(await writeQuote(await body(request)));
+    if (action === 'publishOffer' && request.method === 'POST')
+      return publishClientOffer(await body(request));
+    if (action === 'sharedOffers' && request.method === 'GET')
+      return sharedClientLinks(url.searchParams.get('id'));
+    if (action === 'revokeOffer' && request.method === 'POST')
+      return revokeClientLink(await body(request));
     if (action === 'delete' && request.method === 'POST') {
       const { id, expected_revision } = await body(request);
       if (!/^[0-9a-f-]{36}$/i.test(id) || !Number.isInteger(expected_revision) ||
