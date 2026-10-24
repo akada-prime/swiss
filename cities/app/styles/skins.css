@@ -3,7 +3,7 @@
 html[data-skin="prime-darkweb"] {
   color-scheme:dark;
   --quote-surface:#10151e;--quote-nav:#0d121a;--quote-active:#202a38;
-  --pc-field-bg:#151c27;--pc-field-border:#344052;
+  --pc-field-bg:#1c2a3a;--pc-field-border:#64768c;
   --quote-input:var(--pc-field-bg);--quote-input-border:var(--pc-field-border);
   --pc-primary-action:linear-gradient(130deg,#1888e4,#3961d8);--quote-primary:var(--pc-primary-action);--quote-button-shadow:0 3px 12px #0062bd26;
   --quote-tab-shadow:0 1px 4px #0005;--quote-summary:linear-gradient(155deg,#182337,#111824 70%);
@@ -36,7 +36,7 @@ html[data-skin="prime-darkweb"] {
 html[data-skin="helvetia"] {
   color-scheme:light;
   --quote-surface:#fff;--quote-nav:#f7f8f9;--quote-active:#fff;
-  --pc-field-bg:#f4f6f8;--pc-field-border:#b9c3ca;
+  --pc-field-bg:#eaf0f5;--pc-field-border:#8193a3;
   --quote-input:var(--pc-field-bg);--quote-input-border:var(--pc-field-border);
   --pc-primary-action:linear-gradient(130deg,#bc2c36,#9d2438);--quote-primary:var(--pc-primary-action);--quote-button-shadow:0 3px 10px #8d223218;
   --quote-tab-shadow:0 1px 5px #1c2b3b12,0 0 0 1px #1c2b3b08;
@@ -130,9 +130,7 @@ html[data-skin] .story-fact,
 html[data-skin] .story-reading-grid section,
 html[data-skin] .news-sobriety,
 html[data-skin] .roadmap-principle{background:var(--skin-tint);border-color:var(--skin-border-soft)}
-html[data-skin] input,
-html[data-skin] select,
-html[data-skin] textarea,
+html[data-skin] input,html[data-skin] select,html[data-skin] textarea{background:var(--pc-field-bg);color:var(--skin-text);border-color:var(--pc-field-border);color-scheme:inherit}
 html[data-skin] .filter-toggle,
 html[data-skin] .filters label,
 html[data-skin] .canton-district-group,

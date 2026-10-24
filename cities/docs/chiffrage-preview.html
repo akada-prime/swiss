@@ -74,6 +74,13 @@ if (!params.has('frame')) {
       services:[{family:'prestations',item_code:'formation',label:'Formation',days:index===2?8:4,suggested_days:4}],
       primeLines:Array.from({length:5},(_,i)=>({family:'prime',item_code:`demo-${i}`,label:['Guichet virtuel et démarches en ligne','Signature électronique','Archivage et gestion documentaire','Connecteur de paiement','Interface partenaire'][i],investment_pv:1000+i*500,annual_pv:100+i*50,quantity:1})),
       partners:[],pce:{finances:true,salaires:false,interfacePa:0},oracle:{full:5,light:0},sql:{},lcm:{selection:index===2?'gold':'none'},energy:false,hosting:{included:false}};
+    if(params.get('case')==='bex') {
+      input.name='Bex';input.bfs_id=5402;input.canton='VD';input.dimensions.population=9500;input.dimensions.licensedPopulation=10000;
+      input.services.push({family:'prestations',item_code:'interfaces',label:'Interfaces',days:null,suggested_days:0});
+      const missing=input.moduleServices.find(row=>row.item_code==='abacus/ERP/10510.1');
+      missing.days=null;missing.suggested_days=null;delete catalog.parameters.service_presets.standard[missing.item_code];
+    }
+    if(params.get('noReference')==='1') delete input.reference;
     const result=calculateQuote(input,catalog);
     if(index===2 && params.get('incomplete')==='1')result.status='incomplete';
     return {id:`synthetic-${index}`,title:index===2?'Accompagnement renforcé':'Saignelégier — Variante 1',current_revision:index+1,commune_name:input.name,bfs_id:input.bfs_id,
@@ -104,6 +111,10 @@ if (!params.has('frame')) {
         commune_name:value.input.name,bfs_id:value.input.bfs_id};
       return response({id:saved.id,revision:saved.current_revision,result});
     }
+    if(action==='publishOffer')return response({token:'test-only-token',expires_at:'2099-01-01T00:00:00Z'});
+    if(action==='sharedOffers')return response([]);
+    if(action==='revokeOffer')return response({revoked:true});
+    if(action==='revisions')return response([{revision:1,created_at:'2026-10-24'}]);
     if(action==='export')return response({code:'quoteIncomplete'},422);
     return response({});
   };

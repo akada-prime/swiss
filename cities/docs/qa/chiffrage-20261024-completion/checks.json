@@ -1,0 +1,280 @@
+{
+  "checks": [
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 360,
+      "scroll": 360,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 430,
+      "scroll": 430,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 768,
+      "scroll": 768,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1366,
+      "scroll": 1366,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 1920,
+      "scroll": 1920,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "fr",
+      "width": 2560,
+      "scroll": 2560,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 360,
+      "scroll": 360,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 430,
+      "scroll": 430,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 768,
+      "scroll": 768,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1366,
+      "scroll": 1366,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 1920,
+      "scroll": 1920,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "helvetia",
+      "language": "de",
+      "width": 2560,
+      "scroll": 2560,
+      "style": {
+        "bg": "rgb(234, 240, 245)",
+        "border": "rgb(129, 147, 163)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 360,
+      "scroll": 360,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 430,
+      "scroll": 430,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 768,
+      "scroll": 768,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1366,
+      "scroll": 1366,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 1920,
+      "scroll": 1920,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "fr",
+      "width": 2560,
+      "scroll": 2560,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 360,
+      "scroll": 360,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 430,
+      "scroll": 430,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 768,
+      "scroll": 768,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1366,
+      "scroll": 1366,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 1920,
+      "scroll": 1920,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "skin": "prime-darkweb",
+      "language": "de",
+      "width": 2560,
+      "scroll": 2560,
+      "style": {
+        "bg": "rgb(28, 42, 58)",
+        "border": "rgb(100, 118, 140)",
+        "outer": "rgba(0, 0, 0, 0)"
+      }
+    }
+  ],
+  "errors": [],
+  "functional": [
+    "exact SQL target",
+    "live warning removal and return",
+    "module zero retained on save",
+    "optional/reference zero displayed",
+    "export correction route",
+    "save-before-share",
+    "Abacus-only and PCE-only without SQL",
+    "share copy/close/manage lifecycle",
+    "no-reference snapshot"
+  ]
+}

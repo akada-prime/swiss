@@ -1,5 +1,17 @@
 # État de reprise — Prime Communes 2.0
 
+> **Check-up fonctionnel · 24.10.2026 :** reprise de la production `aec6d002`.
+> Les points bloquants sont listés et reliés aux champs précis, avec ouverture
+> des détails et focus. L’alerte SQL suit le prix retenu, y compris zéro, et se
+> réactive si ce prix est effacé. Le zéro de référence ou d’une prestation
+> facultative absente est visible, sans inventer les prix inconnus. Les offres
+> sans référence ne font plus planter Synthèse ni déclencher à tort l’étiquette
+> « ancien standard ». Partage à finaliser et export conduisent à la correction ;
+> les liens publics et leurs compteurs sont conservés. La cascade des champs
+> utilise réellement les surfaces communes, teintées et bordées dans les deux
+> apparences. Moteur/catalogues inchangés. 157 tests, 24 parcours sur six largeurs.
+> Voir [la recette](docs/chiffrage-checkup-20261024.md).
+
 > **Chiffrage · cadre commun bêta design, 23.10.2026 (r6) :** les six onglets
 > partagent l’en-tête issu de l’Offre. Navigation et identité précèdent une grille
 > de contenu indépendante ; le résumé Natel suit le contenu. Plus de bandeau

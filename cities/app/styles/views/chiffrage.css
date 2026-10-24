@@ -151,3 +151,5 @@ html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
  .chiffrage-share-link{flex-wrap:wrap;gap:12px}
  .chiffrage-share-link>.chiffrage-button{width:100%}
 }
+
+.chiffrage-completion{margin:0 0 20px;padding:16px 18px;border:1px solid var(--skin-border);border-left:3px solid var(--skin-accent);border-radius:8px;background:var(--skin-tint);font-size:14px;line-height:1.5}.chiffrage-completion ul{list-style:none;padding:0;margin:8px 0 0}.chiffrage-completion li+li{margin-top:4px}.chiffrage-completion button{display:block;background:transparent;border:0;padding:7px 0;text-align:left;color:var(--skin-text);font:inherit;overflow-wrap:anywhere;cursor:pointer;min-height:40px}.chiffrage-completion button:hover{text-decoration:underline}.chiffrage-completion summary{cursor:pointer;margin-top:10px}.chiffrage-view .is-completion-target{outline:3px solid var(--skin-accent);outline-offset:3px;scroll-margin-block:100px}
