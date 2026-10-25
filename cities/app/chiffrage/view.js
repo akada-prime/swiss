@@ -15,7 +15,7 @@ const escape = runtime.escapeHtml;
 const endpoint = `${window.SUPABASE_URL}/functions/v1/chiffrage`;
 const sessionKey = 'prime-chiffrage-session';
 const state = { authenticated: false, loaded: false, catalog: null, versions: {},
-  activeVersions: {},
+  activeVersions: {}, activePrimeOptions: [],
   quotes: [], quote: null, draft: null, revision: null, title: '', archived: false,
   showArchived: false, mode: 'list', message: '', error: false, loading: null,
   pendingCommune: null, internal: false, dirty: false,
@@ -227,7 +227,7 @@ function renderNew() {
 async function firstDraft(row) {
   // A tab may have stayed open while a tariff version was activated.
   const active=await api('catalog');
-  state.catalog=active.catalog;state.versions=active.active;state.activeVersions=active.active;
+  state.catalog=active.catalog;state.versions=active.active;state.activeVersions=active.active;state.activePrimeOptions=active.catalog?.parameters?.prime_options??[];
   state.draft = { bfs_id: Number(row.id), name: row.name, canton: row.canton,
     context: { integrator: row.integrator, software: row.software, erp: row.erp,
       hosting: row.hosting, notes: row.notes },
@@ -344,7 +344,7 @@ function productSection() {
         <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" data-missing-days="${days == null}" data-proposed-days="${escape(presetDays(id) ?? '')}" class="${current?.days != null && current.days !== presetDays(id) ? 'is-adjusted' : ''}" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j</span></label>
         ${referenceProfiles(state.catalog).find(row=>row.id===state.draft.reference?.id)?.module_group_labels?.[id] ? `<small>${t('chiffrage.groupedServices')}</small>` : ''}
       </div>` : ''}
-      ${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</details>`;
+      ${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
   };
   return `<section class="chiffrage-section chiffrage-catalog"><p class="chiffrage-kicker">${localLabel('Périmètre logiciel','Softwareumfang')}</p><h2>${t('chiffrage.workspace.f492367598')}</h2>
     <p class="chiffrage-helper">${localLabel('Les modules retenus en premier. Ouvre les options pour compléter le périmètre.','Gewählte Module zuerst. Weitere Optionen bei Bedarf öffnen.')}</p>
@@ -463,7 +463,7 @@ function primeOptionAnnual(line) {
   return line.annual_override ?? Math.floor((state.draft.dimensions.population*rule.per_capita)/rule.round_to+.5)*rule.round_to;
 }
 function extraSection() {
-  const catalogOptions=state.catalog?.parameters?.prime_options??[];
+  const catalogOptions=state.activePrimeOptions;
   const available = kind => {
     const key = kind === 'primeLines' ? 'prime_lines' : 'partners';
     const selected = new Set((state.draft[kind] ?? []).map(line => line.item_code || line.label));
@@ -507,7 +507,7 @@ function extraSection() {
         ${textField(`${id}.note`,line.note,t('chiffrage.note'))}
         <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`;
     }).join('');
-    return `<details class="chiffrage-extra-group"><summary>${label} · ${number(chosen.length)} ${localLabel('retenues','gewählt')}</summary>${rows}
+    return `<details class="chiffrage-extra-group"><summary><span>${label}</span><small>${number(chosen.length)} ${localLabel('retenues','gewählt')}</small></summary>${rows}
       <details class="chiffrage-extra-available"><summary>${number(options.length)} ${localLabel('options non choisies','nicht gewählte Optionen')}</summary>
       ${options.map((line,index)=>`<div><span>${escape(line.label)}</span><button type="button" class="chiffrage-button quiet" data-action="${line.source==='catalog'?'addPrimeOption':'addReferenceLine'}" data-code="${escape(line.item_code??'')}" data-kind="${kind}" data-index="${index}">${localLabel('Ajouter','Hinzufügen')}</button></div>`).join('')||`<p class="chiffrage-helper">${localLabel('Aucune autre option disponible.','Keine weitere Option verfügbar.')}</p>`}</details>
 
@@ -1137,6 +1137,7 @@ async function load() {
       { archived: 'all' })]);
     state.versions = catalog.active;
     state.activeVersions = catalog.active;
+    state.activePrimeOptions = catalog.catalog?.parameters?.prime_options ?? [];
     state.catalog = catalog.catalog;
     state.quotes = quotes;
     state.loaded = true;
@@ -1404,7 +1405,7 @@ root.addEventListener('click', async event => {
       for(const kind of ['primeLines','partners'])for(const line of structuredClone(profile[kind==='primeLines'?'prime_lines':'partners']??[]))
         if(!draft[kind].some(existing=>existing.item_code===line.item_code || existing.label===line.label))draft[kind].push(line);
       if(hostingIncluded(draft))applyHosting(draft,active.catalog);
-      state.catalog=active.catalog;state.versions=active.active;state.activeVersions=active.active;
+      state.catalog=active.catalog;state.versions=active.active;state.activeVersions=active.active;state.activePrimeOptions=active.catalog?.parameters?.prime_options??[];
       state.draft=draft;state.quote=null;state.revision=null;state.title+=localLabel(' — standard actuel',' — aktueller Standard');
       state.dirty=true;state.editorTab='composer';renderEditor();
       notice(() => localLabel('Variante prête à enregistrer. Le chiffrage original et ses révisions restent intacts.','Variante bereit zum Speichern. Die ursprüngliche Kalkulation und ihre Versionen bleiben erhalten.'));
@@ -1578,7 +1579,7 @@ root.addEventListener('click', async event => {
   }
   if (action === 'addPrimeOption') {
     const code=button.dataset.code ?? root.querySelector('[data-prime-option]')?.value;
-    const option=(state.catalog?.parameters?.prime_options??[]).find(item=>item.item_code===code);
+    const option=state.activePrimeOptions.find(item=>item.item_code===code);
     if (!option) return;
     if (state.draft.primeLines.some(line=>line.item_code===code)) return;
     if (code==='prime-mandats-integres' && !state.draft.primeLines.some(line=>line.item_code==='prime-mandats-finance')) {
