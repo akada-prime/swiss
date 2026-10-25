@@ -301,6 +301,16 @@ export function calculateQuote(input, catalog) {
       finite(entry.investment_fixed_pv ?? 0, 'fixed license investment');
     const investment = effective(serviceValue ?? finite(entry.investment_pv ?? 0,
       'investment PV'), entry.investment_override);
+    // Opt-in per-inhabitant pricing; historic flat annual amounts remain untouched.
+    const pricing = entry.family === 'prime' && entry.category === 'license' ? entry.annual_pricing : null;
+    let annualPv = finite(entry.annual_pv ?? 0, 'annual PV');
+    if (pricing?.chf_per_inhabitant != null) {
+      const coefficient = finite(pricing.chf_per_inhabitant, 'CHF per inhabitant');
+      const minimum = finite(pricing.minimum ?? 0, 'minimum annual PV');
+      const step = finite(pricing.round_to ?? 1, 'annual rounding');
+      if (coefficient < 0 || minimum < 0 || step <= 0) throw new Error('Invalid Prime annual pricing');
+      annualPv = Math.ceil(Math.max(populationForLicenses * coefficient, minimum) / step) * step;
+    }
     lines.push({ family: entry.family, category: entry.category ?? null,
       item_code: entry.item_code ?? null,
       label: moduleLine?.label ?? entry.label, supplier: entry.supplier ?? null,
@@ -310,7 +320,7 @@ export function calculateQuote(input, catalog) {
       investment_pv: investment.effective_value * quantity,
       annual_pa: optionalMoney(entry.annual_pa) == null ? null :
         optionalMoney(entry.annual_pa) * quantity,
-      annual_pv: finite(entry.annual_pv ?? 0, 'annual PV') * quantity,
+      annual_pv: annualPv * quantity,
       software: false, explanation: entry.explanation ?? null,
       ...(entry.gp_included ? {gp_included:true} : {}),
       suggested_days: suggestedDays, selected_days: days,

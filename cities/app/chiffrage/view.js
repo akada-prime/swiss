@@ -1,6 +1,6 @@
 import { t, number } from '../core/i18n.js?v=20261024-completion-r1';
 import { subscribePreferences } from '../core/preferences.js';
-import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261024-completion-r1';
+import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261025-prime-options-r1';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js';
 import { calculationError } from './errors.js';
@@ -457,29 +457,53 @@ function extraInvestment(line) {
   return (line.investment_override ?? (line.days != null ? line.days*(line.unit_day_rate??dayRate())+(line.investment_fixed_pv??0) : line.investment_pv??0))*(line.quantity??1);
 }
 function extraSection() {
-  return `<details class="chiffrage-section" open><summary>${t('chiffrage.partners')}</summary>
-    ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index }))
-      .filter(line => line.category !== 'hosting'),
-      ...state.draft.partners.map((line, index) => ({ ...line, kind: 'partners', index }))]
-      .map(line => `<details class="chiffrage-extra-row" ${!line.label?'open':''}><summary><span data-extra-title="${line.kind}.${line.index}">${escape(line.label || t('chiffrage.lineLabel'))}</span><strong data-extra-summary="${line.kind}.${line.index}">${money(extraInvestment(line))}</strong><span data-extra-annual="${line.kind}.${line.index}">${money(line.annual_pv)} / ${t('chiffrage.ui.perYear')}</span></summary><div class="chiffrage-line">
-        ${textField(`${line.kind}.${line.index}.label`, line.label, t('chiffrage.lineLabel'))}
-        ${state.internal ? textField(`${line.kind}.${line.index}.item_code`, line.item_code, t('chiffrage.internalCode')) : ''}
-        ${line.kind === 'partners' ? textField(`${line.kind}.${line.index}.supplier`, line.supplier, t('chiffrage.supplier')) : ''}
-        ${field(`${line.kind}.${line.index}.quantity`, line.quantity ?? 1, t('chiffrage.quantity'))}
-        ${line.days != null ? field(`${line.kind}.${line.index}.days`,line.days,t('chiffrage.days'),{step:.5}) : ''}
-        ${line.unit_day_rate != null ? field(`${line.kind}.${line.index}.unit_day_rate`,line.unit_day_rate,t('chiffrage.serviceDayRate')) : ''}
-        ${field(`${line.kind}.${line.index}.${line.days != null ? 'investment_override' : 'investment_pv'}`, line.days != null ? line.investment_override : line.investment_pv,
-          t(line.days != null ? 'chiffrage.investmentOverride' : 'chiffrage.investment'))}
-        <small class="chiffrage-helper" data-extra-total="${line.kind}.${line.index}">${t('chiffrage.calculatedInvestment')} ${money(extraInvestment(line))}</small>
-        ${state.internal ? field(`${line.kind}.${line.index}.investment_pa`, line.investment_pa, t('chiffrage.investmentPa')) : ''}
-        ${field(`${line.kind}.${line.index}.annual_pv`, line.annual_pv,
-          t('chiffrage.annual'))}
-        ${state.internal ? field(`${line.kind}.${line.index}.annual_pa`, line.annual_pa, t('chiffrage.annualPa')) : ''}
-        ${textField(`${line.kind}.${line.index}.note`, line.note, t('chiffrage.note'))}
-        <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${line.kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`).join('')}
-    <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addLicense">${t('chiffrage.addPrimeLicense')}</button>
-      <button type="button" class="chiffrage-button" data-action="addPrime">${t('chiffrage.addLine')} Prime</button>
-      <button type="button" class="chiffrage-button" data-action="addPartner">${t('chiffrage.addLine')} ${t('chiffrage.partner')}</button></div></details>`;
+  const available = kind => {
+    const key = kind === 'primeLines' ? 'prime_lines' : 'partners';
+    const selected = new Set((state.draft[kind] ?? []).map(line => line.item_code || line.label));
+    const found = new Map();
+    for (const profile of referenceProfiles(state.catalog)) for (const line of profile[key] ?? []) {
+      if (line.category === 'hosting') continue;
+      const id = line.item_code || line.label;
+      if (id && !selected.has(id) && !found.has(id)) found.set(id, line);
+    }
+    return [...found.values()];
+  };
+  const section = (kind, label) => {
+    const chosen = state.draft[kind].map((line,index)=>({...line,index})).filter(line=>line.category !== 'hosting');
+    const options = available(kind);
+    const rows = chosen.map(line => {
+      const id = `${kind}.${line.index}`;
+      const annual = line.annual_pricing?.chf_per_inhabitant == null ? line.annual_pv :
+        Math.ceil(Math.max((state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population) *
+          line.annual_pricing.chf_per_inhabitant, line.annual_pricing.minimum ?? 0) /
+          (line.annual_pricing.round_to ?? 1)) * (line.annual_pricing.round_to ?? 1);
+      return `<details class="chiffrage-extra-row"><summary><span data-extra-title="${id}">${escape(line.label || t('chiffrage.lineLabel'))}</span><span>${number(line.days ?? 0)} ${localLabel('jours','Tage')}</span><strong data-extra-summary="${id}">${money(extraInvestment(line))}</strong><span data-extra-annual="${id}">${money(annual)} / ${t('chiffrage.ui.perYear')}</span></summary><div class="chiffrage-line">
+        ${textField(`${id}.label`,line.label,t('chiffrage.lineLabel'))}
+        ${state.internal?textField(`${id}.item_code`,line.item_code,t('chiffrage.internalCode')):''}
+        ${kind==='partners'?textField(`${id}.supplier`,line.supplier,t('chiffrage.supplier')):''}
+        ${field(`${id}.quantity`,line.quantity??1,t('chiffrage.quantity'))}
+        ${field(`${id}.days`,line.days, t('chiffrage.days'),{step:.5})}
+        ${line.unit_day_rate!=null?field(`${id}.unit_day_rate`,line.unit_day_rate,t('chiffrage.serviceDayRate')):''}
+        ${field(`${id}.${line.days!=null?'investment_override':'investment_pv'}`,
+          line.days!=null?line.investment_override:line.investment_pv,t('chiffrage.investmentOverride'))}
+        ${kind==='primeLines' && line.category==='license'? `<div class="chiffrage-prime-pricing">
+          ${field(`${id}.annual_pricing.chf_per_inhabitant`,line.annual_pricing?.chf_per_inhabitant,localLabel('CHF par habitant et par an','CHF pro Einwohner und Jahr'),{step:.01})}
+          ${field(`${id}.annual_pricing.minimum`,line.annual_pricing?.minimum,localLabel('Minimum annuel CHF','Jährliches Minimum CHF'))}
+          ${field(`${id}.annual_pricing.round_to`,line.annual_pricing?.round_to,localLabel('Arrondi CHF','Rundung CHF'))}
+          <small>${localLabel('Base habitants retenus','Massgebende Einwohner')}: ${number(state.draft.dimensions.licensedPopulation??state.draft.dimensions.population)} · ${localLabel('annuel calculé','berechnet jährlich')}: ${money(annual)}</small></div>`:''}
+        ${field(`${id}.annual_pv`,line.annual_pv,t('chiffrage.annual')+' PV')}
+        ${state.internal?field(`${id}.annual_pa`,line.annual_pa,t('chiffrage.annualPa')):''}
+        ${state.internal?field(`${id}.investment_pa`,line.investment_pa,t('chiffrage.investmentPa')):''}
+        ${textField(`${id}.note`,line.note,t('chiffrage.note'))}
+        <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`;
+    }).join('');
+    return `<section class="chiffrage-extra-group"><h3>${label}</h3>${rows}
+      <details class="chiffrage-extra-available"><summary>${number(options.length)} ${localLabel('options non choisies','nicht gewählte Optionen')}</summary>
+      ${options.map((line,index)=>`<div><span>${escape(line.label)}</span><button type="button" class="chiffrage-button quiet" data-action="addReferenceLine" data-kind="${kind}" data-index="${index}">${localLabel('Ajouter','Hinzufügen')}</button></div>`).join('')||`<p class="chiffrage-helper">${localLabel('Aucune option dans les références.','Keine Option in den Referenzen.')}</p>`}</details>
+      <button type="button" class="chiffrage-button quiet" data-action="${kind==='partners'?'addPartner':'addPrime'}">${localLabel('Ajouter une ligne libre','Freie Zeile hinzufügen')}</button></section>`;
+  };
+  return `<div class="chiffrage-section chiffrage-extra-overview"><h2>${localLabel('Options Prime et partenaires','Prime- und Partneroptionen')}</h2>
+    ${section('primeLines','Prime')}${section('partners',t('chiffrage.partners'))}</div>`;
 }
 
 function hostingSection(scope = 'composer') {
@@ -977,7 +1001,10 @@ function setValue(path, raw, isCheckbox = false) {
   }
   if (parts[0] === 'primeLines' || parts[0] === 'partners') {
     const row = state.draft[parts[0]][Number(parts[1])];
-    row[parts[2]] = ['label', 'item_code', 'supplier', 'note'].includes(parts[2]) ? raw :
+    if (parts[2] === 'annual_pricing') {
+      row.annual_pricing ??= {};
+      row.annual_pricing[parts[3]] = raw === '' ? null : Number(raw);
+    } else row[parts[2]] = ['label', 'item_code', 'supplier', 'note'].includes(parts[2]) ? raw :
       raw === '' ? null : Number(raw);
     return;
   }
@@ -1170,6 +1197,7 @@ root.addEventListener('input', event => {
 });
 
 root.addEventListener('change', event => {
+  if (event.target.dataset.field?.includes('.annual_pricing.')) { renderEditor(); return; }
   if (event.target.dataset.compare) {
     const id=event.target.dataset.compare;
     state.comparison=event.target.checked ? [...state.comparison,id].slice(0,3) :
@@ -1534,6 +1562,19 @@ root.addEventListener('click', async event => {
       quantity: 1, investment_pv: action === 'addHosting' ? null : 0,
       annual_pv: action === 'addHosting' ? null : 0 });
     renderEditor(); return;
+  }
+  if (action === 'addReferenceLine') {
+    const kind=button.dataset.kind;
+    const key=kind==='primeLines'?'prime_lines':'partners';
+    const selected=new Set(state.draft[kind].map(line=>line.item_code||line.label));
+    const found=new Map();
+    for(const profile of referenceProfiles(state.catalog))for(const line of profile[key]??[]){
+      const id=line.item_code||line.label;
+      if(line.category!=='hosting'&&id&&!selected.has(id)&&!found.has(id))found.set(id,line);
+    }
+    const choice=[...found.values()][Number(button.dataset.index)];
+    if(choice){state.draft[kind].push(structuredClone(choice));state.dirty=true;renderEditor();}
+    return;
   }
   if (action === 'removeLine') {
     state.dirty=true;
