@@ -491,7 +491,7 @@ function extraSection() {
           ${field(`${id}.annual_pricing.minimum`,line.annual_pricing?.minimum,localLabel('Minimum annuel CHF','Jährliches Minimum CHF'))}
           ${field(`${id}.annual_pricing.round_to`,line.annual_pricing?.round_to,localLabel('Arrondi CHF','Rundung CHF'))}
           <small>${localLabel('Base habitants retenus','Massgebende Einwohner')}: ${number(state.draft.dimensions.licensedPopulation??state.draft.dimensions.population)} · ${localLabel('annuel calculé','berechnet jährlich')}: ${money(annual)}</small></div>`:''}
-        ${field(`${id}.annual_pv`,line.annual_pv,t('chiffrage.annual')+' PV')}
+        ${line.annual_pricing?.chf_per_inhabitant != null ? `<div class="chiffrage-prime-annual"><span>${t('chiffrage.annual')} PV</span><strong>${money(annual)}</strong></div>` : field(`${id}.annual_pv`,line.annual_pv,t('chiffrage.annual')+' PV')}
         ${state.internal?field(`${id}.annual_pa`,line.annual_pa,t('chiffrage.annualPa')):''}
         ${state.internal?field(`${id}.investment_pa`,line.investment_pa,t('chiffrage.investmentPa')):''}
         ${textField(`${id}.note`,line.note,t('chiffrage.note'))}
