@@ -6,6 +6,12 @@ export function completionItems(input, result) {
   }));
   for (const id of summary.missing_service_days ?? [])
     items.push({kind:'module', code:id, tab:'modules', field:`moduleService.${id}.days`});
+  (input.primeLines??[]).forEach((line,index)=>{
+    if (!(summary.missing_prime_values??[]).includes(line.item_code??line.label)) return;
+    for(const key of ['days','annual_pv'])if(line[key]==null && (key!=='annual_pv'||
+      (!line.annual_rule&&line.item_code!=='prime-mandats-integres')))
+      items.push({kind:'prime',code:line.item_code??line.label,tab:'modules',field:`primeLines.${index}.${key}`});
+  });
   if (summary.missing_hosting) {
     let found = false;
     for (const kind of ['primeLines','partners']) (input[kind] ?? []).forEach((line,index) => {

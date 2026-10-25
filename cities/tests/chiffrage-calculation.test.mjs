@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculateQuote, calculatePce, calculateSql, calculateLcm, calculatePublisherRent,
+import { calculateQuote, calculatePce, calculateSql, calculateLcm, calculatePublisherRent, primeAnnual,
   effective, licensedPopulation, priceCatalogItem,
   selectInnosolvItem } from '../app/chiffrage/calculate.js';
 
@@ -104,6 +104,32 @@ test('LCM options preserve estimate provenance and stay outside the main TCO', (
 test('Prime 2027 publisher rent uses 20% PA and 27% PV on the licence value', () => {
   assert.deepEqual(calculatePublisherRent(5500, { pa_rate: .2, pv_rate: .27 }),
     { pa: 1100, pv: 1485 });
+});
+
+test('Prime option annual per inhabitant rounds per unit, then quantity multiplies annual and days', () => {
+  const rule={per_capita:.25,round_to:250};
+  assert.equal(primeAnnual({annual_rule:rule},2000),500);
+  assert.equal(primeAnnual({annual_rule:rule,annual_override:700},2000),700);
+  const catalog={items:[],parameters:{day_rate:1760}};
+  const base={dimensions:{population:2000},products:[],primeLines:[{family:'prime',
+    category:'license',item_code:'prime-mandats-finance',label:'Mandats finance supplémentaires',
+    quantity:3,days:2,unit_day_rate:1760,annual_rule:rule}]};
+  const quote=calculateQuote(base,catalog);
+  const line=quote.lines.find(item=>item.item_code==='prime-mandats-finance');
+  assert.equal(line.annual_pv,1500);
+  assert.equal(line.investment_pv,10560);
+  assert.equal(line.selected_days,2);
+  assert.throws(()=>calculateQuote({...base,primeLines:[...base.primeLines,
+    {family:'prime',item_code:'prime-mandats-integres',quantity:4,annual_rule:rule}]},catalog),/Integrated mandates/);
+  const both=calculateQuote({...base,primeLines:[...base.primeLines,
+    {family:'prime',item_code:'prime-mandats-integres',quantity:2,days:1,unit_day_rate:1760,annual_rule:rule}]},catalog);
+  assert.equal(both.lines.filter(item=>item.family==='prime').reduce((sum,item)=>sum+item.annual_pv,0),2500);
+  const changed=calculateQuote({...base,primeLines:[{...base.primeLines[0],annual_override:700},
+    {family:'prime',item_code:'prime-mandats-integres',quantity:2,days:1,unit_day_rate:1760}]},catalog);
+  assert.equal(changed.lines.find(item=>item.item_code==='prime-mandats-integres').annual_pv,1400);
+  const incomplete=calculateQuote({...base,primeLines:[...base.primeLines,
+    {family:'prime',category:'license',item_code:'prime-registre-foncier',quantity:1,days:null,annual_pv:null}]},catalog);
+  assert.equal(incomplete.status,'incomplete');
 });
 
 test('quote commercial overrides change the versioned rates without mutating its catalog', () => {
@@ -246,18 +272,25 @@ test('a new source version separates PCE options basis, interface allocation and
  assert.equal(result.pa.salaires.effective_value,300);assert.equal(result.pv.salaires.effective_value,350);
 });
 
-test('Prime license annual per inhabitant observes minimum and rounding; flat historic lines stay fixed', () => {
-  const catalog={items:[],parameters:{day_rate:1760,lcm:[]}};
-  const base={products:[],modules:[],dimensions:{population:1403,licensedPopulation:1500},
-    primeLines:[{family:'prime',category:'license',item_code:'api',label:'Interface',
-      days:2,annual_pv:999,annual_pricing:{chf_per_inhabitant:.2,minimum:500,round_to:50}}]};
-  let result=calculateQuote(base,catalog);
-  assert.equal(result.summary.investment,3520);
-  assert.equal(result.summary.annual,500);
-  result=calculateQuote({...base,dimensions:{population:10000,licensedPopulation:10000}},catalog);
-  assert.equal(result.summary.annual,2000);
-  result=calculateQuote({...base,primeLines:[{...base.primeLines[0],annual_pricing:undefined}]},catalog);
-  assert.equal(result.summary.annual,999);
-  assert.throws(()=>calculateQuote({...base,primeLines:[{...base.primeLines[0],
-    annual_pricing:{chf_per_inhabitant:.2,minimum:500,round_to:0}}]},catalog),/Invalid Prime annual pricing/);
+test('Tolochenaz PCE interface is a distinct obligatory zero-cost line when innosolv and PCE are combined',()=>{
+  const pce={finance_basis:'innosolv_plus_options',salary_pv_method:'markup',finance_ratio:.4,
+    finance_adjustment:500,finance_round_to:500,salary_round_to:250,pv_margin:.45,
+    pv_round_to:250,interface_pa:0,interface_pv:1000};
+  const prices=calculatePce({innosolvPaBase:5750,innosolvOptionsPa:0},pce);
+  assert.equal(prices.pa.finances.effective_value,1500);
+  assert.equal(prices.pv.finances.effective_value,3500);
+  assert.equal(prices.pa.salaires.effective_value,1250);
+  assert.equal(prices.pv.salaires.effective_value,1750);
+  const catalog={items:[],parameters:{pce,oracle:{full_price:0,light_price:0,full_maintenance:0,light_maintenance:0},
+    sql:{suggestion:{lowerPopulation:0,lowerUsers:0,upperPopulation:2000,upperUsers:1},
+      core_from_population:6000,user_base:0,price_per_user:0,default_cores:1,price_per_core:0}}};
+  const base={products:['pce','innosolv'],dimensions:{population:2000},pce:{finances:true,salaires:false,
+    innosolvPaBaseOverride:5750},oracle:{full:0,light:0},sql:{}};
+  const result=calculateQuote(base,catalog);
+  const interfaceLine=result.lines.find(line=>line.item_code==='interface'&&line.family==='pce');
+  assert.equal(interfaceLine.annual_pa,0);
+  assert.equal(interfaceLine.annual_pv,1000);
+  assert.equal(result.lines.some(line=>line.item_code==='salaires'),false);
+  assert.equal(calculateQuote({...base,pce:{...base.pce,salaires:true}},catalog).lines
+    .find(line=>line.item_code==='salaires').annual_pa,1250);
 });
