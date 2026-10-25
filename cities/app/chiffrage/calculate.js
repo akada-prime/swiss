@@ -19,6 +19,14 @@ const roundTo = (value, multiple) => {
 export const licensedPopulation = population =>
   Math.ceil(Math.max(0, finite(population, 'population')) / 500) * 500;
 
+export function primeAnnual(line, population) {
+  if (line.annual_override != null) return finite(line.annual_override, 'Prime annual override');
+  if (!line.annual_rule) return line.annual_pv == null ? null : finite(line.annual_pv, 'annual PV');
+  const { per_capita, round_to } = line.annual_rule;
+  if (per_capita == null || round_to == null) throw new Error('Incomplete Prime annual rule');
+  return roundTo(finite(population, 'population') * finite(per_capita, 'Prime rate'), round_to);
+}
+
 export function suggestedSqlUsers(population, rule) {
   const { lowerPopulation, lowerUsers, upperPopulation, upperUsers } = rule;
   const low = finite(lowerPopulation, 'lower population');
@@ -193,6 +201,10 @@ export function calculateLcm(population, rule, overrides = {}) {
 }
 
 export function calculateQuote(input, catalog) {
+  const mandate = (input.primeLines ?? []).find(line => line.item_code === 'prime-mandats-finance');
+  const integrated = (input.primeLines ?? []).find(line => line.item_code === 'prime-mandats-integres');
+  if (integrated && (!mandate || Number(integrated.quantity ?? 1) > Number(mandate.quantity ?? 1)))
+    throw new Error('Integrated mandates require at least as many finance mandates');
   const hosting = [...(input.primeLines ?? []), ...(input.partners ?? [])]
     .filter(line => line.category === 'hosting');
   if (hostingIncluded(input) && hosting.some(line => line.reference_products?.some(product =>
@@ -268,7 +280,7 @@ export function calculateQuote(input, catalog) {
     if (catalog.parameters.pce.finance_basis === 'innosolv_plus_options' && choices.has('innosolv'))
       lines.push({family:'pce',item_code:'interface',label:'Interface ProConcept–innosolv',
         investment_pa:0,investment_pv:0,
-        annual_pa:optionalMoney(input.pce?.interfacePa ?? catalog.parameters.pce.interface_pa),
+        annual_pa:0,
         annual_pv:finite(input.pce?.interfacePv ?? catalog.parameters.pce.interface_pv,'PCE interface PV'),software:true});
     const oracle = calculateOracle(input.oracle, catalog.parameters.oracle);
     lines.push({ family: 'technique', item_code: 'oracle', label: 'Oracle', software: false,
@@ -301,6 +313,9 @@ export function calculateQuote(input, catalog) {
       finite(entry.investment_fixed_pv ?? 0, 'fixed license investment');
     const investment = effective(serviceValue ?? finite(entry.investment_pv ?? 0,
       'investment PV'), entry.investment_override);
+    const annualPerUnit=entry.item_code === 'prime-mandats-integres' ? primeAnnual(mandate,input.dimensions.population) :
+      entry.family === 'prime' ? primeAnnual(entry, input.dimensions.population) :
+      finite(entry.annual_pv ?? 0, 'annual PV');
     lines.push({ family: entry.family, category: entry.category ?? null,
       item_code: entry.item_code ?? null,
       label: moduleLine?.label ?? entry.label, supplier: entry.supplier ?? null,
@@ -310,7 +325,7 @@ export function calculateQuote(input, catalog) {
       investment_pv: investment.effective_value * quantity,
       annual_pa: optionalMoney(entry.annual_pa) == null ? null :
         optionalMoney(entry.annual_pa) * quantity,
-      annual_pv: finite(entry.annual_pv ?? 0, 'annual PV') * quantity,
+      annual_pv: annualPerUnit == null ? null : annualPerUnit * quantity,
       software: false, explanation: entry.explanation ?? null,
       ...(entry.gp_included ? {gp_included:true} : {}),
       suggested_days: suggestedDays, selected_days: days,
@@ -397,14 +412,18 @@ export function calculateQuote(input, catalog) {
     .map(line => line.item_code);
   const missingServiceDays = input.reference ? lines.filter(line =>
     line.family === 'prestations_module' && line.selected_days == null).map(line => line.item_code) : [];
-  return { ...(missingServiceDays.length || missingTechnical.length || missingHosting ? { status: 'incomplete',
+  const missingPrimeValues=lines.filter(line=>line.family==='prime' && line.category==='license' &&
+    (line.annual_pv==null || line.selected_days==null)).map(line=>line.item_code??line.label);
+  return { ...(missingServiceDays.length || missingTechnical.length || missingHosting || missingPrimeValues.length ? { status: 'incomplete',
     issues: [...(missingServiceDays.length ? [{ code: 'serviceDaysRequired', items: missingServiceDays }] : []),
       ...(missingTechnical.length ? [{ code: 'technicalPriceRequired', items: missingTechnical }] : []),
-      ...(missingHosting ? [{ code: 'hostingPricesRequired' }] : [])] } : {}),
+      ...(missingHosting ? [{ code: 'hostingPricesRequired' }] : []),
+      ...(missingPrimeValues.length ? [{ code: 'primeOptionValuesRequired', items: missingPrimeValues }] : [])] } : {}),
     lines, summary: { investment, annual,
       ...(input.reference ? { missing_service_days: missingServiceDays } : {}),
     missing_technical: missingTechnical,
     missing_hosting: missingHosting,
+    missing_prime_values: missingPrimeValues,
     tco5y: investment + annual * 4,
     tco5y_excluding_lcm: investment + (annual - (selectedLcm && selectedLcm !== 'none' ?
       lcm[selectedLcm].effective_value : 0)) * 4,

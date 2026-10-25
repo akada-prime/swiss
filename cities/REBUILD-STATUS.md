@@ -347,3 +347,34 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
 - Moteur et catalogues privés inchangés. Pas de modification de données live.
   Les catalogues privés, le rapprochement Excel et l’export réel n’ont pas été
   revérifiés faute de session privée ; ne pas annoncer une recette métier complète.
+
+### Chiffrage · bêta options Prime et ProConcept · 25 octobre 2026
+
+- Les options Prime validées sont proposées depuis `prime_options` dans une nouvelle
+  version privée du catalogue commercial. La version `prime-options-beta-20261025`
+  est préparée **inactive** : l'activer seulement avec la livraison du frontend.
+  Aucun tarif n'est publié dans le code client. Fribourg n'entre dans **aucune**
+  moyenne, ni pour les taux annuels ni pour les jours.
+- Les taux en CHF/habitant et les jours moyens viennent des lignes réellement
+  retenues dans Avenches, Haute-Sorne, Tolochenaz, Le Vaud et Montagny :
+  Formules ISAG (0,35 ; 1 j ; 3), portail des fiches et certificats de salaire
+  (0,35 ; 1 j arrondi au demi-jour ; 3), dématérialisation GED (0,225 ; 3,5 j ; 2),
+  gestion des cimetières (0,10 ; 2 j ; 1), taxe immobilière (0,20 ; 3 j ; 1),
+  interface temps de présence (0,05 ; 1,5 j ; 1) et ELP (0,10 ; 2 j ; 1).
+  Welsch Connexion a 0 CHF de revenu annuel dans les trois lignes retenues ;
+  ses jours moyens sont 0,67, proposés à 0,5 j après arrondi au demi-jour.
+  Chaque règle conserve sa source et son effectif dans le catalogue privé.
+- Les mandats finance (0,25 CHF/habitant, 2 j) sont une **estimation** tirée de
+  quatre grilles non retenues hors Fribourg ; le mandat intégré reprend toujours
+  le même prix unitaire, avec ses jours à saisir et une quantité limitée aux
+  mandats finance. L'interface impôts et l'interface registre foncier n'ont pas
+  d'exemple retenu comparable hors Fribourg : tarif et jours restent manuels,
+  avec chiffrage incomplet jusqu'à saisie. Les montants annuels sont calculés
+  par habitant et arrondis au palier de chaque référence, puis multipliés par
+  la quantité ; les jours sont multipliés séparément.
+- Avec ProConcept et innosolv, l'interface d'intégration est présentée comme
+  troisième ligne obligatoire : PV annuel 1'000 CHF selon Tolochenaz et
+  Haute-Sorne, PA 0 CHF. Les formules retranchent ce PV de Finances ; Salaires
+  reste facultatif et se base sur le brut Finances avant cette extraction.
+  Le tarif de l'interface reste éditable ; 1'000 CHF est un montant fixe dans
+  les deux classeurs, pas un pourcentage extrapolé.

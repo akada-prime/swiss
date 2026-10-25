@@ -450,18 +450,25 @@ function technicalSection() {
       ${field('oracle.annualOverride', state.draft.oracle.annualOverride, t('chiffrage.oracleAnnualPv'))}
       ${state.internal ? field('oracle.purchasePa', state.draft.oracle.purchasePa, t('chiffrage.oracleInvestmentPa')) : ''}
       ${state.internal ? field('oracle.maintenancePa', state.draft.oracle.maintenancePa, t('chiffrage.oracleAnnualPa')) : ''}
-      ${state.internal ? field('pce.interfacePa', state.draft.pce.interfacePa, 'Interface PCE–ISAG (PA)') : ''}</div>` : ''}</details>`;
+      ${state.internal && state.draft.products.includes('innosolv') ? `<small class="chiffrage-helper">${localLabel('Interface ProConcept–innosolv : PA 0 CHF · maintenance Prime','ProConcept–innosolv-Schnittstelle: EK 0 CHF · Wartung Prime')}</small>` : ''}</div>` : ''}</details>`;
 }
 
 function extraInvestment(line) {
   return (line.investment_override ?? (line.days != null ? line.days*(line.unit_day_rate??dayRate())+(line.investment_fixed_pv??0) : line.investment_pv??0))*(line.quantity??1);
 }
+function primeOptionAnnual(line) {
+  if(line.item_code==='prime-mandats-integres')line=state.draft.primeLines.find(item=>item.item_code==='prime-mandats-finance')??line;
+  const rule=line.annual_rule;
+  if (!rule || rule.per_capita==null || rule.round_to==null) return line.annual_pv;
+  return line.annual_override ?? Math.floor((state.draft.dimensions.population*rule.per_capita)/rule.round_to+.5)*rule.round_to;
+}
 function extraSection() {
+  const options=state.catalog?.parameters?.prime_options??[];
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.partners')}</summary>
     ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index }))
       .filter(line => line.category !== 'hosting'),
       ...state.draft.partners.map((line, index) => ({ ...line, kind: 'partners', index }))]
-      .map(line => `<details class="chiffrage-extra-row" ${!line.label?'open':''}><summary><span data-extra-title="${line.kind}.${line.index}">${escape(line.label || t('chiffrage.lineLabel'))}</span><strong data-extra-summary="${line.kind}.${line.index}">${money(extraInvestment(line))}</strong><span data-extra-annual="${line.kind}.${line.index}">${money(line.annual_pv)} / ${t('chiffrage.ui.perYear')}</span></summary><div class="chiffrage-line">
+      .map(line => `<details class="chiffrage-extra-row" ${!line.label?'open':''}><summary><span data-extra-title="${line.kind}.${line.index}">${escape(line.label || t('chiffrage.lineLabel'))}</span><strong data-extra-summary="${line.kind}.${line.index}">${money(extraInvestment(line))}</strong><span data-extra-annual="${line.kind}.${line.index}">${primeOptionAnnual(line)==null?localLabel('À préciser','Noch offen'):money(primeOptionAnnual(line)*(line.quantity??1))} / ${t('chiffrage.ui.perYear')}</span></summary><div class="chiffrage-line">
         ${textField(`${line.kind}.${line.index}.label`, line.label, t('chiffrage.lineLabel'))}
         ${state.internal ? textField(`${line.kind}.${line.index}.item_code`, line.item_code, t('chiffrage.internalCode')) : ''}
         ${line.kind === 'partners' ? textField(`${line.kind}.${line.index}.supplier`, line.supplier, t('chiffrage.supplier')) : ''}
@@ -472,12 +479,11 @@ function extraSection() {
           t(line.days != null ? 'chiffrage.investmentOverride' : 'chiffrage.investment'))}
         <small class="chiffrage-helper" data-extra-total="${line.kind}.${line.index}">${t('chiffrage.calculatedInvestment')} ${money(extraInvestment(line))}</small>
         ${state.internal ? field(`${line.kind}.${line.index}.investment_pa`, line.investment_pa, t('chiffrage.investmentPa')) : ''}
-        ${field(`${line.kind}.${line.index}.annual_pv`, line.annual_pv,
-          t('chiffrage.annual'))}
+        ${line.item_code==='prime-mandats-integres' ? `<small class="chiffrage-helper">${localLabel('Même prix annuel unitaire que les mandats finance supplémentaires','Gleicher jährlicher Einzelpreis wie zusätzliche Finanzmandate')} · ${money(primeOptionAnnual(line))}</small>` : line.annual_rule ? `<small class="chiffrage-helper">${t('chiffrage.annual')} · ${money(primeOptionAnnual(line))} / ${t('chiffrage.ui.perYear')} · ${number(line.annual_rule.per_capita)} CHF / ${localLabel('habitant','Einwohner')} · ${localLabel('arrondi','gerundet')} ${money(line.annual_rule.round_to)}</small>${field(`${line.kind}.${line.index}.annual_override`,line.annual_override,localLabel('Montant annuel unitaire personnalisé','Individueller Jahrespreis pro Einheit'))}` : field(`${line.kind}.${line.index}.annual_pv`, line.annual_pv,t('chiffrage.annual'))}
         ${state.internal ? field(`${line.kind}.${line.index}.annual_pa`, line.annual_pa, t('chiffrage.annualPa')) : ''}
         ${textField(`${line.kind}.${line.index}.note`, line.note, t('chiffrage.note'))}
         <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${line.kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`).join('')}
-    <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addLicense">${t('chiffrage.addPrimeLicense')}</button>
+    <div class="chiffrage-actions">${options.length ? `<label>${localLabel('Option Prime','Prime-Option')}<select data-prime-option>${options.map(option=>`<option value="${escape(option.item_code)}">${escape(localLabel(option.label_fr,option.label_de??option.label_fr))}</option>`).join('')}</select></label><button type="button" class="chiffrage-button" data-action="addPrimeOption">${localLabel('Ajouter l’option','Option hinzufügen')}</button>` : ''}<button type="button" class="chiffrage-button" data-action="addLicense">${t('chiffrage.addPrimeLicense')}</button>
       <button type="button" class="chiffrage-button" data-action="addPrime">${t('chiffrage.addLine')} Prime</button>
       <button type="button" class="chiffrage-button" data-action="addPartner">${t('chiffrage.addLine')} ${t('chiffrage.partner')}</button></div></details>`;
 }
@@ -639,7 +645,7 @@ function summary() {
     <p class="chiffrage-summary-context">${escape(state.draft.name)} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</p>
     <dl class="chiffrage-totals"><div><dt>${incomplete ? localLabel('Investissement calculé à ce stade','Bisher berechnete Investition') : t('chiffrage.investment')} <small>CHF · ${t('chiffrage.ui.exTax')}</small></dt><dd>${money(s.investment).replace(' CHF','')}</dd></div><div><dt>${t('chiffrage.annual')} <small>CHF · ${t('chiffrage.ui.exTax')} · ${t('chiffrage.workspace.fe85c43980')}</small></dt><dd>${money(s.annual).replace(' CHF','')}</dd></div></dl>
     <p class="chiffrage-price-feedback" data-price-feedback role="status">${escape(state.priceFeedback || '')}</p>
-    ${incomplete ? `<p class="chiffrage-warning">${s.missing_service_days?.length ? t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length}) : ''} ${s.missing_technical?.length ? localLabel('Prix SQL à préciser : investissement non final.','SQL-Preis ergänzen: Investition noch nicht endgültig.') : ''} ${s.missing_hosting?localLabel('Montants d’hébergement à préciser.','Hostingbeträge ergänzen.'):''}</p><button class="chiffrage-button" data-action="completeQuote">${localLabel('Compléter le chiffrage','Kalkulation ergänzen')} →</button>` : ''}
+    ${incomplete ? `<p class="chiffrage-warning">${s.missing_service_days?.length ? t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length}) : ''} ${s.missing_technical?.length ? localLabel('Prix SQL à préciser : investissement non final.','SQL-Preis ergänzen: Investition noch nicht endgültig.') : ''} ${s.missing_hosting?localLabel('Montants d’hébergement à préciser.','Hostingbeträge ergänzen.'):''} ${s.missing_prime_values?.length?localLabel('Options Prime : prix annuel ou jours à préciser.','Prime-Optionen: Jahrespreis oder Tage ergänzen.'):''}</p><button class="chiffrage-button" data-action="completeQuote">${localLabel('Compléter le chiffrage','Kalkulation ergänzen')} →</button>` : ''}
     <div class="chiffrage-cost-lines">${buckets.map(([label, filter])=>`<div><span>${escape(label)}</span><span>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.investment_pv??0),0))}<small>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.annual_pv??0),0))} / ${t('chiffrage.workspace.de73eac0c3')}</small></span></div>`).join('')}</div>
     <div class="chiffrage-five-year"><span>${incomplete?localLabel('5 ans · calculé à ce stade','5 Jahre · bisher berechnet'):t('chiffrage.workspace.b1aaf814f0')}</span><strong>${money(s.tco5y)}</strong></div>
     <p class="chiffrage-helper">${t('chiffrage.workspace.a855306547')}</p>
@@ -844,7 +850,8 @@ function lineLabel(line) {
   if(document.documentElement.lang !== 'de') return line.label;
   if(item?.label_de)return item.label_de;
   if(line.family==='prestations')return serviceTypes.find(([id])=>id===line.item_code)?.[2] ?? line.label;
-  if(line.family==='pce')return t(line.item_code==='finances'?'chiffrage.finances':'chiffrage.payroll');
+  if(line.family==='pce')return line.item_code==='interface' ? 'ProConcept–innosolv Schnittstelle' :
+    t(line.item_code==='finances'?'chiffrage.finances':'chiffrage.payroll');
   return line.label;
 }
 
@@ -900,7 +907,7 @@ function renderEditor() {
   }
   root.innerHTML = `${state.internal ? `<div class="chiffrage-internal-banner"><strong>${t('chiffrage.workspace.fdbe31da16')}</strong><button class="chiffrage-button" data-action="clientMode">${t('chiffrage.workspace.689c8df402')}</button></div>` : ''}${header()}<div class="chiffrage-variant-title">${textField('title',state.title,t('chiffrage.name'))}</div><div class="chiffrage-workspace"><nav class="chiffrage-work-tabs" aria-label="${t('chiffrage.workspace.dd4e272518')}">${tabs.map(([key,label],i)=>`<button type="button" data-editor-tab="${key}" aria-current="${state.editorTab===key?'page':'false'}"><small>0${i+1}</small>${label}</button>`).join('')}</nav><div id="chiffrageMobileSummary">${mobileSummary()}</div><div id="chiffrageContext">${workspaceHero()}</div>${legacy ? `<div class="chiffrage-standard-notice"><div><strong>${localLabel('Ancien standard','Älterer Standard')}</strong><p>${localLabel('Ce chiffrage conserve ses tarifs d’origine. Crée une variante avec les références actuelles et tes valeurs saisies.','Diese Kalkulation behält ihre bisherigen Tarife. Erstelle eine Variante mit aktuellen Referenzen und deinen Eingaben.')}</p></div><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></div>` : ''}<div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}">
     <div class="chiffrage-fields"><div class="chiffrage-tab-panel" data-tab-panel="composer" ${state.editorTab==='composer'?'':'hidden'}>${composerSection()}</div>
-    <div class="chiffrage-tab-panel" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}${state.draft.products.includes('pce') ? `<section class="chiffrage-section"><h2>ProConcept ERP</h2><div class="chiffrage-choice-group"><label class="chiffrage-choice"><input type="checkbox" data-field="pce.finances" ${state.draft.pce.finances?'checked':''}>${t('chiffrage.finances')}</label><label class="chiffrage-choice"><input type="checkbox" data-field="pce.salaires" ${state.draft.pce.salaires?'checked':''}>${t('chiffrage.payroll')}</label></div></section>`:''}${extraSection()}</div>
+    <div class="chiffrage-tab-panel" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}${state.draft.products.includes('pce') ? `<section class="chiffrage-section"><h2>ProConcept ERP</h2><div class="chiffrage-choice-group"><label class="chiffrage-choice"><input type="checkbox" data-field="pce.finances" ${state.draft.pce.finances?'checked':''}>${t('chiffrage.finances')}</label>${state.draft.products.includes('innosolv') ? `<label class="chiffrage-choice"><input type="checkbox" checked disabled>${localLabel('Interface d’intégration ProConcept–innosolv · obligatoire','ProConcept–innosolv-Integrationsschnittstelle · obligatorisch')}</label>` : ''}<label class="chiffrage-choice"><input type="checkbox" data-field="pce.salaires" ${state.draft.pce.salaires?'checked':''}>${t('chiffrage.payroll')}</label></div></section>`:''}${extraSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="prestations" ${state.editorTab==='prestations'?'':'hidden'}>${serviceSection()}${technicalSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="offer" ${state.editorTab==='offer'?'':'hidden'}><div id="chiffrageOffer">${offerSection()}</div></div>
     <div class="chiffrage-tab-panel" data-tab-panel="compare" ${state.editorTab==='compare'?'':'hidden'}>${comparisonSection()}</div>
@@ -979,6 +986,14 @@ function setValue(path, raw, isCheckbox = false) {
     const row = state.draft[parts[0]][Number(parts[1])];
     row[parts[2]] = ['label', 'item_code', 'supplier', 'note'].includes(parts[2]) ? raw :
       raw === '' ? null : Number(raw);
+    if (row.item_code === 'prime-mandats-finance' && parts[2] === 'quantity') {
+      const integrated=state.draft.primeLines.find(item=>item.item_code==='prime-mandats-integres');
+      if (integrated) integrated.quantity=Math.min(integrated.quantity??1,row.quantity??0);
+    }
+    if (row.item_code === 'prime-mandats-integres' && parts[2] === 'quantity') {
+      const mandate=state.draft.primeLines.find(item=>item.item_code==='prime-mandats-finance');
+      row.quantity=Math.min(row.quantity??0,mandate?.quantity??0);
+    }
     return;
   }
   if (parts[0] === 'modules') {
@@ -1522,6 +1537,21 @@ root.addEventListener('click', async event => {
     state.draft.dimensions.meters = state.draft.dimensions.taxes = suggestedVolume(state.draft.dimensions.population);
     renderEditor(); return;
   }
+  if (action === 'addPrimeOption') {
+    const code=root.querySelector('[data-prime-option]')?.value;
+    const option=(state.catalog?.parameters?.prime_options??[]).find(item=>item.item_code===code);
+    if (!option) return;
+    if (state.draft.primeLines.some(line=>line.item_code===code)) return;
+    if (code==='prime-mandats-integres' && !state.draft.primeLines.some(line=>line.item_code==='prime-mandats-finance')) {
+      notice(() => localLabel('Ajoute d’abord les mandats finance supplémentaires.','Zuerst zusätzliche Finanzmandate hinzufügen.'),true);return;
+    }
+    state.draft.primeLines.push({family:'prime',category:'license',item_code:code,
+      label:localLabel(option.label_fr,option.label_de??option.label_fr),quantity:1,
+      days:option.days??null,unit_day_rate:dayRate(),investment_fixed_pv:0,
+      annual_rule:option.annual_rule??null,annual_pv:option.annual_rule?.per_capita==null?null:0,
+      explanation:{source:option.source,method:option.method,sample_size:option.sample_size}});
+    state.dirty=true;renderEditor();return;
+  }
   if (['addPrime','addPartner','addHosting','addLicense'].includes(action)) {
     state.dirty=true;
     const partner = action === 'addPartner';
@@ -1537,7 +1567,8 @@ root.addEventListener('click', async event => {
   }
   if (action === 'removeLine') {
     state.dirty=true;
-    state.draft[button.dataset.kind].splice(Number(button.dataset.index), 1);
+    const removed=state.draft[button.dataset.kind].splice(Number(button.dataset.index), 1)[0];
+    if(removed?.item_code==='prime-mandats-finance')state.draft.primeLines=state.draft.primeLines.filter(line=>line.item_code!=='prime-mandats-integres');
     renderEditor(); return;
   }
   if (action === 'delete' && !window.confirm(localLabel(
