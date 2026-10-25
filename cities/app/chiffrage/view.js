@@ -344,7 +344,7 @@ function productSection() {
         <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" data-missing-days="${days == null}" data-proposed-days="${escape(presetDays(id) ?? '')}" class="${current?.days != null && current.days !== presetDays(id) ? 'is-adjusted' : ''}" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j</span></label>
         ${referenceProfiles(state.catalog).find(row=>row.id===state.draft.reference?.id)?.module_group_labels?.[id] ? `<small>${t('chiffrage.groupedServices')}</small>` : ''}
       </div>` : ''}
-      ${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
+      ${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</details>`;
   };
   return `<section class="chiffrage-section chiffrage-catalog"><p class="chiffrage-kicker">${localLabel('Périmètre logiciel','Softwareumfang')}</p><h2>${t('chiffrage.workspace.f492367598')}</h2>
     <p class="chiffrage-helper">${localLabel('Les modules retenus en premier. Ouvre les options pour compléter le périmètre.','Gewählte Module zuerst. Weitere Optionen bei Bedarf öffnen.')}</p>
@@ -353,9 +353,9 @@ function productSection() {
         const other = entries.filter(item => !selected.has(`${item.vendor}/${item.product}/${item.item_code}`));
         const brand = { innosolv:'innosolvcity', abacus:'Abacus', pce:'ProConcept' }[group] ?? group;
         const domains=new Map();for(const item of included){const title=domain(item);if(!domains.has(title))domains.set(title,[]);domains.get(title).push(item);}
-        return `<div class="chiffrage-module-set"><h3><span>${escape(brand)}</span><small>${included.length} ${t('chiffrage.workspace.f8352fa70a')}</small></h3>
+        return `<details class="chiffrage-module-set"><summary><span>${escape(brand)}</span><small>${included.length} ${t('chiffrage.workspace.f8352fa70a')}</small></summary>
           <div class="chiffrage-module-list">${[...domains].map(([title,items])=>`<div class="chiffrage-domain"><h4>${escape(title)}</h4>${items.map(entry).join('')}</div>`).join('')}</div>
-          ${other.length ? `<details class="chiffrage-subdetail"><summary>${t('chiffrage.workspace.af758b49cd')} · ${other.length}</summary><input class="chiffrage-module-search" data-module-search="${escape(group)}" type="search" placeholder="${localLabel('Chercher un module','Modul suchen')}" aria-label="${localLabel('Chercher un module','Modul suchen')}"><div class="chiffrage-module-list">${other.map(entry).join('')}</div></details>` : ''}</div>`;
+          ${other.length ? `<details class="chiffrage-subdetail"><summary>${t('chiffrage.workspace.af758b49cd')} · ${other.length}</summary><input class="chiffrage-module-search" data-module-search="${escape(group)}" type="search" placeholder="${localLabel('Chercher un module','Modul suchen')}" aria-label="${localLabel('Chercher un module','Modul suchen')}"><div class="chiffrage-module-list">${other.map(entry).join('')}</div></details>` : ''}</details>`;
       }).join('') || '—'}</div></section>`;
 }
 
@@ -468,10 +468,13 @@ function extraSection() {
     const key = kind === 'primeLines' ? 'prime_lines' : 'partners';
     const selected = new Set((state.draft[kind] ?? []).map(line => line.item_code || line.label));
     const found = new Map();
+    if (kind === 'primeLines') for (const option of catalogOptions) {
+      if (!selected.has(option.item_code)) found.set(option.item_code, { ...option, label:localLabel(option.label_fr,option.label_de??option.label_fr), source:'catalog' });
+    }
     for (const profile of referenceProfiles(state.catalog)) for (const line of profile[key] ?? []) {
       if (line.category === 'hosting') continue;
       const id = line.item_code || line.label;
-      if (id && !selected.has(id) && !found.has(id)) found.set(id, line);
+      if (id && !selected.has(id) && !found.has(id)) found.set(id, { ...line, source:'reference' });
     }
     return [...found.values()];
   };
@@ -504,11 +507,11 @@ function extraSection() {
         ${textField(`${id}.note`,line.note,t('chiffrage.note'))}
         <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`;
     }).join('');
-    return `<section class="chiffrage-extra-group"><h3>${label}</h3>${rows}
+    return `<details class="chiffrage-extra-group"><summary>${label} · ${number(chosen.length)} ${localLabel('retenues','gewählt')}</summary>${rows}
       <details class="chiffrage-extra-available"><summary>${number(options.length)} ${localLabel('options non choisies','nicht gewählte Optionen')}</summary>
-      ${options.map((line,index)=>`<div><span>${escape(line.label)}</span><button type="button" class="chiffrage-button quiet" data-action="addReferenceLine" data-kind="${kind}" data-index="${index}">${localLabel('Ajouter','Hinzufügen')}</button></div>`).join('')||`<p class="chiffrage-helper">${localLabel('Aucune option dans les références.','Keine Option in den Referenzen.')}</p>`}</details>
-      ${kind==='primeLines' && catalogOptions.length ? `<label>${localLabel('Option Prime','Prime-Option')}<select data-prime-option>${catalogOptions.map(option=>`<option value="${escape(option.item_code)}">${escape(localLabel(option.label_fr,option.label_de??option.label_fr))}</option>`).join('')}</select></label><button type="button" class="chiffrage-button" data-action="addPrimeOption">${localLabel('Ajouter l’option','Option hinzufügen')}</button>` : ''}
-      <button type="button" class="chiffrage-button quiet" data-action="${kind==='partners'?'addPartner':'addPrime'}">${localLabel('Ajouter une ligne libre','Freie Zeile hinzufügen')}</button></section>`;
+      ${options.map((line,index)=>`<div><span>${escape(line.label)}</span><button type="button" class="chiffrage-button quiet" data-action="${line.source==='catalog'?'addPrimeOption':'addReferenceLine'}" data-code="${escape(line.item_code??'')}" data-kind="${kind}" data-index="${index}">${localLabel('Ajouter','Hinzufügen')}</button></div>`).join('')||`<p class="chiffrage-helper">${localLabel('Aucune autre option disponible.','Keine weitere Option verfügbar.')}</p>`}</details>
+
+      <button type="button" class="chiffrage-button quiet" data-action="${kind==='partners'?'addPartner':'addPrime'}">${localLabel('Ajouter une ligne libre','Freie Zeile hinzufügen')}</button></details>`;
   };
   return `<div class="chiffrage-section chiffrage-extra-overview"><h2>${localLabel('Options Prime et partenaires','Prime- und Partneroptionen')}</h2>
     ${section('primeLines','Prime')}${section('partners',t('chiffrage.partners'))}</div>`;
@@ -933,7 +936,7 @@ function renderEditor() {
   }
   root.innerHTML = `${state.internal ? `<div class="chiffrage-internal-banner"><strong>${t('chiffrage.workspace.fdbe31da16')}</strong><button class="chiffrage-button" data-action="clientMode">${t('chiffrage.workspace.689c8df402')}</button></div>` : ''}${header()}<div class="chiffrage-variant-title">${textField('title',state.title,t('chiffrage.name'))}</div><div class="chiffrage-workspace"><nav class="chiffrage-work-tabs" aria-label="${t('chiffrage.workspace.dd4e272518')}">${tabs.map(([key,label],i)=>`<button type="button" data-editor-tab="${key}" aria-current="${state.editorTab===key?'page':'false'}"><small>0${i+1}</small>${label}</button>`).join('')}</nav><div id="chiffrageMobileSummary">${mobileSummary()}</div><div id="chiffrageContext">${workspaceHero()}</div>${legacy ? `<div class="chiffrage-standard-notice"><div><strong>${localLabel('Ancien standard','Älterer Standard')}</strong><p>${localLabel('Ce chiffrage conserve ses tarifs d’origine. Crée une variante avec les références actuelles et tes valeurs saisies.','Diese Kalkulation behält ihre bisherigen Tarife. Erstelle eine Variante mit aktuellen Referenzen und deinen Eingaben.')}</p></div><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></div>` : ''}<div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}">
     <div class="chiffrage-fields"><div class="chiffrage-tab-panel" data-tab-panel="composer" ${state.editorTab==='composer'?'':'hidden'}>${composerSection()}</div>
-    <div class="chiffrage-tab-panel" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}${state.draft.products.includes('pce') ? `<section class="chiffrage-section"><h2>ProConcept ERP</h2><div class="chiffrage-choice-group"><label class="chiffrage-choice"><input type="checkbox" data-field="pce.finances" ${state.draft.pce.finances?'checked':''}>${t('chiffrage.finances')}</label>${state.draft.products.includes('innosolv') ? `<label class="chiffrage-choice"><input type="checkbox" checked disabled>${localLabel('Interface d’intégration ProConcept–innosolv · obligatoire','ProConcept–innosolv-Integrationsschnittstelle · obligatorisch')}</label>` : ''}<label class="chiffrage-choice"><input type="checkbox" data-field="pce.salaires" ${state.draft.pce.salaires?'checked':''}>${t('chiffrage.payroll')}</label></div></section>`:''}${extraSection()}</div>
+    <div class="chiffrage-tab-panel" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}${state.draft.products.includes('pce') ? `<section class="chiffrage-section"><h2>ProConcept ERP</h2><div class="chiffrage-choice-group"><label class="chiffrage-choice"><input type="checkbox" data-field="pce.finances" ${state.draft.pce.finances?'checked':''}>${t('chiffrage.finances')}</label>${state.draft.products.includes('innosolv') ? `<label class="chiffrage-choice"><input type="checkbox" checked disabled>${localLabel('Interface PCE-inno','Schnittstelle PCE-inno')}</label>` : ''}<label class="chiffrage-choice"><input type="checkbox" data-field="pce.salaires" ${state.draft.pce.salaires?'checked':''}>${t('chiffrage.payroll')}</label></div></section>`:''}${extraSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="prestations" ${state.editorTab==='prestations'?'':'hidden'}>${serviceSection()}${technicalSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="offer" ${state.editorTab==='offer'?'':'hidden'}><div id="chiffrageOffer">${offerSection()}</div></div>
     <div class="chiffrage-tab-panel" data-tab-panel="compare" ${state.editorTab==='compare'?'':'hidden'}>${comparisonSection()}</div>
@@ -1563,8 +1566,18 @@ root.addEventListener('click', async event => {
     state.draft.dimensions.meters = state.draft.dimensions.taxes = suggestedVolume(state.draft.dimensions.population);
     renderEditor(); return;
   }
+  if (action === 'addReferenceLine') {
+    const kind=button.dataset.kind;
+    if (!['primeLines','partners'].includes(kind)) return;
+    const label=button.parentElement?.querySelector('span')?.textContent;
+    const key=kind==='primeLines'?'prime_lines':'partners';
+    const line=referenceProfiles(state.catalog).flatMap(profile=>profile[key]??[])
+      .find(item=>item.category!=='hosting' && (item.item_code && item.item_code===button.dataset.code || item.label===label));
+    if (!line || state.draft[kind].some(item=>(item.item_code||item.label)===(line.item_code||line.label))) return;
+    state.draft[kind].push(structuredClone(line));state.dirty=true;renderEditor();return;
+  }
   if (action === 'addPrimeOption') {
-    const code=root.querySelector('[data-prime-option]')?.value;
+    const code=button.dataset.code ?? root.querySelector('[data-prime-option]')?.value;
     const option=(state.catalog?.parameters?.prime_options??[]).find(item=>item.item_code===code);
     if (!option) return;
     if (state.draft.primeLines.some(line=>line.item_code===code)) return;
