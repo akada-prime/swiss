@@ -245,3 +245,19 @@ test('a new source version separates PCE options basis, interface allocation and
  assert.equal(result.pa.finances.effective_value,500);assert.equal(result.pv.finances.effective_value,650);
  assert.equal(result.pa.salaires.effective_value,300);assert.equal(result.pv.salaires.effective_value,350);
 });
+
+test('Prime license annual per inhabitant observes minimum and rounding; flat historic lines stay fixed', () => {
+  const catalog={items:[],parameters:{day_rate:1760,lcm:[]}};
+  const base={products:[],modules:[],dimensions:{population:1403,licensedPopulation:1500},
+    primeLines:[{family:'prime',category:'license',item_code:'api',label:'Interface',
+      days:2,annual_pv:999,annual_pricing:{chf_per_inhabitant:.2,minimum:500,round_to:50}}]};
+  let result=calculateQuote(base,catalog);
+  assert.equal(result.summary.investment,3520);
+  assert.equal(result.summary.annual,500);
+  result=calculateQuote({...base,dimensions:{population:10000,licensedPopulation:10000}},catalog);
+  assert.equal(result.summary.annual,2000);
+  result=calculateQuote({...base,primeLines:[{...base.primeLines[0],annual_pricing:undefined}]},catalog);
+  assert.equal(result.summary.annual,999);
+  assert.throws(()=>calculateQuote({...base,primeLines:[{...base.primeLines[0],
+    annual_pricing:{chf_per_inhabitant:.2,minimum:500,round_to:0}}]},catalog),/Invalid Prime annual pricing/);
+});
