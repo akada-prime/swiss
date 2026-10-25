@@ -313,9 +313,17 @@ export function calculateQuote(input, catalog) {
       finite(entry.investment_fixed_pv ?? 0, 'fixed license investment');
     const investment = effective(serviceValue ?? finite(entry.investment_pv ?? 0,
       'investment PV'), entry.investment_override);
+    const pricing = entry.family === 'prime' && entry.category === 'license' ? entry.annual_pricing : null;
+    let legacyAnnual = finite(entry.annual_pv ?? 0, 'annual PV');
+    if (pricing?.chf_per_inhabitant != null) {
+      const coefficient = finite(pricing.chf_per_inhabitant, 'CHF per inhabitant');
+      const minimum = finite(pricing.minimum ?? 0, 'minimum annual PV');
+      const step = finite(pricing.round_to ?? 1, 'annual rounding');
+      if (coefficient < 0 || minimum < 0 || step <= 0) throw new Error('Invalid Prime annual pricing');
+      legacyAnnual = Math.ceil(Math.max(populationForLicenses * coefficient, minimum) / step) * step;
+    }
     const annualPerUnit=entry.item_code === 'prime-mandats-integres' ? primeAnnual(mandate,input.dimensions.population) :
-      entry.family === 'prime' ? primeAnnual(entry, input.dimensions.population) :
-      finite(entry.annual_pv ?? 0, 'annual PV');
+      entry.family === 'prime' && entry.annual_rule ? primeAnnual(entry, input.dimensions.population) : legacyAnnual;
     lines.push({ family: entry.family, category: entry.category ?? null,
       item_code: entry.item_code ?? null,
       label: moduleLine?.label ?? entry.label, supplier: entry.supplier ?? null,

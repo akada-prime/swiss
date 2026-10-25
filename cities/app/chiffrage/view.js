@@ -463,29 +463,55 @@ function primeOptionAnnual(line) {
   return line.annual_override ?? Math.floor((state.draft.dimensions.population*rule.per_capita)/rule.round_to+.5)*rule.round_to;
 }
 function extraSection() {
-  const options=state.catalog?.parameters?.prime_options??[];
-  return `<details class="chiffrage-section" open><summary>${t('chiffrage.partners')}</summary>
-    ${[...state.draft.primeLines.map((line, index) => ({ ...line, kind: 'primeLines', index }))
-      .filter(line => line.category !== 'hosting'),
-      ...state.draft.partners.map((line, index) => ({ ...line, kind: 'partners', index }))]
-      .map(line => `<details class="chiffrage-extra-row" ${!line.label?'open':''}><summary><span data-extra-title="${line.kind}.${line.index}">${escape(line.label || t('chiffrage.lineLabel'))}</span><strong data-extra-summary="${line.kind}.${line.index}">${money(extraInvestment(line))}</strong><span data-extra-annual="${line.kind}.${line.index}">${primeOptionAnnual(line)==null?localLabel('À préciser','Noch offen'):money(primeOptionAnnual(line)*(line.quantity??1))} / ${t('chiffrage.ui.perYear')}</span></summary><div class="chiffrage-line">
-        ${textField(`${line.kind}.${line.index}.label`, line.label, t('chiffrage.lineLabel'))}
-        ${state.internal ? textField(`${line.kind}.${line.index}.item_code`, line.item_code, t('chiffrage.internalCode')) : ''}
-        ${line.kind === 'partners' ? textField(`${line.kind}.${line.index}.supplier`, line.supplier, t('chiffrage.supplier')) : ''}
-        ${field(`${line.kind}.${line.index}.quantity`, line.quantity ?? 1, t('chiffrage.quantity'))}
-        ${line.days != null ? field(`${line.kind}.${line.index}.days`,line.days,t('chiffrage.days'),{step:.5}) : ''}
-        ${line.unit_day_rate != null ? field(`${line.kind}.${line.index}.unit_day_rate`,line.unit_day_rate,t('chiffrage.serviceDayRate')) : ''}
-        ${field(`${line.kind}.${line.index}.${line.days != null ? 'investment_override' : 'investment_pv'}`, line.days != null ? line.investment_override : line.investment_pv,
-          t(line.days != null ? 'chiffrage.investmentOverride' : 'chiffrage.investment'))}
-        <small class="chiffrage-helper" data-extra-total="${line.kind}.${line.index}">${t('chiffrage.calculatedInvestment')} ${money(extraInvestment(line))}</small>
-        ${state.internal ? field(`${line.kind}.${line.index}.investment_pa`, line.investment_pa, t('chiffrage.investmentPa')) : ''}
-        ${line.item_code==='prime-mandats-integres' ? `<small class="chiffrage-helper">${localLabel('Même prix annuel unitaire que les mandats finance supplémentaires','Gleicher jährlicher Einzelpreis wie zusätzliche Finanzmandate')} · ${money(primeOptionAnnual(line))}</small>` : line.annual_rule ? `<small class="chiffrage-helper">${t('chiffrage.annual')} · ${money(primeOptionAnnual(line))} / ${t('chiffrage.ui.perYear')} · ${number(line.annual_rule.per_capita)} CHF / ${localLabel('habitant','Einwohner')} · ${localLabel('arrondi','gerundet')} ${money(line.annual_rule.round_to)}</small>${field(`${line.kind}.${line.index}.annual_override`,line.annual_override,localLabel('Montant annuel unitaire personnalisé','Individueller Jahrespreis pro Einheit'))}` : field(`${line.kind}.${line.index}.annual_pv`, line.annual_pv,t('chiffrage.annual'))}
-        ${state.internal ? field(`${line.kind}.${line.index}.annual_pa`, line.annual_pa, t('chiffrage.annualPa')) : ''}
-        ${textField(`${line.kind}.${line.index}.note`, line.note, t('chiffrage.note'))}
-        <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${line.kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`).join('')}
-    <div class="chiffrage-actions">${options.length ? `<label>${localLabel('Option Prime','Prime-Option')}<select data-prime-option>${options.map(option=>`<option value="${escape(option.item_code)}">${escape(localLabel(option.label_fr,option.label_de??option.label_fr))}</option>`).join('')}</select></label><button type="button" class="chiffrage-button" data-action="addPrimeOption">${localLabel('Ajouter l’option','Option hinzufügen')}</button>` : ''}<button type="button" class="chiffrage-button" data-action="addLicense">${t('chiffrage.addPrimeLicense')}</button>
-      <button type="button" class="chiffrage-button" data-action="addPrime">${t('chiffrage.addLine')} Prime</button>
-      <button type="button" class="chiffrage-button" data-action="addPartner">${t('chiffrage.addLine')} ${t('chiffrage.partner')}</button></div></details>`;
+  const catalogOptions=state.catalog?.parameters?.prime_options??[];
+  const available = kind => {
+    const key = kind === 'primeLines' ? 'prime_lines' : 'partners';
+    const selected = new Set((state.draft[kind] ?? []).map(line => line.item_code || line.label));
+    const found = new Map();
+    for (const profile of referenceProfiles(state.catalog)) for (const line of profile[key] ?? []) {
+      if (line.category === 'hosting') continue;
+      const id = line.item_code || line.label;
+      if (id && !selected.has(id) && !found.has(id)) found.set(id, line);
+    }
+    return [...found.values()];
+  };
+  const section = (kind, label) => {
+    const chosen = state.draft[kind].map((line,index)=>({...line,index})).filter(line=>line.category !== 'hosting');
+    const options = available(kind);
+    const rows = chosen.map(line => {
+      const id = `${kind}.${line.index}`;
+      const annual = line.annual_rule ? primeOptionAnnual(line) : line.annual_pricing?.chf_per_inhabitant == null ? line.annual_pv :
+        Math.ceil(Math.max((state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population) *
+          line.annual_pricing.chf_per_inhabitant, line.annual_pricing.minimum ?? 0) /
+          (line.annual_pricing.round_to ?? 1)) * (line.annual_pricing.round_to ?? 1);
+      return `<details class="chiffrage-extra-row"><summary><span data-extra-title="${id}">${escape(line.label || t('chiffrage.lineLabel'))}</span><span>${number(line.days ?? 0)} ${localLabel('jours','Tage')}</span><strong data-extra-summary="${id}">${money(extraInvestment(line))}</strong><span data-extra-annual="${id}">${annual==null?localLabel('À préciser','Noch offen'):money(annual*(line.quantity??1))} / ${t('chiffrage.ui.perYear')}</span></summary><div class="chiffrage-line">
+        ${textField(`${id}.label`,line.label,t('chiffrage.lineLabel'))}
+        ${state.internal?textField(`${id}.item_code`,line.item_code,t('chiffrage.internalCode')):''}
+        ${kind==='partners'?textField(`${id}.supplier`,line.supplier,t('chiffrage.supplier')):''}
+        ${field(`${id}.quantity`,line.quantity??1,t('chiffrage.quantity'))}
+        ${field(`${id}.days`,line.days, t('chiffrage.days'),{step:.5})}
+        ${line.unit_day_rate!=null?field(`${id}.unit_day_rate`,line.unit_day_rate,t('chiffrage.serviceDayRate')):''}
+        ${field(`${id}.${line.days!=null?'investment_override':'investment_pv'}`,
+          line.days!=null?line.investment_override:line.investment_pv,t('chiffrage.investmentOverride'))}
+        ${kind==='primeLines' && line.category==='license' && !line.annual_rule ? `<div class="chiffrage-prime-pricing">
+          ${field(`${id}.annual_pricing.chf_per_inhabitant`,line.annual_pricing?.chf_per_inhabitant,localLabel('CHF par habitant et par an','CHF pro Einwohner und Jahr'),{step:.01})}
+          ${field(`${id}.annual_pricing.minimum`,line.annual_pricing?.minimum,localLabel('Minimum annuel CHF','Jährliches Minimum CHF'))}
+          ${field(`${id}.annual_pricing.round_to`,line.annual_pricing?.round_to,localLabel('Arrondi CHF','Rundung CHF'))}
+          <small>${localLabel('Base habitants retenus','Massgebende Einwohner')}: ${number(state.draft.dimensions.licensedPopulation??state.draft.dimensions.population)} · ${localLabel('annuel calculé','berechnet jährlich')}: ${money(annual)}</small></div>`:''}
+        ${line.annual_rule ? `<div class="chiffrage-prime-annual"><span>${t('chiffrage.annual')} · ${number(line.annual_rule.per_capita)} CHF / ${localLabel('habitant','Einwohner')}</span><strong>${annual==null?localLabel('À préciser','Noch offen'):money(annual)}</strong>${line.item_code==='prime-mandats-integres'?'':field(`${id}.annual_override`,line.annual_override,localLabel('Montant annuel unitaire personnalisé','Individueller Jahrespreis pro Einheit'))}</div>` : line.annual_pricing?.chf_per_inhabitant != null ? `<div class="chiffrage-prime-annual"><span>${t('chiffrage.annual')} PV</span><strong>${money(annual)}</strong></div>` : field(`${id}.annual_pv`,line.annual_pv,t('chiffrage.annual')+' PV')}
+        ${state.internal?field(`${id}.annual_pa`,line.annual_pa,t('chiffrage.annualPa')):''}
+        ${state.internal?field(`${id}.investment_pa`,line.investment_pa,t('chiffrage.investmentPa')):''}
+        ${textField(`${id}.note`,line.note,t('chiffrage.note'))}
+        <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`;
+    }).join('');
+    return `<section class="chiffrage-extra-group"><h3>${label}</h3>${rows}
+      <details class="chiffrage-extra-available"><summary>${number(options.length)} ${localLabel('options non choisies','nicht gewählte Optionen')}</summary>
+      ${options.map((line,index)=>`<div><span>${escape(line.label)}</span><button type="button" class="chiffrage-button quiet" data-action="addReferenceLine" data-kind="${kind}" data-index="${index}">${localLabel('Ajouter','Hinzufügen')}</button></div>`).join('')||`<p class="chiffrage-helper">${localLabel('Aucune option dans les références.','Keine Option in den Referenzen.')}</p>`}</details>
+      ${kind==='primeLines' && catalogOptions.length ? `<label>${localLabel('Option Prime','Prime-Option')}<select data-prime-option>${catalogOptions.map(option=>`<option value="${escape(option.item_code)}">${escape(localLabel(option.label_fr,option.label_de??option.label_fr))}</option>`).join('')}</select></label><button type="button" class="chiffrage-button" data-action="addPrimeOption">${localLabel('Ajouter l’option','Option hinzufügen')}</button>` : ''}
+      <button type="button" class="chiffrage-button quiet" data-action="${kind==='partners'?'addPartner':'addPrime'}">${localLabel('Ajouter une ligne libre','Freie Zeile hinzufügen')}</button></section>`;
+  };
+  return `<div class="chiffrage-section chiffrage-extra-overview"><h2>${localLabel('Options Prime et partenaires','Prime- und Partneroptionen')}</h2>
+    ${section('primeLines','Prime')}${section('partners',t('chiffrage.partners'))}</div>`;
 }
 
 function hostingSection(scope = 'composer') {
