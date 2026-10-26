@@ -1,55 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-10-22T10:11:36.768Z",
+    "generatedAt": "2026-10-26T11:07:53.578Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "472354585fa470683dd283af1d1089b751cd99289257ce968226b9c643d5652a",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Contrôle des habitants",
-      "url": "https://www.yverdon-les-bains.ch/votre-commune/les-services-de-ladministration/population-et-numerique/controle-des-habitants",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
-    },
-    {
-      "id": "fedb07f3bf0e6dcd807d7b20566a9d3632c4d5655b10453172f7a24d9c7b4d19",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Impôts et taxes",
-      "url": "https://www.yverdon-les-bains.ch/votre-commune/finances/impots",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : finance",
-      "status": "pending"
-    },
-    {
-      "id": "1cc5ed6b260bbcea45a1deb5d9a7b1fa406c92603b4837bcd5a81291a52cc0e3",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rénovation salle Omnisports des Isles",
-      "url": "https://www.yverdon-les-bains.ch/votre-commune/les-services-de-ladministration/batiments/gestion-immobiliere/renovation-salle-omnisports-des-isles",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
-    },
     {
       "id": "685661020faed9464edd4a0eb0f3afaa4374c955987ff5ee64909b57a2cb4ee6",
       "sourceId": "yverdon-preavis",
@@ -3003,6 +2958,51 @@
       "publicationDate": "2026-10-22",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "bfecb42b0c5e1563ff72037368f7a07a92e4dbb8917fa5b7b5a2d2755d54ecc3",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Appel d'offres assurances de personnes 2027",
+      "url": "https://www.simap.ch/fr/?search=05396ecc-83ee-4d05-9e20-069060559cc0",
+      "detectedAt": "2026-10-26T11:07:47.344Z",
+      "publicationDate": "2026-10-26",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "9ef373bd3b5b86b67f0848e4a4659da688140d5a777679ae94acc2cd5a4add6c",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Erwerb von Microsoft-Lizenzen",
+      "url": "https://www.simap.ch/fr/?search=112e1a0c-55fc-4754-bc53-f9c1b2ddea6a",
+      "detectedAt": "2026-10-26T11:07:47.344Z",
+      "publicationDate": "2026-10-23",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "60f3181c1e093f2e185e89328dad94b3c9ea3c8bb1b75c44e73208003eea7be0",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "Ressources humaines",
+      "url": "https://www.yverdon-les-bains.ch/votre-commune/les-services-de-ladministration/ressources-humaines",
+      "detectedAt": "2026-10-26T11:07:49.511Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : ressources humaines",
       "status": "pending"
     }
   ]
