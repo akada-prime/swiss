@@ -582,3 +582,6 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .b
 }
 
 
+
+.prime-offer-lcm-price { display:block; margin:0 0 8px; color:var(--offer-text); font-size:18px; }
+.prime-offer-lcm-alternative p>span { display:block; margin-bottom:10px; }

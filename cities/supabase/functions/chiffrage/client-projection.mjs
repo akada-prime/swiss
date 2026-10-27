@@ -81,7 +81,13 @@ export function publicOfferFromSaved(quote, catalog) {
     /\bAZ(?: Informatique)?\b/i.test([...hostingLabels,String(snapshot.input?.context?.hosting??'')].join(' '))) ? 'az' : null;
   const chosen=snapshot.input?.lcm?.selection;
   const lcm=chosen==='gold'?'Gold':chosen==='platinium'?'Platinum':null;
+  // Publish only the two saved annual selling prices, never reference metadata.
+  const gold=s.lcm?.gold?.effective_value, platinum=s.lcm?.platinium?.effective_value;
+  const selectedAnnual=rollup(line=>line.family==='lcm','annual');
+  const lcmPrices=chosen==='gold' && finite(gold) && finite(platinum) && gold>=0 && platinum>=0 &&
+    Math.abs(selectedAnnual-gold)<.01 ? {gold,platinum} : null;
   return {
+    ...(lcmPrices ? {lcm_prices:lcmPrices} : {}),
     version:2,quote_title:short(quote.title),commune:short(quote.commune_name),
     bfs_id:Number(quote.bfs_id),canton:short(quote.canton,2).toUpperCase(),
     population:Number(quote.population),revision:Number(snapshot.revision),
