@@ -191,3 +191,8 @@ html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
 .chiffrage-summary-hint{font-size:.85em;font-weight:400;color:var(--skin-muted)}
 @media(max-width:700px){.chiffrage-hosting-preview{grid-template-columns:1fr 1fr}.chiffrage-hosting-preview>span{grid-column:1/-1}.chiffrage-hosting-preview strong{white-space:normal}}
 @media(max-width:600px){.chiffrage-services .chiffrage-service-grid{gap:0}.chiffrage-services .chiffrage-service-item{grid-template-columns:minmax(0,1fr) 76px 80px;gap:8px;min-height:58px;padding:8px 0}.chiffrage-services .chiffrage-service-item label{min-width:0}.chiffrage-services .chiffrage-service-item input{max-width:100%}}
+
+.chiffrage-offer-solutions h4{min-height:38px;display:flex;align-items:center}
+.chiffrage-software-logo{display:block;max-width:165px;max-height:38px;width:auto;height:auto;object-fit:contain}
+.chiffrage-hosting-brand{margin-top:18px;border-radius:10px;padding:10px 16px;background:#1c3452}
+.chiffrage-hosting-brand img{display:block;width:140px;max-width:100%;height:auto}
