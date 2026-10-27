@@ -75,6 +75,8 @@ export function publicOfferFromSaved(quote, catalog) {
   const solution=line=>!host(line)&&!partner(line);
   const buckets=Object.fromEntries([['solutions',solution],['partners',partner],['hosting',host]].map(
     ([key,filter])=>[key,{investment:rollup(filter,'investment'),annual:rollup(filter,'annual')}]));
+  const hostingLabels=(snapshot.input?.primeLines??[]).filter(line=>line.category==='hosting').map(line=>String(line.label??''));
+  const hostingProvider=breakdown.some(x=>x.key==='hosting') && /\bAZ(?: Informatique)?\b/i.test([...hostingLabels,String(snapshot.input?.context?.hosting??'')].join(' ')) ? 'az' : null;
   const chosen=snapshot.input?.lcm?.selection;
   const lcm=chosen==='gold'?'Gold':chosen==='platinium'?'Platinum':null;
   return {
@@ -85,7 +87,7 @@ export function publicOfferFromSaved(quote, catalog) {
     products:[...new Set(sourceProducts.filter(x=>Object.hasOwn(products,x)).map(x=>products[x]))],
     // Modules are customer-safe labels, never raw catalog objects.
     scope:customerModuleScope(snapshot.input,catalog),
-    lcm,hosting:breakdown.some(x=>x.key==='hosting'),
+    lcm,hosting:breakdown.some(x=>x.key==='hosting'),hosting_provider:hostingProvider,
     amounts:{investment:s.investment,annual:s.annual,tco5y:s.investment+4*s.annual},
     breakdown,buckets
   };
