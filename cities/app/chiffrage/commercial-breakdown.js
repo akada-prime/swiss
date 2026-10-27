@@ -9,7 +9,7 @@ export const offerPriceGroups = Object.freeze([
   ['otherServices','Autres prestations','Weitere Dienstleistungen'],
   ['database','Bases de données et technique','Datenbanken und Technik'],
   ['primePartners','Prime et partenaires','Prime und Partner'],
-  ['lcm','LCM','LCM'],
+  ['lcm','LCM (mises à jour annualisées)','LCM (annualisierte Aktualisierungen)'],
   ['hosting','Hébergement','Hosting']
 ]);
 
