@@ -17,7 +17,7 @@ const fr = !/^de(?:-|$)/i.test(navigator.language);
 if (!fr) document.documentElement.lang = 'de';
 const label = (f,d) => fr ? f : d;
 const safeId = id => /^\d{1,5}$/.test(String(id)) ? String(id) : '';
-const softwareLogo = {innosolvcity:'innosolvcity.png',ProConcept:'proconcept-wordmark.png'};
+const softwareLogo = {innosolvcity:'innosolvcity.png',ProConcept:'proconcept-wordmark.png',Abacus:'abacus-wordmark.png'};
 const safeCanton = code => /^[A-Z]{2}$/.test(String(code)) ? String(code) : '';
 const errorView = () => { root.innerHTML = `<div class="client-offer-message">
   <img src="public/prime-logo-negative.svg" alt="Prime Technologies" width="150" height="80">
@@ -76,7 +76,7 @@ function renderOffer(o, map) {
   ].join('') : content(label('Répartition du prix','Preisaufteilung'),
     ['solutions','partners','hosting'],'');
   const scope = current && Array.isArray(o.scope) ? o.scope.map(group=>`<div class="client-offer-module-group">
-    <h4>${softwareLogo[group.product] ? `<img class="client-offer-software-logo" src="public/assets/logos/${softwareLogo[group.product]}" alt="${enc(group.product)}">` : enc(group.product)}</h4>
+    <h4 class="${group.product==='Abacus'?'brand-abacus':''}">${softwareLogo[group.product] ? `<img class="client-offer-software-logo" src="public/assets/logos/${softwareLogo[group.product]}" alt="${enc(group.product)}">` : enc(group.product)}</h4>
     <ul>${group.items.map(entry=>`<li>${enc(label(entry.fr,entry.de))}</li>`).join('')}</ul>
   </div>`).join('') :
     `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
