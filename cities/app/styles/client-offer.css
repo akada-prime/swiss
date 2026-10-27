@@ -3,7 +3,6 @@
 .client-offer-page{margin:0;background:var(--skin-page);color:var(--skin-text)}
 .client-offer-shell{width:min(1180px,100%);margin:0 auto;padding:clamp(0px,3vw,44px) clamp(0px,3vw,32px) 70px;min-height:100dvh}
 .client-offer{border-radius:clamp(0px,1.8vw,20px);overflow:hidden;border:1px solid var(--skin-border-soft);box-shadow:var(--skin-shadow)}
-.client-offer .chiffrage-offer-hero{--prime-offer-mark:url('../../public/prime-one-negative.png')}
 .client-offer .chiffrage-offer-brand{max-width:78%}
 .client-offer .client-offer-revision{font-size:14px;color:#c3d1e8;margin-top:8px}
 .client-offer .chiffrage-offer-horizon{margin-bottom:0}
@@ -35,7 +34,7 @@
 
 /* The customer detail continues the deep-blue Prime presentation.
    Richer commercial scope, but no internal editor controls or raw line data. */
-.client-offer .client-offer-body{display:grid;grid-template-columns:1fr;gap:38px;background:linear-gradient(155deg,#253955 0%,#1a2f4d 60%,#243b5a 100%);color:#edf4ff;padding:clamp(24px,4vw,60px)}
+.client-offer .client-offer-body{display:grid;grid-template-columns:1fr;gap:38px;background:linear-gradient(155deg,#253955 0%,#1a2f4d 60%,#243b5a 100%);color:#edf4ff;padding:24px clamp(24px,4vw,60px) clamp(24px,4vw,60px)}
 .client-offer .client-offer-body .chiffrage-kicker{color:#9db4d2;font-size:13px}
 .client-offer .client-offer-body h3{font-size:clamp(24px,3.1vw,34px);color:#fff;line-height:1.15;margin:0 0 22px}
 .client-offer .client-offer-scope{padding:0 0 32px;border-bottom:1px solid #d5e7fa30}
@@ -47,6 +46,10 @@
 .client-offer .client-offer-products span{border:1px solid #8fb5da55;background:#ffffff10;color:#fff}
 .client-offer .client-offer-lcm{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin-top:16px;border:1px solid #acd8f755;border-radius:10px;padding:11px 16px;color:#aac1dc;background:#93bbe91c}
 .client-offer .client-offer-lcm strong{font-size:17px;color:#fff}
+.client-offer .client-offer-lcm-alternative{max-width:550px;margin-top:12px;border:1px solid #acd8f755;border-radius:10px;background:#162b4799;color:#e9f2ff}
+.client-offer .client-offer-lcm-alternative summary{cursor:pointer;padding:12px 16px;font-size:14px;font-weight:650;line-height:1.5}
+.client-offer .client-offer-lcm-alternative summary:focus-visible{outline:2px solid #a8d6ff;outline-offset:3px}
+.client-offer .client-offer-lcm-alternative p{margin:0;padding:0 16px 15px;color:#cad9ee;font-size:14px;line-height:1.55}
 .client-offer .client-offer-price-section{margin-top:22px}
 .client-offer .client-offer-price-section+.client-offer-price-section{border-top:1px solid #ffffff28;padding-top:24px;margin-top:26px}
 .client-offer .client-offer-price-section h3{font-size:21px;margin:0 0 12px;color:#dcecff}
@@ -60,7 +63,7 @@
 .client-offer .client-offer-price-values strong{display:block;color:#f5f9ff;white-space:nowrap;font-size:clamp(13px,1.65vw,18px);font-weight:600;font-variant-numeric:tabular-nums}
 .client-offer .client-offer-footer{color:#c2d1e4;background:#132137;border-color:#ffffff22}
 @media(max-width:660px){
- .client-offer .client-offer-body{padding:30px 22px;gap:26px}
+ .client-offer .client-offer-body{padding:22px 22px 30px;gap:26px}
  .client-offer .client-offer-module-grid{grid-template-columns:1fr;gap:10px}
  .client-offer .client-offer-module-group{padding:16px}
  .client-offer .client-offer-price-row{grid-template-columns:1fr;gap:12px;padding:17px 15px}
@@ -79,7 +82,6 @@ html[data-skin] .client-offer .client-offer-body .chiffrage-kicker{color:#bdcde3
 .client-offer .client-offer-module-group{background:#ffffff0b;border-color:#c0d6ee50}
 
 /* Reuse the editor's exact brand mark and keep verified coats and product logos legible. */
-.client-offer .chiffrage-offer-hero:before{opacity:.13}
 .client-offer .chiffrage-communal-coat img{display:block;object-fit:contain;width:44px;height:52px}
 .client-offer .client-offer-module-group h4{min-height:38px;display:flex;align-items:center}
 .client-offer .client-offer-software-logo{display:block;max-width:180px;max-height:42px;width:auto;height:auto;object-fit:contain}

@@ -766,7 +766,6 @@ export default {
   "chiffrage.pceSalaryAnnual": "ProConcept Löhne · jährlich CHF",
   "chiffrage.pceStandalonePrice": "Ohne innosolv definiert diese Referenz keinen eigenständigen ProConcept-Tarif. Erfassen Sie die jährlichen Finanz-/Lohnpreise unter Technik.",
   "chiffrage.ui.variant": "Variante",
-  "chiffrage.ui.offerBrand": "Gemeinden / Angebot",
   "chiffrage.ui.priceToConfirm": "Preis bestätigen",
   "chiffrage.ui.unavailableModule": "Modulbezeichnung nicht verfügbar",
   "chiffrage.ui.unspecified": "Nicht angegeben",
