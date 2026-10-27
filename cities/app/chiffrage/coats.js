@@ -1,5 +1,14 @@
 // Verified public arms: Wikidata P771 (OFS) and P94, with Commons source metadata.
 export default {
+  "5744": {
+    "name": "Ballaigues",
+    "filename": "CHE Ballaigues COA.svg",
+    "asset": "https://commons.wikimedia.org/wiki/Special:FilePath/CHE_Ballaigues_COA.svg?width=100",
+    "source": "https://www.wikidata.org/wiki/Q43239",
+    "filePage": "https://commons.wikimedia.org/wiki/File:CHE_Ballaigues_COA.svg",
+    "license": "Public domain",
+    "retrieved": "2026-10-27"
+  },
   "5586": {
     "name": "Lausanne",
     "filename": "CHE Lausanne COA.svg",
