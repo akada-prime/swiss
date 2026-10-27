@@ -88,3 +88,12 @@ test('public entry preserves v1/v2 offers, FR/DE, values and confidentiality',as
   } finally {for(const [k,d]of Object.entries(saved)){if(d)Object.defineProperty(globalThis,k,d);else delete globalThis[k];}}
  }
 });
+
+test('Platinum shows annual price and replacement delta, with no invented fallback',()=>{
+ const html=offerLcm('Gold',label,{money,prices:{gold:100,platinum:150}});
+ assert.match(html,/LCM Platinum · 150 CHF/);
+ assert.match(html,/\+50 CHF/);
+ assert.match(html,/ne s’ajoute pas/);
+ assert.doesNotMatch(offerLcm('Gold',label,{money}),/CHF/);
+ assert.match(offerLcm('Gold',label,{money,prices:{gold:0,platinum:0}}),/même prix annuel/);
+});

@@ -275,3 +275,19 @@ test('commercial offer owns its contrast without client cascade overrides',()=>{
   assert.doesNotMatch(css+shell,/!important/);
   assert.doesNotMatch(shell,/chiffrage-offer-(hero|summary)/);
 });
+
+test('Gold publication includes only saved LCM annual PV prices when reconciled',()=>{
+  const q=structuredClone(quote);
+  q.snapshot.input.lcm={selection:'gold'};
+  q.snapshot.result.lines.push({family:'lcm',annual_pv:100,investment_pv:0});
+  q.snapshot.result.summary.annual+=100;
+  q.snapshot.result.summary.lcm={gold:{effective_value:100,source:'private'},platinium:{effective_value:150,source:'private'}};
+  const p=publicOfferFromSaved(q);
+  assert.deepEqual(p.lcm_prices,{gold:100,platinum:150});
+  assert.doesNotMatch(JSON.stringify(p),/private/);
+  assert.equal(p.amounts.annual,125);
+  q.snapshot.result.summary.lcm.gold.effective_value=99;
+  assert.equal(publicOfferFromSaved(q).lcm_prices,undefined);
+  delete q.snapshot.result.summary.lcm;
+  assert.equal(publicOfferFromSaved(q).lcm_prices,undefined);
+});

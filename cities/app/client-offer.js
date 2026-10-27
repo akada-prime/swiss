@@ -1,5 +1,5 @@
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from './offer/presentation.js?v=20261027-shared-offer-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from './offer/presentation.js?v=20261027-platinum-price-r1';
 import verifiedCoats from './chiffrage/coats.js';
 import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261027-ballaigues-r1';
 
@@ -48,7 +48,7 @@ function renderOffer(o, map) {
     ${offerBanner(hero,offerFigures(o.amounts,{label,money}))}
     <div class="chiffrage-offer-body prime-offer-commercial">
       <section class="client-offer-scope"><h3>${label('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
-        ${scope}${offerHosting(o.hosting_provider==='az',{asset,label})}${offerLcm(o.lcm,label)}
+        ${scope}${offerHosting(o.hosting_provider==='az',{asset,label})}${offerLcm(o.lcm,label,{prices:o.lcm_prices,money})}
       </section>
       <section class="client-offer-breakdown"><h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
         ${priceDetail}

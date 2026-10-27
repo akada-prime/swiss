@@ -1,4 +1,4 @@
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from '../offer/presentation.js?v=20261027-shared-offer-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from '../offer/presentation.js?v=20261027-platinum-price-r1';
 import { t, number } from '../core/i18n.js?v=20261024-completion-r1';
 import { subscribePreferences } from '../core/preferences.js';
 import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261025-prime-beta-r1';
@@ -764,7 +764,7 @@ function workspaceHero() {
   const hero = offerHero({ asset:assetUrl, name:state.draft.name, bfsId:state.draft.bfs_id,
     population:number(state.draft.dimensions.population), inhabitants:t('chiffrage.workspace.a46028df66'),
     heading:t(`chiffrage.ui.heading.${state.editorTab}`),
-    brand:state.editorTab==='offer'?'':t('chiffrage.ui.workspaceBrand'),
+    
     map:territoryMap(), identity:territoryIdentity(), details:`    <p class="chiffrage-offer-reference">${localLabel('Base de prestations','Leistungsgrundlage')} : <strong>${escape(displayReference(state.draft.reference))}</strong>${state.dirty?` · ${localLabel('Modifications en cours','Änderungen in Bearbeitung')}`:''}</p>
     <details class="chiffrage-offer-tariffs"><summary>${t('chiffrage.ui.tariffReferences')}</summary><p>${escape(tariffLabel(state.catalog))}</p></details>
 ` });
@@ -797,7 +797,7 @@ function offerSection() {
   const scope = offerScope(themes.map(group=>({product:group.name,items:group.themes})),{asset:assetUrl});
   const lcm = ({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection;
   return `<article class="chiffrage-offer"><div class="chiffrage-offer-body"><section><h3>${localLabel('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
-    ${scope}${offerHosting(azHosting,{asset:assetUrl,label:localLabel})}${offerLcm(lcm,localLabel)}
+    ${scope}${offerHosting(azHosting,{asset:assetUrl,label:localLabel})}${offerLcm(lcm,localLabel,{money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
     <p>${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p></section>
     <section><h3>${localLabel('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>${priceDetail}<p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
 }
