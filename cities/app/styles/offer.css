@@ -1,0 +1,584 @@
+
+:root {
+  --offer-gradient: radial-gradient(circle at 85% 20%,#c7425955,transparent 38%),radial-gradient(circle at 20% 80%,#356da355,transparent 44%),linear-gradient(135deg,#101c34,#172746 57%,#321c36);
+  --offer-gutter: clamp(22px,5vw,76px);
+  --offer-radius: 14px;
+  --offer-mark-opacity: .13;
+}
+.chiffrage-offer-body {
+  --offer-text: var(--skin-text);
+  --offer-muted: var(--skin-secondary);
+  --offer-panel: var(--skin-tint);
+  --offer-border: var(--skin-border);
+  display: grid;
+  gap: clamp(24px,4vw,64px);
+  grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr);
+  padding: 24px var(--offer-gutter) 36px;
+}
+.prime-offer-banner {
+  --skin-text: #fff;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--offer-gradient);
+  color: #f8faff;
+}
+.chiffrage-offer-hero::before {
+  content: '';
+  position: absolute;
+  right: 2%;
+  top: 56px;
+  width: 118px;
+  height: min(350px,calc(100% - 70px));
+  background: url('../../public/prime-one-negative.png') center / contain no-repeat;
+  opacity: var(--offer-mark-opacity);
+  pointer-events: none;
+  z-index: -1;
+}
+/* Shared offer presentation. Both entry points load this owner. */
+.chiffrage-offer-map svg {
+  width: 100%;
+  height: 100%;
+  display: block
+}
+.chiffrage-map-region path {
+  fill: #8ba9c744;
+  stroke: #9fb6ce;
+  stroke-width: 750
+}
+.chiffrage-map-selected {
+  fill: #44dc98;
+  stroke: #fff;
+  stroke-width: 700
+}
+.chiffrage-map-point {
+  fill: #44dc98;
+  stroke: #fff;
+  stroke-width: 1800;
+  paint-order: stroke fill
+}
+.chiffrage-offer-map {
+  position: absolute;
+  right: 5%;
+  top: 64px;
+  width: clamp(130px,17vw,230px);
+  height: 140px;
+  pointer-events: none
+}
+.chiffrage-offer-map .chiffrage-map-region path {
+  fill: #98afdb33;
+  stroke: #c5d8f199
+}
+.chiffrage-offer {
+  background: var(--quote-surface)
+}
+.chiffrage-offer-hero {
+  position: relative;
+  color: #f8faff;
+  isolation: isolate;
+  padding: clamp(28px,5vw,76px) var(--offer-gutter) 24px;
+  overflow-wrap: anywhere
+}
+.chiffrage-offer-brand {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  max-width: 70%
+}
+.chiffrage-offer-brand img {
+  display: block;
+  width: 137px;
+  height: 60px;
+  object-fit: contain
+}
+.chiffrage-offer-brand>span {
+  font-size: 14px;
+  letter-spacing: 0;
+  color: #c3d1e8
+}
+.chiffrage-offer-identity {
+  margin-top: 20px;
+  max-width: 70%
+}
+.chiffrage-offer-identity .chiffrage-identity {
+  justify-content: flex-start
+}
+.chiffrage-offer-identity .chiffrage-canton {
+  color: #e9efff
+}
+.chiffrage-offer-identity .chiffrage-coat-fallback {
+  color: #c3d1e8
+}
+.chiffrage-offer-place {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 12px 0 8px;
+  font-size: clamp(21px,2vw,28px);
+  font-weight: 650;
+  color: #f8faff
+}
+.chiffrage-offer-place span {
+  font-size: 14px;
+  color: #aebdd8
+}
+.chiffrage-offer-hero h2 {
+  color: #fff;
+  margin: 0 0 12px;
+  font-size: clamp(32px,4vw,60px);
+  line-height: 1.05;
+  letter-spacing: -.055em
+}
+.chiffrage-offer-reference {
+  font-size: 14px;
+  color: #b7c6e2;
+  line-height: 1.5
+}
+.chiffrage-offer-reference strong {
+  color: #fff
+}
+.chiffrage-offer-tariffs {
+  font-size: 14px;
+  color: #b7c6e2;
+  margin-top: 10px;
+  max-width: 100%
+}
+.chiffrage-offer-tariffs summary {
+  cursor: pointer;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px
+}
+.chiffrage-offer-tariffs summary:before {
+  content: "+"
+}
+.chiffrage-offer-tariffs[open] summary:before {
+  content: "−"
+}
+.chiffrage-offer-tariffs p {
+  overflow-wrap: anywhere;
+  line-height: 1.5
+}
+.chiffrage-offer-figures {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 32px
+}
+.chiffrage-offer-figures>div {
+  min-width: 0;
+  border-top: 1px solid #ffffff52;
+  padding-top: 20px
+}
+.chiffrage-offer-figures span,.chiffrage-offer-figures small {
+  display: block;
+  color: #c3d1e8;
+  font-size: 14px
+}
+.chiffrage-offer-figures strong {
+  color: #fff;
+  display: block;
+  margin: 9px 0 6px;
+  line-height: 1.12;
+  letter-spacing: -.06em;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(30px,4.6vw,64px);
+  white-space: normal;
+  overflow-wrap: anywhere
+}
+.chiffrage-offer-figures>div:first-child strong {
+  background: linear-gradient(100deg,#fff 12%,#d1e9ff 55%,#f7aab1);
+  background-clip: text;
+  -webkit-text-fill-color: transparent
+}
+.chiffrage-offer-horizon {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 18px 0 0;
+  border-top: 1px solid #ffffff52;
+  color: #c3d1e8;
+  font-size: 14px
+}
+.chiffrage-offer-horizon strong {
+  color: #fff;
+  font-size: clamp(22px,2.8vw,32px);
+  font-variant-numeric: tabular-nums;
+  text-align: right
+}
+.chiffrage-offer-caveat {
+  margin: 20px 0 0;
+  padding: 12px;
+  border-radius: 6px;
+  background: #ffffff19;
+  color: #fff;
+  font-size: 13px
+}
+.chiffrage-offer-body h3 {
+  font-size: 22px;
+  letter-spacing: -.03em;
+  margin: 0 0 18px
+}
+.chiffrage-offer-body p {
+  line-height: 1.6
+}
+.chiffrage-view .chiffrage-offer-breakdown :is(th,td) {
+  padding: 12px 8px
+}
+.chiffrage-offer-breakdown-total :is(th,td) {
+  font-weight: 700;
+  color: var(--skin-text)
+}
+.chiffrage-identity {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px
+}
+.chiffrage-communal-coat {
+  display: flex;
+  align-items: center;
+  max-width: 130px;
+  min-height: 52px
+}
+.chiffrage-communal-coat img {
+  display: block;
+  object-fit: contain;
+  width: 44px;
+  height: 52px
+}
+.chiffrage-coat-fallback {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--skin-muted)
+}
+.chiffrage-canton {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  color: var(--skin-secondary)
+}
+.chiffrage-canton img {
+  object-fit: contain
+}
+.chiffrage-map-fallback {
+  padding: 10px;
+  font-size: 13px;
+  text-align: center
+}
+.chiffrage-offer-summary {
+  color: #f8faff;
+  padding: 0 var(--offer-gutter) 28px
+}
+.prime-offer-commercial {
+  --skin-text: #f8fbff;
+  --offer-text: #f8fbff;
+  --offer-muted: #cad9ee;
+  --offer-panel: #1a2d48;
+  --offer-border: #c0d6ee50;
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  gap: 32px;
+  background: linear-gradient(155deg,#253955 0%,#1a2f4d 60%,#243b5a 100%);
+  color: var(--offer-text);
+  padding: 24px var(--offer-gutter) 36px
+}
+.prime-offer-commercial h3 {
+  font-size: clamp(24px,3.1vw,34px);
+  color: #fff;
+  line-height: 1.15;
+  margin: 0 0 22px
+}
+.prime-offer-module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,275px),1fr));
+  gap: 14px
+}
+.prime-offer-module-group {
+  min-width: 0;
+  border: 1px solid #a1c3e638;
+  padding: 19px 20px;
+  background: var(--offer-panel);
+  border-color: var(--offer-border);
+  border-radius: var(--offer-radius)
+}
+.prime-offer-module-group h4 {
+  margin: 0 0 12px;
+  font-size: 19px;
+  color: var(--offer-text);
+  min-height: 38px;
+  display: flex;
+  align-items: center
+}
+.prime-offer-module-group ul {
+  padding-left: 19px;
+  margin: 0;
+  display: grid;
+  gap: 9px
+}
+.prime-offer-module-group li {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--offer-muted)
+}
+.prime-offer-lcm {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 16px;
+  border: 1px solid #acd8f755;
+  border-radius: 10px;
+  padding: 11px 16px;
+  color: var(--offer-muted);
+  background: var(--offer-panel);
+  border-color: var(--offer-border)
+}
+.prime-offer-lcm strong {
+  font-size: 17px;
+  color: var(--offer-text)
+}
+.prime-offer-lcm-alternative {
+  max-width: 550px;
+  margin-top: 12px;
+  border: 1px solid #acd8f755;
+  border-radius: 10px;
+  background: var(--offer-panel);
+  color: var(--offer-text);
+  border-color: var(--offer-border)
+}
+.prime-offer-lcm-alternative summary {
+  cursor: pointer;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.5
+}
+.prime-offer-lcm-alternative summary:focus-visible {
+  outline: 2px solid #a8d6ff;
+  outline-offset: 3px
+}
+.prime-offer-lcm-alternative p {
+  margin: 0;
+  padding: 0 16px 15px;
+  color: var(--offer-muted);
+  font-size: 14px;
+  line-height: 1.55
+}
+.prime-offer-price-section {
+  margin-top: 22px
+}
+.prime-offer-price-section+.prime-offer-price-section {
+  border-top: 1px solid #ffffff28;
+  padding-top: 24px;
+  margin-top: 26px
+}
+.prime-offer-price-section h3 {
+  font-size: 21px;
+  margin: 0 0 12px;
+  color: var(--offer-text)
+}
+.prime-offer-price-section>p {
+  margin: 0 0 17px;
+  font-size: 14px;
+  max-width: 660px;
+  line-height: 1.6;
+  color: var(--offer-muted)
+}
+.prime-offer-price-list {
+  display: grid;
+  gap: 1px;
+  border: 1px solid #ffffff29;
+  overflow: hidden;
+  background: #ffffff18;
+  border-color: var(--offer-border);
+  border-radius: var(--offer-radius)
+}
+.prime-offer-price-row {
+  display: grid;
+  grid-template-columns: minmax(0,1.1fr) minmax(0,1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 18px 20px;
+  background: var(--offer-panel)
+}
+.prime-offer-price-row h4 {
+  color: var(--offer-text);
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.45;
+  font-weight: 650
+}
+.prime-offer-price-values {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 14px
+}
+.prime-offer-price-values>div {
+  min-width: 0
+}
+.prime-offer-price-values small {
+  display: block;
+  color: var(--offer-muted);
+  margin-bottom: 6px;
+  font-size: 14px
+}
+.prime-offer-price-values strong {
+  display: block;
+  color: var(--offer-text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(14px,1.65vw,18px);
+  white-space: normal;
+  overflow-wrap: anywhere
+}
+.prime-offer-software-logo {
+  display: block;
+  max-width: 180px;
+  max-height: 42px;
+  width: auto;
+  height: auto;
+  object-fit: contain
+}
+.prime-offer-module-group .brand-abacus {
+  width: max-content;
+  max-width: 100%;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #fff
+}
+.prime-offer-hosting-brand {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 18px;
+  padding: 14px 18px;
+  border: 1px solid #c0d6ee50;
+  border-radius: 12px;
+  background: var(--offer-panel);
+  color: var(--offer-text);
+  border-color: var(--offer-border)
+}
+.prime-offer-hosting-brand span {
+  font-size: 14px;
+  font-weight: 600
+}
+.prime-offer-hosting-brand img {
+  display: block;
+  width: 150px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain
+}
+.chiffrage-offer-body .logo-on-light {
+  display: none;
+}
+html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .logo-on-dark {
+  display: none;
+}
+html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .logo-on-light {
+  display: block;
+}
+html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .brand-innosolv {
+  background: #162b47;
+  padding: 5px 8px;
+  border-radius: 6px;
+  width: max-content;
+  max-width: 100%;
+}
+@media(max-width:900px){
+.chiffrage-offer-body {
+  grid-template-columns: 1fr;
+  padding: 24px var(--offer-gutter) 36px
+}}
+@media(max-width:600px){
+.chiffrage-offer-place {
+  margin-top: 16px
+}
+.chiffrage-offer-figures {
+  grid-template-columns: 1fr;
+  gap: 20px
+}
+.chiffrage-offer-figures strong {
+  font-size: clamp(34px,10vw,56px)
+}
+.chiffrage-offer-horizon {
+  margin-top: 20px;
+  align-items: start;
+  flex-direction: column
+}
+.chiffrage-view .chiffrage-offer-breakdown :is(th,td) {
+  padding: 10px 5px;
+  font-size: 14px
+}
+.chiffrage-identity {
+  justify-content: flex-start;
+  gap: 10px
+}
+.chiffrage-offer-brand {
+  max-width: 100%;
+  gap: 10px;
+  align-items: flex-start;
+  flex-direction: column
+}
+.chiffrage-offer-brand>span {
+  font-size: 14px
+}
+.chiffrage-offer-identity {
+  max-width: 100%;
+  margin-top: 18px
+}
+.chiffrage-offer-map,.chiffrage-offer-hero .chiffrage-offer-map {
+  position: relative;
+  top: auto;
+  right: auto;
+  width: 150px;
+  height: 105px;
+  float: right;
+  margin: 4px 0 8px 12px
+}
+.chiffrage-offer-place {
+  clear: both
+}}
+@media(max-width:1100px){
+.chiffrage-offer-body {
+  grid-template-columns: minmax(0,1fr);
+  padding: 24px var(--offer-gutter) 36px
+}}
+@media(max-width:850px){
+.prime-offer-commercial {
+  grid-template-columns: 1fr;
+  gap: 32px
+}
+}
+@media(max-width:660px){
+.prime-offer-commercial {
+  gap: 26px
+}
+.prime-offer-module-grid {
+  grid-template-columns: 1fr;
+  gap: 10px
+}
+.prime-offer-module-group {
+  padding: 16px
+}
+.prime-offer-price-row {
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 17px 15px
+}
+.prime-offer-price-values strong {
+  font-size: 17px
+}
+.prime-offer-price-list {
+  border-radius: 12px
+}
+}
+
+

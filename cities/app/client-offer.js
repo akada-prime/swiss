@@ -1,4 +1,5 @@
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from './offer/presentation.js?v=20261027-shared-offer-r1';
 import verifiedCoats from './chiffrage/coats.js';
 import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261027-ballaigues-r1';
 
@@ -11,14 +12,12 @@ const fmt = value => Number(Math.round(value)).toLocaleString('fr-CH', {
 const money = value => `${fmt(value)} CHF`;
 const cantonNames = { JU:'Jura', VD:'Vaud', GE:'Genève', FR:'Fribourg',
   NE:'Neuchâtel', BE:'Berne', VS:'Valais', ZH:'Zurich', BL:'Bâle-Campagne' };
-const title = key => ({
-  solutions:'Solutions Prime', partners:'Partenaires', hosting:'Hébergement' })[key];
 const fr = !/^de(?:-|$)/i.test(navigator.language);
 if (!fr) document.documentElement.lang = 'de';
 const label = (f,d) => fr ? f : d;
-const primeMark = new URL('public/prime-one-negative.png', document.baseURI).href;
+const asset = path => `public/${path}`;
 const safeId = id => /^\d{1,5}$/.test(String(id)) ? String(id) : '';
-const softwareLogo = {innosolvcity:'innosolvcity.png',ProConcept:'proconcept-wordmark.png',Abacus:'abacus-wordmark.png'};
+
 const safeCanton = code => /^[A-Z]{2}$/.test(String(code)) ? String(code) : '';
 const errorView = () => { root.innerHTML = `<div class="client-offer-message">
   <img src="public/prime-logo-negative.svg" alt="Prime Technologies" width="150" height="80">
@@ -26,22 +25,6 @@ const errorView = () => { root.innerHTML = `<div class="client-offer-message">
   <p>${label('Le lien est incorrect, expiré ou révoqué. Contactez Prime Technologies pour recevoir un nouveau lien.',
   'Der Link ist ungültig, abgelaufen oder widerrufen. Bitte wenden Sie sich für einen neuen Link an Prime Technologies.')}</p>
   </div>`; };
-const mapRegion = (map, offer) => {
-  const selected = map?.municipalities?.find(row => Number(row.id) === Number(offer.bfs_id));
-  const box = map?.meta?.viewBox;
-  if (!selected?.d || !Array.isArray(box) || box.length !== 4) return '';
-  const points = [...selected.d.matchAll(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g)]
-    .map(m => [Number(m[1]), Number(m[2])]);
-  if (!points.length) return '';
-  const center = [
-    (Math.min(...points.map(p=>p[0]))+Math.max(...points.map(p=>p[0])))/2,
-    (Math.min(...points.map(p=>p[1]))+Math.max(...points.map(p=>p[1])))/2 ];
-  return `<svg viewBox="${box.map(Number).join(' ')}" role="img" aria-label="${enc(label('Situation de la commune','Lage der Gemeinde'))}">
-    <g class="chiffrage-map-region">${(map.cantons??[]).map(x=>`<path d="${enc(x.d)}"></path>`).join('')}</g>
-    <path class="chiffrage-map-selected" d="${enc(selected.d)}"></path>
-    <circle class="chiffrage-map-point" cx="${center[0]}" cy="${center[1]}" r="7000"></circle>
-  </svg>`;
-};
 function renderOffer(o, map) {
   const id=safeId(o.bfs_id), canton=safeCanton(o.canton), coat=verifiedCoats[id];
   const coatSrc=coat?.asset ? (/^https:\/\//.test(coat.asset) ? coat.asset : `public/${coat.asset}`) : '';
@@ -52,57 +35,20 @@ function renderOffer(o, map) {
   }));
   const legacyNames={solutions:label('Solutions Prime','Prime-Lösungen'),
     partners:label('Partenaires','Partner'),hosting:label('Hébergement','Hosting')};
-  const row = entry => `<div class="client-offer-price-row">
-    <h4>${enc(names.get(entry.key) || legacyNames[entry.key] || entry.key)}</h4>
-    <div class="client-offer-price-values">
-      <div><small>${label('Investissement','Investition')}</small><strong>${money(entry.investment)}</strong></div>
-      <div><small>${label('Annuel dès N+1','Jährlich ab N+1')}</small><strong>${money(entry.annual)}</strong></div>
-    </div>
-  </div>`;
-  const content = (title, keys, hint) => {
-    const entries=rows.filter(x=>keys.includes(x.key));
-    return entries.length ? `<section class="client-offer-price-section">
-      <h3>${title}</h3>${hint ? `<p>${hint}</p>` : ''}
-      <div class="client-offer-price-list">${entries.map(row).join('')}</div>
-    </section>` : '';
-  };
-  const priceDetail = current ? [
-    content(label('Logiciels et maintenance','Software und Wartung'),['licenses'],''),
-    content(label('Votre accompagnement','Ihre Begleitung'),
-      ['implementation','migration','management','training','otherServices'],
-      label('Installation, reprise, conduite de projet et prise en main : chaque étape est chiffrée séparément.',
-        'Einrichtung, Migration, Projektleitung und Einführung: Jede Etappe ist separat ausgewiesen.')),
-    content(label('Technique et services associés','Technik und zusätzliche Leistungen'),
-      ['database','primePartners','lcm','hosting'],'')
-  ].join('') : content(label('Répartition du prix','Preisaufteilung'),
-    ['solutions','partners','hosting'],'');
-  const scope = current && Array.isArray(o.scope) ? o.scope.map(group=>`<div class="client-offer-module-group">
-    <h4 class="${group.product==='Abacus'?'brand-abacus':''}">${softwareLogo[group.product] ? `<img class="client-offer-software-logo" src="public/assets/logos/${softwareLogo[group.product]}" alt="${enc(group.product)}">` : enc(group.product)}</h4>
-    <ul>${group.items.map(entry=>`<li>${enc(label(entry.fr,entry.de))}</li>`).join('')}</ul>
-  </div>`).join('') :
-    `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
+  const priceDetail = offerBreakdown(rows.map(row=>({...row,label:names.get(row.key)||legacyNames[row.key]||row.key})),{label,money,legacy:!current});
+  const scope = current && Array.isArray(o.scope) ? offerScope(o.scope.map(group=>({
+    product:group.product, items:group.items.map(entry=>label(entry.fr,entry.de))
+  })), { asset }) : `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
+  const hero = offerHero({ asset, name:o.commune, bfsId:o.bfs_id, population:fmt(o.population),
+    inhabitants:label('habitants','Einwohner'), heading:label('Votre projet, en chiffres.','Ihr Projekt in Zahlen.'),
+    map:offerMap(map,o.bfs_id,label('Situation de la commune','Lage der Gemeinde')),
+    identity:offerIdentity({asset,canton,cantonLabel:cantonNames[canton],coatHtml:coatSrc ? `<img src="${enc(coatSrc)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}),
+    details:`<p class="chiffrage-offer-reference">${enc(o.quote_title)} · ${label('Révision','Version')} ${enc(o.revision)}</p>` });
   root.innerHTML = `<article class="chiffrage-offer client-offer">
-    <header class="chiffrage-offer-hero" style="--prime-offer-mark:url('${enc(primeMark)}')">
-      <div class="chiffrage-offer-brand"><img src="public/prime-logo-negative.svg" alt="Prime Technologies" width="137" height="60"></div>
-      <div class="chiffrage-offer-map">${mapRegion(map,o)}</div>
-      <div class="chiffrage-offer-identity"><div class="chiffrage-identity">
-        <div class="chiffrage-communal-coat">${coatSrc ? `<img src="${enc(coatSrc)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}</div>
-        <span class="chiffrage-canton">${canton ? `<img src="public/cantons/${canton.toLowerCase()}.svg" alt="${enc(cantonNames[canton] || canton)}" width="22" height="27">` : ''}</span></div></div>
-      <p class="chiffrage-offer-place">${enc(o.commune)} <span>OFS ${enc(o.bfs_id)} · ${fmt(o.population)} ${label('habitants','Einwohner')}</span></p>
-      <h2>${label('Votre projet, en chiffres.','Ihr Projekt in Zahlen.')}</h2>
-      <p class="client-offer-revision">${enc(o.quote_title)} · ${label('Révision','Version')} ${enc(o.revision)}</p>
-    </header>
-    <section class="chiffrage-offer-summary"><div class="chiffrage-offer-figures">
-        <div><span>${label('Investissement initial','Anfangsinvestition')}</span><strong>${money(o.amounts.investment)}</strong><small>HT · ${label('une fois','einmalig')}</small></div>
-        <div><span>${label('Coût annuel récurrent','Wiederkehrende Jahreskosten')}</span><strong>${money(o.amounts.annual)}</strong><small>HT · ${label('dès la 2e année','ab dem zweiten Jahr')}</small></div>
-      </div>
-      <div class="chiffrage-offer-horizon"><span>${label('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${money(o.amounts.tco5y)}</strong></div></section>
-    <div class="chiffrage-offer-body client-offer-body">
+    ${offerBanner(hero,offerFigures(o.amounts,{label,money}))}
+    <div class="chiffrage-offer-body prime-offer-commercial">
       <section class="client-offer-scope"><h3>${label('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
-        <div class="client-offer-module-grid">${scope}</div>
-        ${o.hosting_provider==='az' ? `<div class="client-offer-hosting-brand"><span>${label('Hébergement assuré par','Hosting durch')}</span><img src="public/assets/logos/az-footer.png" alt="AZ Informatique"></div>` : ''}
-        ${o.lcm ? `<div class="client-offer-lcm"><span>LCM</span><strong>${enc(o.lcm)}</strong><span>${label('· formule retenue (mises à jour annualisées)','· gewählte Variante (annualisierte Aktualisierungen)')}</span></div>` : ''}
-        ${o.lcm === 'Gold' ? `<details class="client-offer-lcm-alternative"><summary>${label('Découvrir Platinum · une autre formule LCM','Platinum entdecken · eine weitere LCM-Variante')}</summary><p>${label('Envie d’explorer Platinum ? Nous pouvons comparer les deux formules pour votre commune. Platinum remplacerait Gold dans une proposition adaptée.', 'Möchten Sie Platinum kennenlernen? Wir können beide Varianten für Ihre Gemeinde vergleichen. Platinum würde Gold in einem angepassten Angebot ersetzen.')}</p></details>` : ''}
+        ${scope}${offerHosting(o.hosting_provider==='az',{asset,label})}${offerLcm(o.lcm,label)}
       </section>
       <section class="client-offer-breakdown"><h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
         ${priceDetail}

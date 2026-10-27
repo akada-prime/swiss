@@ -347,3 +347,11 @@ la baseline, ne pas travailler sur `main` et ne rien merger automatiquement.
 - Moteur et catalogues privés inchangés. Pas de modification de données live.
   Les catalogues privés, le rapprochement Excel et l’export réel n’ont pas été
   revérifiés faute de session privée ; ne pas annoncer une recette métier complète.
+
+## Consolidation graphique offre — 27.10.2026
+
+Branche `refactor/chiffrage-shared-presentation`, base `034bdd4`. Composants
+purs et CSS communs extraits, bandeau/fonds unifiés, anciennes surcharges
+retirées. Moteur et serveur inchangés. 170 tests et build réussis.
+Recette navigateur et Safari non réalisée : intégration en attente de contrôle
+visuel. Diagnostic et critères : [rapport](docs/chiffrage-shared-presentation.md).
