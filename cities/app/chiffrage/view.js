@@ -249,7 +249,12 @@ async function firstDraft(row) {
   const erp = String(row.erp ?? '').toLowerCase();
   if (/proconcept|pce/.test(erp)) chooseErp('pce', false);
   else if (/abacus/.test(erp)) chooseErp('abacus', false);
-  if (profile) applyReference(state.draft, state.catalog, profile.id,{initializeScope:true});
+  if (profile) { applyReference(state.draft, state.catalog, profile.id,{initializeScope:true});
+    state.draft.primeLines=state.draft.primeLines.filter(line=>line.category==='hosting');
+    state.draft.partners=[];
+    const reserve=state.draft.services.find(line=>line.item_code==='reserve');
+    if (reserve) { reserve.days=1; reserve.suggested_days=1; }
+  }
   state.title = `${row.name} — ${t('chiffrage.ui.variant')} ${1 + state.quotes.filter(quote => Number(quote.bfs_id) === Number(row.id)).length}`;
   state.revision = null;
   state.quote = null;
@@ -523,12 +528,13 @@ function hostingSection(scope = 'composer') {
     .filter(line => line.category === 'hosting');
   const scopeChanged=rows.some(line=>line.reference_products?.some(product=>!state.draft.products.includes(product)));
   const complete = rows.length > 0 && rows.every(line=>line.investment_pv != null && line.annual_pv != null);
+  const amounts = complete ? {investment:rows.reduce((sum,line)=>sum+Number(line.investment_pv),0),annual:rows.reduce((sum,line)=>sum+Number(line.annual_pv),0)} : null;
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.hosting')}</summary>
     <fieldset class="chiffrage-choice-group"><legend>${t('chiffrage.hostingQuestion')}</legend>
       ${[true,false].map(value => `<label class="chiffrage-choice"><input type="radio" name="chiffrage-hosting-${scope}" data-hosting="${value}" ${included === value ? 'checked' : ''}>${t(value ? 'chiffrage.yes' : 'chiffrage.no')}</label>`).join('')}
     </fieldset><p class="chiffrage-helper">${t(included ? 'chiffrage.hostingIncluded' : 'chiffrage.hostingExcluded')}</p>
     ${included && scopeChanged ? `<p class="chiffrage-warning">${t('chiffrage.hostingScopeChanged')}</p><button class="chiffrage-button" data-action="confirmHosting">${t('chiffrage.confirmHosting')}</button>` : ''}
-    ${included ? `<details class="chiffrage-subdetail" ${complete ? '' : 'open'}><summary>${t('chiffrage.hostingAmounts')}</summary>
+    ${included ? `<div class="chiffrage-hosting-preview"><span>${localLabel('Hébergement retenu','Gewähltes Hosting')}</span><strong>${localLabel('Investissement','Investition')} ${money(amounts?.investment)}</strong><strong>${localLabel('Annuel dès N+1','Jährlich ab Jahr 2')} ${money(amounts?.annual)}</strong></div><details class="chiffrage-subdetail" ${complete ? '' : 'open'}><summary>${t('chiffrage.hostingAmounts')}</summary>
     <p class="chiffrage-helper">${t(complete ? 'chiffrage.hostingPrefilled' : 'chiffrage.hostingEstimate')}</p>
     <div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addHosting">${
       t('chiffrage.addHosting')}</button></div>
@@ -551,7 +557,7 @@ function lcmPrices() {
 function lcmSection() {
   const prices = calculateLcm(state.draft.dimensions.population,
     state.catalog.parameters.lcm, state.draft.lcm);
-  return `<details class="chiffrage-section" open><summary>${t('chiffrage.lcm')}</summary>
+  return `<details class="chiffrage-section" open><summary>${t('chiffrage.lcm')} <span class="chiffrage-summary-hint">${localLabel('(mises à jour annualisées)','(annualisierte Aktualisierungen)')}</span></summary>
     <p class="chiffrage-lcm-prices">${lcmPrices()}</p>
     <div class="chiffrage-grid"><label>${t('chiffrage.lcmSelection')}<select data-field="lcm.selection">
       ${[['none', t('chiffrage.lcmNone')], ['gold','Gold'], ['platinium','Platinum']].map(([key,label]) =>
@@ -592,7 +598,7 @@ async function loadTerritory() {
 async function loadCoat(commune) {
   const id = Number(commune.bfs_id);
   if (coats.has(id)) return;
-  if (bundledCoats[id]) { coats.set(id, { ...bundledCoats[id], url: assetUrl(bundledCoats[id].asset) }); updateTerritory(); return; }
+  if (bundledCoats[id]) { coats.set(id, { ...bundledCoats[id], url: /^https:\/\//.test(bundledCoats[id].asset) ? bundledCoats[id].asset : assetUrl(bundledCoats[id].asset) }); updateTerritory(); return; }
   coats.set(id, undefined);
   const json = async params => {
     const url = new URL('https://www.wikidata.org/w/api.php');
