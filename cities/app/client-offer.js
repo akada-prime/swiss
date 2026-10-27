@@ -1,6 +1,6 @@
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
 import verifiedCoats from './chiffrage/coats.js';
-import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261024-commercial-r1';
+import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261027-ballaigues-r1';
 
 const root = document.getElementById('offerClientRoot');
 const endpoint = 'https://ozdvmllgxduzquiujcbg.supabase.co/functions/v1/chiffrage?action=clientOffer';
@@ -17,6 +17,7 @@ const fr = !/^de(?:-|$)/i.test(navigator.language);
 if (!fr) document.documentElement.lang = 'de';
 const label = (f,d) => fr ? f : d;
 const safeId = id => /^\d{1,5}$/.test(String(id)) ? String(id) : '';
+const softwareLogo = {innosolvcity:'innosolvcity.png',ProConcept:'proconcept.png',Abacus:'abacus.png'};
 const safeCanton = code => /^[A-Z]{2}$/.test(String(code)) ? String(code) : '';
 const errorView = () => { root.innerHTML = `<div class="client-offer-message">
   <img src="public/prime-logo-negative.svg" alt="Prime Technologies" width="150" height="80">
@@ -42,6 +43,7 @@ const mapRegion = (map, offer) => {
 };
 function renderOffer(o, map) {
   const id=safeId(o.bfs_id), canton=safeCanton(o.canton), coat=verifiedCoats[id];
+  const coatSrc=coat?.asset ? (/^https:\/\//.test(coat.asset) ? coat.asset : `public/${coat.asset}`) : '';
   const names = new Map(offerPriceGroups.map(([key,fr,de])=>[key,label(fr,de)]));
   const current = o.version >= 2 && Array.isArray(o.breakdown);
   const rows = current ? o.breakdown : ['solutions','partners','hosting'].map(key=>({
@@ -74,16 +76,16 @@ function renderOffer(o, map) {
   ].join('') : content(label('Répartition du prix','Preisaufteilung'),
     ['solutions','partners','hosting'],'');
   const scope = current && Array.isArray(o.scope) ? o.scope.map(group=>`<div class="client-offer-module-group">
-    <h4>${enc(group.product)}</h4>
+    <h4>${softwareLogo[group.product] ? `<img class="client-offer-software-logo" src="public/assets/logos/${softwareLogo[group.product]}" alt="${enc(group.product)}">` : enc(group.product)}</h4>
     <ul>${group.items.map(entry=>`<li>${enc(label(entry.fr,entry.de))}</li>`).join('')}</ul>
   </div>`).join('') :
     `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
   root.innerHTML = `<article class="chiffrage-offer client-offer">
-    <header class="chiffrage-offer-hero">
+    <header class="chiffrage-offer-hero" style="--prime-offer-mark:url('public/prime-one-negative.png')">
       <div class="chiffrage-offer-brand"><img src="public/prime-logo-negative.svg" alt="Prime Technologies" width="137" height="60"><span>${label('Communes / Proposition','Gemeinden / Angebot')}</span></div>
       <div class="chiffrage-offer-map">${mapRegion(map,o)}</div>
       <div class="chiffrage-offer-identity"><div class="chiffrage-identity">
-        <div class="chiffrage-communal-coat">${coat?.asset ? `<img src="public/${enc(coat.asset)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}</div>
+        <div class="chiffrage-communal-coat">${coatSrc ? `<img src="${enc(coatSrc)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}</div>
         <span class="chiffrage-canton">${canton ? `<img src="public/cantons/${canton.toLowerCase()}.svg" alt="" width="22" height="27">` : ''}
         ${enc(cantonNames[canton] || canton)}</span></div></div>
       <p class="chiffrage-offer-place">${enc(o.commune)} <span>OFS ${enc(o.bfs_id)} · ${fmt(o.population)} ${label('habitants','Einwohner')}</span></p>
@@ -99,6 +101,7 @@ function renderOffer(o, map) {
       <section class="client-offer-scope"><p class="chiffrage-kicker">${label('Votre périmètre','Ihr Umfang')}</p>
         <h3>${label('Les solutions et modules retenus','Ausgewählte Lösungen und Module')}</h3>
         <div class="client-offer-module-grid">${scope}</div>
+        ${o.hosting_provider==='az' ? `<div class="client-offer-hosting-brand"><img src="public/assets/logos/az-footer.png" alt="AZ Informatique"></div>` : ''}
         ${o.lcm ? `<div class="client-offer-lcm"><span>LCM</span><strong>${enc(o.lcm)}</strong></div>` : ''}
       </section>
       <section class="client-offer-breakdown"><p class="chiffrage-kicker">${label('Lecture du prix','Preisaufteilung')}</p>
