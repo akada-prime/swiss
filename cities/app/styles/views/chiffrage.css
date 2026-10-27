@@ -194,7 +194,8 @@ html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
 
 .chiffrage-offer-solutions h4{min-height:38px;display:flex;align-items:center}
 .chiffrage-software-logo{display:block;max-width:165px;max-height:38px;width:auto;height:auto;object-fit:contain}
-.chiffrage-hosting-brand{margin-top:18px;border-radius:10px;padding:10px 16px;background:#1c3452}
+.chiffrage-hosting-brand{display:flex;align-items:center;flex-wrap:wrap;gap:12px 20px;margin-top:18px;border-radius:10px;padding:12px 16px;background:#1c3452;color:#e9f2ff}
+.chiffrage-hosting-brand span{font-size:14px;font-weight:600}
 .chiffrage-hosting-brand img{display:block;width:140px;max-width:100%;height:auto}
 .chiffrage-hosting-brand .logo-on-light{width:190px}
 .chiffrage-offer-hero:before{right:2%;top:18%;width:clamp(150px,18vw,260px);height:76%;opacity:.13}
@@ -206,4 +207,5 @@ html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
 .chiffrage-offer-solutions .brand-abacus{width:max-content;max-width:100%;padding:5px 8px;border-radius:6px;background:#fff}
 html[data-skin="helvetia"] .chiffrage-offer-body .logo-on-dark{display:none}
 html[data-skin="helvetia"] .chiffrage-offer-body .logo-on-light{display:block}
+html[data-skin="helvetia"] .chiffrage-hosting-brand{background:#edf3f8;color:#23364b}
 html[data-skin="helvetia"] .chiffrage-offer-solutions .brand-innosolv{width:max-content;max-width:100%;padding:5px 8px;border-radius:6px;background:#162b47}
