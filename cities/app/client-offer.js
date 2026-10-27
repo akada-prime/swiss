@@ -86,26 +86,23 @@ function renderOffer(o, map) {
       <div class="chiffrage-offer-map">${mapRegion(map,o)}</div>
       <div class="chiffrage-offer-identity"><div class="chiffrage-identity">
         <div class="chiffrage-communal-coat">${coatSrc ? `<img src="${enc(coatSrc)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}</div>
-        <span class="chiffrage-canton">${canton ? `<img src="public/cantons/${canton.toLowerCase()}.svg" alt="" width="22" height="27">` : ''}
-        ${enc(cantonNames[canton] || canton)}</span></div></div>
+        <span class="chiffrage-canton">${canton ? `<img src="public/cantons/${canton.toLowerCase()}.svg" alt="${enc(cantonNames[canton] || canton)}" width="22" height="27">` : ''}</span></div></div>
       <p class="chiffrage-offer-place">${enc(o.commune)} <span>OFS ${enc(o.bfs_id)} · ${fmt(o.population)} ${label('habitants','Einwohner')}</span></p>
       <h2>${label('Votre projet, en chiffres.','Ihr Projekt in Zahlen.')}</h2>
       <p class="client-offer-revision">${enc(o.quote_title)} · ${label('Révision','Version')} ${enc(o.revision)}</p>
-      <div class="chiffrage-offer-figures">
+    </header>
+    <section class="chiffrage-offer-summary"><div class="chiffrage-offer-figures">
         <div><span>${label('Investissement initial','Anfangsinvestition')}</span><strong>${money(o.amounts.investment)}</strong><small>HT · ${label('une fois','einmalig')}</small></div>
         <div><span>${label('Coût annuel récurrent','Wiederkehrende Jahreskosten')}</span><strong>${money(o.amounts.annual)}</strong><small>HT · ${label('dès la 2e année','ab dem zweiten Jahr')}</small></div>
       </div>
-      <div class="chiffrage-offer-horizon"><span>${label('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${money(o.amounts.tco5y)}</strong></div>
-    </header>
+      <div class="chiffrage-offer-horizon"><span>${label('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${money(o.amounts.tco5y)}</strong></div></section>
     <div class="chiffrage-offer-body client-offer-body">
-      <section class="client-offer-scope"><p class="chiffrage-kicker">${label('Votre périmètre','Ihr Umfang')}</p>
-        <h3>${label('Les solutions et modules retenus','Ausgewählte Lösungen und Module')}</h3>
+      <section class="client-offer-scope"><h3>${label('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
         <div class="client-offer-module-grid">${scope}</div>
         ${o.hosting_provider==='az' ? `<div class="client-offer-hosting-brand"><img src="public/assets/logos/az-footer.png" alt="AZ Informatique"></div>` : ''}
         ${o.lcm ? `<div class="client-offer-lcm"><span>LCM</span><strong>${enc(o.lcm)}</strong></div>` : ''}
       </section>
-      <section class="client-offer-breakdown"><p class="chiffrage-kicker">${label('Lecture du prix','Preisaufteilung')}</p>
-        <h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
+      <section class="client-offer-breakdown"><h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
         ${priceDetail}
       </section>
     </div>

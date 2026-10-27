@@ -15,6 +15,18 @@ test('the mobile workspace puts a collapsible financial card above editable fiel
   assert.match(css, /@media\(max-width:900px\)\{[\s\S]*?#chiffrageSummary\{display:none\}/);
 });
 
+test('offer and customer link use the common hero before the same financial summary', () => {
+  const hero=view.slice(view.indexOf('function workspaceHero() {'),view.indexOf('function offerSection() {'));
+  const offer=view.slice(view.indexOf('function offerSection() {'),view.indexOf('function variantName('));
+  const client=readFileSync(new URL('../app/client-offer.js',import.meta.url),'utf8');
+  assert.doesNotMatch(hero,/chiffrage-offer-figures/);
+  assert.match(offer,/chiffrage-offer-summary/);
+  assert.match(client,/<\/header>\s*<section class="chiffrage-offer-summary">/);
+  assert.match(css,/\.chiffrage-offer-summary\{/);
+  assert.doesNotMatch(offer,/Lecture du prix|Votre périmètre/);
+  assert.doesNotMatch(client,/Lecture du prix|Votre périmètre/);
+});
+
 test('detailed calculation rows become labeled two-column cards on narrow screens', () => {
   const detail = view.slice(view.indexOf('function lineDetail() {'), view.indexOf('function renderEditor() {'));
   assert.match(detail, /chiffrage-line-detail/);
@@ -35,7 +47,7 @@ test('shared Prime controls and quote typography do not require cascade override
   assert.match(css, /chiffrage-mobile-summary-figures strong\{[^}]*font-size:clamp\(27px,7\.2vw,33px\)/);
   assert.match(skin, /html\[data-skin="helvetia"\][\s\S]*?--pc-field-bg:#eaf0f5;--pc-field-border:#8193a3/);
   assert.doesNotMatch(view, /class="chiffrage-saved-formula"/);
-  assert.match(index, /main\.css\?v=20261027-brand-r4/);
+  assert.match(index, /main\.css\?v=20261027-structure-r5/);
 });
 
 
@@ -49,5 +61,5 @@ test('Chiffrage shares the same large two-line hero as the other Prime Communes 
   assert.doesNotMatch(css, /\.chiffrage-view \.chiffrage-intro h1/);
   assert.doesNotMatch(css, /\.chiffrage-view \.chiffrage-intro\{display:flex/);
   assert.doesNotMatch(css, /\.chiffrage-view \.view-intro-copy \.eyebrow\{display:none/);
-  assert.match(main, /chiffrage\.css\?v=20261027-brand-r4/);
+  assert.match(main, /chiffrage\.css\?v=20261027-structure-r5/);
 });
