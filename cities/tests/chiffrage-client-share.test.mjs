@@ -176,8 +176,8 @@ test('internal quote and customer projection share the same price taxonomy',()=>
   const client=readFileSync(new URL('../app/client-offer.js',import.meta.url),'utf8');
   assert.match(view,/commercialPriceGroup\(line\)===key/);
   assert.match(client,/offerPriceGroups/);
-  assert.match(client,/client-offer-module-group/);
-  assert.match(client,/client-offer-price-section/);
+  assert.match(client,/offerScope/);
+  assert.match(client,/offerBreakdown/);
   assert.match(client,/\[1,2\]\.includes\(offer.version\)/);
   assert.equal(offerPriceGroups.length,10);
   assert.ok(publicPriceBreakdown([{family:'lcm',annual_pv:8000,investment_pv:0}])
@@ -267,11 +267,11 @@ test('share panels are dismissible and link revocation is a single server action
 });
 
 
-test('nighttime customer offer headings retain readable contrast in every skin',()=>{
-  const css=readFileSync(new URL('../app/styles/client-offer.css',import.meta.url),'utf8');
-  const page=readFileSync(new URL('../offre.html',import.meta.url),'utf8');
-  assert.match(css,/html\[data-skin\] \.client-offer \.client-offer-body :is\(h3,h4\)\{color:#f8fbff\}/);
-  assert.match(css,/background:linear-gradient\(155deg,#253955/);
-  assert.doesNotMatch(css,/!important/);
-  assert.match(page,/client-offer\.css\?v=20261027-platinum-r8/);
+test('commercial offer owns its contrast without client cascade overrides',()=>{
+  const css=readFileSync(new URL('../app/styles/offer.css',import.meta.url),'utf8');
+  const shell=readFileSync(new URL('../app/styles/client-offer.css',import.meta.url),'utf8');
+  assert.match(css,/--skin-text: #f8fbff/);
+  assert.match(css,/background: linear-gradient\(155deg,#253955/);
+  assert.doesNotMatch(css+shell,/!important/);
+  assert.doesNotMatch(shell,/chiffrage-offer-(hero|summary)/);
 });
