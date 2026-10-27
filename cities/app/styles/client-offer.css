@@ -87,7 +87,7 @@ html[data-skin] .client-offer .client-offer-body .chiffrage-kicker{color:#bdcde3
 .client-offer .client-offer-module-group{background:#ffffff0b;border-color:#c0d6ee50}
 
 /* Reuse the editor's exact brand mark and keep verified coats and product logos legible. */
-.client-offer .chiffrage-offer-hero:before{opacity:.055}
+.client-offer .chiffrage-offer-hero:before{opacity:.13}
 .client-offer .chiffrage-communal-coat img{display:block;object-fit:contain;width:44px;height:52px}
 .client-offer .client-offer-module-group h4{min-height:38px;display:flex;align-items:center}
 .client-offer .client-offer-software-logo{display:block;max-width:180px;max-height:42px;width:auto;height:auto;object-fit:contain}

@@ -17,7 +17,7 @@ const fr = !/^de(?:-|$)/i.test(navigator.language);
 if (!fr) document.documentElement.lang = 'de';
 const label = (f,d) => fr ? f : d;
 const safeId = id => /^\d{1,5}$/.test(String(id)) ? String(id) : '';
-const softwareLogo = {innosolvcity:'innosolvcity.png',ProConcept:'proconcept.png',Abacus:'abacus.png'};
+const softwareLogo = {innosolvcity:'innosolvcity.png',ProConcept:'proconcept-wordmark.png'};
 const safeCanton = code => /^[A-Z]{2}$/.test(String(code)) ? String(code) : '';
 const errorView = () => { root.innerHTML = `<div class="client-offer-message">
   <img src="public/prime-logo-negative.svg" alt="Prime Technologies" width="150" height="80">
