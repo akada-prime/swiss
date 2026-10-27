@@ -7,7 +7,7 @@ import { calculationError } from './errors.js';
 import bundledCoats from './coats.js';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261025-prime-beta-r1';
 import { comparisonRows, mapLocation, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261025-prime-beta-r1';
-import { commercialPriceGroup, offerPriceGroups } from './commercial-breakdown.js?v=20261024-commercial-r1';
+import { commercialPriceGroup, offerPriceGroups } from './commercial-breakdown.js?v=20261027-ballaigues-r1';
 
 const root = document.getElementById('chiffrageRoot');
 const runtime = window.PrimeCommunesRuntime;
