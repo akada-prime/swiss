@@ -3,7 +3,7 @@ export default {
   "5744": {
     "name": "Ballaigues",
     "filename": "CHE Ballaigues COA.svg",
-    "asset": "https://commons.wikimedia.org/wiki/Special:FilePath/CHE_Ballaigues_COA.svg?width=100",
+    "asset": "communes/5744.svg",
     "source": "https://www.wikidata.org/wiki/Q43239",
     "filePage": "https://commons.wikimedia.org/wiki/File:CHE_Ballaigues_COA.svg",
     "license": "Public domain",
