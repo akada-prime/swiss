@@ -16,6 +16,7 @@ const title = key => ({
 const fr = !/^de(?:-|$)/i.test(navigator.language);
 if (!fr) document.documentElement.lang = 'de';
 const label = (f,d) => fr ? f : d;
+const primeMark = new URL('public/prime-one-negative.png', document.baseURI).href;
 const safeId = id => /^\d{1,5}$/.test(String(id)) ? String(id) : '';
 const softwareLogo = {innosolvcity:'innosolvcity.png',ProConcept:'proconcept-wordmark.png',Abacus:'abacus-wordmark.png'};
 const safeCanton = code => /^[A-Z]{2}$/.test(String(code)) ? String(code) : '';
@@ -81,8 +82,8 @@ function renderOffer(o, map) {
   </div>`).join('') :
     `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
   root.innerHTML = `<article class="chiffrage-offer client-offer">
-    <header class="chiffrage-offer-hero" style="--prime-offer-mark:url('public/prime-one-negative.png')">
-      <div class="chiffrage-offer-brand"><img src="public/prime-logo-negative.svg" alt="Prime Technologies" width="137" height="60"><span>${label('Communes / Proposition','Gemeinden / Angebot')}</span></div>
+    <header class="chiffrage-offer-hero" style="--prime-offer-mark:url('${enc(primeMark)}')">
+      <div class="chiffrage-offer-brand"><img src="public/prime-logo-negative.svg" alt="Prime Technologies" width="137" height="60"></div>
       <div class="chiffrage-offer-map">${mapRegion(map,o)}</div>
       <div class="chiffrage-offer-identity"><div class="chiffrage-identity">
         <div class="chiffrage-communal-coat">${coatSrc ? `<img src="${enc(coatSrc)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}</div>
@@ -100,7 +101,8 @@ function renderOffer(o, map) {
       <section class="client-offer-scope"><h3>${label('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
         <div class="client-offer-module-grid">${scope}</div>
         ${o.hosting_provider==='az' ? `<div class="client-offer-hosting-brand"><span>${label('Hébergement assuré par','Hosting durch')}</span><img src="public/assets/logos/az-footer.png" alt="AZ Informatique"></div>` : ''}
-        ${o.lcm ? `<div class="client-offer-lcm"><span>LCM</span><strong>${enc(o.lcm)}</strong><span>${label('(mises à jour annualisées)','(annualisierte Aktualisierungen)')}</span></div>` : ''}
+        ${o.lcm ? `<div class="client-offer-lcm"><span>LCM</span><strong>${enc(o.lcm)}</strong><span>${label('· formule retenue (mises à jour annualisées)','· gewählte Variante (annualisierte Aktualisierungen)')}</span></div>` : ''}
+        ${o.lcm === 'Gold' ? `<details class="client-offer-lcm-alternative"><summary>${label('Découvrir Platinum · une autre formule LCM','Platinum entdecken · eine weitere LCM-Variante')}</summary><p>${label('Envie d’explorer Platinum ? Nous pouvons comparer les deux formules pour votre commune. Platinum remplacerait Gold dans une proposition adaptée.', 'Möchten Sie Platinum kennenlernen? Wir können beide Varianten für Ihre Gemeinde vergleichen. Platinum würde Gold in einem angepassten Angebot ersetzen.')}</p></details>` : ''}
       </section>
       <section class="client-offer-breakdown"><h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
         ${priceDetail}

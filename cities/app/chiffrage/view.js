@@ -761,7 +761,7 @@ function displayReference(reference) {
 }
 function workspaceHero() {
   return `<header class="chiffrage-offer-hero" style="--prime-offer-mark:url('${escape(assetUrl('prime-one-negative.png'))}')">
-    <div class="chiffrage-offer-brand"><img src="${escape(assetUrl('prime-logo-negative.svg'))}" width="137" height="60" alt="Prime Technologies"><span>${t(state.editorTab==='offer'?'chiffrage.ui.offerBrand':'chiffrage.ui.workspaceBrand')}</span></div>
+    <div class="chiffrage-offer-brand"><img src="${escape(assetUrl('prime-logo-negative.svg'))}" width="137" height="60" alt="Prime Technologies">${state.editorTab==='offer'?'':`<span>${t('chiffrage.ui.workspaceBrand')}</span>`}</div>
     <div class="chiffrage-offer-map" data-territory>${territoryMap()}</div><div class="chiffrage-offer-identity" data-identity>${territoryIdentity()}</div><p class="chiffrage-offer-place">${escape(state.draft.name)} <span>OFS ${state.draft.bfs_id} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</span></p>
     <h2>${t(`chiffrage.ui.heading.${state.editorTab}`)}</h2>
     <p class="chiffrage-offer-reference">${localLabel('Base de prestations','Leistungsgrundlage')} : <strong>${escape(displayReference(state.draft.reference))}</strong>${state.dirty?` · ${localLabel('Modifications en cours','Änderungen in Bearbeitung')}`:''}</p>

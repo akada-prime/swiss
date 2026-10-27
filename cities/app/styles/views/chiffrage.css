@@ -203,6 +203,8 @@ html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
 .chiffrage-offer-summary .chiffrage-offer-figures>div{padding-top:18px}
 .chiffrage-offer-summary .chiffrage-offer-horizon{margin-top:24px}
 @media(max-width:600px){.chiffrage-offer-summary{padding:16px 22px 24px}.chiffrage-offer-summary .chiffrage-offer-horizon{margin-top:20px}}
+.chiffrage-offer>.chiffrage-offer-body{padding-top:28px}
+@media(max-width:600px){.chiffrage-offer>.chiffrage-offer-body{padding-top:22px}}
 .chiffrage-offer-body .logo-on-light{display:none}
 .chiffrage-offer-solutions .brand-abacus{width:max-content;max-width:100%;padding:5px 8px;border-radius:6px;background:#fff}
 html[data-skin="helvetia"] .chiffrage-offer-body .logo-on-dark{display:none}
