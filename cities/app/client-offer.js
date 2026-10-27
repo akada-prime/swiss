@@ -100,7 +100,7 @@ function renderOffer(o, map) {
       <section class="client-offer-scope"><h3>${label('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
         <div class="client-offer-module-grid">${scope}</div>
         ${o.hosting_provider==='az' ? `<div class="client-offer-hosting-brand"><span>${label('Hébergement assuré par','Hosting durch')}</span><img src="public/assets/logos/az-footer.png" alt="AZ Informatique"></div>` : ''}
-        ${o.lcm ? `<div class="client-offer-lcm"><span>LCM</span><strong>${enc(o.lcm)}</strong></div>` : ''}
+        ${o.lcm ? `<div class="client-offer-lcm"><span>LCM</span><strong>${enc(o.lcm)}</strong><span>${label('(mises à jour annualisées)','(annualisierte Aktualisierungen)')}</span></div>` : ''}
       </section>
       <section class="client-offer-breakdown"><h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
         ${priceDetail}
