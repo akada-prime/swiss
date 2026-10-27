@@ -40,9 +40,18 @@ test('public projection exposes only customer-safe PV totals and ten commercial 
   assert.deepEqual(clean.scope,[]);
   assert.equal(clean.lcm,null);
   assert.equal(clean.hosting,true);
+  assert.equal(clean.hosting_provider,null);
   assert.deepEqual(Object.keys(clean).sort(),['amounts','bfs_id','buckets','canton','commune',
     'issued_at','population','products','quote_title','revision','version',
-    'scope','lcm','hosting','breakdown'].sort());
+    'scope','lcm','hosting','hosting_provider','breakdown'].sort());
+});
+
+test('AZ logo is identified only for a hosting selection that names AZ',()=>{
+  const selected=structuredClone(quote);
+  selected.snapshot.input.primeLines=[{category:'hosting',label:'Hébergement AZ Informatique'}];
+  assert.equal(publicOfferFromSaved(selected).hosting_provider,'az');
+  selected.snapshot.input.primeLines[0].label='Hébergement autre partenaire';
+  assert.equal(publicOfferFromSaved(selected).hosting_provider,null);
 });
 
 test('incomplete or mismatched quote snapshots are not shareable',()=>{
