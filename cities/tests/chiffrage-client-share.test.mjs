@@ -52,6 +52,8 @@ test('AZ logo is identified only for a hosting selection that names AZ',()=>{
   assert.equal(publicOfferFromSaved(selected).hosting_provider,'az');
   selected.snapshot.input.primeLines[0].label='Hébergement autre partenaire';
   assert.equal(publicOfferFromSaved(selected).hosting_provider,null);
+  selected.snapshot.input.primeLines[0]={category:'hosting',item_code:'hosting-reference',label:'Hébergement · référence Tolochenaz'};
+  assert.equal(publicOfferFromSaved(selected).hosting_provider,'az');
 });
 
 test('incomplete or mismatched quote snapshots are not shareable',()=>{
@@ -271,5 +273,5 @@ test('nighttime customer offer headings retain readable contrast in every skin',
   assert.match(css,/html\[data-skin\] \.client-offer \.client-offer-body :is\(h3,h4\)\{color:#f8fbff\}/);
   assert.match(css,/background:linear-gradient\(155deg,#253955/);
   assert.doesNotMatch(css,/!important/);
-  assert.match(page,/client-offer\.css\?v=20261027-brand-r2/);
+  assert.match(page,/client-offer\.css\?v=20261027-brand-r3/);
 });

@@ -76,7 +76,9 @@ export function publicOfferFromSaved(quote, catalog) {
   const buckets=Object.fromEntries([['solutions',solution],['partners',partner],['hosting',host]].map(
     ([key,filter])=>[key,{investment:rollup(filter,'investment'),annual:rollup(filter,'annual')}]));
   const hostingLabels=(snapshot.input?.primeLines??[]).filter(line=>line.category==='hosting').map(line=>String(line.label??''));
-  const hostingProvider=breakdown.some(x=>x.key==='hosting') && /\bAZ(?: Informatique)?\b/i.test([...hostingLabels,String(snapshot.input?.context?.hosting??'')].join(' ')) ? 'az' : null;
+  const hostingProvider=breakdown.some(x=>x.key==='hosting') && (
+    (snapshot.input?.primeLines??[]).some(line=>line.category==='hosting'&&line.item_code==='hosting-reference') ||
+    /\bAZ(?: Informatique)?\b/i.test([...hostingLabels,String(snapshot.input?.context?.hosting??'')].join(' '))) ? 'az' : null;
   const chosen=snapshot.input?.lcm?.selection;
   const lcm=chosen==='gold'?'Gold':chosen==='platinium'?'Platinum':null;
   return {
