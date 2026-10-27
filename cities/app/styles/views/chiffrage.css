@@ -196,4 +196,10 @@ html[data-skin] .chiffrage-view .chiffrage-offer-hero h2{color:#fff}
 .chiffrage-software-logo{display:block;max-width:165px;max-height:38px;width:auto;height:auto;object-fit:contain}
 .chiffrage-hosting-brand{margin-top:18px;border-radius:10px;padding:10px 16px;background:#1c3452}
 .chiffrage-hosting-brand img{display:block;width:140px;max-width:100%;height:auto}
+.chiffrage-hosting-brand .logo-on-light{width:190px}
 .chiffrage-offer-hero:before{right:2%;top:18%;width:clamp(150px,18vw,260px);height:76%;opacity:.13}
+.chiffrage-offer-body .logo-on-light{display:none}
+.chiffrage-offer-solutions .brand-abacus{width:max-content;max-width:100%;padding:5px 8px;border-radius:6px;background:#fff}
+html[data-skin="helvetia"] .chiffrage-offer-body .logo-on-dark{display:none}
+html[data-skin="helvetia"] .chiffrage-offer-body .logo-on-light{display:block}
+html[data-skin="helvetia"] .chiffrage-offer-solutions .brand-innosolv{width:max-content;max-width:100%;padding:5px 8px;border-radius:6px;background:#162b47}
