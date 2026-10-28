@@ -1,5 +1,12 @@
 # État de reprise — Prime Communes 2.0
 
+> **Offre client · séparation éditorial/chiffres · 28.10.2026 :** espace
+> réservé de 32 px sous le contenu éditorial, défini par un seul paramètre
+> du bandeau et appliqué par la règle propriétaire existante du hero.
+> Suppression de la surcharge padding-bottom à 18 px. Dernière marge de
+> paragraphe et padding de copie restent nuls ; même séparation ouvert/fermé.
+> Valeur choisie pour retrouver la respiration de la capture de référence.
+
 > **Offre client · espacement et texte des services · 28.10.2026 :** marges
 > cumulées sous le bloc éditorial retirées, espace final de 18 px. Textes des
 > cartes Hébergement/LCM harmonisés à 14 px ; titres et emphases à graisse 700.

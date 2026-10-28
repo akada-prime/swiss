@@ -76,7 +76,7 @@
   position: relative;
   color: #f8faff;
   isolation: isolate;
-  padding: clamp(28px,5vw,76px) var(--offer-gutter) 24px;
+  padding: clamp(28px,5vw,76px) var(--offer-gutter) var(--offer-hero-bottom-space,24px);
   overflow-wrap: anywhere
 }
 .chiffrage-offer-brand {
@@ -162,6 +162,7 @@
 /* Client-only signature inside the existing financial banner (no separate surface). */
 .client-offer {
   --offer-large-size: 44px;
+  --offer-hero-bottom-space: 32px;
   --offer-editorial-gap: clamp(25px,4.8vw,58px);
 }
 .client-offer .chiffrage-offer-hero h2 {
@@ -250,7 +251,6 @@
   float: left;
   width: calc(50% - var(--offer-editorial-gap) / 2);
 }
-.client-offer .chiffrage-offer-hero { padding-bottom:18px; }
 .client-offer .prime-offer-signature-content p:last-child { margin-bottom:0; }
 .client-offer .prime-offer-signature-question {
   font: inherit;
