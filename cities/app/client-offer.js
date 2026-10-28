@@ -53,15 +53,15 @@ function renderOffer(o, map) {
   const scope = current && Array.isArray(o.scope) ? offerScope(o.scope.map(group=>({
     product:group.product, items:group.items.map(entry=>label(entry.fr,entry.de))
   })), { asset }) : `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
-  const hero = offerHero({ asset, name:o.commune, bfsId:o.bfs_id, population:fmt(o.population),
+  let hero = offerHero({ asset, name:o.commune, bfsId:o.bfs_id, population:fmt(o.population),
     inhabitants:label('habitants','Einwohner'), heading:label('Votre projet, en chiffres.','Ihr Projekt in Zahlen.'),
     map:offerMap(map,o.bfs_id,label('Situation de la commune','Lage der Gemeinde')),
     identity:offerIdentity({asset,canton,cantonLabel:cantonNames[canton],coatHtml:coatSrc ? `<img src="${enc(coatSrc)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}),
     details:`${commercialSignature()}` });
   const reference=`<p class="chiffrage-offer-reference">${enc(o.quote_title)} · ${label('Révision','Version')} ${enc(o.revision)}</p>`;
-  const compactHero=hero.replace('<h2>',reference+'<h2>');
+  hero=hero.replace('<h2>',reference+'<h2>');
   root.innerHTML = `<article class="chiffrage-offer client-offer">
-    ${offerBanner(compactHero,offerFigures(o.amounts,{label,money,municipal:true}))}
+    ${offerBanner(hero,offerFigures(o.amounts,{label,money,municipal:true}))}
     <div class="chiffrage-offer-body prime-offer-commercial">
       <section class="client-offer-scope"><h3>${label('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
         ${scope}<div class="prime-offer-service-grid">${o.hosting_provider==='az' ? `<section class="prime-offer-service">${offerHosting(true,{asset,label})}</section>` : ''}<section class="prime-offer-service"><h4>${label('Accompagnement LCM','LCM-Begleitung')}</h4>${offerLcm(o.lcm,label,{prices:o.lcm_prices,money})}</section></div>
