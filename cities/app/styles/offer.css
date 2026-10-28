@@ -141,28 +141,41 @@
 }
 
 /* Client-only signature inside the existing financial banner (no separate surface). */
+.client-offer {
+  --offer-large-size: 44px;
+}
+.client-offer .chiffrage-offer-hero h2,
+.client-offer .chiffrage-offer-figures strong,
+.client-offer .chiffrage-offer-horizon strong {
+  font-size: var(--offer-large-size);
+}
+.client-offer .chiffrage-offer-place {
+  font-size: 14px;
+  font-weight: 700;
+}
 .client-offer .prime-offer-signature {
-  max-width: 72ch;
-  margin-top: 10px;
+  margin: 25px 0 8px;
   font-size: 14px;
   line-height: 1.55;
 }
 .client-offer .prime-offer-signature-kicker {
-  margin: 0 0 2px;
   color: #f39449;
   font-size: inherit;
   font-weight: 700;
   line-height: inherit;
 }
 .client-offer .prime-offer-signature-disclosure summary {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
   width: 100%;
   min-height: 44px;
   padding: 9px 0;
   box-sizing: border-box;
   list-style: none;
   cursor: pointer;
-  color: #edf3ff;
+  color: #f39449;
   font-size: inherit;
   font-weight: 700;
   line-height: inherit;
@@ -173,6 +186,7 @@
 .client-offer .prime-offer-signature-disclosure summary::after {
   content: '';
   display: inline-block;
+  flex-shrink: 0;
   width: 7px;
   height: 7px;
   margin: 0 2px 2px 9px;
@@ -190,12 +204,27 @@
   border-radius: 3px;
 }
 .client-offer .prime-offer-signature-content {
-  max-width: 66ch;
-  padding: 1px 0 7px;
+  display: grid;
+  grid-template-columns: minmax(0,1.05fr) minmax(0,1fr);
+  gap: clamp(25px,4.8vw,58px);
+  align-items: start;
+  padding: 12px 0 7px;
   overflow-wrap: anywhere;
 }
+.client-offer .prime-offer-signature-question {
+  margin: 0;
+  color: #f7f6f4;
+  font-size: var(--offer-large-size);
+  font-weight: 400;
+  line-height: 1.06;
+  letter-spacing: -.043em;
+  text-wrap: balance;
+}
+.client-offer .prime-offer-signature-question span {
+  color: #f39449;
+}
 .client-offer .prime-offer-signature-content p {
-  margin: 9px 0 0;
+  margin: 0 0 17px;
   color: #d5e1f1;
   font-size: inherit;
   line-height: inherit;
@@ -207,7 +236,33 @@
   color: #f39449;
 }
 .client-offer .prime-offer-signature-content .prime-offer-signature-conclusion {
+  margin-bottom: 0;
   color: #fff;
+}
+@media (max-width: 600px) {
+  .client-offer {
+    --offer-large-size: 32px;
+  }
+  .client-offer .prime-offer-signature {
+    margin-top: 20px;
+  }
+  .client-offer .prime-offer-signature-content {
+    grid-template-columns: minmax(0,1fr);
+    gap: 22px;
+    padding-top: 10px;
+  }
+  .client-offer .prime-offer-signature-question {
+    text-wrap: pretty;
+  }
+  .client-offer .chiffrage-offer-figures {
+    grid-template-columns: minmax(0,1fr);
+    gap: 23px;
+  }
+  .client-offer .chiffrage-offer-horizon {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .client-offer .prime-offer-signature-disclosure summary::after {
