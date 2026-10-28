@@ -370,3 +370,12 @@ purs et CSS communs extraits, bandeau/fonds unifiés, anciennes surcharges
 retirées. Moteur et serveur inchangés. 170 tests et build réussis.
 Recette navigateur et Safari non réalisée : intégration en attente de contrôle
 visuel. Diagnostic et critères : [rapport](docs/chiffrage-shared-presentation.md).
+
+## Finition commerciale offre — 28.10.2026
+
+Logo AZ horizontal officiel, traitement clair/négatif dans le composant partagé.
+LCM : bénéfice support/hotline explicite, Gold et Platinum comparés dans le
+même détail, phrase de remplacement unique. Règle typographique française
+centralisée dans i18n et les adaptateurs chiffrage/client ; ponctuation double
+protégée, sans toucher aux chiffres ni aux données sauvegardées.
+Recette technique : 175 tests et build. Pas de validation Safari réelle.

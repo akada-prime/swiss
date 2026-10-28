@@ -600,12 +600,18 @@
   font-size: 14px;
   font-weight: 600
 }
-.prime-offer-hosting-brand img {
+.prime-offer-hosting-logo {
   display: block;
-  width: 150px;
+  width: 240px;
   max-width: 100%;
   height: auto;
-  object-fit: contain
+  object-fit: contain;
+  filter: grayscale(1) invert(1);
+  mix-blend-mode: screen;
+}
+html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .prime-offer-hosting-logo {
+  filter: none;
+  mix-blend-mode: multiply;
 }
 .chiffrage-offer-body .logo-on-light {
   display: none;

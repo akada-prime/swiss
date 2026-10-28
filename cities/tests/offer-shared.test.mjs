@@ -24,7 +24,7 @@ test('scope renders supplied themes without exposing other properties; LCM remai
  assert.equal((result.match(/<li>/g)||[]).length,4);
  assert.match(result,/abacus-wordmark\.png/);
  assert.doesNotMatch(result,/secret|999/);
- assert.match(offerLcm('Gold',label),/<details[\s\S]*remplacerait Gold[\s\S]*<\/details>/);
+ assert.match(offerLcm('Gold',label),/<details[\s\S]*remplace Gold[\s\S]*<\/details>/);
  assert.doesNotMatch(offerLcm('Platinum',label),/<details/);
  assert.equal(offerLcm(null,label),'');
 });
@@ -47,7 +47,7 @@ test('public module dependency graph cannot load editor, calculations or private
   }
  }
  visit(new URL('../app/client-offer.js',import.meta.url));
- assert.equal(visited.size,4);
+ assert.equal(visited.size,5);
 });
 
 test('banner has one CSS owner, one mark rule, and no independently painted summary',()=>{
@@ -102,9 +102,11 @@ test('public entry preserves v1/v2 offers, FR/DE, values and confidentiality',as
 
 test('Platinum shows annual price and replacement delta, with no invented fallback',()=>{
  const html=offerLcm('Gold',label,{money,prices:{gold:100,platinum:150}});
- assert.match(html,/LCM Platinum · 150 CHF/);
+ assert.match(html,/Platinum · 150 CHF/);
+ assert.match(html,/Gold inclus dans votre offre · 100 CHF/);
+ assert.match(html,/Support et hotline inclus/);
  assert.match(html,/\+50 CHF/);
- assert.match(html,/ne s’ajoute pas/);
+ assert.match(html,/sans cumul/);
  assert.doesNotMatch(offerLcm('Gold',label,{money}),/CHF/);
  assert.match(offerLcm('Gold',label,{money,prices:{gold:0,platinum:0}}),/même prix annuel/);
 });
