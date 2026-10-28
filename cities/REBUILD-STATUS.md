@@ -1,5 +1,15 @@
 # État de reprise — Prime Communes 2.0
 
+> **Offre client · invitation toujours visible · 28.10.2026 :** libellé
+> « Le bon sens paysan de Prime. ». La question est le summary natif cliquable,
+> visible en entier lorsque le bloc est fermé, avec chevron adjacent. À
+> l’ouverture, la question occupe la colonne gauche et la réponse la droite ;
+> sur Natel, la réponse apparaît dessous. Même graisse 700, taille et approche
+> typographique que le titre principal ; aucun texte de question dupliqué.
+> Validation ciblée : 10 tests réussis, dont FR/DE, texte exact, typographie
+> française et question présente une seule fois dans le summary.
+> Publication expressément autorisée par Alex ; améliorations LCM/AZ conservées.
+
 > **Offre client · composition éditoriale validée · 28.10.2026 :** le bloc
 > utilise toute la largeur : grande question à gauche, argumentaire à droite.
 > Sur Natel (jusqu’à 600 px), question, texte et montants se suivent sur une
