@@ -1,5 +1,14 @@
 # État de reprise — Prime Communes 2.0
 
+> **Services partagés, blason Gollion et alignement · 28.10.2026 :**
+> le même rendu des cartes Hébergement/LCM est utilisé par l’offre interne
+> et le lien client. Suppression du doublon « Hébergement : Oui » pour AZ.
+> Les deux colonnes de montants du détail sont alignées à droite, avec
+> chiffres tabulaires existants. Gollion OFS 5484 ajouté au registre vérifié
+> (Wikidata Q70594 / Commons CHE Gollion COA.svg, domaine public) ; son image
+> est chargée depuis upload.wikimedia.org, autorisé explicitement dans la CSP
+> client. Cache des entrées et des armoiries actualisé.
+
 > **AZ originaux et ligne LCM · 28.10.2026 :** semi-négatif transparent
 > fourni par Alex pour les fonds sombres ; original positif pour les fonds
 > clairs. Fichiers copiés sans transformation, filtres et mélange retirés.

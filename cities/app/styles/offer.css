@@ -590,6 +590,7 @@
   gap: 14px
 }
 .prime-offer-price-values>div {
+  text-align: right;
   min-width: 0
 }
 .prime-offer-price-values small {
