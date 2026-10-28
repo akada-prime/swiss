@@ -1,5 +1,11 @@
 # État de reprise — Prime Communes 2.0
 
+> **AZ originaux et ligne LCM · 28.10.2026 :** semi-négatif transparent
+> fourni par Alex pour les fonds sombres ; original positif pour les fonds
+> clairs. Fichiers copiés sans transformation, filtres et mélange retirés.
+> Ligne LCM Gold rendue en texte courant avec espaces normaux dans la carte.
+> Cache des deux entrées actualisé. Publication autorisée par Alex.
+
 > **Offre client · séparation éditorial/chiffres · 28.10.2026 :** espace
 > réservé de 32 px sous le contenu éditorial, défini par un seul paramètre
 > du bandeau et appliqué par la règle propriétaire existante du hero.

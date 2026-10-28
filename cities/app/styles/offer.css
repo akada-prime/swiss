@@ -151,7 +151,7 @@
 .prime-offer-service { --offer-service-size:14px; font-size:var(--offer-service-size); line-height:1.55; min-width:0; padding:18px; border:1px solid var(--offer-border); border-radius:var(--offer-radius); background:var(--offer-panel); }
 .prime-offer-service h4 { margin:0 0 12px; font-size:inherit; font-weight:700; color:var(--offer-text); }
 .prime-offer-service .prime-offer-hosting-brand { margin:0; padding:0; border:0; background:none; display:flex; flex-direction:column; align-items:flex-start; gap:18px; }
-.prime-offer-service .prime-offer-lcm { margin:0; padding:0; border:0; background:none; }
+.prime-offer-service .prime-offer-lcm { display:block; margin:0; padding:0; border:0; background:none; }
 .prime-offer-service .prime-offer-lcm-alternative { max-width:none; border:0; border-top:1px solid var(--offer-border); border-radius:0; background:none; }
 .prime-offer-service .prime-offer-lcm-alternative summary { padding:12px 0; }
 .prime-offer-service .prime-offer-lcm-alternative p { padding:0 0 15px; }
@@ -645,13 +645,8 @@
   max-width: 100%;
   height: auto;
   object-fit: contain;
-  filter: grayscale(1) invert(1);
-  mix-blend-mode: screen;
 }
-html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .prime-offer-hosting-logo {
-  filter: none;
-  mix-blend-mode: multiply;
-}
+
 .chiffrage-offer-body .logo-on-light {
   display: none;
 }
