@@ -1,8 +1,8 @@
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from './offer/presentation.js?v=20261028-shared-services-r10';
-import verifiedCoats from './chiffrage/coats.js?v=20261028-shared-services-r10';
-import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261027-ballaigues-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from './offer/presentation.js?v=20261028-business-r11';
+import verifiedCoats from './chiffrage/coats.js?v=20261028-business-r11';
+import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261028-business-r11';
 
 const root = document.getElementById('offerClientRoot');
 const endpoint = 'https://ozdvmllgxduzquiujcbg.supabase.co/functions/v1/chiffrage?action=clientOffer';
@@ -49,7 +49,8 @@ function renderOffer(o, map) {
   }));
   const legacyNames={solutions:label('Solutions Prime','Prime-Lösungen'),
     partners:label('Partenaires','Partner'),hosting:label('Hébergement','Hosting')};
-  const priceDetail = offerBreakdown(rows.map(row=>({...row,label:names.get(row.key)||legacyNames[row.key]||row.key})),{label,money,legacy:!current});
+  const detailed=Array.isArray(o.cost_details)?o.cost_details.map(row=>({...row,label:label(row.label_fr,row.label_de)})):null;
+  const priceDetail = offerBreakdown(detailed ?? rows.map(row=>({...row,label:names.get(row.key)||legacyNames[row.key]||row.key})),{label,money,legacy:!current});
   const scope = current && Array.isArray(o.scope) ? offerScope(o.scope.map(group=>({
     product:group.product, items:group.items.map(entry=>label(entry.fr,entry.de))
   })), { asset }) : `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
@@ -61,7 +62,7 @@ function renderOffer(o, map) {
   const reference=`<p class="chiffrage-offer-reference">${enc(o.quote_title)} · ${label('Révision','Version')} ${enc(o.revision)}</p>`;
   hero=hero.replace('<h2>',reference+'<h2>');
   root.innerHTML = `<article class="chiffrage-offer client-offer">
-    ${offerBanner(hero,offerFigures(o.amounts,{label,money,municipal:true}))}
+    ${offerBanner(hero,offerFigures(o.amounts,{label,money,municipal:true,annualBreakdown:o.annual_breakdown}))}
     <div class="chiffrage-offer-body prime-offer-commercial">
       <section class="client-offer-scope"><h3>${label('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
         ${scope}${offerServices(o.hosting_provider==='az',o.lcm,{asset,label,prices:o.lcm_prices,money})}

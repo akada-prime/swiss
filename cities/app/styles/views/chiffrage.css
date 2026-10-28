@@ -186,3 +186,16 @@
 .chiffrage-summary-hint{font-size:.85em;font-weight:400;color:var(--skin-muted)}
 @media(max-width:700px){.chiffrage-hosting-preview{grid-template-columns:1fr 1fr}.chiffrage-hosting-preview>span{grid-column:1/-1}.chiffrage-hosting-preview strong{white-space:normal}}
 @media(max-width:600px){.chiffrage-services .chiffrage-service-grid{gap:0}.chiffrage-services .chiffrage-service-item{grid-template-columns:minmax(0,1fr) 76px 80px;gap:8px;min-height:58px;padding:8px 0}.chiffrage-services .chiffrage-service-item label{min-width:0}.chiffrage-services .chiffrage-service-item input{max-width:100%}}
+
+/* Business summaries share one financial alignment, including closed modules. */
+.chiffrage-rollup {display:flex;flex-wrap:wrap;gap:8px 20px;margin-left:auto;font-size:14px;font-weight:400;font-variant-numeric:tabular-nums;}
+.chiffrage-rollup>span {text-align:right;white-space:nowrap;}
+.chiffrage-rollup small {font-size:inherit;color:var(--skin-muted);}
+.chiffrage-module-set>summary,.chiffrage-extra-group>summary {display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.chiffrage-extra-available>.chiffrage-option-preview {display:grid;grid-template-columns:minmax(160px,1fr) repeat(3,minmax(100px,auto)) auto;gap:16px;align-items:center;padding:12px 0;border-top:1px solid var(--skin-border);}
+.chiffrage-option-preview>span:not(:first-child),.chiffrage-option-preview>strong {text-align:right;font-variant-numeric:tabular-nums;}
+.chiffrage-option-days {text-align:right;font-variant-numeric:tabular-nums;}
+.chiffrage-option-days small {display:block;}
+.chiffrage-pce-entry {padding:16px 0;border-top:1px solid var(--skin-border);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;}
+.chiffrage-service-group-heading {grid-column:1/-1;font-size:16px;margin:18px 0 8px;}
+@media(max-width:700px){.chiffrage-rollup{width:100%;margin-left:0;justify-content:space-between;gap:8px}.chiffrage-extra-available>.chiffrage-option-preview{grid-template-columns:minmax(0,1fr) auto;gap:8px}.chiffrage-option-preview>span:first-child{grid-column:1/-1}.chiffrage-option-preview>button{grid-column:2;grid-row:2/4}}

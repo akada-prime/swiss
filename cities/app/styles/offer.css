@@ -214,7 +214,7 @@
   color: #f7f6f4;
   font-family: inherit;
   font-size: var(--offer-large-size);
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.05;
   letter-spacing: -.055em;
   text-wrap: pretty;
@@ -254,6 +254,7 @@
 .client-offer .prime-offer-signature-content p:last-child { margin-bottom:0; }
 .client-offer .prime-offer-signature-question {
   font: inherit;
+  font-weight: 400;
 }
 .client-offer .prime-offer-signature-question span {
   color: #f39449;
@@ -617,11 +618,11 @@
   object-fit: contain
 }
 .prime-offer-module-group .brand-abacus {
-  width: max-content;
+  width: 180px;
   max-width: 100%;
   padding: 5px 8px;
   border-radius: 6px;
-  background: #fff
+  background: transparent
 }
 .prime-offer-hosting-brand {
   display: flex;
@@ -757,3 +758,7 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .b
 
 .prime-offer-lcm-price { display:block; margin:0 0 8px; color:var(--offer-text); font-size:var(--offer-service-size,18px); }
 .prime-offer-lcm-alternative p>span { display:block; margin-bottom:10px; }
+
+.prime-offer-annual-breakdown { margin:12px 0 0;font-size:14px;line-height:1.6; }
+.prime-offer-annual-breakdown div {display:flex;justify-content:space-between;gap:12px;}
+.prime-offer-annual-breakdown dd {margin:0;text-align:right;font-variant-numeric:tabular-nums;}

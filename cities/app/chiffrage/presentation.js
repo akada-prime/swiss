@@ -9,7 +9,7 @@ export function implementationSummary(result, products = []) {
     if (line.category === 'hosting' || !['prestations_module','prestations'].includes(line.family) && line.selected_days == null) continue;
     const code = String(line.item_code ?? '');
     const product = line.family === 'prestations_module' ? code.split('/')[0] :
-      code.startsWith('abacus-') ? 'abacus' : code.startsWith('pce-') ? 'pce' : 'common';
+      ['prime','partenaires'].includes(line.family)?line.family:code.startsWith('abacus-') ? 'abacus' : code.startsWith('pce-') ? 'pce' : 'common';
     if (!groups.has(product)) groups.set(product,{key:product,days:0,investment:0,incomplete:false});
     const row=groups.get(product);
     row.days+=(line.selected_days??0)*(line.quantity??1);
@@ -92,6 +92,7 @@ export function offerThemes(input, catalog, language = 'fr') {
     if (input.pce?.finances) add('pce', names.finance);
     if (input.pce?.salaires) add('pce', names.payroll);
   }
+  for(const [kind,vendor] of [['primeLines','Prime'],['partners',language==='de'?'Partner':'Partenaires']]) for(const row of input[kind]??[]) if(row.category!=='hosting'&&row.label) add(vendor,row.label);
   return [...groups].map(([vendor, themes]) => ({ vendor, name:productNames[vendor] ?? vendor, themes:[...themes] }));
 }
 
