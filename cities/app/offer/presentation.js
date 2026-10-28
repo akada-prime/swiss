@@ -13,7 +13,12 @@ export function offerHero({ asset, name, bfsId, population, heading, inhabitants
     <h2>${e(heading)}</h2>${details}</header>`;
 }
 export const offerBanner = (hero, figures = '') => `<div class="prime-offer-banner">${hero}${figures}</div>`;
-export function offerFigures(amounts, { label, money, incomplete = false, caveat = '' }) {
+export function offerFigures(amounts, { label, money, incomplete = false, caveat = '', municipal = false }) {
+  if (municipal) return `<section class="chiffrage-offer-summary"><div class="prime-offer-communal-figures">
+    <div><span>${label("Coût d’investissement",'Investitionskosten')}</span><strong>${e(money(amounts.investment)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Une fois','Einmalig')}</small></div>
+    <div><span>${label('Coûts de fonctionnement (annuels)','Betriebskosten (jährlich)')}</span><strong>${e(money(amounts.annual)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Dès la 2e année','Ab dem zweiten Jahr')}</small></div>
+    <div><span>${label('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${e(money(amounts.tco5y)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Investissement + 4 annuités','Investition + 4 Jahresbeträge')}</small></div>
+    </div>${caveat}</section>`;
   return `<section class="chiffrage-offer-summary"><div class="chiffrage-offer-figures">
     <div><span>${incomplete ? label('Investissement calculé à ce stade','Bisher berechnete Investition') : label('Investissement initial','Anfangsinvestition')}</span><strong>${e(money(amounts.investment))}</strong><small>${label('HT · une fois','exkl. MWST · einmalig')}</small></div>
     <div><span>${label('Coût annuel récurrent','Wiederkehrende Jahreskosten')}</span><strong>${e(money(amounts.annual))}</strong><small>${label('HT · dès la 2e année','exkl. MWST · ab dem zweiten Jahr')}</small></div>
