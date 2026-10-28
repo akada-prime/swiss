@@ -163,11 +163,22 @@
   line-height: 1.55;
 }
 .client-offer .prime-offer-signature-kicker {
-  margin: 0 0 12px;
-  color: #f39449;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0 0 18px;
+  color: #f7f6f4;
   font-size: inherit;
   font-weight: 700;
   line-height: inherit;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+.client-offer .prime-offer-signature-kicker::after {
+  content: '';
+  flex: 1 0 24px;
+  height: 1px;
+  background: #f39449;
 }
 .client-offer .prime-offer-signature-disclosure {
   display: flow-root;
@@ -248,6 +259,10 @@
   }
   .client-offer .prime-offer-signature {
     margin-top: 20px;
+  }
+  .client-offer .prime-offer-signature-kicker {
+    gap: 12px;
+    letter-spacing: .8px;
   }
   .client-offer .prime-offer-signature-content {
     margin-left: 0;

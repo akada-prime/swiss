@@ -1,5 +1,11 @@
 # État de reprise — Prime Communes 2.0
 
+> **Offre client · rubrique de journal · 28.10.2026 :** variante validée
+> « Filet orange » : libellé blanc, capitales espacées à 14 px, filet orange
+> fin prolongé à droite. Espacement adapté sur Natel. Changement uniquement
+> visuel du nom de rubrique ; texte, question et dérouleur conservés.
+> Cache CSS actualisé. Publication expressément autorisée par Alex.
+
 > **Offre client · invitation toujours visible · 28.10.2026 :** libellé
 > « Le bon sens paysan de Prime. ». La question est le summary natif cliquable,
 > visible en entier lorsque le bloc est fermé, avec chevron adjacent. À
