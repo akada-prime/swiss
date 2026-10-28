@@ -1,5 +1,14 @@
 // Verified public arms: Wikidata P771 (OFS) and P94, with Commons source metadata.
 export default {
+  "5484": {
+    "name": "Gollion",
+    "filename": "CHE Gollion COA.svg",
+    "asset": "https://upload.wikimedia.org/wikipedia/commons/2/24/CHE_Gollion_COA.svg",
+    "source": "https://www.wikidata.org/wiki/Q70594",
+    "filePage": "https://commons.wikimedia.org/wiki/File:CHE_Gollion_COA.svg",
+    "license": "Public domain",
+    "retrieved": "2026-10-28"
+  },
   "5744": {
     "name": "Ballaigues",
     "filename": "CHE Ballaigues COA.svg",

@@ -1,7 +1,7 @@
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from './offer/presentation.js?v=20261028-az-original-r9';
-import verifiedCoats from './chiffrage/coats.js';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from './offer/presentation.js?v=20261028-shared-services-r10';
+import verifiedCoats from './chiffrage/coats.js?v=20261028-shared-services-r10';
 import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261027-ballaigues-r1';
 
 const root = document.getElementById('offerClientRoot');
@@ -64,7 +64,7 @@ function renderOffer(o, map) {
     ${offerBanner(hero,offerFigures(o.amounts,{label,money,municipal:true}))}
     <div class="chiffrage-offer-body prime-offer-commercial">
       <section class="client-offer-scope"><h3>${label('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
-        ${scope}<div class="prime-offer-service-grid">${o.hosting_provider==='az' ? `<section class="prime-offer-service">${offerHosting(true,{asset,label})}</section>` : ''}<section class="prime-offer-service"><h4>${label('Accompagnement LCM','LCM-Begleitung')}</h4>${offerLcm(o.lcm,label,{prices:o.lcm_prices,money})}</section></div>
+        ${scope}${offerServices(o.hosting_provider==='az',o.lcm,{asset,label,prices:o.lcm_prices,money})}
       </section>
       <section class="client-offer-breakdown"><h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
         ${priceDetail}

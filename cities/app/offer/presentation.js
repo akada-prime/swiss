@@ -52,6 +52,11 @@ export function offerLcm(lcm, label, {prices, money} = {}) {
 export function offerHosting(az, { asset, label }) {
   return az ? `<div class="prime-offer-hosting-brand"><span>${label('Hébergement assuré par','Hosting durch')}</span><img class="prime-offer-hosting-logo logo-on-dark" src="${e(asset('assets/logos/az-semi-negative.png'))}" alt="AZ Informatique"><img class="prime-offer-hosting-logo logo-on-light" src="${e(asset('assets/logos/az-positive.png'))}" alt="AZ Informatique"></div>` : '';
 }
+export function offerServices(az, lcm, {asset, label, prices, money}) {
+  if (!az && !lcm) return '';
+  return `<div class="prime-offer-service-grid">${az ? `<section class="prime-offer-service">${offerHosting(true,{asset,label})}</section>` : ''}${lcm ? `<section class="prime-offer-service"><h4>${label('Accompagnement LCM','LCM-Begleitung')}</h4>${offerLcm(lcm,label,{prices,money})}</section>` : ''}</div>`;
+}
+
 export function offerBreakdown(rows, { label, money, legacy = false }) {
   const section = (heading, keys, hint = '') => {
     const entries = rows.filter(row=>keys.includes(row.key));

@@ -1,12 +1,12 @@
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from '../offer/presentation.js?v=20261028-az-original-r9';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from '../offer/presentation.js?v=20261028-shared-services-r10';
 import { t, number } from '../core/i18n.js?v=20261028-offer-polish-r1';
 import { subscribePreferences } from '../core/preferences.js';
 import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261025-prime-beta-r1';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js';
 import { calculationError } from './errors.js';
-import bundledCoats from './coats.js';
+import bundledCoats from './coats.js?v=20261028-shared-services-r10';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261025-prime-beta-r1';
 import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261025-prime-beta-r1';
 import { commercialPriceGroup, offerPriceGroups } from './commercial-breakdown.js?v=20261027-ballaigues-r1';
@@ -798,8 +798,8 @@ function offerSection() {
   const scope = offerScope(themes.map(group=>({product:group.name,items:group.themes})),{asset:assetUrl});
   const lcm = ({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection;
   return `<article class="chiffrage-offer"><div class="chiffrage-offer-body"><section><h3>${localLabel('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
-    ${scope}${offerHosting(azHosting,{asset:assetUrl,label:localLabel})}${offerLcm(lcm,localLabel,{money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
-    <p>${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p></section>
+    ${scope}${offerServices(azHosting,lcm,{asset:assetUrl,label:localLabel,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
+    ${azHosting ? '' : `<p>${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p>`}</section>
     <section><h3>${localLabel('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>${priceDetail}<p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
 }
 
