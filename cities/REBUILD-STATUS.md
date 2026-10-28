@@ -1,5 +1,19 @@
 # État de reprise — Prime Communes 2.0
 
+> **Retours métier · 28.10.2026 :** Modules / Accompagnement, totaux des groupes
+> fermés, prix et jours des options avant sélection, ouvertures et recherche
+> conservées. ProConcept rejoint les groupes de modules ; récapitulatif des
+> prestations par solution sans double comptage, puis GP/reprise/formation/aide
+> et prestations complémentaires nommées. Nouveau détail client PV par logiciel
+> et ventilation annuelle Solutions/LCM/hébergement sur les futurs liens ; les
+> liens existants restent figés et compatibles. Offre : accompagnement avant
+> logiciels, puis technique/services/support. Question éditoriale en graisse
+> normale, même police. Abacus négatif vectoriel pour les fonds foncés.
+> Aucun tarif, calcul, catalogue, schéma ni donnée métier modifié.
+> Validation : 179 tests, build, navigateur 360/430/768/1366/1920/2560 px,
+> dérouleurs et sélection, états éditoriaux ouvert/fermé sans débordement.
+> Publication demandée explicitement par Alex (GOGOGO et ajout du point 9).
+
 > **Services partagés, blason Gollion et alignement · 28.10.2026 :**
 > le même rendu des cartes Hébergement/LCM est utilisé par l’offre interne
 > et le lien client. Suppression du doublon « Hébergement : Oui » pour AZ.

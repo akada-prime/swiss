@@ -41,6 +41,7 @@ if (!params.has('frame')) {
       pce:{finance_ratio:.4,finance_adjustment:100,finance_round_to:100,salary_round_to:50,pv_margin:.2,pv_round_to:50},
       oracle:{full_price:100,light_price:50,full_maintenance:10,light_maintenance:5},
       lcm:[{up_to:5000,gold:1000,platinium:2000},{up_to:100000,gold:3000,platinium:5000}]}};
+  catalog.parameters.configuration_profiles[0].partners=[{family:'partenaires',item_code:'ged-demo',label:'GED · démonstration',days:2,unit_day_rate:1000,annual_pv:350,quantity:1}];
   // Real municipality for geographic QA; every price, volume and quotation below is invented.
   const domains = [
     ['10510','Comptabilité financière','Finanzbuchhaltung'],

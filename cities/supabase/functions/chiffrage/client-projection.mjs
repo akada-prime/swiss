@@ -1,6 +1,6 @@
 // Customer-safe allowlist: only commercially approved software labels and PV totals.
 // No raw input/result, catalog versions, item codes, PA, margins, rates, or services days.
-import { publicPriceBreakdown } from '../../../app/chiffrage/commercial-breakdown.js';
+import { publicPriceBreakdown, publicCostDetails, annualComponents } from '../../../app/chiffrage/commercial-breakdown.js';
 
 const products = {innosolv:'innosolvcity',pce:'ProConcept',abacus:'Abacus'};
 const finite = value => typeof value === 'number' && Number.isFinite(value);
@@ -47,9 +47,14 @@ export function customerModuleScope(input, catalog) {
     if(input.pce?.finances)add('pce','Finances','Finanzen');
     if(input.pce?.salaires)add('pce','Salaires','Löhne');
   }
-  return Object.entries(products).filter(([vendor])=>groups.has(vendor))
+  const output=Object.entries(products).filter(([vendor])=>groups.has(vendor))
     .map(([vendor,product])=>({product,items:[...groups.get(vendor).values()]}))
     .filter(x=>x.items.length);
+  for(const [key,product] of [['primeLines','Prime'],['partners','Partenaires']]) {
+    const items=(input?.[key]??[]).filter(row=>row.category!=='hosting').map(row=>short(row.label,120)).filter(Boolean);
+    if(items.length)output.push({product,items:[...new Set(items)].map(fr=>({fr,de:fr}))});
+  }
+  return output;
 }
 
 export function publicOfferFromSaved(quote, catalog) {
@@ -97,7 +102,9 @@ export function publicOfferFromSaved(quote, catalog) {
     scope:customerModuleScope(snapshot.input,catalog),
     lcm,hosting:breakdown.some(x=>x.key==='hosting'),hosting_provider:hostingProvider,
     amounts:{investment:s.investment,annual:s.annual,tco5y:s.investment+4*s.annual},
-    breakdown,buckets
+    breakdown,buckets,
+    cost_details:publicCostDetails(snapshot.result.lines),
+    annual_breakdown:annualComponents(breakdown)
   };
 }
 export function publicLinkMetadata(row) {

@@ -43,7 +43,7 @@ test('public projection exposes only customer-safe PV totals and ten commercial 
   assert.equal(clean.hosting_provider,null);
   assert.deepEqual(Object.keys(clean).sort(),['amounts','bfs_id','buckets','canton','commune',
     'issued_at','population','products','quote_title','revision','version',
-    'scope','lcm','hosting','hosting_provider','breakdown'].sort());
+    'scope','lcm','hosting','hosting_provider','breakdown','cost_details','annual_breakdown'].sort());
 });
 
 test('AZ logo is identified only for a hosting selection that names AZ',()=>{
