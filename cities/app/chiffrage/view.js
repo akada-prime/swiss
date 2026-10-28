@@ -1,5 +1,6 @@
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from '../offer/presentation.js?v=20261027-platinum-price-r1';
-import { t, number } from '../core/i18n.js?v=20261024-completion-r1';
+import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from '../offer/presentation.js?v=20261028-offer-polish-r1';
+import { t, number } from '../core/i18n.js?v=20261028-offer-polish-r1';
 import { subscribePreferences } from '../core/preferences.js';
 import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261025-prime-beta-r1';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
@@ -27,7 +28,7 @@ const field = (key, value, label, { min = 0, step = 1 } = {}) =>
   `<label>${label}<input data-field="${key}" type="number" min="${min}" step="${step}" value="${escape(value ?? '')}"></label>`;
 const textField = (key, value, label) =>
   `<label>${label}<input data-field="${key}" value="${escape(value ?? '')}"></label>`;
-const localLabel = (fr, de) => document.documentElement.lang === 'de' ? de : fr;
+const localLabel = (fr, de) => document.documentElement.lang === 'de' ? de : frenchTypography(fr);
 const cantonName = code => ({ JU: 'Jura', VD: 'Vaud', GE: 'Genève', FR: 'Fribourg',
   NE: 'Neuchâtel', VS: 'Valais', BE: 'Berne' })[code] ?? code;
 // GitHub Pages serves the source tree; Vite copies public assets to the build root.

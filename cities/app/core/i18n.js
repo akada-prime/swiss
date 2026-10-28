@@ -1,3 +1,4 @@
+import { frenchTypography } from './french-typography.js?v=20261028-offer-polish-r1';
 import fr from '../i18n/fr.js?v=20261024-completion-r1';
 import de from '../i18n/de.js?v=20261024-completion-r1';
 import { getPreference, subscribePreferences } from './preferences.js';
@@ -18,7 +19,8 @@ export function date(value, options) { return new Intl.DateTimeFormat(locale(), 
 export function t(key, variables = {}) {
   const translation = catalogues[getPreference('language')][key] ?? fr[key];
   if (translation == null) throw new TypeError(`Missing translation: ${key}`);
-  return translation.replace(/\{(\w+)\}/g, (_, variable) => String(variables[variable] ?? ''));
+  const display = getPreference('language') === 'fr' ? frenchTypography(translation) : translation;
+  return display.replace(/\{(\w+)\}/g, (_, variable) => String(variables[variable] ?? ''));
 }
 
 const attributes = [

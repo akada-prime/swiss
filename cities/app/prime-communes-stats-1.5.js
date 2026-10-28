@@ -1,4 +1,4 @@
-import {t, number, date, locale} from './core/i18n.js?v=20261024-completion-r1';
+import {t, number, date, locale} from './core/i18n.js?v=20261028-offer-polish-r1';
 (() => {
   'use strict';
 

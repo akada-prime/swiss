@@ -1,5 +1,6 @@
+import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from './offer/presentation.js?v=20261027-platinum-price-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from './offer/presentation.js?v=20261028-offer-polish-r1';
 import verifiedCoats from './chiffrage/coats.js';
 import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261027-ballaigues-r1';
 
@@ -14,7 +15,7 @@ const cantonNames = { JU:'Jura', VD:'Vaud', GE:'Genève', FR:'Fribourg',
   NE:'Neuchâtel', BE:'Berne', VS:'Valais', ZH:'Zurich', BL:'Bâle-Campagne' };
 const fr = !/^de(?:-|$)/i.test(navigator.language);
 if (!fr) document.documentElement.lang = 'de';
-const label = (f,d) => fr ? f : d;
+const label = (f,d) => fr ? frenchTypography(f) : d;
 const asset = path => `public/${path}`;
 const safeId = id => /^\d{1,5}$/.test(String(id)) ? String(id) : '';
 
