@@ -25,6 +25,21 @@ const errorView = () => { root.innerHTML = `<div class="client-offer-message">
   <p>${label('Le lien est incorrect, expiré ou révoqué. Contactez Prime Technologies pour recevoir un nouveau lien.',
   'Der Link ist ungültig, abgelaufen oder widerrufen. Bitte wenden Sie sich für einen neuen Link an Prime Technologies.')}</p>
   </div>`; };
+
+function commercialSignature() {
+  return `<div class="prime-offer-signature">
+    <p class="prime-offer-signature-kicker">${enc(label('Le bon sens paysan de Prime.','Primes gesunder Bauernverstand.'))}</p>
+    <details class="prime-offer-signature-disclosure">
+      <summary>${enc(label('Et si le plus important dans votre prochain ERP n’était pas le logiciel ?','Was, wenn bei Ihrem nächsten ERP nicht die Software das Wichtigste wäre?'))}</summary>
+      <div class="prime-offer-signature-content">
+        <p>${enc(label('Un projet maîtrisé, des spécialistes dédiés aux métiers communaux, des coûts transparents et une responsabilité assumée. Voilà ce que nous mettons derrière nos solutions : une vision, pas un catalogue de licences.','Ein sorgfältig geführtes Projekt, Fachleute für kommunale Aufgaben, transparente Kosten und klar übernommene Verantwortung. Dafür stehen unsere Lösungen: eine Vision, kein Lizenzkatalog.'))}</p>
+        <p>${enc(label('Car le plus important dans un devis, c’est parfois ce qui ne sera pas facturé plus tard.','Denn das Wichtigste an einer Offerte ist manchmal das, was später nicht zusätzlich verrechnet wird.'))}</p>
+        <p class="prime-offer-signature-conclusion">${enc(label('Un forfait, ça se juge à la dernière facture.','Eine Pauschale bewährt sich erst mit der letzten Rechnung.'))}</p>
+        <p class="prime-offer-signature-note">${enc(label('Cette signature exprime notre approche. Ce chiffrage reste estimatif ; seuls les engagements contractuels font foi.','Diese Aussage beschreibt unsere Haltung. Die Kalkulation bleibt eine Schätzung; verbindlich sind ausschliesslich die vertraglichen Vereinbarungen.'))}</p>
+      </div>
+    </details>
+  </div>`;
+}
 function renderOffer(o, map) {
   const id=safeId(o.bfs_id), canton=safeCanton(o.canton), coat=verifiedCoats[id];
   const coatSrc=coat?.asset ? (/^https:\/\//.test(coat.asset) ? coat.asset : `public/${coat.asset}`) : '';
@@ -43,7 +58,7 @@ function renderOffer(o, map) {
     inhabitants:label('habitants','Einwohner'), heading:label('Votre projet, en chiffres.','Ihr Projekt in Zahlen.'),
     map:offerMap(map,o.bfs_id,label('Situation de la commune','Lage der Gemeinde')),
     identity:offerIdentity({asset,canton,cantonLabel:cantonNames[canton],coatHtml:coatSrc ? `<img src="${enc(coatSrc)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}),
-    details:`<p class="chiffrage-offer-reference">${enc(o.quote_title)} · ${label('Révision','Version')} ${enc(o.revision)}</p>` });
+    details:`<p class="chiffrage-offer-reference">${enc(o.quote_title)} · ${label('Révision','Version')} ${enc(o.revision)}</p>${commercialSignature()}` });
   root.innerHTML = `<article class="chiffrage-offer client-offer">
     ${offerBanner(hero,offerFigures(o.amounts,{label,money}))}
     <div class="chiffrage-offer-body prime-offer-commercial">

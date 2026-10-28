@@ -139,6 +139,78 @@
 .chiffrage-offer-reference strong {
   color: #fff
 }
+
+/* Client-only signature inside the existing financial banner (no separate surface). */
+.client-offer .prime-offer-signature {
+  max-width: 72ch;
+  margin-top: 10px;
+}
+.client-offer .prime-offer-signature-kicker {
+  margin: 0 0 2px;
+  color: #b7c6e2;
+  font-size: 14px;
+  line-height: 1.35;
+}
+.client-offer .prime-offer-signature-disclosure summary {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 0;
+  box-sizing: border-box;
+  list-style: none;
+  cursor: pointer;
+  color: #edf3ff;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.client-offer .prime-offer-signature-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+.client-offer .prime-offer-signature-disclosure summary::after {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 2px 2px 9px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 150ms ease;
+}
+.client-offer .prime-offer-signature-disclosure[open] summary::after {
+  transform: rotate(225deg);
+}
+.client-offer .prime-offer-signature-disclosure summary:focus-visible {
+  outline: 2px solid #a8d6ff;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+.client-offer .prime-offer-signature-content {
+  max-width: 66ch;
+  padding: 1px 0 7px;
+  overflow-wrap: anywhere;
+}
+.client-offer .prime-offer-signature-content p {
+  margin: 9px 0 0;
+  color: #d5e1f1;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.client-offer .prime-offer-signature-content .prime-offer-signature-conclusion {
+  color: #fff;
+  font-weight: 650;
+}
+.client-offer .prime-offer-signature-content .prime-offer-signature-note {
+  color: #b7c6e2;
+  font-size: 14px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .client-offer .prime-offer-signature-disclosure summary::after {
+    transition: none;
+  }
+}
+
 .chiffrage-offer-tariffs {
   font-size: 14px;
   color: #b7c6e2;
