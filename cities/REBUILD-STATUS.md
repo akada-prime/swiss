@@ -1,5 +1,12 @@
 # État de reprise — Prime Communes 2.0
 
+> **Optimisation offre communale · 28.10.2026 :** deux paragraphes éditoriaux,
+> coûts d’investissement / fonctionnement annuels / total cinq ans sur trois
+> colonnes, unités CHF HT, référence rapprochée de l’identité et blocs
+> Hébergement/LCM cohérents, alternative Platinum intégrée au bloc LCM.
+> Empilement des chiffres et services sous 850 px. Montants inchangés.
+> Huit tests ciblés réussis ; publication autorisée par Alex.
+
 > **Offre client · rubrique de journal · 28.10.2026 :** variante validée
 > « Filet orange » : libellé blanc, capitales espacées à 14 px, filet orange
 > fin prolongé à droite. Espacement adapté sur Natel. Changement uniquement

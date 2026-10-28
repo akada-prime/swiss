@@ -140,6 +140,25 @@
   color: #fff
 }
 
+/* Municipal client summary and related services. */
+.client-offer .chiffrage-offer-reference { margin: 3px 0 12px; }
+.prime-offer-communal-figures { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px; }
+.prime-offer-communal-figures>div { min-width:0; border-top:1px solid #ffffff52; padding-top:18px; }
+.prime-offer-communal-figures>div>span,.prime-offer-communal-figures small { display:block; color:#c3d1e8; font-size:14px; line-height:1.5; }
+.prime-offer-communal-figures strong { display:block; color:#fff; font-size:var(--offer-large-size); line-height:1.12; letter-spacing:-.055em; margin:10px 0 6px; overflow-wrap:anywhere; }
+.prime-offer-communal-figures .prime-offer-currency { display:inline-block; font-size:14px; letter-spacing:0; white-space:nowrap; }
+.prime-offer-service-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:18px; align-items:start; }
+.prime-offer-service { min-width:0; padding:18px; border:1px solid var(--offer-border); border-radius:var(--offer-radius); background:var(--offer-panel); }
+.prime-offer-service h4 { margin:0 0 12px; font-size:14px; color:var(--offer-text); }
+.prime-offer-service .prime-offer-hosting-brand { margin:0; padding:0; border:0; background:none; display:flex; flex-direction:column; align-items:flex-start; gap:18px; }
+.prime-offer-service .prime-offer-lcm { margin:0; padding:0; border:0; background:none; }
+.prime-offer-service .prime-offer-lcm-alternative { max-width:none; border:0; border-top:1px solid var(--offer-border); border-radius:0; background:none; }
+.prime-offer-service .prime-offer-lcm-alternative summary { padding:12px 0; }
+.prime-offer-service .prime-offer-lcm-alternative p { padding:0 0 15px; }
+@media(max-width:850px){
+ .prime-offer-communal-figures,.prime-offer-service-grid { grid-template-columns:minmax(0,1fr); }
+}
+
 /* Client-only signature inside the existing financial banner (no separate surface). */
 .client-offer {
   --offer-large-size: 44px;

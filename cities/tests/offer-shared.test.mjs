@@ -79,7 +79,7 @@ test('public entry preserves v1/v2 offers, FR/DE, values and confidentiality',as
    }}))Object.defineProperty(globalThis,k,{value,configurable:true,writable:true});
    await import(`../app/client-offer.js?test=${version}-${lang}`);await rendered;
    assert.match(html,/Ballaigues/);assert.match(html,/Contrôle &lt;test&gt;/);
-   for(const value of Object.values(response.amounts)) assert.ok(html.includes(escapeOffer(money(value))));
+   for(const value of Object.values(response.amounts)) assert.ok(html.replace(/<[^>]*>/g,'').includes(escapeOffer(money(value))));
    assert.doesNotMatch(html,/NEVER_RENDER|annual_pa|margin|data-action|<input|<button|style=|A{43}/);
    assert.equal(calls.length,2);assert.equal(calls[0].options.headers.Authorization,'Bearer '+token);
    assert.equal(calls[0].options.cache,'no-store');
