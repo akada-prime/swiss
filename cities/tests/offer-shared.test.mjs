@@ -86,7 +86,7 @@ test('public entry preserves v1/v2 offers, FR/DE, values and confidentiality',as
    assert.match(html,lang==='de-CH'?/Ihr Projekt in Zahlen/:/Votre projet, en chiffres/);
    assert.ok(html.indexOf('chiffrage-offer-reference')<html.indexOf('prime-offer-signature'));
    assert.ok(html.indexOf('prime-offer-signature')<html.indexOf('chiffrage-offer-summary'));
-   assert.match(html,/<details class="prime-offer-signature-disclosure">\\s*<summary>/);
+   assert.match(html,/<details class="prime-offer-signature-disclosure">\s*<summary>/);
    assert.match(html,lang==='de-CH'?/Primes gesunder Bauernverstand/:/Le bon sens paysan de Prime/);
    assert.match(html,lang==='de-CH'?/Die Kalkulation bleibt eine Schätzung/:/Ce chiffrage reste estimatif/);
    if(version===2)assert.match(html,lang==='de-CH'?/Finanzen/:/Finances/);
@@ -106,15 +106,15 @@ test('Platinum shows annual price and replacement delta, with no invented fallba
 test('public client signature is compact, accessible, translated and explicitly non-contractual',()=>{
  const js=read('../app/client-offer.js');
  const css=read('../app/styles/offer.css');
- assert.match(js, /<details class="prime-offer-signature-disclosure">[\\s\\S]*?<summary>/);
+ assert.match(js, /<details class="prime-offer-signature-disclosure">[\s\S]*?<summary>/);
  assert.doesNotMatch(js, /<details class="prime-offer-signature-disclosure" open/);
- assert.match(js, /Le bon sens paysan de Prime\\./);
- assert.match(js, /Primes gesunder Bauernverstand\\./);
- assert.match(js, /Un forfait, ça se juge à la dernière facture\\./);
+ assert.match(js, /Le bon sens paysan de Prime\./);
+ assert.match(js, /Primes gesunder Bauernverstand\./);
+ assert.match(js, /Un forfait, ça se juge à la dernière facture\./);
  assert.match(js, /Ce chiffrage reste estimatif/);
  assert.match(js, /vertraglichen Vereinbarungen/);
- assert.match(css, /\\.prime-offer-signature-disclosure summary:focus-visible/);
- assert.match(css, /\\.prime-offer-signature-disclosure\\[open\\] summary::after/);
+ assert.match(css, /\.prime-offer-signature-disclosure summary:focus-visible/);
+ assert.match(css, /\.prime-offer-signature-disclosure\[open\] summary::after/);
  assert.match(css, /min-height: 44px/);
  assert.doesNotMatch(css, /!important/);
 });
