@@ -1,5 +1,5 @@
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from '../offer/presentation.js?v=20261028-offer-polish-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerBreakdown } from '../offer/presentation.js?v=20261028-az-original-r9';
 import { t, number } from '../core/i18n.js?v=20261028-offer-polish-r1';
 import { subscribePreferences } from '../core/preferences.js';
 import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261025-prime-beta-r1';
