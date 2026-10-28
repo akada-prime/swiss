@@ -1,5 +1,10 @@
 # État de reprise — Prime Communes 2.0
 
+> **Offre client · espacement et texte des services · 28.10.2026 :** marges
+> cumulées sous le bloc éditorial retirées, espace final de 18 px. Textes des
+> cartes Hébergement/LCM harmonisés à 14 px ; titres et emphases à graisse 700.
+> Logo AZ conservé à la demande d’Alex, qui prépare les originaux.
+
 > **Optimisation offre communale · 28.10.2026 :** deux paragraphes éditoriaux,
 > coûts d’investissement / fonctionnement annuels / total cinq ans sur trois
 > colonnes, unités CHF HT, référence rapprochée de l’identité et blocs
