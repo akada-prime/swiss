@@ -1,5 +1,13 @@
 # État de reprise — Prime Communes 2.0
 
+> **Offre client · composition éditoriale validée · 28.10.2026 :** le bloc
+> utilise toute la largeur : grande question à gauche, argumentaire à droite.
+> Sur Natel (jusqu’à 600 px), question, texte et montants se suivent sur une
+> colonne. Deux tailles dans le bandeau : 44/14 px, puis 32/14 px sur Natel.
+> Texte français exact et emphases conservés ; ouverture via « Le bon sens
+> Prime. », repliée par défaut. Publication explicitement autorisée par Alex.
+> Vérification ciblée : 8 tests du rendu public FR/DE et versions 1/2 réussis.
+
 > **Offre client · Le bon sens Prime · 28.10.2026 :** texte français repris
 > exactement selon la validation utilisateur, libellé allemand actualisé, phrase
 > ajoutée sur le chiffrage estimatif retirée du bloc éditorial. Une seule taille
