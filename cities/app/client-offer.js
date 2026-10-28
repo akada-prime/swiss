@@ -28,14 +28,13 @@ const errorView = () => { root.innerHTML = `<div class="client-offer-message">
 
 function commercialSignature() {
   return `<div class="prime-offer-signature">
-    <p class="prime-offer-signature-kicker">${enc(label('Le bon sens paysan de Prime.','Primes gesunder Bauernverstand.'))}</p>
+    <p class="prime-offer-signature-kicker">${enc(label('Le bon sens Prime.','Primes gesunder Menschenverstand.'))}</p>
     <details class="prime-offer-signature-disclosure">
-      <summary>${enc(label('Et si le plus important dans votre prochain ERP n’était pas le logiciel ?','Was, wenn bei Ihrem nächsten ERP nicht die Software das Wichtigste wäre?'))}</summary>
+      <summary>${enc(label("Et si le plus important dans votre prochain ERP n'était pas le logiciel ?",'Was, wenn bei Ihrem nächsten ERP nicht die Software das Wichtigste wäre?'))}</summary>
       <div class="prime-offer-signature-content">
-        <p>${enc(label('Un projet maîtrisé, des spécialistes dédiés aux métiers communaux, des coûts transparents et une responsabilité assumée. Voilà ce que nous mettons derrière nos solutions : une vision, pas un catalogue de licences.','Ein sorgfältig geführtes Projekt, Fachleute für kommunale Aufgaben, transparente Kosten und klar übernommene Verantwortung. Dafür stehen unsere Lösungen: eine Vision, kein Lizenzkatalog.'))}</p>
-        <p>${enc(label('Car le plus important dans un devis, c’est parfois ce qui ne sera pas facturé plus tard.','Denn das Wichtigste an einer Offerte ist manchmal das, was später nicht zusätzlich verrechnet wird.'))}</p>
-        <p class="prime-offer-signature-conclusion">${enc(label('Un forfait, ça se juge à la dernière facture.','Eine Pauschale bewährt sich erst mit der letzten Rechnung.'))}</p>
-        <p class="prime-offer-signature-note">${enc(label('Cette signature exprime notre approche. Ce chiffrage reste estimatif ; seuls les engagements contractuels font foi.','Diese Aussage beschreibt unsere Haltung. Die Kalkulation bleibt eine Schätzung; verbindlich sind ausschliesslich die vertraglichen Vereinbarungen.'))}</p>
+        <p>${enc(label('Un projet maîtrisé, des spécialistes dédiés aux métiers communaux, des coûts transparents et une responsabilité assumée. Voilà ce que nous mettons derrière nos solutions :','Ein sorgfältig geführtes Projekt, Fachleute für kommunale Aufgaben, transparente Kosten und klar übernommene Verantwortung. Dafür stehen unsere Lösungen:'))} <strong class="prime-offer-signature-vision">${enc(label('une vision, pas un catalogue de licences.','eine Vision, kein Lizenzkatalog.'))}</strong></p>
+        <p>${enc(label("Car le plus important dans un devis, c'est parfois ce qui ne sera pas facturé plus tard.",'Denn das Wichtigste an einer Offerte ist manchmal das, was später nicht zusätzlich verrechnet wird.'))}</p>
+        <p class="prime-offer-signature-conclusion"><strong>${enc(label('Un forfait, ça se juge à la dernière facture.','Eine Pauschale bewährt sich erst mit der letzten Rechnung.'))}</strong></p>
       </div>
     </details>
   </div>`;

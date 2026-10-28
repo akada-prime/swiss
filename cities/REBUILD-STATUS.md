@@ -1,5 +1,12 @@
 # État de reprise — Prime Communes 2.0
 
+> **Offre client · Le bon sens Prime · 28.10.2026 :** texte français repris
+> exactement selon la validation utilisateur, libellé allemand actualisé, phrase
+> ajoutée sur le chiffrage estimatif retirée du bloc éditorial. Une seule taille
+> de 14 px pour le bloc ; hiérarchie par le gras et l’orange, sans séparateur.
+> Le dérouleur reste fermé par défaut, après la référence et avant les montants.
+> Vérification ciblée : 8 tests réussis, dont rendu public FR/DE et versions 1/2.
+
 > **Lecture des prestations et des marges · 24.10.2026 :** le résumé par solution
 > additionne les jours des lignes de module et des forfaits de groupes dans
 > Projet et Prestations, puis distingue les prestations communes. Les jours

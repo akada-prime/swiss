@@ -144,12 +144,15 @@
 .client-offer .prime-offer-signature {
   max-width: 72ch;
   margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.55;
 }
 .client-offer .prime-offer-signature-kicker {
   margin: 0 0 2px;
-  color: #b7c6e2;
-  font-size: 14px;
-  line-height: 1.35;
+  color: #f39449;
+  font-size: inherit;
+  font-weight: 700;
+  line-height: inherit;
 }
 .client-offer .prime-offer-signature-disclosure summary {
   display: block;
@@ -160,9 +163,9 @@
   list-style: none;
   cursor: pointer;
   color: #edf3ff;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.5;
+  font-size: inherit;
+  font-weight: 700;
+  line-height: inherit;
 }
 .client-offer .prime-offer-signature-disclosure summary::-webkit-details-marker {
   display: none;
@@ -194,16 +197,17 @@
 .client-offer .prime-offer-signature-content p {
   margin: 9px 0 0;
   color: #d5e1f1;
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: inherit;
+  line-height: inherit;
+}
+.client-offer .prime-offer-signature-content strong {
+  font-weight: 700;
+}
+.client-offer .prime-offer-signature-content .prime-offer-signature-vision {
+  color: #f39449;
 }
 .client-offer .prime-offer-signature-content .prime-offer-signature-conclusion {
   color: #fff;
-  font-weight: 650;
-}
-.client-offer .prime-offer-signature-content .prime-offer-signature-note {
-  color: #b7c6e2;
-  font-size: 14px;
 }
 @media (prefers-reduced-motion: reduce) {
   .client-offer .prime-offer-signature-disclosure summary::after {
