@@ -87,8 +87,14 @@ test('public entry preserves v1/v2 offers, FR/DE, values and confidentiality',as
    assert.ok(html.indexOf('chiffrage-offer-reference')<html.indexOf('prime-offer-signature'));
    assert.ok(html.indexOf('prime-offer-signature')<html.indexOf('chiffrage-offer-summary'));
    assert.match(html,/<details class="prime-offer-signature-disclosure">\s*<summary>/);
-   assert.match(html,lang==='de-CH'?/Primes gesunder Bauernverstand/:/Le bon sens paysan de Prime/);
-   assert.match(html,lang==='de-CH'?/Die Kalkulation bleibt eine Schätzung/:/Ce chiffrage reste estimatif/);
+   assert.match(html,lang==='de-CH'?/Primes gesunder Menschenverstand\./:/Le bon sens Prime\./);
+   assert.match(html,lang==='de-CH'?/<strong class="prime-offer-signature-vision">eine Vision, kein Lizenzkatalog\.<\/strong>/:/<strong class="prime-offer-signature-vision">une vision, pas un catalogue de licences\.<\/strong>/);
+   if(lang==='fr-CH') {
+    const signature=html.slice(html.indexOf('<div class="prime-offer-signature">'),html.indexOf('</header>'));
+    const text=signature.replace(/<[^>]*>/g,' ').replace(/&#39;/g,"'").replace(/\s+/g,' ').trim();
+    assert.equal(text,"Le bon sens Prime. Et si le plus important dans votre prochain ERP n'était pas le logiciel ? Un projet maîtrisé, des spécialistes dédiés aux métiers communaux, des coûts transparents et une responsabilité assumée. Voilà ce que nous mettons derrière nos solutions : une vision, pas un catalogue de licences. Car le plus important dans un devis, c'est parfois ce qui ne sera pas facturé plus tard. Un forfait, ça se juge à la dernière facture.");
+   }
+   assert.doesNotMatch(html,/prime-offer-signature-note|gesunder Bauernverstand|Le bon sens paysan/);
    if(version===2)assert.match(html,lang==='de-CH'?/Finanzen/:/Finances/);
   } finally {for(const [k,d]of Object.entries(saved)){if(d)Object.defineProperty(globalThis,k,d);else delete globalThis[k];}}
  }
@@ -103,16 +109,14 @@ test('Platinum shows annual price and replacement delta, with no invented fallba
  assert.match(offerLcm('Gold',label,{money,prices:{gold:0,platinum:0}}),/même prix annuel/);
 });
 
-test('public client signature is compact, accessible, translated and explicitly non-contractual',()=>{
+test('public client signature remains compact, accessible and translated',()=>{
  const js=read('../app/client-offer.js');
  const css=read('../app/styles/offer.css');
  assert.match(js, /<details class="prime-offer-signature-disclosure">[\s\S]*?<summary>/);
  assert.doesNotMatch(js, /<details class="prime-offer-signature-disclosure" open/);
- assert.match(js, /Le bon sens paysan de Prime\./);
- assert.match(js, /Primes gesunder Bauernverstand\./);
+ assert.match(js, /Le bon sens Prime\./);
+ assert.match(js, /Primes gesunder Menschenverstand\./);
  assert.match(js, /Un forfait, ça se juge à la dernière facture\./);
- assert.match(js, /Ce chiffrage reste estimatif/);
- assert.match(js, /vertraglichen Vereinbarungen/);
  assert.match(css, /\.prime-offer-signature-disclosure summary:focus-visible/);
  assert.match(css, /\.prime-offer-signature-disclosure\[open\] summary::after/);
  assert.match(css, /min-height: 44px/);
