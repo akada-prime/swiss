@@ -1,5 +1,23 @@
 # État de reprise — Prime Communes 2.0
 
+> **Radar · qualification du lot de 200 candidats · 29.10.2026 :** cinq candidats
+> analysés regroupés en trois nouveaux signaux communaux : Lausanne Abacus
+> (45018-01, offres 02.11 à 11 h 30), Lausanne ressources projet/Business Analysis
+> (45005-01, offres 02.11 à 16 h), Yverdon recherche documentaire/accessibilité
+> (réponse municipale du 28.05.2026, pp. 1–2 ; COGE et postulat regroupés).
+> Statuts commerciaux inconnus explicités ; aucune exclusion au seul motif client.
+> 195 candidats écartés avec motif : archives, bruit, hors périmètre communal ou
+> métier, adjudications confirmées, procédure interrompue ou calendrier non actualisé.
+> Les marchés cantonaux (dont M-Files RCJU et guichet virtuel SITel FR) sont identifiés
+> comme tels dans les candidats, sans rattachement artificiel à une commune.
+> Sources SIMAP primaires consultées par projet ; réponse Yverdon scannée vérifiée
+> visuellement. Aucun scan général, appel IA automatique, changement de code,
+> de calcul ou de données Supabase. Cinq signaux antérieurs conservés.
+> Contrôles : JSON, correspondance des 200 URL, statuts terminaux, cohérence
+> signaux/analyses, 18 tests Radar ciblés. Date figée du test adaptée au nouveau lot.
+> Publication sur main explicitement autorisée par l’utilisateur le 29.10.2026 ;
+> seuls les fichiers de qualification Radar, le test daté et ce statut sont intégrés.
+
 > **Radar → ChatGPT · 29.10.2026 :** ancien lien vers une conversation privée
 > supprimé. Demande copiée, nouvel onglet réservé pendant le clic puis ouvert
 > sur ChatGPT ; onglet Radar conservé. Message explicite de collage/envoi,

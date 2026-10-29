@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "2.0.1-v1",
-    "updatedOn": "2026-09-21",
+    "updatedOn": "2026-10-29",
     "mode": "radar-qualified",
     "notice": "Faits publics détectés mécaniquement puis qualifiés par l'IA d'Axel ; fait, déduction et lecture Prime restent séparés."
   },
@@ -121,6 +121,77 @@
         "Concession",
         "Interfaces",
         "À surveiller"
+      ]
+    },
+    {
+      "id": "yverdon-recherche-documentaire-accessibilite-2026",
+      "level": "watch",
+      "date": "2026-05-28",
+      "bfsId": 5938,
+      "municipality": "Yverdon-les-Bains",
+      "canton": "VD",
+      "title": "Recherche documentaire et accessibilité : deux besoins explicités par la Municipalité",
+      "summary": "Dans sa réponse du 28 mai 2026 à la COGE (observations 2 et 3, pp. 1–2), la Municipalité indique analyser techniquement et financièrement la recherche plein texte des documents dans les rubriques du Conseil communal. Elle annonce aussi un audit externe d’accessibilité du site et des PDF pour 2026. Le moteur global cherche déjà dans les PDF ; la lacune concerne les moteurs contextuels.",
+      "why": "Le besoin porte sur l’accès aux documents et aux prestations numériques. Ces pièces ne prouvent ni un marché ouvert ni une attribution ; la réalisation effective des mesures annoncées pour 2026 reste inconnue au 29 octobre. Qualifier avec la Chancellerie et le Service population et numérique les travaux restant à réaliser et les interfaces éventuelles avec la gestion documentaire. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+      "sourceType": "Source publique",
+      "sourceLabel": "Ville d’Yverdon-les-Bains · réponse aux observations COGE 2025 · 28 mai 2026 · pp. 1–2",
+      "sourceUrl": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2026_rapports/PR26.13RA_COGE_ReponsesMunicipalite_Observations2025_RapportGestion2025.pdf",
+      "updatedBy": "IA d'Axel",
+      "confidence": "confirmed",
+      "tags": [
+        "Recherche documentaire",
+        "Accessibilité",
+        "Besoin documenté",
+        "Statut commercial inconnu"
+      ]
+    },
+    {
+      "id": "lausanne-ressources-projets-business-analysis-2026",
+      "level": "watch",
+      "date": "2026-09-29",
+      "bfsId": 5586,
+      "municipality": "Lausanne",
+      "canton": "VD",
+      "title": "Lausanne référence des chefs de projet et Business Analysts pour 2027–2030",
+      "summary": "Le SOI de la Ville de Lausanne a publié le marché SIMAP 45005-01 : trois lots pour la conduite de projets métier, de projets techniques et la Business Analysis, avec deux prestataires référencés par lot. Les prestations sont prévues du 1er février 2027 au 31 décembre 2030, avec une prolongation possible d’un an. Le délai d’offre est le 2 novembre 2026 à 16 h, heure suisse. Consortium et sous-traitance sont exclus dans l’avis.",
+      "why": "Il s’agit d’un marché de ressources et d’accompagnement SI, sans achat ERP démontré. L’échéance proche et l’interdiction de sous-traiter imposent de vérifier immédiatement la capacité de réponse directe et les critères du dossier. Évaluer uniquement les lots correspondant aux compétences et disponibilités de Prime. Lausanne est cliente Prime ; cela ne renseigne pas le statut de ce marché. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+      "sourceType": "Source publique",
+      "sourceLabel": "Ville de Lausanne · SOI · SIMAP 45005-01 · 29 septembre 2026 · vérifié le 29 octobre",
+      "sourceUrl": "https://www.simap.ch/fr/?search=36b63a36-1766-4850-8ec0-a2ac668d170b",
+      "updatedBy": "IA d'Axel",
+      "confidence": "confirmed",
+      "tags": [
+        "Appel d’offres ouvert",
+        "Gestion de projet",
+        "Business Analysis",
+        "Échéance 02.11.2026",
+        "Client Prime",
+        "Statut commercial inconnu"
+      ]
+    },
+    {
+      "id": "lausanne-abacus-licences-support-2027-2031",
+      "level": "strong",
+      "date": "2026-09-29",
+      "bfsId": 5586,
+      "municipality": "Lausanne",
+      "canton": "VD",
+      "title": "Lausanne met en concurrence les licences et le support Abacus pour cinq ans",
+      "summary": "Le SOI de la Ville de Lausanne recherche un intégrateur pour fournir les licences de sa solution financière Abacus et assurer maintenance et support sur 2027–2031, avec une prolongation possible d’un an. L’avis SIMAP 45018-01 prévoit des tarifs journaliers par profil et précise que les jours sont estimatifs. Le délai d’offre est le 2 novembre 2026 à 11 h 30, heure suisse. Consortium et sous-traitance sont exclus dans l’avis.",
+      "why": "La dernière publication publique consultée le 29 octobre est un appel d’offres, sans adjudication dans cet en-tête. Le besoin correspond directement à l’intégration Abacus ; il concerne l’exploitation de la solution financière, sans remplacement d’ERP démontré. L’éligibilité de Prime dépend des critères complets du dossier. Priorité à une qualification immédiate du périmètre, des critères et de la capacité de réponse directe. Lausanne est cliente Prime ; cela ne renseigne pas le statut de ce marché. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+      "sourceType": "Source publique",
+      "sourceLabel": "Ville de Lausanne · SOI · SIMAP 45018-01 · 29 septembre 2026 · vérifié le 29 octobre",
+      "sourceUrl": "https://www.simap.ch/fr/?search=3ecd2c2e-c931-40d8-82f9-3c06cd723856",
+      "updatedBy": "IA d'Axel",
+      "confidence": "confirmed",
+      "tags": [
+        "Abacus",
+        "Finance",
+        "Licences et support",
+        "Appel d’offres ouvert",
+        "Échéance 02.11.2026",
+        "Client Prime",
+        "Statut commercial inconnu"
       ]
     }
   ]

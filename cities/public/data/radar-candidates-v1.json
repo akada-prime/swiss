@@ -2,7 +2,16 @@
   "meta": {
     "version": "radar-candidates-v1",
     "generatedAt": "2026-10-28T11:21:14.838Z",
-    "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
+    "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement.",
+    "lastAnalysisAt": "2026-10-29T08:15:07Z",
+    "lastAnalysisDate": "2026-10-29",
+    "lastAnalysis": {
+      "submittedCandidates": 200,
+      "analyzedCandidates": 5,
+      "discardedCandidates": 195,
+      "newSignals": 3,
+      "scope": "Candidats du lot fourni uniquement ; marchés communaux, sans collecte supplémentaire."
+    }
   },
   "items": [
     {
@@ -18,7 +27,18 @@
       "publicationDate": "2026-06-18",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "analyzed",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "signalId": "yverdon-recherche-documentaire-accessibilite-2026",
+      "analysis": {
+        "decision": "publish",
+        "reason": "Candidat qualifié ; sources apparentées regroupées dans un seul signal.",
+        "publicFact": "Dans sa réponse du 28 mai 2026 à la COGE (observations 2 et 3, pp. 1–2), la Municipalité indique analyser techniquement et financièrement la recherche plein texte des documents dans les rubriques du Conseil communal. Elle annonce aussi un audit externe d’accessibilité du site et des PDF pour 2026. Le moteur global cherche déjà dans les PDF ; la lacune concerne les moteurs contextuels.",
+        "deduction": "Le besoin porte sur l’accès aux documents et aux prestations numériques. Ces pièces ne prouvent ni un marché ouvert ni une attribution ; la réalisation effective des mesures annoncées pour 2026 reste inconnue au 29 octobre.",
+        "primeReading": "Qualifier avec la Chancellerie et le Service population et numérique les travaux restant à réaliser et les interfaces éventuelles avec la gestion documentaire. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+        "sourceVerification": "primary-source-read",
+        "reviewedAt": "2026-10-29T08:15:07Z"
+      }
     },
     {
       "id": "5f2696ffa1700f7f0c70f4c4741b3f13f23b06dad6304a31574603ac6b5c1b0e",
@@ -33,7 +53,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "analyzed",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "signalId": "yverdon-recherche-documentaire-accessibilite-2026",
+      "analysis": {
+        "decision": "publish",
+        "reason": "Candidat qualifié ; sources apparentées regroupées dans un seul signal.",
+        "publicFact": "Dans sa réponse du 28 mai 2026 à la COGE (observations 2 et 3, pp. 1–2), la Municipalité indique analyser techniquement et financièrement la recherche plein texte des documents dans les rubriques du Conseil communal. Elle annonce aussi un audit externe d’accessibilité du site et des PDF pour 2026. Le moteur global cherche déjà dans les PDF ; la lacune concerne les moteurs contextuels.",
+        "deduction": "Le besoin porte sur l’accès aux documents et aux prestations numériques. Ces pièces ne prouvent ni un marché ouvert ni une attribution ; la réalisation effective des mesures annoncées pour 2026 reste inconnue au 29 octobre.",
+        "primeReading": "Qualifier avec la Chancellerie et le Service population et numérique les travaux restant à réaliser et les interfaces éventuelles avec la gestion documentaire. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+        "sourceVerification": "primary-source-read",
+        "reviewedAt": "2026-10-29T08:15:07Z"
+      }
     },
     {
       "id": "e41ff5f60e3e01125f5da5df61f12304d7ebc1f1560b38c99c1f4d43b692648d",
@@ -48,7 +79,18 @@
       "publicationDate": "2026-02-26",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "calendar-not-current",
+        "reason": "Le préavis SCI du 26.02.2026 prévoit achat au premier semestre et mise en service en juillet–août 2026, puis déploiement 2026–2031. Aucun état actuel ni prestation externe encore ouverte établi. Non publié faute de fenêtre commerciale actuelle démontrée ; aucune attribution ou livraison supposée.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2026_preavis/PR26.05PR_Solution_informatique_SCI.pdf"
+        ]
+      }
     },
     {
       "id": "b2d94b2deec0870ee518d57b3d1b1d16b17f4e49eeb2999b101a8e35fd404208",
@@ -63,7 +105,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "calendar-not-current",
+        "reason": "Rapport de commission du même dossier SCI (PR26.05), acquisition et mise en service prévues en 2026 ; pas de preuve nouvelle d’un marché restant ouvert. Ne pas convertir le calendrier prévisionnel en livraison avérée.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2026_rapports/PR26.05RA_Solution_informatique_SCI.pdf"
+        ]
+      }
     },
     {
       "id": "f7e566dc775e5f7ebdf861e70817ef27412c8d067f0b66b64b5ab315340250e3",
@@ -78,7 +131,18 @@
       "publicationDate": "2025-05-22",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "superseded-context",
+        "reason": "Rapport de gestion 2024 consulté : contexte historique ; pas de nouveau besoin encore ouvert établi en complément des pièces 2026 retenues.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2025_preavis/PR25.12PR_RapportGestion2024-Interactif.pdf"
+        ]
+      }
     },
     {
       "id": "f0d1d44652c1bbfd1d9489ecd1a31dc007c9a917e9ce40d245f03e03d5eed20c",
@@ -93,7 +157,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "superseded-context",
+        "reason": "Réponses sur la gestion 2024 consultées ; pas de nouveau marché logiciel établi. Les besoins actuels de recherche documentaire sont regroupés sous la réponse municipale de 2026.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Pilier_public_virtuel/ReponsesObservations2024.pdf"
+        ]
+      }
     },
     {
       "id": "55c63317135546fd983d69cf0a1104ebdaebb7f3469ee16a2371586bc613aa26",
@@ -108,7 +183,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "superseded-context",
+        "reason": "Rapport COGE 2024 consulté ; les outils et projets cités ne démontrent pas une nouvelle fenêtre commerciale au 29.10.2026. Contexte 2026 traité séparément.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2025_rapports/PR25.12RA_COGE_RapportGestion2024.pdf"
+        ]
+      }
     },
     {
       "id": "08e78a30d96b4d7354cd399abd515c1ee5455a17e910ddd5a318bf305fe49701",
@@ -123,7 +209,18 @@
       "publicationDate": "2025-01-16",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : digital",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Préavis consulté : guidage des parkings, capteurs et affichage de disponibilité ; aucun besoin ERP, GED ou facturation Prime établi.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2025_preavis/PR25.03PR_CreditInverstissementGestionDigitaliseeParking.pdf"
+        ]
+      }
     },
     {
       "id": "6119f975c7c7c936f58d265ae84c8764de6d013881423c9d21daea5e8a8aed45",
@@ -138,7 +235,18 @@
       "publicationDate": "2024-02-01",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : digital",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "related-outside-scope",
+        "reason": "Désignation de commission relative au même dossier de guidage des parkings PR25.03 ; pas un besoin logiciel métier Prime distinct.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Aff_comm_preavis/2025_acp/PR25.03PR_Aff_CreditInverstissementGestionDigitaliseeParking.pdf"
+        ]
+      }
     },
     {
       "id": "2c5000897b1321317515a1b75800ed35f7cb58e79cac1fc1bd8ae3a346e8cd91",
@@ -153,7 +261,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : digital",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Rapport de commission consulté : même projet spécialisé de comptage/guidage des parkings PR25.03 ; pas un marché métier Prime établi.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2025_rapports/PR25.03RA_CreditInverstissementGestionDigitaliseeParking.pdf"
+        ]
+      }
     },
     {
       "id": "fac066e32b2dd047bb8ea7a95a262bfd3944644573192be05e65740de898fc81",
@@ -168,7 +287,18 @@
       "publicationDate": "2024-04-25",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-programme",
+        "reason": "Préavis de transformation numérique de 2024 consulté : programme de CHF 1,6 million avec migrations envisagées en 2025–2026. Pas de preuve actuelle de lot encore ouvert ; ne pas republier le programme historique comme nouvelle opportunité. Besoin documentaire 2026 traité séparément.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2024_preavis/PR24.12PR_DemandeCreditNumeriqueV2.pdf"
+        ]
+      }
     },
     {
       "id": "860df338474a0951dd6d8bb14f3227b3a95900d9c5436d57bfc1f41fb3063121",
@@ -183,7 +313,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-programme",
+        "reason": "Rapport PR24.12 consulté, relatif au programme numérique de 2024. Contexte ancien, sans nouvel état de marché au 29.10.2026.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2024_rapports/PR24.12RA_DemandeCreditNumerique.pdf"
+        ]
+      }
     },
     {
       "id": "4599169e162e842fd486dd98f434484073c692d2983dc1f42adc711d6197fb83",
@@ -198,7 +339,18 @@
       "publicationDate": "2024-06-20",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2024_preavis/PR24.08PR_RG2023.pdf"
+        ]
+      }
     },
     {
       "id": "addcfd1516185b0eb441004c124ceec70af7fa4f6c1706bd96333c2386de96dd",
@@ -213,7 +365,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2024_rapports/ReponsesObservations2023.pdf"
+        ]
+      }
     },
     {
       "id": "782076bb0bb86ff60aa53aa52accfb560d8008eef119ea84b0b2bbde6afdc016",
@@ -228,7 +391,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2024_rapports/PR24.08RA_COGE_RapportGestion2023_2.pdf"
+        ]
+      }
     },
     {
       "id": "8816029b5bb244138c9369f53ba711cd050c20357d8e5465ed96c0b4d320d291",
@@ -243,7 +417,18 @@
       "publicationDate": "2023-04-03",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2023_preavis/PR23.08PR_vol.1_RapportGestion2022.pdf"
+        ]
+      }
     },
     {
       "id": "86f4054dc03435aab0a069d226989004cce347a4281f4f53584293da9ef5d8b3",
@@ -258,7 +443,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2023_rapports/COGE_ReponsesObservations.pdf"
+        ]
+      }
     },
     {
       "id": "a58e8ec154062bd08a289a50f8bf2242c83c7f90ffceae9a62485490cb499775",
@@ -273,7 +469,18 @@
       "publicationDate": "2023-04-27",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2023_rapports/PR23.08RA_COGE_RapportGestion2022.pdf"
+        ]
+      }
     },
     {
       "id": "1e9b8bf544efb92b6aee0a4d1f528544649422800b767d575fb6d782070de83d",
@@ -288,7 +495,18 @@
       "publicationDate": "2022-11-03",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : cyber",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.32PR_Cyberadministration.pdf"
+        ]
+      }
     },
     {
       "id": "dc1b412354b2daa68bdbcee2d06d0baaba59fe903d4075ea5ba787f0d14429ef",
@@ -303,7 +521,18 @@
       "publicationDate": "2022-10-12",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : cyber",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2022_rapports/PR22.32RA_Cyberadministration.pdf"
+        ]
+      }
     },
     {
       "id": "135fef25fc9cbf19d8933ea442aee306653b76baaf3a8f50a1108583a33a8aa9",
@@ -318,7 +547,18 @@
       "publicationDate": "2022-08-25",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : population",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.24PR_ParticipationPopulationPDLGare-Lac.pdf"
+        ]
+      }
     },
     {
       "id": "bd47164137c5a7124f04598cbc99e85c14ef8f5bb8b95e8aa88abce27d705735",
@@ -333,7 +573,18 @@
       "publicationDate": "2022-08-11",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.15PR_TransformationNumerique.pdf"
+        ]
+      }
     },
     {
       "id": "1395374408be4e19604942ef306679e4b572fc8ffcbe9cf38a7b5fcb705aa5dd",
@@ -348,7 +599,18 @@
       "publicationDate": "2022-08-11",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2022_rapports/PR22.15RA_TransformationNumerique.pdf"
+        ]
+      }
     },
     {
       "id": "2703ec450b594c862298a73c3cbbf3dacf1e079bbe05a9ff12bcd8610193a326",
@@ -363,7 +625,18 @@
       "publicationDate": "2022-04-13",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://yverdon.rapportannuel.ch/"
+        ]
+      }
     },
     {
       "id": "8e669966b018062d5ec49e9ced7855014a9c175fe493f1cb0544dcff259fa958",
@@ -378,7 +651,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.08PR_Complement_ReponseCC_Voeux_2021.pdf"
+        ]
+      }
     },
     {
       "id": "1d2ba00385d04d7876350f77861a6a97e760ee7d19d4396451baa1538be0a18f",
@@ -393,7 +677,18 @@
       "publicationDate": "2022-04-14",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2022_rapports/COGE_RapportGestion2021.pdf"
+        ]
+      }
     },
     {
       "id": "1fe09615baea936bac9ad336904f03f77f7b1dc4ae22f5681f69b475f239e1a8",
@@ -408,7 +703,18 @@
       "publicationDate": "2021-11-04",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2021_preavis/PR21.43PR_AffichageNumeriqueFrontal.pdf"
+        ]
+      }
     },
     {
       "id": "7a92f07881d251e2bfef3d1586c07bde278d72b476783701f5e4d53d91d0ece1",
@@ -423,7 +729,18 @@
       "publicationDate": "2021-11-04",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2022_rapports/PR21.43RA_AffichageNumeriqueFrontal.pdf"
+        ]
+      }
     },
     {
       "id": "8b02deab87765b5483b5632bd2921c73951b4904a750a7a5811cf438160d4193",
@@ -438,7 +755,18 @@
       "publicationDate": "2021-05-18",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2021_preavis/PR21.10PR_Gestion2020.pdf"
+        ]
+      }
     },
     {
       "id": "8e42086caac41cb482aa24e61493d7eb6a2c5edeb0ddd0bc6c5fd9fa3da27d41",
@@ -453,7 +781,18 @@
       "publicationDate": "2020-06-18",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2020_preavis/PR20.07PR_Gestion2019.pdf"
+        ]
+      }
     },
     {
       "id": "7c508c3574d4d727f74e8e6e7bf4ce6a468510e5883496e9a05c65d0d44fd9f1",
@@ -468,7 +807,18 @@
       "publicationDate": "2019-11-14",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2019_preavis/PR19.33PR_PreavisCollegesInformatique.pdf"
+        ]
+      }
     },
     {
       "id": "d9785f5977a9c4335cd4a9a683d6c542c5032faedbae3e9d7b1786ce22ae352d",
@@ -483,7 +833,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : modernisation",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2020_rapports/PR19.33RA_ModernisationExtensionReseaux.pdf"
+        ]
+      }
     },
     {
       "id": "5b905c098a473adfee8a52c06848ba0c8b4270289b253fb37d0a794fb97c3e85",
@@ -498,7 +859,18 @@
       "publicationDate": "2019-08-12",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2019_preavis/PR19.21PR_ModificationReglementGestionDechets.pdf"
+        ]
+      }
     },
     {
       "id": "8c58d0f41dfe7b51fa0693d4e4ee7f9a55810bac4a1fb1d42b2836bb72943b3c",
@@ -513,7 +885,18 @@
       "publicationDate": "2019-07-26",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2019_rapports/PR19.21RA_ModificationReglementGestionDechets.pdf"
+        ]
+      }
     },
     {
       "id": "eb5a63d86872eaaf1fd3ded9f1b6384ab348ef299ca695504d7afd7ea012bf2f",
@@ -528,7 +911,18 @@
       "publicationDate": "2019-05-28",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2019_rapports/COGE_RapportGestion2018.pdf"
+        ]
+      }
     },
     {
       "id": "fbe812d50d6af1627c9779f51df3a2748e83dd3efbd356229928fbae55598323",
@@ -543,7 +937,18 @@
       "publicationDate": "2019-06-20",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2019_preavis/PR19.08PR_Gestion2018.pdf"
+        ]
+      }
     },
     {
       "id": "08209848a2b3c9241d4b986d33c0f4693716363264de86bcae11d70b79b22c80",
@@ -558,7 +963,18 @@
       "publicationDate": "2019-01-10",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2019_preavis/PR19.01PR_RenouvellementInstallationsGestionTrafic_complet.pdf"
+        ]
+      }
     },
     {
       "id": "84c3007b9377a6786b2169665d16657e4f96c984431b7a30f575fa5782df75bb",
@@ -573,7 +989,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2019_rapports/PR19.01RA_RenouvellementInstallationsGestionTrafic.pdf"
+        ]
+      }
     },
     {
       "id": "1e9dc960c65ed2c06f0f80e4b86911d64448fb4e16ea58f8b99a1928bc287cc5",
@@ -588,7 +1015,18 @@
       "publicationDate": "2018-08-23",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2018_preavis/PR18.20PR_LogicielsPlanificationGestionImmobiliere.pdf"
+        ]
+      }
     },
     {
       "id": "f6ac35e83c024859d27dfbabd6694d4ba41e76df8caf840d24446a877f079f7e",
@@ -603,7 +1041,18 @@
       "publicationDate": "2018-08-16",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2018_rapports/PR18.20RA_LogicielsPlanificationGestionImmobiliere.pdf"
+        ]
+      }
     },
     {
       "id": "4bdd311763e66affee4f094feb2c8a2bb5cc1e21d943c631fb0690261c2a9150",
@@ -618,7 +1067,18 @@
       "publicationDate": "2018-08-16",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2018_preavis/PR18.19PR_TaxeForfaitaireFinancementDechets.pdf"
+        ]
+      }
     },
     {
       "id": "034f6c4724a1e1bb7388213d700dee540326be8c79421e956ea8d1d166ebecba",
@@ -633,7 +1093,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2018_rapports/PR18.19RA_TaxeForfaitaireFinancementDechets.pdf"
+        ]
+      }
     },
     {
       "id": "652b778fbe86c3b41452ff305351b6e54a941d1251d570aa1763cf6e473e8836",
@@ -648,7 +1119,18 @@
       "publicationDate": "2018-07-19",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2018_rapports/PR18.19RA_COFI_TaxeForfaitaireFinancementDechets.pdf"
+        ]
+      }
     },
     {
       "id": "9821921b4a33693b838dc92e766cf9fcad0bab54fce1cf96a94a8e5acfee3464",
@@ -663,7 +1145,18 @@
       "publicationDate": "2018-05-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2018_rapports/COGE_RapportGestion2017.pdf"
+        ]
+      }
     },
     {
       "id": "2d6be9c806441410b5880041af1dac5690bb62a3815b0f74fe15a777d431e4ae",
@@ -678,7 +1171,18 @@
       "publicationDate": "2018-05-08",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2018_preavis/PR18.06PR_Gestion2017.pdf"
+        ]
+      }
     },
     {
       "id": "917f6a8d78c05b49c7d891bfb9ac2df0ee7820cd536e92e7a455b908e002a5de",
@@ -693,7 +1197,18 @@
       "publicationDate": "2017-07-20",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2017_preavis/PR17.13PR_RenouvellementPostesInformatiques.pdf"
+        ]
+      }
     },
     {
       "id": "32364b517bbd062345f6ac3343c67e3f2fca8b97be0cd035defee18999841102",
@@ -708,7 +1223,18 @@
       "publicationDate": "2017-07-14",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2017_rapports/PR17.13RA_RenouvellementPostesInformatiques.pdf"
+        ]
+      }
     },
     {
       "id": "0fa76f94e5f830e0304b1fc4575b8db7a2a1a346fea258d11720c9d00b7508de",
@@ -723,7 +1249,18 @@
       "publicationDate": "2017-06-15",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2017_rapports/COGE_Rapport2017sur2016.pdf"
+        ]
+      }
     },
     {
       "id": "faff45259e7f0f98d5c4123f8fd026866ffde64f760dbb6d76abf66ab1688d72",
@@ -738,7 +1275,18 @@
       "publicationDate": "2017-05-21",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2017_preavis/PR17.04PR_Gestion2016.pdf"
+        ]
+      }
     },
     {
       "id": "ccdc2ac7e571663f022f86a9d62c0c9ba66f84b587332be70c0004af29462147",
@@ -753,7 +1301,18 @@
       "publicationDate": "2016-06-23",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2016_rapports/COGE_Rapport2016surGestion2015.pdf"
+        ]
+      }
     },
     {
       "id": "7106db6889d8293fb02490e7e3923ad63319e2f8bca9a73a9775ee72030847b1",
@@ -768,7 +1327,18 @@
       "publicationDate": "2016-05-24",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2016_preavis/PR16.10PR_Gestion2015.pdf"
+        ]
+      }
     },
     {
       "id": "09fc01249053f5adad15c1786267461e7f3c5503053334fde3fc24eb0cc283e9",
@@ -783,7 +1353,18 @@
       "publicationDate": "2015-12-03",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2015_preavis/PR15.30PR_Renouvellement_Infrastructures_Informatique.pdf"
+        ]
+      }
     },
     {
       "id": "0ac95bdf76b2951a31fd599fc55f7bb0dedc02ed98af92ca8a31df649c8c8962",
@@ -798,7 +1379,18 @@
       "publicationDate": "2015-09-15",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2015_rapports/PR15.30RA_Renouvellement_Infrastructure_Informatique.pdf"
+        ]
+      }
     },
     {
       "id": "12677b454a36e83e17ee82ec5c50bb17379787c8093eb134d41d85282c28895f",
@@ -813,7 +1405,18 @@
       "publicationDate": "2015-06-25",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2015_rapports/COGE_Rapport__sur_gestion__2014.pdf"
+        ]
+      }
     },
     {
       "id": "857e8bb46688ab0efd7c004cd40d4433b3486c59de67592c6e6c9d3033375d2f",
@@ -828,7 +1431,18 @@
       "publicationDate": "2015-04-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2015_preavis/PR15.20PR_Gestion_2014.pdf"
+        ]
+      }
     },
     {
       "id": "6fa1a0013e15a51572518a5cc8e6b5ee95ff791a9bd6b3fa3138bf8ca46c8026",
@@ -843,7 +1457,18 @@
       "publicationDate": "2014-06-26",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2014_rapports/COGE_Rapport_sur_gestion_2013.pdf"
+        ]
+      }
     },
     {
       "id": "c06b90154ee701210a3ac30e9c37ddb3407f19a29043818504795f696a9cd687",
@@ -858,7 +1483,18 @@
       "publicationDate": "2014-04-30",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2014_preavis/PR14.20PR_Gestion_2013_light.pdf"
+        ]
+      }
     },
     {
       "id": "8ffa139b334ef60d9c98f90da8a6df1f562c42da1c5967a533f61a437090604b",
@@ -873,7 +1509,18 @@
       "publicationDate": "2013-08-26",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : modernisation",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2013_preavis/PR13.27PR_Modernisation_stationsDetenteGaz.pdf"
+        ]
+      }
     },
     {
       "id": "c7db481ff3433d04b79e5fe78dec9b9c43aab6b9aba27a37438fed8a1d181d1d",
@@ -888,7 +1535,18 @@
       "publicationDate": "2013-08-26",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : modernisation",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2013_rapports/PR13.27RA_Modernisation_stationsDetenteGaz.pdf"
+        ]
+      }
     },
     {
       "id": "8a56e1db266b90a56fef1a37440cc6c8b94c1759d27d9ea50f4032c3cc5d78b8",
@@ -903,7 +1561,18 @@
       "publicationDate": "2013-08-26",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2013_preavis/PR13.26PR_OptimisationTelegestionGaz.pdf"
+        ]
+      }
     },
     {
       "id": "d1bb80bd8ffceb4e2cf4c43769fe822af328d9276d665ed8be8a35a2c971e88e",
@@ -918,7 +1587,18 @@
       "publicationDate": "2013-08-16",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2013_rapports/PR13.26RA_OptimisationTelegestionGaz.pdf"
+        ]
+      }
     },
     {
       "id": "c399913dd86407a433a4a888f8a0563c310b84d68187bec4e60204072e57aaaf",
@@ -933,7 +1613,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "unrelated-finance",
+        "reason": "Rapport COFIN n° 5 consulté : arrêté d’imposition 2027, finances et endettement ; pas de projet SI identifié.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.gland.ch/fileadmin/documents/pdf/Conseil_communal/2026-2031/rapports_commissions/PREAVIS_5_RAPPORT_COM_FIN.pdf"
+        ]
+      }
     },
     {
       "id": "2d34563fd581ff88315d86794b0f28ec3e05d4dedd54b08d740cba83dde8fde8",
@@ -948,7 +1639,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "unrelated-finance",
+        "reason": "Rapport COFIN n° 4 consulté : autorisation générale en matière de legs, donations et successions ; pas de projet SI identifié.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.gland.ch/fileadmin/documents/pdf/Conseil_communal/2026-2031/rapports_commissions/PREAVIS_4_RAPPORT_COM_FIN.pdf"
+        ]
+      }
     },
     {
       "id": "efc666a89b234d948fdfbdcb09527e434e365bda52f7801c37a2241d7ecc1d6e",
@@ -963,7 +1665,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "unrelated-finance",
+        "reason": "Rapport COFIN n° 3 consulté : placement de trésorerie auprès des banques ; pas de projet SI identifié.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.gland.ch/fileadmin/documents/pdf/Conseil_communal/2026-2031/rapports_commissions/PREAVIS_3_RAPPORT_COM_FIN.pdf"
+        ]
+      }
     },
     {
       "id": "b3bfa9622f23db21853247f9bb9b6a6bdfcd663ca9ddf5ceaf19fb70094521ed",
@@ -978,7 +1691,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "unrelated-finance",
+        "reason": "Rapport COFIN n° 1 consulté : compétences financières générales pour dépenses imprévues ; pas de projet SI identifié.",
+        "sourceVerification": "primary-pdf-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.gland.ch/fileadmin/documents/pdf/Conseil_communal/2026-2031/rapports_commissions/PREAVIS_1_RAPPORT_COM_FIN.pdf"
+        ]
+      }
     },
     {
       "id": "0749b7db5f239853d641c0f46b67620ab489853bb3b49488e8f2e84e3aa8d9db",
@@ -993,7 +1717,20 @@
       "publicationDate": "2026-09-25",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "already-awarded",
+        "reason": "Adjudication publiée : SIMAP 29718-02 du 2026-09-25. Projet déjà attribué, exclu conformément au périmètre prospectif.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=abc10976-8930-42c4-8ede-6562baf6d4bd",
+          "https://www.simap.ch/api/publications/v2/project/abc10976-8930-42c4-8ede-6562baf6d4bd/project-header",
+          "https://www.simap.ch/api/publications/v1/project/abc10976-8930-42c4-8ede-6562baf6d4bd/publication-details/bee09ad1-a44a-4ffe-b660-b2bc8bcccae1"
+        ]
+      }
     },
     {
       "id": "8e4e37a314a087dc27703a084c5fd2adb6038e3c89a32baa0ef4089eab612e70",
@@ -1008,7 +1745,18 @@
       "publicationDate": "2026-09-25",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=080ba68c-9a8c-41f2-be2d-572eb0078dac"
+        ]
+      }
     },
     {
       "id": "0c30e8d1ab95ac687aca5747874bff6a16ac4fbf18f88f09032c5b82008cebef",
@@ -1023,7 +1771,20 @@
       "publicationDate": "2026-09-25",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "abandoned",
+        "reason": "Procédure interrompue : SIMAP 38183-02 du 2026-09-25. Aucune relance établie dans ce candidat.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=46f9a87e-9c3e-4930-a388-138dde3b8264",
+          "https://www.simap.ch/api/publications/v2/project/46f9a87e-9c3e-4930-a388-138dde3b8264/project-header",
+          "https://www.simap.ch/api/publications/v1/project/46f9a87e-9c3e-4930-a388-138dde3b8264/publication-details/562f311f-4895-418b-8e81-d4a31edd9cf9"
+        ]
+      }
     },
     {
       "id": "b7edd560f6d409b7e3812b24a570fb6a373c5a9ee3931b461135a881368692df",
@@ -1038,7 +1799,18 @@
       "publicationDate": "2026-09-28",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=a04917eb-5b2a-42c7-949f-190886237b92"
+        ]
+      }
     },
     {
       "id": "fd4107eeb26ca94be7a50d975513d50fa79b1629e1ddd23ed5c800e4fd25c1d0",
@@ -1053,7 +1825,18 @@
       "publicationDate": "2026-09-28",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=1f464e0c-0ea3-4fe5-898f-807af0fa600c"
+        ]
+      }
     },
     {
       "id": "a9fc47267865ebd71d6f99f9c1ed01608436863d6f49184cda5b7536df2e836b",
@@ -1068,7 +1851,18 @@
       "publicationDate": "2026-09-28",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=6fad470d-38c7-41c5-9517-9725c38dc03d"
+        ]
+      }
     },
     {
       "id": "b79b3cfc71812123c73c5e391d866ff3d2e53727f4c9c3029bec9661ed560dc6",
@@ -1083,7 +1877,18 @@
       "publicationDate": "2026-09-26",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : erp",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=28a15dbe-3307-4f0a-8cf4-9c7583660769"
+        ]
+      }
     },
     {
       "id": "e9d4ce0ab952902c807865ad736fb9b2627fdd8d82402f6525f4ea1566891bb9",
@@ -1098,7 +1903,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2013_rapports/COGE_rapport_2013_sur_gestion_2012.pdf"
+        ]
+      }
     },
     {
       "id": "b9ac342626add5ae1c0a03599d12a2a750c717a9d6af38cb0ba476fbcbb970b5",
@@ -1113,7 +1929,18 @@
       "publicationDate": "2013-04-24",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2013_preavis/PR13.14PR_Gestion_2012.pdf"
+        ]
+      }
     },
     {
       "id": "98691a62795fbc84cb03b69006c6fd523868acaac4e4e1e82e58e238227c82d3",
@@ -1128,7 +1955,18 @@
       "publicationDate": "2013-04-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2013_preavis/PR13.13PR_defibrillateurs_Postulat_Oosterhof.pdf"
+        ]
+      }
     },
     {
       "id": "20b634a10aae22ea01ada179fc6f0e5bbd947faaa201c62d0fa4d41c386b104e",
@@ -1143,7 +1981,18 @@
       "publicationDate": "2013-04-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2013_rapports/PR13.13RA_Defibrillateurs_Postulat_Oosterhof.pdf"
+        ]
+      }
     },
     {
       "id": "115d1eefa584d87df329c4cd5344bbdd5c3aa987cfe68e9b3ce1a795d9ec1fab",
@@ -1158,7 +2007,18 @@
       "publicationDate": "2013-04-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2013_preavis/PR13.12PR_Logiciel_Facturation_SEY.pdf"
+        ]
+      }
     },
     {
       "id": "b15a7ebdd8f41478fb750f3c4af03ba3a0f6bde625ffa1f921f7e34cff0ec029",
@@ -1173,7 +2033,18 @@
       "publicationDate": "2013-04-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2013_rapports/PR13.12RA_Logiciel_Facturation_SEY.pdf"
+        ]
+      }
     },
     {
       "id": "9a7af2a4ed8d7b37715e282616e2df48cdad3fd88750760a3c0670c92111eedd",
@@ -1188,7 +2059,18 @@
       "publicationDate": "2012-05-31",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2012_preavis/PR12.17PR_Reponses_aux_observations_CogestION.pdf"
+        ]
+      }
     },
     {
       "id": "4c3c3561eaddd2220f2394e8a895c487c893219dbab7bc0d9857cec401fd4699",
@@ -1203,7 +2085,18 @@
       "publicationDate": "2012-06-14",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2012_rapports/COGE_rapport_2012_sur_gestion_2011.pdf"
+        ]
+      }
     },
     {
       "id": "8b13b68fe671e54fa888acf01144e94fca98023075e14f71944255188ea82185",
@@ -1218,7 +2111,18 @@
       "publicationDate": "2012-05-21",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2012_rapports/PR12.16RA_compte_et_gestion_Gressy_2011.pdf"
+        ]
+      }
     },
     {
       "id": "e19ae515bf67506de77f8b1df08c0cac641191402926cf51c60dfd0e3dc242ec",
@@ -1233,7 +2137,18 @@
       "publicationDate": "2012-04-18",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2012_preavis/PR12.10PR_Gestion_2011.PDF"
+        ]
+      }
     },
     {
       "id": "7f0c4871e4cbcdf89fe3b96220db83f604da961925b15f672fdd607eabbf9cf4",
@@ -1248,7 +2163,18 @@
       "publicationDate": "2011-04-20",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2011_preavis/PR11.11PR_Gestion_2010.pdf"
+        ]
+      }
     },
     {
       "id": "c0bc09215fb3b13056ec1e05e99ed4c6a19eaf3f907195a970a0aaf1bcc8c77c",
@@ -1263,7 +2189,18 @@
       "publicationDate": "2011-04-14",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2011_preavis/PR11.09PR_Gestion_patrimoine_routier.pdf"
+        ]
+      }
     },
     {
       "id": "223e8291fa72993e5ec6a367e3224a7365453b2ed98e73e0b25d847930b7749a",
@@ -1278,7 +2215,18 @@
       "publicationDate": "2011-04-11",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2011_rapports/PR11.09RA_gestion_patrimoine_routier.pdf"
+        ]
+      }
     },
     {
       "id": "ecd16f4a4ce4f6b3edcc3e8ee60dadc1bbcc7bccc07087cdce2cdf5b016c1364",
@@ -1293,7 +2241,18 @@
       "publicationDate": "2010-12-06",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2010_preavis/PR10.50PR_ReponsesPostulats_Viquerat_et_Oosterhoff_complet.pdf"
+        ]
+      }
     },
     {
       "id": "d297b058430f516ad764257e02b74ccaf022ead35a37121d48a88123a89ab8c9",
@@ -1308,7 +2267,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2010_rapports/PR10.50RA_Rep._Postulats_Viquerat_et_Oosterhoff.pdf"
+        ]
+      }
     },
     {
       "id": "66bed77cbee01082c08218ca1e4755fa7f2802ff95dd25447d9450e944002ec3",
@@ -1323,7 +2293,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2010_preavis/PR10.22PR_gestion2009.pdf"
+        ]
+      }
     },
     {
       "id": "3b760962a9aa1c337d432b182e697daecf7897dad225d6eb32465e20008c04b6",
@@ -1338,7 +2319,18 @@
       "publicationDate": "2010-01-22",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2010_preavis/PR10.03PR_Renouvellement_materiel_informatique.pdf"
+        ]
+      }
     },
     {
       "id": "8a1811e7c4b8f6831cefdafd838363c120992bd7ffb8b35ac10a3f0fc376aebb",
@@ -1353,7 +2345,18 @@
       "publicationDate": "2010-01-14",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2010_rapports/PR10.03RA__Materiel_informatique.pdf"
+        ]
+      }
     },
     {
       "id": "8d0902f94b8999019997cdeac791073a9fd7397b8bedec930bebf5d0b733ccec",
@@ -1368,7 +2371,18 @@
       "publicationDate": "2009-06-25",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2009_rapports/PR09.31RA_Rapport_de_gestion.pdf"
+        ]
+      }
     },
     {
       "id": "1d213308e82ef07ac26ebf7416bf6c41982a899cf57100f836793b838e3d4b91",
@@ -1383,7 +2397,18 @@
       "publicationDate": "2009-09-03",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2009_preavis/PR09.28PRgestion2008.pdf"
+        ]
+      }
     },
     {
       "id": "3d22abf1ecc8c488c234aa6b3f306fe8c60bb7ce392720d5301e7cca56fcf22e",
@@ -1398,7 +2423,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2009_preavis/PR09.24PR_SASAchat_logiciel_jeunesse.pdf"
+        ]
+      }
     },
     {
       "id": "05ad336f175675b9a67a1a9c18b70df42dc14666386a5df52088bfc9239d2bc6",
@@ -1413,7 +2449,18 @@
       "publicationDate": "2009-06-25",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2009_rapports/PR09.24RA__achat_logiciel_jeunesse.pdf"
+        ]
+      }
     },
     {
       "id": "81a15d0acbe77f38cf6754fdd5cf8ca3f92cd41e1d145cff7eb82aa0f054dba4",
@@ -1428,7 +2475,18 @@
       "publicationDate": "2008-11-06",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2008_rapports/PR08.44RA_Arrete_d_imposition_2009.pdf"
+        ]
+      }
     },
     {
       "id": "9a300e73fb6504105864df4c3749a11eb850bf572c5c081318395da533c380e0",
@@ -1443,7 +2501,18 @@
       "publicationDate": "2008-11-06",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : facturation",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2008_preavis/2008_42_SEY_Metering_Code_EDM_et_mise_a_jour_du_systeme_de_facturation.pdf"
+        ]
+      }
     },
     {
       "id": "52bec13aefb0a2c09e0a81bf59002806265c24e655a10d5e15fdc7b584934ce8",
@@ -1458,7 +2527,18 @@
       "publicationDate": "2008-07-11",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2008_preavis/2008_38_Bibliotheque_logiciel_Aloes.pdf"
+        ]
+      }
     },
     {
       "id": "835c37c103ce1680368a12bb005d4f98c2f16038ed7c80c93a9b5f3843f2aaa1",
@@ -1473,7 +2553,18 @@
       "publicationDate": "2008-10-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2008_rapports/PR08.38RA_logiciel_bibliotheque.pdf"
+        ]
+      }
     },
     {
       "id": "d674b3f8708caff71b9d59838d9d94542b2ca56d01f8e75a92e51cc7317e2e99",
@@ -1488,7 +2579,18 @@
       "publicationDate": "2008-10-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2008_rapports/PR08.35RA_COFI_complements.pdf"
+        ]
+      }
     },
     {
       "id": "e0eb178bd80cd88706f7a2692e49da91d37682555fb740612a9e9f6f9b2a1eae",
@@ -1503,7 +2605,18 @@
       "publicationDate": "2008-05-22",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2008_preavis/2008_23_Gestion_-_Reponses_MUNI.pdf"
+        ]
+      }
     },
     {
       "id": "d4ee73b431dbdba5b984e2321084f64e497ba7c557dddf5d43eb261567d3584f",
@@ -1518,7 +2631,18 @@
       "publicationDate": "2008-06-26",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2008_rapports/PR08.23RA_Reponses_CG.pdf"
+        ]
+      }
     },
     {
       "id": "ef127d918007d84ced328968ed42a64c60c016807bf8db83d38d1a463c6672e5",
@@ -1533,7 +2657,18 @@
       "publicationDate": "2007-11-05",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2007_preavis/2007_32_Credit_d_invest._logiciel_stock_SEY-projet_ANA-LOG.pdf"
+        ]
+      }
     },
     {
       "id": "a8b2577630f909a28a9fe2eb0817e728284a4b2dcb7b52809483a1453b28a43d",
@@ -1548,7 +2683,18 @@
       "publicationDate": "2007-12-13",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2007_rapports/2007_32_Rapport_credit_d_invest._logiciel_stocks_SEY_ANA-LOG.pdf"
+        ]
+      }
     },
     {
       "id": "b1887e7430102d05370cc066fd8a22ccc41383c8e3f0187f8f090177a740ff27",
@@ -1563,7 +2709,18 @@
       "publicationDate": "2007-10-03",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2007_preavis/2007_24_Credit_d_invest.SAGREYG__SA_gestion_eau_Yverdon-Grandson_.pdf"
+        ]
+      }
     },
     {
       "id": "53262b8e5743f88799e4898cba191564228e6fea69efdb3eb4e0d7d95a63a1a7",
@@ -1578,7 +2735,18 @@
       "publicationDate": "2007-06-11",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2007_preavis/2007_13_Gestion_-_reponses_MUNI.pdf"
+        ]
+      }
     },
     {
       "id": "e25ac03effd6c67d3aed084251bc1b392e42d8a871fa0230059bdf94498f97fe",
@@ -1593,7 +2761,18 @@
       "publicationDate": "2006-10-05",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2006_preavis/2006_30_Etablissement_d_une_entente_intercommunale_pour_la_gestion_des_batiments_scolaires_....pdf"
+        ]
+      }
     },
     {
       "id": "ce55bcac65d837fd6cf964e4ffcfa6e8292f1ae1b9dba3aae7df58b06aae0d10",
@@ -1608,7 +2787,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2006_preavis/2006_23_Reponses_gestion.pdf"
+        ]
+      }
     },
     {
       "id": "cb5d2174a9fb83c5b233243ed2e6dd0c383e550b61fd07a387e892252017f649",
@@ -1623,7 +2813,18 @@
       "publicationDate": "2006-06-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2006_rapports/2006_23_Rapport_Reponses_gestion.pdf"
+        ]
+      }
     },
     {
       "id": "2da65914220f291f402db2a76eb7f0f52c11d6eb875bf8961564fbbe2ac4c863",
@@ -1638,7 +2839,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2005_preavis/2005_39_preavis_evolutionmaterielinformatique.pdf"
+        ]
+      }
     },
     {
       "id": "68582fd56f7bfc9c00cfdf97d1db2ef2141e3efc3dd9008cce423bcb42fd6860",
@@ -1653,7 +2865,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2005_rapports/2005_39_Rapport_comm_evolutionmaterielinformatique.pdf"
+        ]
+      }
     },
     {
       "id": "c6982577a63e54c15b61daa355196fd80b3ea34e0abf0aa68bba8918aeb373f5",
@@ -1668,7 +2891,18 @@
       "publicationDate": "2005-11-03",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2005_preavis/2005_33_preavis_Reponsesgestion.pdf"
+        ]
+      }
     },
     {
       "id": "7737421f1ff9dcfc6e3a15f159bf5aa138b6f2eea676ee21a41624cf7ea490b4",
@@ -1683,7 +2917,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2005_rapports/2005_33_Rapport_comm_Reponsesgestion.pdf"
+        ]
+      }
     },
     {
       "id": "4bd382c86a843f0faf098179ff7b71d6ab75bada98270602361a67e009c77672",
@@ -1698,7 +2943,18 @@
       "publicationDate": "2005-05-12",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2005_preavis/2005_13_preavis_LogicielMeriersSEY.pdf"
+        ]
+      }
     },
     {
       "id": "5d957143ff3f6da58887d14465c8836c09de64fb49b58bb5808d0de911302627",
@@ -1713,7 +2969,18 @@
       "publicationDate": "2005-05-12",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2005_rapports/2005_13_Rapport_comm_LogicielMetiersSEY.pdf"
+        ]
+      }
     },
     {
       "id": "6d61863bde778f9a6908e3c311fa3891cda94d460b69361f39a3464f26bc8933",
@@ -1728,7 +2995,18 @@
       "publicationDate": "2004-11-04",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2004_preavis/2004_29_preavis_Reponsesgestion.pdf"
+        ]
+      }
     },
     {
       "id": "19759b0b4fb9a6c98744255ffcffa20200f4f6001fc952d1a18c6362e89c22c7",
@@ -1743,7 +3021,18 @@
       "publicationDate": "2004-12-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2004_rapports/2004_29_Rapport_comm_reponsesgestion.pdf"
+        ]
+      }
     },
     {
       "id": "7b00671586a7a1a051a803d561c04fce697649919601ee4d610bda38917d50b2",
@@ -1758,7 +3047,18 @@
       "publicationDate": "2003-12-04",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2003_preavis/2003_25_preavis_reponses_observations_Co_gestion.pdf"
+        ]
+      }
     },
     {
       "id": "110386da49cbb4739f551fa38d02d007e332f396582db69347ca15306c6a4644",
@@ -1773,7 +3073,18 @@
       "publicationDate": "2002-07-04",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2002_preavis/2002_14_preavis_Informatique.pdf"
+        ]
+      }
     },
     {
       "id": "06f23290cbffd37e740c701170d9e473ed0d6e7bf4cea1447b9e93af03309b40",
@@ -1788,7 +3099,18 @@
       "publicationDate": "2001-04-05",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2001_preavis/2001_07_preavis_Musesfinance.pdf"
+        ]
+      }
     },
     {
       "id": "0738e8bb509f6b1b2ddcbae0c96f7db29d9dfa94710e07885beea6b02ba0098d",
@@ -1803,7 +3125,18 @@
       "publicationDate": "2026-02-05",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "keyword-false-positive",
+        "reason": "Postulat relatif à un foyer d’accueil et d’écoute : pas de projet numérique établi ; le mot-clé RH provient du nom ARRHAOUI dans le lien.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Motions_et_postulats/PO26.02PO_M.ARRHAOUI_L_MATI-creation_d_un_foyer_d_accueil_et_d_ecoute.pdf"
+        ]
+      }
     },
     {
       "id": "d10a40dff934f15ac71fd04ed47f8b94c57a448f2ec84382fa2779b145efbec8",
@@ -1818,7 +3151,18 @@
       "publicationDate": "2026-02-05",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "keyword-false-positive",
+        "reason": "Postulat relatif à des solutions de logement durables et abordables : pas de projet SI établi ; le mot-clé RH provient du nom MEIERHANS dans le lien.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Motions_et_postulats/PO26.03PO_Y.MEIERHANS_Solutions_durabes_abordables.pdf"
+        ]
+      }
     },
     {
       "id": "cb7d68b585057b2b7b65fce6e3798661f144516e1b3745846a4bc17a0ee0b6af",
@@ -1833,7 +3177,18 @@
       "publicationDate": "2026-06-04",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "keyword-false-positive",
+        "reason": "Rapport relatif au même postulat sur le logement durable et abordable ; pas de projet SI établi, détection RH dans le nom MEIERHANS.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2026_rapports/PO26.03RA_Y.MEIERHANS_Solutions_durabes_abordables_PROJET.pdf"
+        ]
+      }
     },
     {
       "id": "8d91c9c9eccde9292dee054ab8760e94b5d6408e498523501209e243fc2b0d8a",
@@ -1848,7 +3203,18 @@
       "publicationDate": "2025-11-06",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : données",
-      "status": "pending"
+      "status": "analyzed",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "signalId": "yverdon-recherche-documentaire-accessibilite-2026",
+      "analysis": {
+        "decision": "publish",
+        "reason": "Candidat qualifié ; sources apparentées regroupées dans un seul signal.",
+        "publicFact": "Dans sa réponse du 28 mai 2026 à la COGE (observations 2 et 3, pp. 1–2), la Municipalité indique analyser techniquement et financièrement la recherche plein texte des documents dans les rubriques du Conseil communal. Elle annonce aussi un audit externe d’accessibilité du site et des PDF pour 2026. Le moteur global cherche déjà dans les PDF ; la lacune concerne les moteurs contextuels.",
+        "deduction": "Le besoin porte sur l’accès aux documents et aux prestations numériques. Ces pièces ne prouvent ni un marché ouvert ni une attribution ; la réalisation effective des mesures annoncées pour 2026 reste inconnue au 29 octobre.",
+        "primeReading": "Qualifier avec la Chancellerie et le Service population et numérique les travaux restant à réaliser et les interfaces éventuelles avec la gestion documentaire. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+        "sourceVerification": "primary-source-read",
+        "reviewedAt": "2026-10-29T08:15:07Z"
+      }
     },
     {
       "id": "80e4b8974795031b4d2bdd576c68baec0565af8a85f790945ed8a9f36f5e9b9b",
@@ -1863,7 +3229,18 @@
       "publicationDate": "2024-11-07",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Motions_et_postulats/PO24.11PO_S.MAYOR_Augmentation_pour_FinancementDeuxGrandsFestivalsYverdonnois.pdf"
+        ]
+      }
     },
     {
       "id": "bf35b27d76e1d0b9264e210777354255ef75fee0a4f2b83df52fbb08d7d753e7",
@@ -1878,7 +3255,18 @@
       "publicationDate": "2025-05-01",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2024_rapports/PO24.11RA_S.MAYOR_Augmentation_pour_FinancementDeuxGrandsFestivalsYverdonnois.pdf"
+        ]
+      }
     },
     {
       "id": "8449eb61f07872b8ba60d6aca039055a39472c6b5fdd766e9ab683a78bbdf944",
@@ -1893,7 +3281,18 @@
       "publicationDate": "2024-05-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Motions_et_postulats/MO24.01_Motion_Commission_de_Recours_Par_Mme_A.-L.GILLIERON_ReglementGestionDechets.pdf"
+        ]
+      }
     },
     {
       "id": "6bc50ea74e30e3b1763fd4fd952bb55c44abc7b4d8649b67f2e912e565656352",
@@ -1908,7 +3307,18 @@
       "publicationDate": "2022-02-03",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : population",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Motions_et_postulats/PO21.15PO_Postulat_MLovey_Consorts_PourUneDetteCommunaleAuxMainsDeLaPopulation.pdf"
+        ]
+      }
     },
     {
       "id": "ff157b470af437ebb71ba655e3c63f3137e152a9fee6ce9a7f9b459899217be1",
@@ -1923,7 +3333,18 @@
       "publicationDate": "2017-10-05",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Motions_et_postulats/2017.10.05_Motion_ABriand_PolitiqueGestionPatrimoineImmobilier.pdf"
+        ]
+      }
     },
     {
       "id": "a6a794606fc8bf8e7ae3402d911282fc7a3b8b2c6977cf152778703f2434535c",
@@ -1938,7 +3359,18 @@
       "publicationDate": "2018-03-01",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "historical-document",
+        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2017_rapports/RA_MotionBriand_PolitiqueGestionPatrimoineImmobilier.pdf"
+        ]
+      }
     },
     {
       "id": "a5508e11345ccd4387864a4ee79db7859ccb89b991387f5b6f6570e929f183a3",
@@ -1953,7 +3385,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : digital",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "external-vendor-link",
+        "reason": "Lien de prestataire web WNG ; aucune demande communale ou nouvelle acquisition établie.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.wng.ch/"
+        ]
+      }
     },
     {
       "id": "8cd028edb070674d5c705568407eda17a9bac2666884434808fea769c0d40dbe",
@@ -1968,7 +3411,18 @@
       "publicationDate": "2026-09-30",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=343d0b78-7688-4de6-a742-9f083898c3b2"
+        ]
+      }
     },
     {
       "id": "6c11b240d58be509d088b7be4fd5b7748530d3f079e166df3c5755680afb1c52",
@@ -1983,7 +3437,20 @@
       "publicationDate": "2026-09-30",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : modernisation",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-municipal-scope",
+        "reason": "Statistique Vaud : location de services pour la modernisation du SI cantonal, hors marché communal et hors acquisition ERP Prime.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=842dadbc-f7b7-4b68-a414-cdb2a444a486",
+          "https://www.simap.ch/api/publications/v2/project/842dadbc-f7b7-4b68-a414-cdb2a444a486/project-header",
+          "https://www.simap.ch/api/publications/v1/project/842dadbc-f7b7-4b68-a414-cdb2a444a486/publication-details/dc2c07dd-ce41-4ec2-90e7-e4de881deed9"
+        ]
+      }
     },
     {
       "id": "daef79139db1d46d31a686c5eea6e8c17b55835f25bbabc7ad91f513745c7d57",
@@ -1998,7 +3465,18 @@
       "publicationDate": "2026-09-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=7fbfe9ff-3ce0-4e9f-b9a2-bfcc92f90c86"
+        ]
+      }
     },
     {
       "id": "13a915aeca906c2a7d3d2127ef6b2b215c3ee36260a820c6aa5ab6a3c5198e91",
@@ -2013,7 +3491,18 @@
       "publicationDate": "2026-09-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=2433e872-d8ad-493e-847f-3a9952c4f4ab"
+        ]
+      }
     },
     {
       "id": "586bced9483881a658816b9361d4427e4bd960e5db785e7a084781c048e12038",
@@ -2028,7 +3517,18 @@
       "publicationDate": "2026-09-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "analyzed",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "signalId": "lausanne-ressources-projets-business-analysis-2026",
+      "analysis": {
+        "decision": "publish",
+        "reason": "Candidat qualifié ; sources apparentées regroupées dans un seul signal.",
+        "publicFact": "Le SOI de la Ville de Lausanne a publié le marché SIMAP 45005-01 : trois lots pour la conduite de projets métier, de projets techniques et la Business Analysis, avec deux prestataires référencés par lot. Les prestations sont prévues du 1er février 2027 au 31 décembre 2030, avec une prolongation possible d’un an. Le délai d’offre est le 2 novembre 2026 à 16 h, heure suisse. Consortium et sous-traitance sont exclus dans l’avis.",
+        "deduction": "Il s’agit d’un marché de ressources et d’accompagnement SI, sans achat ERP démontré. L’échéance proche et l’interdiction de sous-traiter imposent de vérifier immédiatement la capacité de réponse directe et les critères du dossier.",
+        "primeReading": "Évaluer uniquement les lots correspondant aux compétences et disponibilités de Prime. Lausanne est cliente Prime ; cela ne renseigne pas le statut de ce marché. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+        "sourceVerification": "primary-source-read",
+        "reviewedAt": "2026-10-29T08:15:07Z"
+      }
     },
     {
       "id": "7fcb1d7025f16f39575624d6029a74ae6bec82e9967f9fbded60bfd7b837d7c9",
@@ -2043,7 +3543,18 @@
       "publicationDate": "2026-09-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "analyzed",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "signalId": "lausanne-abacus-licences-support-2027-2031",
+      "analysis": {
+        "decision": "publish",
+        "reason": "Candidat qualifié ; sources apparentées regroupées dans un seul signal.",
+        "publicFact": "Le SOI de la Ville de Lausanne recherche un intégrateur pour fournir les licences de sa solution financière Abacus et assurer maintenance et support sur 2027–2031, avec une prolongation possible d’un an. L’avis SIMAP 45018-01 prévoit des tarifs journaliers par profil et précise que les jours sont estimatifs. Le délai d’offre est le 2 novembre 2026 à 11 h 30, heure suisse. Consortium et sous-traitance sont exclus dans l’avis.",
+        "deduction": "La dernière publication publique consultée le 29 octobre est un appel d’offres, sans adjudication dans cet en-tête. Le besoin correspond directement à l’intégration Abacus ; il concerne l’exploitation de la solution financière, sans remplacement d’ERP démontré. L’éligibilité de Prime dépend des critères complets du dossier.",
+        "primeReading": "Priorité à une qualification immédiate du périmètre, des critères et de la capacité de réponse directe. Lausanne est cliente Prime ; cela ne renseigne pas le statut de ce marché. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+        "sourceVerification": "primary-source-read",
+        "reviewedAt": "2026-10-29T08:15:07Z"
+      }
     },
     {
       "id": "35b337708bba4a9178b93f6cdc17650caa353aef1f4b4fa4592970724f64fe16",
@@ -2058,7 +3569,20 @@
       "publicationDate": "2026-10-01",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "already-awarded",
+        "reason": "Adjudication publiée : SIMAP 21214-03 du 2026-10-01. Projet déjà attribué, exclu conformément au périmètre prospectif.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=e164268c-5c1d-4538-ad75-ef48b7964f48",
+          "https://www.simap.ch/api/publications/v2/project/e164268c-5c1d-4538-ad75-ef48b7964f48/project-header",
+          "https://www.simap.ch/api/publications/v1/project/e164268c-5c1d-4538-ad75-ef48b7964f48/publication-details/739fcbf5-eddc-405b-a462-746a0f4e394a"
+        ]
+      }
     },
     {
       "id": "f2711c36953992fa5256f190f9e07e7bb621cf726d9d6dd2618d5812a9c3b8d6",
@@ -2073,7 +3597,20 @@
       "publicationDate": "2026-10-01",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "already-awarded",
+        "reason": "Adjudication publiée : SIMAP 21790-03 du 2026-10-01. Projet déjà attribué, exclu conformément au périmètre prospectif.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=6b3c8614-8647-4f7b-b4bd-5d7e2cf135c8",
+          "https://www.simap.ch/api/publications/v2/project/6b3c8614-8647-4f7b-b4bd-5d7e2cf135c8/project-header",
+          "https://www.simap.ch/api/publications/v1/project/6b3c8614-8647-4f7b-b4bd-5d7e2cf135c8/publication-details/b7060d03-599f-4a9e-ba36-1fafd2ef05cc"
+        ]
+      }
     },
     {
       "id": "c9d6e56c42b4a2a3f6e0c6affaaa6d3c9485998a4ef15847000fadf34c541b68",
@@ -2088,7 +3625,18 @@
       "publicationDate": "2026-10-01",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=10b23ca4-f4d4-40f9-9013-3434537f2019"
+        ]
+      }
     },
     {
       "id": "4f1d2e8aaabf1c4eaa04d8fcc96aee28a9ce8faf07ad8b6b475a551676ff2c82",
@@ -2103,7 +3651,20 @@
       "publicationDate": "2026-10-01",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-municipal-scope",
+        "reason": "OCSIN : RFI cantonal pour cachetage électronique et horodatage, réponses au 27.11.2026. Ce n’est pas un appel d’offres ni un besoin communal établi ; pas de rattachement à la Ville de Genève.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=c217154b-b431-433b-a506-5a06d810dba2",
+          "https://www.simap.ch/api/publications/v2/project/c217154b-b431-433b-a506-5a06d810dba2/project-header",
+          "https://www.simap.ch/api/publications/v1/project/c217154b-b431-433b-a506-5a06d810dba2/publication-details/a82d5571-8983-4aa9-a2a3-ed8010c369d8"
+        ]
+      }
     },
     {
       "id": "d7332b4de4b4ca635fd1c472800014993e3110c4c3d34bc3a67630e29000f64a",
@@ -2118,7 +3679,18 @@
       "publicationDate": "2026-10-01",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=b93ffe8c-5f1e-416c-9938-a6ba9d28474c"
+        ]
+      }
     },
     {
       "id": "15b239743b75c3b7ce5c6380ddeb30ad46cc4cd195cc228518eee7d0846a1640",
@@ -2133,7 +3705,18 @@
       "publicationDate": "2026-10-05",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=d39d3401-ecc9-4ebf-9898-2732e4b0494c"
+        ]
+      }
     },
     {
       "id": "ca1c4fcbce6b2e27632e0e4d726e99be5b35cec7880d525e126a126057a4bf5b",
@@ -2148,7 +3731,18 @@
       "publicationDate": "2026-10-05",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=840e7364-a194-4b56-8133-a9ff7a67ee5b"
+        ]
+      }
     },
     {
       "id": "c4b5d0b61b6238a4ff5fc95977d29fb8c73f7f880dbdee9e6540884d9a58768c",
@@ -2163,7 +3757,20 @@
       "publicationDate": "2026-10-03",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "already-awarded",
+        "reason": "Adjudication publiée : SIMAP 35082-03 du 2026-10-03. Projet déjà attribué, exclu conformément au périmètre prospectif.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=5d0cd105-08d2-459b-92c4-a94c25f005f3",
+          "https://www.simap.ch/api/publications/v2/project/5d0cd105-08d2-459b-92c4-a94c25f005f3/project-header",
+          "https://www.simap.ch/api/publications/v1/project/5d0cd105-08d2-459b-92c4-a94c25f005f3/publication-details/270b411f-d618-42d8-bd82-1a98e4db389a"
+        ]
+      }
     },
     {
       "id": "3da0e7c4f077de0709fa789c8b1546094832f05edd40c4653f46f19866d2e511",
@@ -2178,7 +3785,18 @@
       "publicationDate": "2026-10-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=8165ac4e-bd6b-4385-b1cf-24c034f9067e"
+        ]
+      }
     },
     {
       "id": "e49a5a20dba409d7e725c977f7a472d83edd63e00676d6e8cc7f3ef0d477feb9",
@@ -2193,7 +3811,20 @@
       "publicationDate": "2026-10-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "État de Fribourg : intégration SAP SuccessFactors et SAP Analytics Cloud, hors solutions Prime établies et hors commune. Ne pas confondre avec le dossier ERP de la Ville de Fribourg.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=45d54a70-cb99-4b03-838e-a070ad36cd32",
+          "https://www.simap.ch/api/publications/v2/project/45d54a70-cb99-4b03-838e-a070ad36cd32/project-header",
+          "https://www.simap.ch/api/publications/v1/project/45d54a70-cb99-4b03-838e-a070ad36cd32/publication-details/0d1eccfc-2571-4e37-8f55-69d82b9300e7"
+        ]
+      }
     },
     {
       "id": "91e6ab39daacba9e33f892789bd41998092e657f2cad65a0a68a031bbd65add4",
@@ -2208,7 +3839,18 @@
       "publicationDate": "2026-10-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=5d3ab28f-730a-4580-9918-68f1e9352e1a"
+        ]
+      }
     },
     {
       "id": "b021c26a9204d92d21aeff784d065d6eb45557f89e401d93eae5c9cbf914f97a",
@@ -2223,7 +3865,18 @@
       "publicationDate": "2026-10-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=74edb7dd-2e88-4bce-b7d0-6c3a50b45828"
+        ]
+      }
     },
     {
       "id": "5d82d67c69bff96a300cf79aeb19b30db492a115ced828ce5b5acaaf71db55f8",
@@ -2238,7 +3891,18 @@
       "publicationDate": "2026-10-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=e7e0761e-99cf-4f2c-981e-6b0ef31094d5"
+        ]
+      }
     },
     {
       "id": "754b27159fe9b085b0b070c4fdc256f29a52e7924e671d2a32723d293e4b5880",
@@ -2253,7 +3917,20 @@
       "publicationDate": "2026-10-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-municipal-scope",
+        "reason": "État de Fribourg : renouvellement Varonis SaaS, hors besoin communal ou ERP/GED Prime établi.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=846cffd2-cb36-4802-8ce4-1cfa995d520e",
+          "https://www.simap.ch/api/publications/v2/project/846cffd2-cb36-4802-8ce4-1cfa995d520e/project-header",
+          "https://www.simap.ch/api/publications/v1/project/846cffd2-cb36-4802-8ce4-1cfa995d520e/publication-details/80348060-85f6-4c6a-9d96-2261a79c7ac2"
+        ]
+      }
     },
     {
       "id": "04d9711ec70f0bb75dbcb5c3a354a171cbae97d81804f3ad822bad3b064cc2b1",
@@ -2268,7 +3945,18 @@
       "publicationDate": "2026-10-02",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=e02bfd7f-d077-4011-a7e9-cb4165610d97"
+        ]
+      }
     },
     {
       "id": "d3432167acb4939508e422faf1badb9e8c9c01a5f37da035a04bbecb97c9bcf3",
@@ -2283,7 +3971,18 @@
       "publicationDate": "2026-10-07",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=bc4a52ee-2a33-40fb-912f-d4863b9285bf"
+        ]
+      }
     },
     {
       "id": "4291c3ba0cdc0764d19d14bcdd0ebab74a50b4d0086d47b63b6e1819327afd5e",
@@ -2298,7 +3997,18 @@
       "publicationDate": "2026-10-07",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=cbd6cc80-5792-4a2c-88f1-ec6b22ce3201"
+        ]
+      }
     },
     {
       "id": "4166bb1d07d83775f7ba4401667bd3aaf795c56fdd557a08b097b78b1f38b420",
@@ -2313,7 +4023,20 @@
       "publicationDate": "2026-10-07",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "already-awarded",
+        "reason": "Adjudication publiée : SIMAP 40150-02 du 2026-10-07. Projet déjà attribué, exclu conformément au périmètre prospectif.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=28924f2c-9875-4618-afde-d276d8e2beca",
+          "https://www.simap.ch/api/publications/v2/project/28924f2c-9875-4618-afde-d276d8e2beca/project-header",
+          "https://www.simap.ch/api/publications/v1/project/28924f2c-9875-4618-afde-d276d8e2beca/publication-details/731fbdec-53cb-408a-87c8-96f17badc314"
+        ]
+      }
     },
     {
       "id": "ee7e4ae64e01bdc4992598f8bc47ef9029a36463a52bf2822fe6e9c8ee54dbfb",
@@ -2328,7 +4051,20 @@
       "publicationDate": "2026-10-06",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "DIT de Genève : assistance métier géomatique cantonale ; le texte exclut le développement de solutions informatiques.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=be20c76f-3afd-47dc-b6c8-6f7b89b56a0b",
+          "https://www.simap.ch/api/publications/v2/project/be20c76f-3afd-47dc-b6c8-6f7b89b56a0b/project-header",
+          "https://www.simap.ch/api/publications/v1/project/be20c76f-3afd-47dc-b6c8-6f7b89b56a0b/publication-details/068acbae-11f0-4c35-866b-d2e11fd28df1"
+        ]
+      }
     },
     {
       "id": "07c5e7163c22179993c7e03cce1fa32714c88110043c02780f89fa34700b7ea7",
@@ -2343,7 +4079,20 @@
       "publicationDate": "2026-10-08",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : cloud",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Canton de Neuchâtel : intégration SAP Analytics Cloud/Datasphere déjà choisis, hors offre métier Prime établie et hors commune.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=f589be44-4c1f-426d-8d46-6a93aefaec25",
+          "https://www.simap.ch/api/publications/v2/project/f589be44-4c1f-426d-8d46-6a93aefaec25/project-header",
+          "https://www.simap.ch/api/publications/v1/project/f589be44-4c1f-426d-8d46-6a93aefaec25/publication-details/46bf75c3-1f93-4cd7-af75-454c2c2c75ff"
+        ]
+      }
     },
     {
       "id": "b62cdf22a7f47cd32ca52dfcff6fb69ccf3023b8964f3756925dad6ca9c9db31",
@@ -2358,7 +4107,20 @@
       "publicationDate": "2026-10-12",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-municipal-scope",
+        "reason": "DGNSI vaudoise : remplacement d’outil Discovery pour inventaire des ressources IT, hors besoin communal métier établi.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=5be46c5d-82ed-4245-87a2-552f51965981",
+          "https://www.simap.ch/api/publications/v2/project/5be46c5d-82ed-4245-87a2-552f51965981/project-header",
+          "https://www.simap.ch/api/publications/v1/project/5be46c5d-82ed-4245-87a2-552f51965981/publication-details/2692c15e-aa7d-44be-9033-11c570a40063"
+        ]
+      }
     },
     {
       "id": "2655bb4a5348841b4e5f03ecd0ec1a4dc71c5b2234911641e074ba2ee11db710",
@@ -2373,7 +4135,18 @@
       "publicationDate": "2026-10-10",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=bafc3593-9e67-4538-8047-3895ee38f241"
+        ]
+      }
     },
     {
       "id": "58f30c51e0bada1b80cd7b664ac7fe58a096b7ca1dd8c4941e69920fe7979186",
@@ -2388,7 +4161,18 @@
       "publicationDate": "2026-10-09",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=206cb499-734c-4555-b988-13ba4c39503e"
+        ]
+      }
     },
     {
       "id": "a60e682af724e9da49cdd968eec1bcb4a8a1c5296d866b35b76951f3e30718a1",
@@ -2403,7 +4187,20 @@
       "publicationDate": "2026-10-09",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "already-awarded",
+        "reason": "Adjudication publiée : SIMAP 37229-02 du 2026-10-09. Projet déjà attribué, exclu conformément au périmètre prospectif.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=f49f8fee-d889-43f1-b145-465bb602dd25",
+          "https://www.simap.ch/api/publications/v2/project/f49f8fee-d889-43f1-b145-465bb602dd25/project-header",
+          "https://www.simap.ch/api/publications/v1/project/f49f8fee-d889-43f1-b145-465bb602dd25/publication-details/2fa3c8d5-5c9d-4a80-9d33-ed5ceb5155f5"
+        ]
+      }
     },
     {
       "id": "452bb8a38cde7533629a2d7825f6ef178ae974b5dff0f07151dbc3c3905d3f34",
@@ -2418,7 +4215,18 @@
       "publicationDate": "2026-10-09",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=0eacbca5-c716-49e1-bb21-7de03107aa00"
+        ]
+      }
     },
     {
       "id": "c163222fb2dc4aac2b841aab1b66a851b8a355004cde50cd8d7d749f561d2c9f",
@@ -2433,7 +4241,18 @@
       "publicationDate": "2026-10-09",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=a672b435-a3e7-4127-ae57-d3d594b7759a"
+        ]
+      }
     },
     {
       "id": "06798da30062d0d47ad95a0a26693f2b987cd221f0181ddccf931a772a597bc9",
@@ -2448,7 +4267,18 @@
       "publicationDate": "2026-10-09",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : migration",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=ed98d423-1e99-405f-94ad-4b9f5aaa2f70"
+        ]
+      }
     },
     {
       "id": "d69711d6272752b9913d1dde08babc9f3e48b26eca8abb5507e1815747b3e500",
@@ -2463,7 +4293,20 @@
       "publicationDate": "2026-10-09",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "SITel cantonal : exploitation Azure DevOps, CI/CD et Kubernetes, hors périmètre communal et solutions métier Prime établies.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=64369a57-bfe6-4447-a890-feb156aee5bb",
+          "https://www.simap.ch/api/publications/v2/project/64369a57-bfe6-4447-a890-feb156aee5bb/project-header",
+          "https://www.simap.ch/api/publications/v1/project/64369a57-bfe6-4447-a890-feb156aee5bb/publication-details/e0bb60c5-f7cd-4d28-9ff1-436bfab3a10c"
+        ]
+      }
     },
     {
       "id": "71c20516a30d6260cbef60ca43d80869556f874e162cb40e4e86bdfc8b75f4dc",
@@ -2478,7 +4321,18 @@
       "publicationDate": "2026-10-14",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=cf1c8d91-725c-4afb-8263-14d3f4225c65"
+        ]
+      }
     },
     {
       "id": "29d7eac347953db9c91945a5614e979df2c5dcb0a496555c74277878361d48d1",
@@ -2493,7 +4347,18 @@
       "publicationDate": "2026-10-14",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : erp",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=939e79da-3347-4e41-9318-4ab4bc85f475"
+        ]
+      }
     },
     {
       "id": "ef6f4d59b4f114d6c6f9ad95b3ebfe307236a71be4fe3294623fba8eb358208f",
@@ -2508,7 +4373,20 @@
       "publicationDate": "2026-10-14",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : cloud",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "ECA Vaud : contrat-cadre de location de personnel IT en 12 lots, hors besoin communal ERP/GED établi.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=c49a7004-8349-46f8-8a64-003dc1565e62",
+          "https://www.simap.ch/api/publications/v2/project/c49a7004-8349-46f8-8a64-003dc1565e62/project-header",
+          "https://www.simap.ch/api/publications/v1/project/c49a7004-8349-46f8-8a64-003dc1565e62/publication-details/f8a3ade7-d27d-4e25-aaba-853bd8af3bc0"
+        ]
+      }
     },
     {
       "id": "199d0d4f592b1649956055507e1aa9088d0353d22c117ef9d5ab12ec9047d8a6",
@@ -2523,7 +4401,18 @@
       "publicationDate": "2026-10-13",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=3ceab648-a2d0-4906-9f3f-bce4c5df442d"
+        ]
+      }
     },
     {
       "id": "9e233ac1cf09f6bac7257d82c0ec6a4be83bf0951c5d1ed655a6bca047d1af33",
@@ -2538,7 +4427,18 @@
       "publicationDate": "2026-10-16",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=259f8217-9084-4def-851d-4296f722d919"
+        ]
+      }
     },
     {
       "id": "7a7c5209369f949dc3939516cbeca75c4e887c10144642cec383bf45347b9584",
@@ -2553,7 +4453,18 @@
       "publicationDate": "2026-10-16",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : portail",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=13ddea55-2cbc-4b71-947b-4b07385e5572"
+        ]
+      }
     },
     {
       "id": "6333841c2fa986cfd7239e70ef275dc7a68eb48474236ca4adb90779d534aa49",
@@ -2568,7 +4479,18 @@
       "publicationDate": "2026-10-16",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=be55c522-37de-4e92-9e47-89b3c0733d5e"
+        ]
+      }
     },
     {
       "id": "0326412613bbefe5f99e4fb9bbfd99a31d7421cebdb021b8414fc0a178558492",
@@ -2583,7 +4505,18 @@
       "publicationDate": "2026-10-16",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=5f1a6d17-450a-427e-8696-6cdba3fd8411"
+        ]
+      }
     },
     {
       "id": "dd11b7b7e5c1f21099744791cf1f817f97baf60c7c21674b2e7262ea01757145",
@@ -2598,7 +4531,18 @@
       "publicationDate": "2026-10-19",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=5dab8a6b-d43b-4e1a-88b7-44850b23603b"
+        ]
+      }
     },
     {
       "id": "2af497318343642d7be34b99431f45b1bf7718088edc65a30a8f04e1aefb6568",
@@ -2613,7 +4557,20 @@
       "publicationDate": "2026-10-19",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : saas",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "already-awarded",
+        "reason": "Adjudication publiée : SIMAP 41806-02 du 2026-10-19. Projet déjà attribué, exclu conformément au périmètre prospectif.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=301d6b9d-3c5f-4402-95fb-590c161dcdb4",
+          "https://www.simap.ch/api/publications/v2/project/301d6b9d-3c5f-4402-95fb-590c161dcdb4/project-header",
+          "https://www.simap.ch/api/publications/v1/project/301d6b9d-3c5f-4402-95fb-590c161dcdb4/publication-details/a759e5ef-38e3-469c-b4cd-e8ff79f87114"
+        ]
+      }
     },
     {
       "id": "6b265820f993a6b70c20c0f05124d18e942dfaaf0b8c321e370c679b1e5e2727",
@@ -2628,7 +4585,20 @@
       "publicationDate": "2026-10-19",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : cyber",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "TPG : exercice de gestion de crise cyber sur table, hors besoin communal ERP/GED établi ; ne pas inférer une acquisition logicielle.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=6694cc70-9e7d-4af5-8f98-13e0271a797d",
+          "https://www.simap.ch/api/publications/v2/project/6694cc70-9e7d-4af5-8f98-13e0271a797d/project-header",
+          "https://www.simap.ch/api/publications/v1/project/6694cc70-9e7d-4af5-8f98-13e0271a797d/publication-details/c934501a-735d-4df8-b51b-96bdbfecc3f7"
+        ]
+      }
     },
     {
       "id": "ac8dcbe0ae5d064401f68a8920c12257290d4c9d2550388ee2c694ec89b41de1",
@@ -2643,7 +4613,18 @@
       "publicationDate": "2026-10-19",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=8e22b4ce-c785-4d69-8dee-f8b663c87f72"
+        ]
+      }
     },
     {
       "id": "2e862a9efa98bb8512f7821006cd883d9585608b2799e79c54ab1aa0840c7260",
@@ -2658,7 +4639,18 @@
       "publicationDate": "2026-10-19",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=58dcfc3b-1519-4164-84f0-4ff1498c144c"
+        ]
+      }
     },
     {
       "id": "a4c9deb1e7a80868f25d85c05f4f23debaa254f254b1f3b739e002f04b0ddcf7",
@@ -2673,7 +4665,20 @@
       "publicationDate": "2026-10-19",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "EPI : fourniture et gestion de licences Microsoft, hors marché communal de solutions métier établi.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=fb8679e7-360d-40c3-b7dd-e4e58eb75b32",
+          "https://www.simap.ch/api/publications/v2/project/fb8679e7-360d-40c3-b7dd-e4e58eb75b32/project-header",
+          "https://www.simap.ch/api/publications/v1/project/fb8679e7-360d-40c3-b7dd-e4e58eb75b32/publication-details/2a0435a4-356f-4e5d-838d-cf0f7680cef8"
+        ]
+      }
     },
     {
       "id": "f32e9d1fdb257d85596fed40867c217224f52b066c92c339cbafb20385590bcf",
@@ -2688,7 +4693,20 @@
       "publicationDate": "2026-10-17",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "already-awarded",
+        "reason": "Adjudication publiée : SIMAP 41243-02 du 2026-10-17. Projet déjà attribué, exclu conformément au périmètre prospectif.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=89972c08-279b-4e8e-abef-73d745771807",
+          "https://www.simap.ch/api/publications/v2/project/89972c08-279b-4e8e-abef-73d745771807/project-header",
+          "https://www.simap.ch/api/publications/v1/project/89972c08-279b-4e8e-abef-73d745771807/publication-details/bf28c3ca-b7df-4b4d-ad6b-1bc10f2f889c"
+        ]
+      }
     },
     {
       "id": "ef6484ee99539808d6f59e273ae6b242c36c10b8ec96ed9f602e5479cf65f493",
@@ -2703,7 +4721,20 @@
       "publicationDate": "2026-10-17",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "UNIL : achat de neuf serveurs pour la virtualisation, hors périmètre métier et communal.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=a030f9a1-0852-4bef-a85a-523622a1acea",
+          "https://www.simap.ch/api/publications/v2/project/a030f9a1-0852-4bef-a85a-523622a1acea/project-header",
+          "https://www.simap.ch/api/publications/v1/project/a030f9a1-0852-4bef-a85a-523622a1acea/publication-details/5ae3468e-0f9f-4f9b-a931-d0de774bc5f3"
+        ]
+      }
     },
     {
       "id": "34aa4cf158606a1ebedf61403b638fcd64e714031aef84ff621632cffa2a0740",
@@ -2718,7 +4749,20 @@
       "publicationDate": "2026-10-21",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "already-awarded",
+        "reason": "Adjudication publiée : SIMAP 33266-04 du 2026-10-22. Projet déjà attribué, exclu conformément au périmètre prospectif.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=4b8a42ef-8151-4b64-8f27-71cc877f8908",
+          "https://www.simap.ch/api/publications/v2/project/4b8a42ef-8151-4b64-8f27-71cc877f8908/project-header",
+          "https://www.simap.ch/api/publications/v1/project/4b8a42ef-8151-4b64-8f27-71cc877f8908/publication-details/541a2800-ca31-4925-8a34-cc6b8ef71796"
+        ]
+      }
     },
     {
       "id": "72210074856be46a2d79c1128259eb6151cb6c4e99230f6fba77d1e3c2e366fc",
@@ -2733,7 +4777,18 @@
       "publicationDate": "2026-10-21",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=02f7fdab-b8f4-4d98-a343-183f259bb17b"
+        ]
+      }
     },
     {
       "id": "d7020a5b54ad58217c5262d5d34979e8ebd2f0b8065193c29eefff51de82faad",
@@ -2748,7 +4803,18 @@
       "publicationDate": "2026-10-21",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=9c00cb01-0fc5-4175-91cd-bdfd3890bd32"
+        ]
+      }
     },
     {
       "id": "d503dda4d73e924a4f67b5650388e173a9c81390c34f5c849072d4366ae14e93",
@@ -2763,7 +4829,18 @@
       "publicationDate": "2026-10-21",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : erp",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=bd39055a-3ec8-4191-8de5-092bdc5dd74d"
+        ]
+      }
     },
     {
       "id": "dec7b257672c65cd5c5e433238a0094df3a1b6bd8b853831c5ab48d15e582908",
@@ -2778,7 +4855,20 @@
       "publicationDate": "2026-10-21",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-municipal-scope",
+        "reason": "SITel de l’État de Fribourg : cinq prestations de guichet virtuel avec support/maintenance, offres au 19.11.2026 à 11 h. Marché cantonal, aucun besoin de la Ville de Fribourg établi ; ne pas lui attribuer un OFS communal.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=e4b706c5-c329-4cde-9934-ab389afea31c",
+          "https://www.simap.ch/api/publications/v2/project/e4b706c5-c329-4cde-9934-ab389afea31c/project-header",
+          "https://www.simap.ch/api/publications/v1/project/e4b706c5-c329-4cde-9934-ab389afea31c/publication-details/5e4a2e25-65cd-4231-86a5-fcd265416bbb"
+        ]
+      }
     },
     {
       "id": "86783f17da6fa84611f47f0b935e9ede2913ab8964714a94df8952c6f59ce436",
@@ -2793,7 +4883,18 @@
       "publicationDate": "2026-10-20",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=e34580c4-1f8a-4137-b567-7bf028b9b069"
+        ]
+      }
     },
     {
       "id": "6432644f79bffc8fae0fc473ebfa371ecc96ffc581a23035c2af8302dcdaa769",
@@ -2808,7 +4909,20 @@
       "publicationDate": "2026-10-22",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "already-awarded",
+        "reason": "Adjudication publiée : SIMAP 41019-02 du 2026-10-22. Projet déjà attribué, exclu conformément au périmètre prospectif.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=9bd1bf4c-1106-4d2e-a730-2dc92620fd51",
+          "https://www.simap.ch/api/publications/v2/project/9bd1bf4c-1106-4d2e-a730-2dc92620fd51/project-header",
+          "https://www.simap.ch/api/publications/v1/project/9bd1bf4c-1106-4d2e-a730-2dc92620fd51/publication-details/08844919-d285-4c5e-b938-d9587d6dfada"
+        ]
+      }
     },
     {
       "id": "68ff243456e100d598593bb13c77a307afedccf96242a6190f4909ab139a9225",
@@ -2823,7 +4937,20 @@
       "publicationDate": "2026-10-22",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-municipal-scope",
+        "reason": "RCJU : M-Files, deux lots (licences/maintenance et développement des coffres), contrat du 01.04.2027 au 31.03.2032, offres au 04.12.2026 à 12 h. Intérêt GED possible pour Prime/partenaire, mais marché cantonal sans besoin communal démontré ; ne pas l’attribuer à Delémont.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=471af242-a160-4343-a7b5-45d8edc1e58e",
+          "https://www.simap.ch/api/publications/v2/project/471af242-a160-4343-a7b5-45d8edc1e58e/project-header",
+          "https://www.simap.ch/api/publications/v1/project/471af242-a160-4343-a7b5-45d8edc1e58e/publication-details/b5191183-1ad5-4d54-b0c5-233e9d19ab05"
+        ]
+      }
     },
     {
       "id": "a0099c55c264f317b71d0990c3f28f2a22e47cb68f9b47e6bfd3e9893b4656c8",
@@ -2838,7 +4965,18 @@
       "publicationDate": "2026-10-22",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=6e943311-1654-4f58-a7d3-2e08bb6a9181"
+        ]
+      }
     },
     {
       "id": "c2ea3ebf6505dafcd104dd8a9dd1027016ee33b755ab0fe0f0b42632987b23cb",
@@ -2853,7 +4991,18 @@
       "publicationDate": "2026-10-22",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=cf954371-f45d-42dc-bcd3-8d0209e5ed4c"
+        ]
+      }
     },
     {
       "id": "bfecb42b0c5e1563ff72037368f7a07a92e4dbb8917fa5b7b5a2d2755d54ecc3",
@@ -2868,7 +5017,18 @@
       "publicationDate": "2026-10-26",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=05396ecc-83ee-4d05-9e20-069060559cc0"
+        ]
+      }
     },
     {
       "id": "9ef373bd3b5b86b67f0848e4a4659da688140d5a777679ae94acc2cd5a4add6c",
@@ -2883,7 +5043,20 @@
       "publicationDate": "2026-10-23",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-municipal-scope",
+        "reason": "Service cantonal de l’informatique du Valais : licences Microsoft, hors besoin communal métier établi.",
+        "sourceVerification": "primary-simap-header-and-publication-read",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=112e1a0c-55fc-4754-bc53-f9c1b2ddea6a",
+          "https://www.simap.ch/api/publications/v2/project/112e1a0c-55fc-4754-bc53-f9c1b2ddea6a/project-header",
+          "https://www.simap.ch/api/publications/v1/project/112e1a0c-55fc-4754-bc53-f9c1b2ddea6a/publication-details/ab0ec33a-32a5-4e40-8bfa-554553606726"
+        ]
+      }
     },
     {
       "id": "60f3181c1e093f2e185e89328dad94b3c9ea3c8bb1b75c44e73208003eea7be0",
@@ -2898,7 +5071,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : ressources humaines",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "static-service-page",
+        "reason": "Page de présentation du service RH ; aucune acquisition ou nouveau besoin daté dans le candidat.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/votre-commune/les-services-de-ladministration/ressources-humaines"
+        ]
+      }
     },
     {
       "id": "adec4083f70642ba2b8a09b2b9f3c28acce16c785e1fe4f54adc63e47466756b",
@@ -2913,7 +5097,18 @@
       "publicationDate": "2026-10-28",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=29495c05-f8f9-4fe3-aa24-f2222b8c311d"
+        ]
+      }
     },
     {
       "id": "28ac2a79d4e1c9a10936993d7f38c2ea78f6a6cacbf99ad989e8d9a38b4c6258",
@@ -2928,7 +5123,18 @@
       "publicationDate": "2026-10-27",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=382ec507-9fa8-48bd-9a08-c18c1f30efea"
+        ]
+      }
     },
     {
       "id": "b9ec5c4975216238cd3b081062c870605a97a582fe9884225170a3b06f8ca685",
@@ -2943,7 +5149,18 @@
       "publicationDate": "2026-10-27",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=85592303-a4dd-4ad7-b76c-692eeeaf559d"
+        ]
+      }
     },
     {
       "id": "8f5f4e4da35b40eddb3b20f9a17710bd45998bea080db7be2fd3bb99945a65d5",
@@ -2958,7 +5175,18 @@
       "publicationDate": "2026-10-27",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.simap.ch/fr/?search=5198c1b1-0e3d-40ff-ad46-a0d7cba3a488"
+        ]
+      }
     },
     {
       "id": "472354585fa470683dd283af1d1089b751cd99289257ce968226b9c643d5652a",
@@ -2973,7 +5201,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : numérique",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "static-service-page",
+        "reason": "Page du Contrôle des habitants ; le nom du service et le chemin population-et-numérique ne constituent pas un projet d’acquisition.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/votre-commune/les-services-de-ladministration/population-et-numerique/controle-des-habitants"
+        ]
+      }
     },
     {
       "id": "fedb07f3bf0e6dcd807d7b20566a9d3632c4d5655b10453172f7a24d9c7b4d19",
@@ -2988,7 +5227,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "static-service-page",
+        "reason": "Page d’information sur les impôts et taxes ; aucun projet logiciel établi dans le candidat.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/votre-commune/finances/impots"
+        ]
+      }
     },
     {
       "id": "1cc5ed6b260bbcea45a1deb5d9a7b1fa406c92603b4837bcd5a81291a52cc0e3",
@@ -3003,7 +5253,18 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
-      "status": "pending"
+      "status": "discarded",
+      "analyzedAt": "2026-10-29T08:15:07Z",
+      "analysis": {
+        "decision": "discard",
+        "category": "outside-business-scope",
+        "reason": "Page consacrée à la rénovation de la salle omnisports des Isles ; le chemin gestion-immobilière ne démontre pas un achat de logiciel.",
+        "sourceVerification": "candidate-title-and-url-only",
+        "reviewedAt": "2026-10-29T08:15:07Z",
+        "sourceUrls": [
+          "https://www.yverdon-les-bains.ch/votre-commune/les-services-de-ladministration/batiments/gestion-immobiliere/renovation-salle-omnisports-des-isles"
+        ]
+      }
     }
   ]
 }

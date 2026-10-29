@@ -160,7 +160,7 @@ test('Radar data distinguishes level, provenance, confidence and municipality', 
   const radar = JSON.parse(await read('public/data/news-radar-v1.json'));
   assert.equal(radar.meta.mode, 'radar-qualified');
   assert.ok(radar.signals.length >= 3);
-  assert.equal(radar.meta.updatedOn, '2026-09-21');
+  assert.equal(radar.meta.updatedOn, '2026-10-29');
   const yverdon = radar.signals.find(signal => signal.id === 'yverdon-sey-normes-tic-2026');
   assert.equal(yverdon?.bfsId, 5938);
   assert.equal(yverdon?.level, 'strong');
