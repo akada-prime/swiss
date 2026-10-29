@@ -1,6 +1,6 @@
 import { frenchTypography } from './french-typography.js?v=20261028-offer-polish-r1';
-import fr from '../i18n/fr.js?v=20261024-completion-r1';
-import de from '../i18n/de.js?v=20261024-completion-r1';
+import fr from '../i18n/fr.js?v=20261029-radar-chat-r1';
+import de from '../i18n/de.js?v=20261029-radar-chat-r1';
 import { getPreference, subscribePreferences } from './preferences.js';
 
 const catalogues = { fr, de };

@@ -188,9 +188,10 @@ test('Radar is functional without a new database write path', async () => {
   assert.match(html, /id="newsManualRefresh"/);
   assert.match(runtime, /fetch\(DATA_URL/);
   assert.match(runtime, /navigator\.clipboard\.writeText/);
-  assert.match(runtime, /CHAT_URL = 'https:\/\/chatgpt\.com\/c\/6a9ef456-9284-83ed-9f8b-5e32c1fdfcc3'/);
-  assert.match(runtime, /window\.location\.assign\(CHAT_URL\)/);
-  assert.doesNotMatch(runtime, /window\.open/);
+  assert.match(runtime, /CHAT_URL = 'https:\/\/chatgpt\.com\/'/);
+  assert.match(runtime, /chat\.location\.replace\(CHAT_URL\)/);
+  assert.match(runtime, /window\.open\('about:blank', '_blank'\)/);
+  assert.doesNotMatch(runtime, /window\.location\.assign|chatgpt\.com\/c\//);
   assert.match(runtime, /Ne demande pas une validation supplémentaire/);
   assert.match(runtime, /n'exclus jamais un signal uniquement parce que la commune est cliente Prime/);
   assert.match(runtime, /publie-le avec une réserve explicite/);

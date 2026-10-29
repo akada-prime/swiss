@@ -1,5 +1,11 @@
 # État de reprise — Prime Communes 2.0
 
+> **Radar → ChatGPT · 29.10.2026 :** ancien lien vers une conversation privée
+> supprimé. Demande copiée, nouvel onglet réservé pendant le clic puis ouvert
+> sur ChatGPT ; onglet Radar conservé. Message explicite de collage/envoi,
+> traitement du blocage des fenêtres et de l’échec de copie, FR/DE.
+> Retours à la ligne du prompt corrigés. Données de veille inchangées.
+
 > **Retours métier · 28.10.2026 :** Modules / Accompagnement, totaux des groupes
 > fermés, prix et jours des options avant sélection, ouvertures et recherche
 > conservées. ProConcept rejoint les groupes de modules ; récapitulatif des

@@ -8,7 +8,7 @@ import { getPreference } from './core/preferences.js';
   const ANALYSIS_URL = 'public/data/news-analysis-v1.json?v=20260920-1';
   const RADAR_STATUS_URL = 'public/data/radar-state-v1.json?v=20260921-1';
   const RADAR_CANDIDATES_URL = 'public/data/radar-candidates-v1.json?v=20260921-1';
-  const CHAT_URL = 'https://chatgpt.com/c/6a9ef456-9284-83ed-9f8b-5e32c1fdfcc3';
+  const CHAT_URL = 'https://chatgpt.com/';
   const levelOrder = { strong: 0, watch: 1, info: 2 };
   const levelLabels = { strong: 'radar.strong', watch: 'radar.watch', info: 'radar.info' };
   const confidenceLabels = { confirmed: 'radar.confirmed', probable: 'radar.probable', verify: 'radar.verify' };
@@ -74,10 +74,10 @@ import { getPreference } from './core/preferences.js';
       'Après traitement, marque le candidat comme analyzed ou discarded dans radar-candidates-v1.json afin qu’il ne soit pas réanalysé.',
       '',
       'Candidats détectés (' + pending.length + ') :',
-      lines.length ? lines.join('\\n') : '- aucun',
+      lines.length ? lines.join('\n') : '- aucun',
       '',
       'À la fin, résume uniquement les candidats analysés, publiés ou écartés.'
-    ].join('\\n');
+    ].join('\n');
   }
 
   async function copyRefreshPrompt() {
@@ -92,8 +92,9 @@ import { getPreference } from './core/preferences.js';
       textarea.style.opacity = '0';
       document.body.append(textarea);
       textarea.select();
-      document.execCommand('copy');
+      const copied = document.execCommand('copy');
       textarea.remove();
+      if (!copied) throw new Error('Clipboard unavailable');
     }
   }
 
@@ -395,17 +396,22 @@ import { getPreference } from './core/preferences.js';
       if (status) status.textContent = t('radar.noCalls');
       return;
     }
+    let chat = null;
     try {
       localStorage.setItem(REFRESH_REQUEST_KEY, JSON.stringify({
         candidateCount: pending.length,
         requestedAt: new Date().toISOString()
       }));
-      await copyRefreshPrompt();
-      byId('newsManualRefresh')?.classList.add('is-launching');
-      if (status) status.textContent = t('radar.copied');
-      window.setTimeout(() => window.location.assign(CHAT_URL), 900);
+      // Start copying and reserve the tab during the click (also Safari).
+      const copying = copyRefreshPrompt();
+      chat = window.open('about:blank', '_blank');
+      if (chat) chat.opener = null;
+      await copying;
+      if (chat) chat.location.replace(CHAT_URL);
+      if (status) status.textContent = t(chat ? 'radar.copied' : 'radar.popupBlocked');
     } catch (error) {
       console.error(error);
+      if (chat && !chat.closed) chat.close();
       if (status) status.textContent = t('radar.copyFailed');
     }
   });
