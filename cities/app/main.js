@@ -8,7 +8,7 @@ import './prime-communes-maplibre-1.2.js?v=20261024-completion-r1';
 import './prime-communes-1.1-base.js?v=20261024-completion-r1';
 import './prime-communes-stats-1.5.js?v=20261024-completion-r1';
 import './prime-communes-communes-1.2.js?v=20261024-completion-r1';
-import './prime-communes-news-2.0.js?v=20261024-completion-r1';
+import './prime-communes-news-2.0.js?v=20261029-radar-chat-r1';
 import './prime-communes-stories-2.0.js?v=20261024-completion-r1';
 import './prime-communes-roadmap-1.2.js';
 import './chiffrage/view.js?v=20261028-business-r11';
