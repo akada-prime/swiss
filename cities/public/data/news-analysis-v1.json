@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "2.0.4-v1",
-    "updatedOn": "2026-09-21",
+    "updatedOn": "2026-10-29",
     "mode": "radar-qualified",
     "notice": "Les interprétations proviennent uniquement de candidats détectés mécaniquement ; les candidats hors périmètre, déjà attribués ou sans lien commercial plausible sont écartés avant publication."
   },
@@ -162,6 +162,102 @@
         "owner": "",
         "nextAction": "Identifier le système communal et les interfaces prévues pour les données entreprises et la facturation ; ne pas traiter la concession elle-même comme une opportunité logicielle Prime.",
         "dueDate": "",
+        "probability": null,
+        "estimatedValue": null,
+        "currency": "CHF",
+        "basis": "Proposition de l'IA d'Axel à valider humainement."
+      }
+    },
+    {
+      "signalId": "yverdon-recherche-documentaire-accessibilite-2026",
+      "interpretation": {
+        "change": "Dans sa réponse du 28 mai 2026 à la COGE (observations 2 et 3, pp. 1–2), la Municipalité indique analyser techniquement et financièrement la recherche plein texte des documents dans les rubriques du Conseil communal. Elle annonce aussi un audit externe d’accessibilité du site et des PDF pour 2026. Le moteur global cherche déjà dans les PDF ; la lacune concerne les moteurs contextuels.",
+        "deduction": "Le besoin porte sur l’accès aux documents et aux prestations numériques. Ces pièces ne prouvent ni un marché ouvert ni une attribution ; la réalisation effective des mesures annoncées pour 2026 reste inconnue au 29 octobre.",
+        "primeReading": "Qualifier avec la Chancellerie et le Service population et numérique les travaux restant à réaliser et les interfaces éventuelles avec la gestion documentaire. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+        "affected": {
+          "municipalities": [
+            "Yverdon-les-Bains"
+          ],
+          "territories": [
+            "Nord vaudois"
+          ],
+          "products": [
+            "Aucun produit Prime établi"
+          ],
+          "integrators": [
+            "Aucun prestataire identifié dans les pièces consultées"
+          ]
+        }
+      },
+      "qualificationProposal": {
+        "decision": "watch",
+        "owner": "",
+        "nextAction": "Vérifier en interne le statut du dossier, puis qualifier l’avancement de l’analyse de recherche contextuelle et de l’audit d’accessibilité ; ne pas présumer un appel d’offres.",
+        "dueDate": "",
+        "probability": null,
+        "estimatedValue": null,
+        "currency": "CHF",
+        "basis": "Proposition de l'IA d'Axel à valider humainement."
+      }
+    },
+    {
+      "signalId": "lausanne-ressources-projets-business-analysis-2026",
+      "interpretation": {
+        "change": "Le SOI de la Ville de Lausanne a publié le marché SIMAP 45005-01 : trois lots pour la conduite de projets métier, de projets techniques et la Business Analysis, avec deux prestataires référencés par lot. Les prestations sont prévues du 1er février 2027 au 31 décembre 2030, avec une prolongation possible d’un an. Le délai d’offre est le 2 novembre 2026 à 16 h, heure suisse. Consortium et sous-traitance sont exclus dans l’avis.",
+        "deduction": "Il s’agit d’un marché de ressources et d’accompagnement SI, sans achat ERP démontré. L’échéance proche et l’interdiction de sous-traiter imposent de vérifier immédiatement la capacité de réponse directe et les critères du dossier.",
+        "primeReading": "Évaluer uniquement les lots correspondant aux compétences et disponibilités de Prime. Lausanne est cliente Prime ; cela ne renseigne pas le statut de ce marché. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+        "affected": {
+          "municipalities": [
+            "Lausanne"
+          ],
+          "territories": [
+            "Lausanne"
+          ],
+          "products": [
+            "Aucun produit Prime établi"
+          ],
+          "integrators": [
+            "Prestataires à sélectionner ; aucun titulaire établi"
+          ]
+        }
+      },
+      "qualificationProposal": {
+        "decision": "to_qualify",
+        "owner": "",
+        "nextAction": "Contrôler immédiatement le dossier commercial interne et les critères des lots ; décider d’une réponse directe avant le 2 novembre à 16 h. Consortium et sous-traitance interdits.",
+        "dueDate": "2026-10-30",
+        "probability": null,
+        "estimatedValue": null,
+        "currency": "CHF",
+        "basis": "Proposition de l'IA d'Axel à valider humainement."
+      }
+    },
+    {
+      "signalId": "lausanne-abacus-licences-support-2027-2031",
+      "interpretation": {
+        "change": "Le SOI de la Ville de Lausanne recherche un intégrateur pour fournir les licences de sa solution financière Abacus et assurer maintenance et support sur 2027–2031, avec une prolongation possible d’un an. L’avis SIMAP 45018-01 prévoit des tarifs journaliers par profil et précise que les jours sont estimatifs. Le délai d’offre est le 2 novembre 2026 à 11 h 30, heure suisse. Consortium et sous-traitance sont exclus dans l’avis.",
+        "deduction": "La dernière publication publique consultée le 29 octobre est un appel d’offres, sans adjudication dans cet en-tête. Le besoin correspond directement à l’intégration Abacus ; il concerne l’exploitation de la solution financière, sans remplacement d’ERP démontré. L’éligibilité de Prime dépend des critères complets du dossier.",
+        "primeReading": "Priorité à une qualification immédiate du périmètre, des critères et de la capacité de réponse directe. Lausanne est cliente Prime ; cela ne renseigne pas le statut de ce marché. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
+        "affected": {
+          "municipalities": [
+            "Lausanne"
+          ],
+          "territories": [
+            "Lausanne"
+          ],
+          "products": [
+            "Abacus · solution financière"
+          ],
+          "integrators": [
+            "Intégrateur Abacus à sélectionner ; aucun titulaire établi"
+          ]
+        }
+      },
+      "qualificationProposal": {
+        "decision": "to_qualify",
+        "owner": "",
+        "nextAction": "Vérifier immédiatement si Prime a déjà devisé ou traite ce marché ; sinon décider d’une réponse directe avant le 2 novembre à 11 h 30 après lecture des critères. Consortium et sous-traitance interdits.",
+        "dueDate": "2026-10-30",
         "probability": null,
         "estimatedValue": null,
         "currency": "CHF",
