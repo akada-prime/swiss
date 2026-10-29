@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "radar-state-v1",
-    "generatedAt": "2026-10-28T11:21:14.836Z",
+    "generatedAt": "2026-10-29T11:31:22.406Z",
     "mode": "deterministic-watch",
     "bootstrapDays": null,
     "notice": "Mesures issues du dernier passage mécanique. Une erreur de source n’est jamais comptée comme un silence."
@@ -17,31 +17,31 @@
     "active": 4,
     "error": 0,
     "pending": 0,
-    "unchanged": 1
+    "unchanged": 0
   },
   "detection": {
-    "changes": 3,
-    "newDocuments": 1723,
-    "pendingCandidates": 200,
+    "changes": 1,
+    "newDocuments": 13,
+    "pendingCandidates": 2,
     "bootstrapDays": null,
-    "bootstrapCandidates": 67
+    "bootstrapCandidates": 2
   },
   "analysis": {
-    "analyzed": 5,
-    "published": 5
+    "analyzed": 8,
+    "published": 8
   },
   "economy": {
-    "requests": 12,
+    "requests": 6,
     "notModified": 0,
-    "unchanged": 1,
-    "downloaded": 9,
+    "unchanged": 0,
+    "downloaded": 6,
     "aiCalls": 0
   },
   "sourceState": {
     "simap-romandie": {
       "status": "healthy",
-      "lastCheckAt": "2026-10-28T11:21:07.873Z",
-      "lastSuccessAt": "2026-10-28T11:21:07.873Z",
+      "lastCheckAt": "2026-10-29T11:31:22.405Z",
+      "lastSuccessAt": "2026-10-29T11:31:22.405Z",
       "seenIds": [
         "98f97c4149ff1b865f85ed7aa700d9af48131e844712b39fd5c5a9ce5a85f25e",
         "edf276fecedf7cbb0aa7785a79652413ea7e02282fe939b2fccc007ff6769446",
@@ -947,13 +947,26 @@
         "9cade26f65f33ec4c53c809a73d3d0c59ac848ae643a8c6651075aefeddcf666",
         "d050c4c97b239e6485ae08114156ae8a1ff8759fe3d16269f4191ed67978e98f",
         "1b5dacdc576a79ab614a71f525758cd8538e632dafdb6a42a2027b4ae9815a36",
-        "de23c76e87acc8be92e2188f8ba86f9f5fd18dea47441321d15ee36637080d57"
+        "de23c76e87acc8be92e2188f8ba86f9f5fd18dea47441321d15ee36637080d57",
+        "1171be7693932f87045d35c2489c8f68bd9650b66bf3697314763641bfb24b61",
+        "f45c37611302f075baa0554c4af6d74839b817fff5637fce638c6736526b50e1",
+        "337f014bfc609523f356d0d5b8e35edbccd5daf8446385a6249d87a50dee3ca0",
+        "acea89fea04afd4926ef36c294eef17d4ea01d876705f5521d09b22e26e5eb02",
+        "33b4c5fbf0dba39afdeaf0531260608aa28f0108db26af16125cef8fcf3e1ee0",
+        "a09b6b0ea9926fbbcd658186863df39250cfaea703a275322309e5eb13a19e25",
+        "cac3a43b46c03f97fa801ab5b2e846af73da6648554044baf8fcf5c61db72111",
+        "aea3132546391ad759e99f9ca1768666a982024bdf37650e418f1f1d6af5438f",
+        "986bc6207536e3f5f95b09663975d1dcb90f8d787f3d3144ff58e6c50da71a4f",
+        "332a7030e24c02a49d35b7a038a3271f512c24768cd60f8f7c1eed4386c487bc",
+        "aa5ef0e91df1d4e0b69351de82661314a33b58ec3678573b93986a7d853858fe",
+        "5e8d7d2633c6497a0cd96b3d124b9250512b3ddaf29829628163208f314049e3",
+        "57e8d5c3cff4626fefda9a01720d3aa2b8bb3bdd669e312d1371b440f577a57b"
       ],
-      "itemCount": 86,
+      "itemCount": 95,
       "error": null,
       "baselined": true,
       "intervalHours": 24,
-      "nextCheckAt": "2026-10-29T11:21:07.873Z"
+      "nextCheckAt": "2026-10-30T11:31:22.406Z"
     },
     "yverdon-preavis": {
       "status": "healthy",

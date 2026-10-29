@@ -1,71 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-10-28T11:21:14.838Z",
-    "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement.",
-    "lastAnalysisAt": "2026-10-29T08:15:07Z",
-    "lastAnalysisDate": "2026-10-29",
-    "lastAnalysis": {
-      "submittedCandidates": 200,
-      "analyzedCandidates": 5,
-      "discardedCandidates": 195,
-      "newSignals": 3,
-      "scope": "Candidats du lot fourni uniquement ; marchés communaux, sans collecte supplémentaire."
-    }
+    "generatedAt": "2026-10-29T11:31:22.409Z",
+    "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "3f625d007b5e32e547e77fff32e3390ae5027c54d0b03a4b2a6d816008f71615",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Réponse aux observations de la commission chargée d'examiner la gestion des biens communaux en 2025",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2026_rapports/PR26.13RA_COGE_ReponsesMunicipalite_Observations2025_RapportGestion2025.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2026-06-18",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "analyzed",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "signalId": "yverdon-recherche-documentaire-accessibilite-2026",
-      "analysis": {
-        "decision": "publish",
-        "reason": "Candidat qualifié ; sources apparentées regroupées dans un seul signal.",
-        "publicFact": "Dans sa réponse du 28 mai 2026 à la COGE (observations 2 et 3, pp. 1–2), la Municipalité indique analyser techniquement et financièrement la recherche plein texte des documents dans les rubriques du Conseil communal. Elle annonce aussi un audit externe d’accessibilité du site et des PDF pour 2026. Le moteur global cherche déjà dans les PDF ; la lacune concerne les moteurs contextuels.",
-        "deduction": "Le besoin porte sur l’accès aux documents et aux prestations numériques. Ces pièces ne prouvent ni un marché ouvert ni une attribution ; la réalisation effective des mesures annoncées pour 2026 reste inconnue au 29 octobre.",
-        "primeReading": "Qualifier avec la Chancellerie et le Service population et numérique les travaux restant à réaliser et les interfaces éventuelles avec la gestion documentaire. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
-        "sourceVerification": "primary-source-read",
-        "reviewedAt": "2026-10-29T08:15:07Z"
-      }
-    },
-    {
-      "id": "5f2696ffa1700f7f0c70f4c4741b3f13f23b06dad6304a31574603ac6b5c1b0e",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport COGE",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2026_rapports/PR26.13RA_COGE_RapportGestion2025.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "analyzed",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "signalId": "yverdon-recherche-documentaire-accessibilite-2026",
-      "analysis": {
-        "decision": "publish",
-        "reason": "Candidat qualifié ; sources apparentées regroupées dans un seul signal.",
-        "publicFact": "Dans sa réponse du 28 mai 2026 à la COGE (observations 2 et 3, pp. 1–2), la Municipalité indique analyser techniquement et financièrement la recherche plein texte des documents dans les rubriques du Conseil communal. Elle annonce aussi un audit externe d’accessibilité du site et des PDF pour 2026. Le moteur global cherche déjà dans les PDF ; la lacune concerne les moteurs contextuels.",
-        "deduction": "Le besoin porte sur l’accès aux documents et aux prestations numériques. Ces pièces ne prouvent ni un marché ouvert ni une attribution ; la réalisation effective des mesures annoncées pour 2026 reste inconnue au 29 octobre.",
-        "primeReading": "Qualifier avec la Chancellerie et le Service population et numérique les travaux restant à réaliser et les interfaces éventuelles avec la gestion documentaire. Statut commercial Prime de ce dossier inconnu ; vérifier les offres et mandats existants en interne avant toute démarche.",
-        "sourceVerification": "primary-source-read",
-        "reviewedAt": "2026-10-29T08:15:07Z"
-      }
-    },
     {
       "id": "e41ff5f60e3e01125f5da5df61f12304d7ebc1f1560b38c99c1f4d43b692648d",
       "sourceId": "yverdon-preavis",
@@ -5265,6 +5204,36 @@
           "https://www.yverdon-les-bains.ch/votre-commune/les-services-de-ladministration/batiments/gestion-immobiliere/renovation-salle-omnisports-des-isles"
         ]
       }
+    },
+    {
+      "id": "67afd87d97cdfa18fb7aaa42185c8dd5499637e83b33da269396c4cd7bdd7b7c",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Wartungs- und Supportleistungen für die Anwendung TaxPPEnc des Kantons Freiburg",
+      "url": "https://www.simap.ch/fr/?search=e7121246-64ed-4ac5-bbe5-a9ae343db9d9",
+      "detectedAt": "2026-10-29T11:31:22.405Z",
+      "publicationDate": "2026-10-29",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "a283b84af225499675de2529be685d5b2352e86f536ca6b30ef3563ed0c4db76",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Wartungs- und Supportleistungen für die Anwendung TaxPM/DiPMWeb des Kantons Freiburg",
+      "url": "https://www.simap.ch/fr/?search=8bc20a0d-dbe4-400e-8846-4f5fc2a39afe",
+      "detectedAt": "2026-10-29T11:31:22.405Z",
+      "publicationDate": "2026-10-29",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
     }
   ]
 }
