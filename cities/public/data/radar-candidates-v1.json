@@ -1,244 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-10-29T11:31:22.409Z",
+    "generatedAt": "2026-10-30T11:24:14.841Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "e41ff5f60e3e01125f5da5df61f12304d7ebc1f1560b38c99c1f4d43b692648d",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "PR26.05PR",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2026_preavis/PR26.05PR_Solution_informatique_SCI.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2026-02-26",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : informatique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "calendar-not-current",
-        "reason": "Le préavis SCI du 26.02.2026 prévoit achat au premier semestre et mise en service en juillet–août 2026, puis déploiement 2026–2031. Aucun état actuel ni prestation externe encore ouverte établi. Non publié faute de fenêtre commerciale actuelle démontrée ; aucune attribution ou livraison supposée.",
-        "sourceVerification": "primary-pdf-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2026_preavis/PR26.05PR_Solution_informatique_SCI.pdf"
-        ]
-      }
-    },
-    {
-      "id": "b2d94b2deec0870ee518d57b3d1b1d16b17f4e49eeb2999b101a8e35fd404208",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2026_rapports/PR26.05RA_Solution_informatique_SCI.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : informatique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "calendar-not-current",
-        "reason": "Rapport de commission du même dossier SCI (PR26.05), acquisition et mise en service prévues en 2026 ; pas de preuve nouvelle d’un marché restant ouvert. Ne pas convertir le calendrier prévisionnel en livraison avérée.",
-        "sourceVerification": "primary-pdf-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2026_rapports/PR26.05RA_Solution_informatique_SCI.pdf"
-        ]
-      }
-    },
-    {
-      "id": "f7e566dc775e5f7ebdf861e70817ef27412c8d067f0b66b64b5ab315340250e3",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "la gestion de la Municipalité durant l'année 2024",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2025_preavis/PR25.12PR_RapportGestion2024-Interactif.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2025-05-22",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "superseded-context",
-        "reason": "Rapport de gestion 2024 consulté : contexte historique ; pas de nouveau besoin encore ouvert établi en complément des pièces 2026 retenues.",
-        "sourceVerification": "primary-pdf-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2025_preavis/PR25.12PR_RapportGestion2024-Interactif.pdf"
-        ]
-      }
-    },
-    {
-      "id": "f0d1d44652c1bbfd1d9489ecd1a31dc007c9a917e9ce40d245f03e03d5eed20c",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Réponse aux observations de la Commission chargée d'examiner la gestion des biens communaux en 2024",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Pilier_public_virtuel/ReponsesObservations2024.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "superseded-context",
-        "reason": "Réponses sur la gestion 2024 consultées ; pas de nouveau marché logiciel établi. Les besoins actuels de recherche documentaire sont regroupés sous la réponse municipale de 2026.",
-        "sourceVerification": "primary-pdf-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Pilier_public_virtuel/ReponsesObservations2024.pdf"
-        ]
-      }
-    },
-    {
-      "id": "55c63317135546fd983d69cf0a1104ebdaebb7f3469ee16a2371586bc613aa26",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport COGE",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2025_rapports/PR25.12RA_COGE_RapportGestion2024.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "superseded-context",
-        "reason": "Rapport COGE 2024 consulté ; les outils et projets cités ne démontrent pas une nouvelle fenêtre commerciale au 29.10.2026. Contexte 2026 traité séparément.",
-        "sourceVerification": "primary-pdf-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2025_rapports/PR25.12RA_COGE_RapportGestion2024.pdf"
-        ]
-      }
-    },
-    {
-      "id": "08e78a30d96b4d7354cd399abd515c1ee5455a17e910ddd5a318bf305fe49701",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "PR25.03PR",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2025_preavis/PR25.03PR_CreditInverstissementGestionDigitaliseeParking.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2025-01-16",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : digital",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Préavis consulté : guidage des parkings, capteurs et affichage de disponibilité ; aucun besoin ERP, GED ou facturation Prime établi.",
-        "sourceVerification": "primary-pdf-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2025_preavis/PR25.03PR_CreditInverstissementGestionDigitaliseeParking.pdf"
-        ]
-      }
-    },
-    {
-      "id": "6119f975c7c7c936f58d265ae84c8764de6d013881423c9d21daea5e8a8aed45",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Commission",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Aff_comm_preavis/2025_acp/PR25.03PR_Aff_CreditInverstissementGestionDigitaliseeParking.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2024-02-01",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : digital",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "related-outside-scope",
-        "reason": "Désignation de commission relative au même dossier de guidage des parkings PR25.03 ; pas un besoin logiciel métier Prime distinct.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Aff_comm_preavis/2025_acp/PR25.03PR_Aff_CreditInverstissementGestionDigitaliseeParking.pdf"
-        ]
-      }
-    },
-    {
-      "id": "2c5000897b1321317515a1b75800ed35f7cb58e79cac1fc1bd8ae3a346e8cd91",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2025_rapports/PR25.03RA_CreditInverstissementGestionDigitaliseeParking.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : digital",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Rapport de commission consulté : même projet spécialisé de comptage/guidage des parkings PR25.03 ; pas un marché métier Prime établi.",
-        "sourceVerification": "primary-pdf-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2025_rapports/PR25.03RA_CreditInverstissementGestionDigitaliseeParking.pdf"
-        ]
-      }
-    },
-    {
-      "id": "fac066e32b2dd047bb8ea7a95a262bfd3944644573192be05e65740de898fc81",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "PR24.12PR",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2024_preavis/PR24.12PR_DemandeCreditNumeriqueV2.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2024-04-25",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : numérique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-programme",
-        "reason": "Préavis de transformation numérique de 2024 consulté : programme de CHF 1,6 million avec migrations envisagées en 2025–2026. Pas de preuve actuelle de lot encore ouvert ; ne pas republier le programme historique comme nouvelle opportunité. Besoin documentaire 2026 traité séparément.",
-        "sourceVerification": "primary-pdf-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2024_preavis/PR24.12PR_DemandeCreditNumeriqueV2.pdf"
-        ]
-      }
-    },
     {
       "id": "860df338474a0951dd6d8bb14f3227b3a95900d9c5436d57bfc1f41fb3063121",
       "sourceId": "yverdon-preavis",
@@ -5233,6 +4999,141 @@
       "publicationDate": "2026-10-29",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "685661020faed9464edd4a0eb0f3afaa4374c955987ff5ee64909b57a2cb4ee6",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "Rénovation du Château, étapes 29 à 30",
+      "url": "https://www.yverdon-les-bains.ch/votre-commune/les-services-de-ladministration/batiments/gestion-immobiliere/renovation-du-chateau",
+      "detectedAt": "2026-10-30T11:24:12.608Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "10c0f66b63ea3208acdd6c6fc0e0eb05cc0672f1627175ab72fdf55230d7b0e9",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "Soutien à la population",
+      "url": "https://www.yverdon-les-bains.ch/aides-subventions/subventions-culturelles/soutien-a-la-population",
+      "detectedAt": "2026-10-30T11:24:12.608Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : population",
+      "status": "pending"
+    },
+    {
+      "id": "4b9d7310e13c6d97809f63742eab6177c6734136356501976210c06bdec1e136",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "Subventions population",
+      "url": "https://www.yverdon-les-bains.ch/aides-subventions/durabilite-/-energie/subventionspopulation",
+      "detectedAt": "2026-10-30T11:24:12.608Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : population",
+      "status": "pending"
+    },
+    {
+      "id": "3e5beb32cc8b5f4034c8f9de3e51786229ec68821d44c531b53f01a745c5a748",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "Passeport / Carte d&#039;identité",
+      "url": "https://www.yverdon-les-bains.ch/controle-des-habitants/passeport-/-carte-didentite",
+      "detectedAt": "2026-10-30T11:24:12.608Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : habitants",
+      "status": "pending"
+    },
+    {
+      "id": "c819d34b67a22589b0c6b3e8a959ea68f8574bc17d1551981a57c0c6d68df747",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "Actes et certificats (naissance, mariage, décès, famille, résidence)",
+      "url": "https://www.yverdon-les-bains.ch/controle-des-habitants/actes-et-certificats-naissance-mariage-deces-famille-residence",
+      "detectedAt": "2026-10-30T11:24:12.608Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : habitants",
+      "status": "pending"
+    },
+    {
+      "id": "a94ad1955f5910446685fec948de1a4b110bca32158f98a99f6e728b80c95f50",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "Marche à suivre EWID EGID",
+      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Controle-des-habitants/pdf/EWID-EGID.pdf",
+      "detectedAt": "2026-10-30T11:24:12.608Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : habitants",
+      "status": "pending"
+    },
+    {
+      "id": "2da364e769afff3e1cd19488d43e3707206e028d339f52a09a403d12cd9d61c7",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "la gestion de la Municipalité durant l'année 2025",
+      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2026_preavis/PR26.13PR_vol1_RapportGestion2025.pdf",
+      "detectedAt": "2026-10-30T11:24:12.608Z",
+      "publicationDate": "2026-06-18",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "3f625d007b5e32e547e77fff32e3390ae5027c54d0b03a4b2a6d816008f71615",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "Réponse aux observations de la commission chargée d'examiner la gestion des biens communaux en 2025",
+      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2026_rapports/PR26.13RA_COGE_ReponsesMunicipalite_Observations2025_RapportGestion2025.pdf",
+      "detectedAt": "2026-10-30T11:24:12.608Z",
+      "publicationDate": "2026-06-18",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "5f2696ffa1700f7f0c70f4c4741b3f13f23b06dad6304a31574603ac6b5c1b0e",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "Rapport COGE",
+      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2026_rapports/PR26.13RA_COGE_RapportGestion2025.pdf",
+      "detectedAt": "2026-10-30T11:24:12.608Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
       "status": "pending"
     }
   ]
