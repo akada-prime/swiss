@@ -527,3 +527,9 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   réelles sur six largeurs. Le contrôle navigateur concerne cet aperçu isolé ;
   aucune ouverture de lien client et aucun compteur consommé pour la recette.
 - Validation finale : `npm run check` (188 tests), `npm run build` et `git diff --check` réussis ; ouverture globale, fermeture et état partiel contrôlés au navigateur.
+
+## Offre client · alignement des triangles — 02.11.2026
+
+- Le marqueur natif des rubriques passe en position extérieure : triangle et puces partagent le même retrait, titre et modules le même départ de texte.
+- Correction CSS ciblée, commune à tous les logiciels ; aucun changement fonctionnel ni financier.
+- Cache des feuilles actualisé pour les liens existants.
