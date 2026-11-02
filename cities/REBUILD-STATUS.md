@@ -488,3 +488,26 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
 - Tests de présentation (FR/DE, arrondis, total nul et absence de détail),
   contrôles complets et build Vite ; contrôle navigateur non réalisé, aperçu
   géré précédemment refusé par la configuration d'hôte Vite.
+
+## Catalogue et offre client — 02.11.2026
+
+- Mise en oeuvre regroupée en paramétrage/intégration et accompagnement au
+  déploiement, avec sous-totaux, total, lignes compactes et colonne annuelle
+  seulement si elle contient un montant non nul. Prime identifié explicitement ;
+  déplacements estimés distingués des déplacements offerts.
+- Répartition annuelle repliable sous les trois montants. Corps de lecture
+  client à 16 px sur desktop, rendu Natel conservé.
+- Fonctions incluses génériques rattachées à un parent, affichées sans
+  sélection et sans prix supplémentaire. Catalogue éditable dans l'éditeur
+  authentifié, avec versions commerciales et contrôle de concurrence.
+- ProConcept : 8 fonctions financières et 2 fonctions salaires ; 4 options
+  Prime indépendantes avec jours proposés et annuel fixe explicite.
+- Les contenus sont figés dans les révisions et les publications. L'enrichissement
+  des offres PCE en cours est explicitement autorisé par Alex dans ce chantier ;
+  montants, jetons, échéances et compteurs des liens doivent être conservés.
+- Migration 20261102164122 appliquée : une RPC invoker, réservée à
+  service_role, clone atomiquement le catalogue commercial. Essai transactionnel
+  de clonage annulé après vérification. Pas de nouvel accès public aux tables.
+- Vérifications : compilation syntaxique des sources, tests de domaine et CI.
+  Environnement local et navigateur indisponibles : pas de recette visuelle ni
+  de validation Safari. Ne pas annoncer une validation visuelle complète.

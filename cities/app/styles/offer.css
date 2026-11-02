@@ -140,6 +140,40 @@
   color: #fff
 }
 
+/* Shared compact implementation and included-module presentation. */
+.prime-offer-implementation {border:1px solid var(--offer-border);border-radius:var(--offer-radius);background:var(--offer-panel);overflow:hidden;}
+.prime-offer-service-columns,.prime-offer-service-heading,.prime-offer-service-line,.prime-offer-service-total {display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,auto);gap:16px;align-items:baseline;padding:8px 20px;}
+.prime-offer-implementation.has-annual :is(.prime-offer-service-columns,.prime-offer-service-heading,.prime-offer-service-line,.prime-offer-service-total) {grid-template-columns:minmax(0,1fr) repeat(2,minmax(90px,auto));}
+.prime-offer-service-columns {font-size:14px;color:var(--offer-muted);padding-top:14px;}
+.prime-offer-service-columns>span:not(:first-child),.prime-offer-service-heading>span,.prime-offer-service-line>span:not(:first-child),.prime-offer-service-total>span {text-align:right;font-variant-numeric:tabular-nums;}
+.prime-offer-service-subgroup {padding:8px 0 12px;}
+.prime-offer-service-subgroup+.prime-offer-service-subgroup {border-top:1px solid var(--offer-border);}
+.prime-offer-service-heading {font-weight:700;padding-top:12px;padding-bottom:10px;}
+.prime-offer-service-heading h4 {margin:0;font-size:inherit;color:var(--offer-text);}
+.prime-offer-service-line {font-size:14px;color:var(--offer-text);}
+.prime-offer-service-line>span:first-child {padding-left:16px;}
+.prime-offer-service-total {border-top:1px solid var(--offer-border);font-weight:700;padding-top:16px;padding-bottom:16px;}
+.prime-offer-included summary {cursor:pointer;line-height:1.6;}
+.prime-offer-included summary>span {color:var(--offer-muted);font-size:14px;white-space:normal;}
+.prime-offer-included h5 {margin:10px 0 4px;font-size:inherit;}
+.prime-offer-module-group li.prime-offer-scope-parent {list-style:none;}
+.prime-offer-included ul {margin-top:8px;padding-left:20px;}
+.prime-offer-annual-disclosure {margin-top:20px;padding-top:10px;border-top:1px solid #ffffff40;}
+.prime-offer-annual-disclosure summary {cursor:pointer;min-height:40px;display:list-item;align-content:center;font-size:14px;color:#c3d1e8;}
+.prime-offer-annual-disclosure .prime-offer-annual-breakdown {max-width:540px;}
+.prime-offer-included summary:focus-visible,.prime-offer-annual-disclosure summary:focus-visible {outline:2px solid #a8d6ff;outline-offset:4px;}
+@media(min-width:851px) {
+  .client-offer :is(.prime-offer-module-group li,.prime-offer-price-section>p,.prime-offer-service-line,.prime-offer-annual-disclosure summary,.prime-offer-annual-breakdown) {font-size:16px;line-height:1.5;}
+  .client-offer .prime-offer-service {--offer-service-size:16px;}
+  .client-offer .prime-offer-service h4 {font-size:18px;}
+  .client-offer .prime-offer-service-heading,.client-offer .prime-offer-service-total {font-size:18px;}
+}
+@media(max-width:600px) {
+  .prime-offer-service-columns,.prime-offer-service-heading,.prime-offer-service-line,.prime-offer-service-total {padding-left:14px;padding-right:14px;gap:10px;grid-template-columns:minmax(0,1fr) minmax(82px,auto);}
+  .prime-offer-implementation.has-annual :is(.prime-offer-service-columns,.prime-offer-service-heading,.prime-offer-service-line,.prime-offer-service-total) {grid-template-columns:minmax(0,1fr) repeat(2,minmax(65px,auto));font-size:14px;}
+  .prime-offer-service-line>span:first-child {padding-left:8px;}
+}
+
 /* Municipal client summary and related services. */
 .prime-offer-communal-figures { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px; }
 .prime-offer-communal-figures>div { min-width:0; border-top:1px solid #ffffff52; padding-top:18px; }

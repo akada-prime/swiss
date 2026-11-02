@@ -1,3 +1,4 @@
+import { optionApplies } from './module-catalog.js';
 // Pure calculation domain. Real catalogs and commercial parameters are loaded
 // from the protected server store, never from this public source file.
 import { hostingIncluded } from './configuration.js';
@@ -297,7 +298,7 @@ export function calculateQuote(input, catalog) {
   }
   for (const entry of [...(input.moduleServices ?? []), ...(input.services ?? []),
     ...(input.primeLines ?? []), ...(input.partners ?? [])]) {
-    if (!serviceApplies(entry, input)) continue;
+    if (!serviceApplies(entry, input) || !optionApplies(entry,input)) continue;
     if (input.travel && entry.family === 'prestations' && entry.item_code === 'deplacements') continue;
     if (input.projectManagement && entry.family === 'prestations' && entry.item_code === 'projet') continue;
     if (entry.category === 'hosting' && !hostingIncluded(input)) continue;

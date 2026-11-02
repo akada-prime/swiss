@@ -199,3 +199,11 @@
 .chiffrage-pce-entry {padding:16px 0;border-top:1px solid var(--skin-border);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;}
 .chiffrage-service-group-heading {grid-column:1/-1;font-size:16px;margin:18px 0 8px;}
 @media(max-width:700px){.chiffrage-rollup{width:100%;margin-left:0;justify-content:space-between;gap:8px}.chiffrage-extra-available>.chiffrage-option-preview{grid-template-columns:minmax(0,1fr) auto;gap:8px}.chiffrage-option-preview>span:first-child{grid-column:1/-1}.chiffrage-option-preview>button{grid-column:2;grid-row:2/4}}
+
+/* Catalog management uses the existing authenticated editor and ordinary controls. */
+.chiffrage-catalog-record{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--skin-border-soft)}
+.chiffrage-catalog-record small{display:block;color:var(--skin-secondary);font-size:14px;margin-top:4px}
+.chiffrage-catalog-manager .chiffrage-panel{max-width:none}
+.chiffrage-included-functions{grid-column:1/-1;margin-top:6px;font-size:14px;color:var(--skin-secondary)}
+.chiffrage-included-functions summary{cursor:pointer;font-size:14px;font-weight:500}
+.chiffrage-included-functions ul{margin:8px 0 0;padding-left:20px}

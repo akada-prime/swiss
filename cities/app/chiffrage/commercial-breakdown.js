@@ -55,12 +55,13 @@ export function publicCostDetails(lines) {
     else if (key==='implementation') {
       const vendor=line.family==='prestations_module' ? String(line.item_code??'').split('/')[0] :
         String(line.item_code??'').startsWith('pce-')?'pce':String(line.item_code??'').startsWith('abacus-')?'abacus':null;
-      if(names[vendor]) {fr='Mise en œuvre · '+names[vendor];de='Implementierung · '+names[vendor];}
+      fr=de=names[vendor] || 'Prime';
     } else if (['otherServices','primePartners'].includes(key)) {
       const text=String(line.label??'').trim();
       if(text && text!==String(line.item_code??'') && !/[<>\/]/.test(text)) fr=de=text.slice(0,160);
       else if(key==='primePartners') fr=de=names[line.family]||fr;
     }
+    if(line.family==='prestations' && String(line.item_code).toLowerCase()==='deplacements') {fr='Déplacements (estimés)';de='Reisekosten (geschätzt)';}
     const id=key+'\0'+fr+'\0'+de;
     if(!groups.has(id))groups.set(id,{key,label_fr:fr,label_de:de,investment:0,annual:0});
     const row=groups.get(id);row.investment+=line.investment_pv??0;row.annual+=line.annual_pv??0;

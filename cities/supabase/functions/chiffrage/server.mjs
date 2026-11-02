@@ -1,3 +1,4 @@
+import { moduleParents, validateModuleCatalog } from '../../../app/chiffrage/module-catalog.js';
 import { createHmac, createHash, randomUUID, randomBytes, timingSafeEqual } from 'node:crypto';
 import { Buffer } from 'node:buffer';
 import { calculateQuote } from '../../../app/chiffrage/calculate.js';
@@ -136,6 +137,7 @@ async function writeQuote(payload) {
     new Set(products).size !== products.length)
     throw new Error('Invalid product selection');
   const catalog = await loadCatalog(payload.catalog_versions);
+  input.module_contents = input.module_contents ?? catalog.parameters.module_contents ?? [];
   let result;
   try { result = calculateQuote(input, catalog); }
   catch (error) {
@@ -213,6 +215,25 @@ async function revokeClientLink(payload) {
   return rows.length ? json(publicLinkMetadata(rows[0])) : fail('Offer link unavailable', 404);
 }
 
+async function managedCatalog() {
+  const versions=await db('chiffrage_catalog_versions',{query:{select:'id,vendor,version,effective_from,active',active:'eq.true'}});
+  const chosen=Object.fromEntries(versions.map(row=>[row.vendor,row.id]));
+  if(!chosen.commercial)throw new Error('Commercial catalog required');
+  const catalog=await loadCatalog(chosen);
+  return {version:chosen.commercial,active:chosen,catalog,parents:moduleParents(catalog),
+    module_contents:catalog.parameters.module_contents ?? [],prime_options:catalog.parameters.prime_options ?? []};
+}
+async function saveManagedCatalog(payload) {
+  if(!uuidPattern.test(payload?.expected_version ?? ''))return fail('Invalid catalog version',400);
+  const current=await managedCatalog();
+  if(current.version!==payload.expected_version)return fail('Revision conflict',409);
+  const validated=validateModuleCatalog(payload,current.catalog);
+  await db('rpc/chiffrage_update_modules',{method:'POST',payload:{
+    p_expected_version:current.version,p_module_contents:validated.module_contents,p_prime_options:validated.prime_options
+  }});
+  return json(await managedCatalog());
+}
+
 export default async function handler(request) {
   if (!configured()) return fail('Chiffrage server is not configured', 503);
   const url = new URL(request.url);
@@ -242,6 +263,8 @@ export default async function handler(request) {
       return json({ versions, active: chosen,
         catalog: Object.keys(selected).length ? await loadCatalog(selected) : null });
     }
+    if (action === 'moduleCatalog' && request.method === 'GET') return json(await managedCatalog());
+    if (action === 'saveModuleCatalog' && request.method === 'POST') return await saveManagedCatalog(await body(request));
     if (action === 'list' && request.method === 'GET')
       return json(await db('chiffrages', { query: { select: '*',
         ...(url.searchParams.get('archived') === 'all' ? {} : { archived: 'eq.false' }),

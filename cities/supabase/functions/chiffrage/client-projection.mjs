@@ -1,3 +1,5 @@
+import { customerModuleScope } from '../../../app/chiffrage/module-scope.js';
+export { customerModuleScope } from '../../../app/chiffrage/module-scope.js';
 // Customer-safe allowlist: only commercially approved software labels and PV totals.
 // No raw input/result, catalog versions, item codes, PA, margins, rates, or services days.
 import { publicPriceBreakdown, publicCostDetails, annualComponents } from '../../../app/chiffrage/commercial-breakdown.js';
@@ -7,55 +9,6 @@ const finite = value => typeof value === 'number' && Number.isFinite(value);
 const short = (value, max = 160) => String(value ?? '').trim().slice(0, max);
 const amount = line => ({investment:line.investment_pv ?? 0,annual:line.annual_pv ?? 0});
 
-export function customerModuleScope(input, catalog) {
-  // A code is only used for lookup server-side and is NEVER serialized.
-  const catalogItems = catalog?.items ?? [];
-  const byCode = new Map(catalogItems.map(x=>[
-    `${x.vendor}/${x.product}/${x.item_code}`,x
-  ]));
-  const selected = input?.modules ?? [];
-  const groups = new Map();
-  const add = (vendor,fr,de) => {
-    if (!products[vendor]) return;
-    const name=short(fr,120), german=short(de || fr,120);
-    if (!name) return;
-    if(!groups.has(vendor))groups.set(vendor,new Map());
-    const group=groups.get(vendor);
-    // Keep product display order and deduplicate Abacus submodule names by family.
-    const key=`${name}\0${german}`;
-    if(!group.has(key))group.set(key,{fr:name,de:german});
-  };
-  for (const module of selected) {
-    if (!products[module.vendor] || !input.products?.includes(module.vendor))continue;
-    const original=byCode.get(`${module.vendor}/${module.product}/${module.item_code}`) ??
-      (module.vendor==='innosolv' && module.item_code==='129' && input.canton==='VD' ?
-        byCode.get(`${module.vendor}/${module.product}/129VD`) : null);
-    if(!original)continue; // Don't invent names from internal item codes.
-    let display=original;
-    if(module.vendor==='abacus'){
-      // Critical: only the parent .1 of the Abacus module group is visible.
-      // Never send individual Abacus function / submodule labels.
-      const family=String(module.item_code).split('.')[0];
-      display=byCode.get(`abacus/${module.product}/${family}.1`) ??
-        byCode.get(`abacus/${module.product}/${family}`) ??
-        (!String(module.item_code).includes('.') || module.item_code.endsWith('.1') ? original :
-          {label_fr:'Autres fonctions Abacus',label_de:'Weitere Abacus-Funktionen'});
-    }
-    add(module.vendor,display.label_fr || display.label_de,display.label_de || display.label_fr);
-  }
-  if(input?.products?.includes('pce')){
-    if(input.pce?.finances)add('pce','Finances','Finanzen');
-    if(input.pce?.salaires)add('pce','Salaires','Löhne');
-  }
-  const output=Object.entries(products).filter(([vendor])=>groups.has(vendor))
-    .map(([vendor,product])=>({product,items:[...groups.get(vendor).values()]}))
-    .filter(x=>x.items.length);
-  for(const [key,product] of [['primeLines','Prime'],['partners','Partenaires']]) {
-    const items=(input?.[key]??[]).filter(row=>row.category!=='hosting').map(row=>short(row.label,120)).filter(Boolean);
-    if(items.length)output.push({product,items:[...new Set(items)].map(fr=>({fr,de:fr}))});
-  }
-  return output;
-}
 
 export function publicOfferFromSaved(quote, catalog) {
   const snapshot = quote?.snapshot;
