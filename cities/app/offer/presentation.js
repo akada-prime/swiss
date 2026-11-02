@@ -15,9 +15,17 @@ export function offerHero({ asset, name, bfsId, population, heading, inhabitants
 }
 export const offerBanner = (hero, figures = '') => `<div class="prime-offer-banner">${hero}${figures}</div>`;
 export function offerFigures(amounts, { label, money, incomplete = false, caveat = '', municipal = false, annualBreakdown = null }) {
+  const annualDetails = municipal && annualBreakdown ? `<table class="prime-offer-annual-breakdown" aria-label="${e(label('Répartition des coûts annuels','Aufteilung der jährlichen Kosten'))}">
+    <thead><tr><th scope="col" aria-label="${e(label('Poste','Position'))}"></th><th scope="col">${label('CHF HT / an','CHF exkl. MWST / Jahr')}</th><th scope="col">${label('Part','Anteil')}</th></tr></thead>
+    <tbody>${[['solutions','Logiciels','Software'],['lcm','LCM','LCM'],['hosting','Hébergement','Hosting']].map(([key,fr,de]) => {
+      const amount = annualBreakdown[key];
+      const share = Number.isFinite(amounts.annual) && amounts.annual > 0 && Number.isFinite(amount)
+        ? `${Math.round(amount / amounts.annual * 100)} %` : '—';
+      return `<tr><th scope="row">${label(fr,de)}</th><td>${e(money(amount).replace(/ CHF(?: HT)?$/, ''))}</td><td class="prime-offer-annual-share">${share}</td></tr>`;
+    }).join('')}</tbody></table>` : '';
   if (municipal) return `<section class="chiffrage-offer-summary"><div class="prime-offer-communal-figures">
     <div><span>${label("Coût d’investissement",'Investitionskosten')}</span><strong>${e(money(amounts.investment)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Une fois','Einmalig')}</small></div>
-    <div><span>${label('Coûts de fonctionnement (annuels)','Betriebskosten (jährlich)')}</span><strong>${e(money(amounts.annual)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Dès la 2e année','Ab dem zweiten Jahr')}</small>${annualBreakdown?`<dl class="prime-offer-annual-breakdown">${[['solutions','Solutions','Lösungen'],['lcm','LCM','LCM'],['hosting','Hébergement','Hosting']].map(([key,fr,de])=>`<div><dt>${label(fr,de)}</dt><dd>${e(money(annualBreakdown[key]))}</dd></div>`).join('')}</dl>`:''}</div>
+    <div><span>${label('Coûts de fonctionnement (annuels)','Betriebskosten (jährlich)')}</span><strong>${e(money(amounts.annual)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Dès la 2e année','Ab dem zweiten Jahr')}</small>${annualDetails}</div>
     <div><span>${label('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${e(money(amounts.tco5y)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Investissement + 4 annuités','Investition + 4 Jahresbeträge')}</small></div>
     </div>${caveat}</section>`;
   return `<section class="chiffrage-offer-summary"><div class="chiffrage-offer-figures">

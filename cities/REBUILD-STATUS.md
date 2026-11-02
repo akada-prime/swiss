@@ -477,3 +477,14 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   conservés. Présentation interne, données et montants inchangés.
 - 179 tests réussis et build Vite réussi. Contrôle navigateur non réalisé :
   l'aperçu géré est refusé par Vite (`terminal.local` non autorisé).
+
+## Offre client · répartition annuelle — 02.11.2026
+
+- « Logiciels » remplace « Solutions » dans le détail annuel. Unité CHF HT / an
+  affichée une seule fois ; troisième colonne de parts annuelles arrondies au
+  pourcent, calculées depuis le total sauvegardé. Total nul : part non applicable.
+- Tableau compact de trois postes, montants alignés et pourcentages secondaires.
+  Les tarifs et les montants sauvegardés ne changent pas.
+- Tests de présentation (FR/DE, arrondis, total nul et absence de détail),
+  contrôles complets et build Vite ; contrôle navigateur non réalisé, aperçu
+  géré précédemment refusé par la configuration d'hôte Vite.
