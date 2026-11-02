@@ -19,7 +19,20 @@ test('included content follows only the selected parent and publishes safe label
  assert.deepEqual(customerModuleScope({...input,products:[]},catalog),[]);
  assert.equal(scope[0].items[0].included.some(row=>'parent' in row || 'source' in row),false);
  const html=offerScope(scope.map(g=>({product:g.product,items:g.items.map(x=>({label:x.fr,included:x.included.map(c=>({label:c.fr}))}))})),{asset:x=>x});
- assert.match(html,/8 fonctions incluses/);assert.match(html,/Brochures cantonales/);assert.doesNotMatch(html,/<input/);
+ assert.match(html,/9 modules inclus/);assert.match(html,/Brochures cantonales/);assert.doesNotMatch(html,/<input/);
+ assert.match(html,/<details class="prime-offer-scope-section">/);
+ assert.doesNotMatch(html,/<details class="prime-offer-scope-section" open/);
+ assert.match(html,/data-scope-toggle/);
+ assert.match(html,/<ul class="prime-offer-scope-modules"><li>Finances<\/li><li>Immobilisation<\/li>/);
+ const salaries=customerModuleScope({...input,pce:{finances:false,salaires:true}},catalog)[0].items[0];
+ for(const product of ['ProConcept','Abacus','innosolvcity']) {
+  const grouped=offerScope([{product,items:[{label:salaries.fr,included:salaries.included.map(child=>({label:child.fr}))}]}],{asset:x=>x});
+  assert.match(grouped,/3 modules inclus/);
+  assert.match(grouped,/<ul class="prime-offer-scope-modules"><li>Salaires<\/li>/);
+  assert.match(grouped,/data-scope-toggle/);
+  assert.doesNotMatch(grouped,/<details class="prime-offer-scope-section" open/);
+ }
+
 });
 test('included functions are generic, sorted and frozen with saved inputs',()=>{
  const rows=[{id:'a',parent:'abacus/ERP/10510.1',label_fr:'Fonction A',order:2},{id:'b',parent:'abacus/ERP/10510.1',label_fr:'Fonction B',order:1}];
