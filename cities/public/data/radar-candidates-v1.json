@@ -1,166 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-10-30T11:24:14.841Z",
+    "generatedAt": "2026-11-02T13:30:19.551Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "860df338474a0951dd6d8bb14f3227b3a95900d9c5436d57bfc1f41fb3063121",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rappor",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2024_rapports/PR24.12RA_DemandeCreditNumerique.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : numérique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-programme",
-        "reason": "Rapport PR24.12 consulté, relatif au programme numérique de 2024. Contexte ancien, sans nouvel état de marché au 29.10.2026.",
-        "sourceVerification": "primary-pdf-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2024_rapports/PR24.12RA_DemandeCreditNumerique.pdf"
-        ]
-      }
-    },
-    {
-      "id": "4599169e162e842fd486dd98f434484073c692d2983dc1f42adc711d6197fb83",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "gestion de la Municipalité durant l'année 2023",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2024_preavis/PR24.08PR_RG2023.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2024-06-20",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2024_preavis/PR24.08PR_RG2023.pdf"
-        ]
-      }
-    },
-    {
-      "id": "addcfd1516185b0eb441004c124ceec70af7fa4f6c1706bd96333c2386de96dd",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Réponse aux observations de la Commission chargée d'examiner la gestion des biens communaux en 2023",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2024_rapports/ReponsesObservations2023.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2024_rapports/ReponsesObservations2023.pdf"
-        ]
-      }
-    },
-    {
-      "id": "782076bb0bb86ff60aa53aa52accfb560d8008eef119ea84b0b2bbde6afdc016",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport&nbsp;COGE",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2024_rapports/PR24.08RA_COGE_RapportGestion2023_2.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2024_rapports/PR24.08RA_COGE_RapportGestion2023_2.pdf"
-        ]
-      }
-    },
-    {
-      "id": "8816029b5bb244138c9369f53ba711cd050c20357d8e5465ed96c0b4d320d291",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "gestion de la Municipalité durant l'année 2022",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2023_preavis/PR23.08PR_vol.1_RapportGestion2022.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2023-04-03",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2023_preavis/PR23.08PR_vol.1_RapportGestion2022.pdf"
-        ]
-      }
-    },
-    {
-      "id": "86f4054dc03435aab0a069d226989004cce347a4281f4f53584293da9ef5d8b3",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Réponse aux observations de la Commission chargée d'examiner la gestion des biens communaux en 2022",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2023_rapports/COGE_ReponsesObservations.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2023_rapports/COGE_ReponsesObservations.pdf"
-        ]
-      }
-    },
     {
       "id": "a58e8ec154062bd08a289a50f8bf2242c83c7f90ffceae9a62485490cb499775",
       "sourceId": "yverdon-preavis",
@@ -5134,6 +4978,96 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "1196cf4105a89539cac3a348d1c77acb3e805dbc944d1295e250767c0da18e43",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Ersatz des Gebäudeleitsystems der UPD",
+      "url": "https://www.simap.ch/fr/?search=4bda931c-ed9c-4865-82f4-014d170fd4ca",
+      "detectedAt": "2026-11-02T13:30:13.871Z",
+      "publicationDate": "2026-11-02",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "2aeb858d77044930382b07b4b4d62330cc762762552149140f8e683228b3b5a0",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Licences VMware 2026",
+      "url": "https://www.simap.ch/fr/?search=b31fcefa-2d0c-4e42-a34b-5fe1d74c9f96",
+      "detectedAt": "2026-11-02T13:30:13.871Z",
+      "publicationDate": "2026-10-31",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : numérique",
+      "status": "pending"
+    },
+    {
+      "id": "83d2324e90a424a85d82a3aab82fec5047e8c88ee7960eadc6ff5e901fa06c65",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Muri b. Bern Gesamtsanierung Schulanlage Horbern - BKP 226.2 Verputzte Aussenwärmedämmung",
+      "url": "https://www.simap.ch/fr/?search=62a81c2d-3bf1-40fe-9d00-35d5ce4b7601",
+      "detectedAt": "2026-11-02T13:30:13.871Z",
+      "publicationDate": "2026-10-30",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : erp",
+      "status": "pending"
+    },
+    {
+      "id": "600a85dda865edbb5ace1066334ee8b2ad9b8b36437895105189fbd4604a6f4e",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "AO2027 - Assistance de 1er niveau (N1)",
+      "url": "https://www.simap.ch/fr/?search=8ad92f96-5266-4742-a509-1f3e19c14b99",
+      "detectedAt": "2026-11-02T13:30:13.871Z",
+      "publicationDate": "2026-10-30",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : numérique",
+      "status": "pending"
+    },
+    {
+      "id": "31b78be8cece46dd80577dd907794e25f9f0a78146a04d8538269d0649df81fa",
+      "sourceId": "gland-preavis",
+      "sourceLabel": "Gland · rapports et préavis 2026",
+      "municipality": "Gland",
+      "bfsId": 5721,
+      "scopeLabel": "",
+      "title": "Rapport de la Commission des finances",
+      "url": "https://www.gland.ch/fileadmin/documents/pdf/Conseil_communal/2026-2031/rapports_commissions/PREAVIS_12_RAPPORT_COM_FIN.pdf",
+      "detectedAt": "2026-11-02T13:30:17.393Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "e917ad011a8deecca036aa98277aaddc71f8c9c8c443cd84325809011f9d43a4",
+      "sourceId": "gland-preavis",
+      "sourceLabel": "Gland · rapports et préavis 2026",
+      "municipality": "Gland",
+      "bfsId": 5721,
+      "scopeLabel": "",
+      "title": "Rapport de la Commission des finances",
+      "url": "https://www.gland.ch/fileadmin/documents/pdf/Conseil_communal/2026-2031/rapports_commissions/PREAVIS_6_RAPPORT_COM_FIN.pdf",
+      "detectedAt": "2026-11-02T13:30:17.393Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
       "status": "pending"
     }
   ]
