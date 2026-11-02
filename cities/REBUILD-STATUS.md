@@ -467,3 +467,13 @@ même détail, phrase de remplacement unique. Règle typographique française
 centralisée dans i18n et les adaptateurs chiffrage/client ; ponctuation double
 protégée, sans toucher aux chiffres ni aux données sauvegardées.
 Recette technique : 175 tests et build. Pas de validation Safari réelle.
+
+## Offre client · identité communale compacte — 02.11.2026
+
+- Nom communal et canton agrandis (22–28 px selon l'écran), sur une première
+  ligne ; OFS et habitants en gras à 14 px, référence/version et révision en
+  poids normal sur la deuxième ligne, avec retour naturel si nécessaire.
+- Suppression de la répétition du nom dans la référence ; titres personnalisés
+  conservés. Présentation interne, données et montants inchangés.
+- 179 tests réussis et build Vite réussi. Contrôle navigateur non réalisé :
+  l'aperçu géré est refusé par Vite (`terminal.local` non autorisé).

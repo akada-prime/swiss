@@ -67,7 +67,7 @@ test('public entry preserves v1/v2 offers, FR/DE, values and confidentiality',as
   const saved=Object.fromEntries(['document','location','navigator','fetch'].map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
   let html,finish;const rendered=new Promise(resolve=>finish=resolve);
   const root={set innerHTML(value){html=value;finish();}};
-  const response={version,commune:'Ballaigues',bfs_id:5744,canton:'VD',population:1200,quote_title:'Contrôle <test>',revision:4,
+  const response={version,commune:'Ballaigues',bfs_id:5744,canton:'VD',population:1200,quote_title:version===2?'Ballaigues VD v1.0':'Contrôle <test>',revision:4,
    amounts:{investment:107780,annual:37028,tco5y:255892},products:['Abacus'],
    buckets:{solutions:{investment:107780,annual:37028}},lcm:'Gold',
    breakdown:[{key:'licenses',investment:107780,annual:37028}],scope:[{product:'Abacus',items:[{fr:'Finances',de:'Finanzen'}]}],
@@ -78,7 +78,12 @@ test('public entry preserves v1/v2 offers, FR/DE, values and confidentiality',as
     calls.push({url,options});return String(url).includes('action=clientOffer')?{ok:true,json:async()=>response}:{ok:false};
    }}))Object.defineProperty(globalThis,k,{value,configurable:true,writable:true});
    await import(`../app/client-offer.js?test=${version}-${lang}`);await rendered;
-   assert.match(html,/Ballaigues/);assert.match(html,/Contrôle &lt;test&gt;/);
+   assert.match(html,/<strong class="chiffrage-offer-name">Ballaigues VD<\/strong>/);
+   assert.match(html,/<span class="chiffrage-offer-metadata"><strong>OFS 5744 · [^<]+<\/strong> <span class="chiffrage-offer-reference">— /);
+   if(version===2) {
+    assert.equal((html.match(/Ballaigues/g)||[]).length,1);
+    assert.match(html,lang==='de-CH'?/— v1\.0 · Version 4/:/— v1\.0 · Révision 4/);
+   } else assert.match(html,/Contrôle &lt;test&gt;/);
    for(const value of Object.values(response.amounts)) assert.ok(html.replace(/<[^>]*>/g,'').includes(escapeOffer(money(value))));
    assert.doesNotMatch(html,/NEVER_RENDER|annual_pa|margin|data-action|<input|<button|style=|A{43}/);
    assert.equal(calls.length,2);assert.equal(calls[0].options.headers.Authorization,'Bearer '+token);
