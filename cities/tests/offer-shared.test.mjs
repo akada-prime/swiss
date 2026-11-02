@@ -64,7 +64,7 @@ test('public module dependency graph cannot load editor, calculations or private
   }
  }
  visit(new URL('../app/client-offer.js',import.meta.url));
- assert.equal(visited.size,5);
+ assert.equal(visited.size,6);
 });
 
 test('banner has one CSS owner, one mark rule, and no independently painted summary',()=>{

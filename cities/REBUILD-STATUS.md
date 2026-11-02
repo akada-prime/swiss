@@ -511,3 +511,19 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
 - Vérifications : compilation syntaxique des sources, tests de domaine et CI.
   Environnement local et navigateur indisponibles : pas de recette visuelle ni
   de validation Safari. Ne pas annoncer une validation visuelle complète.
+
+
+## Offre client · rubriques et repères éditoriaux — 02.11.2026
+
+- Trait éditorial court de 48 px avant la signature sur PC, ligne droite
+  conservée ; triangle annuel orange et logo Prime agrandi de 10 %, proportionnel.
+- Rubriques génériques repliées par défaut et commande commune Tout déplier /
+  Tout replier, après clarification de l'utilisateur. Le module parent apparaît
+  en première puce : Finances + 8 inclus = 9 ; Salaires + 2 inclus = 3.
+- Puces pleines, retrait et taille identiques aux listes ordinaires ; espacement
+  de 6 px entre titre ouvert et liste. Composant commun à tous les logiciels.
+- Aucun changement de tarif, de catalogue ni de données sauvegardées.
+- Contrôles ciblés de présentation et navigation de l'aperçu avec les sources
+  réelles sur six largeurs. Le contrôle navigateur concerne cet aperçu isolé ;
+  aucune ouverture de lien client et aucun compteur consommé pour la recette.
+- Validation finale : `npm run check` (188 tests), `npm run build` et `git diff --check` réussis ; ouverture globale, fermeture et état partiel contrôlés au navigateur.

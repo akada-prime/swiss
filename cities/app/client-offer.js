@@ -1,10 +1,12 @@
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
+import { bindOfferScope } from './offer/interactions.js';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from './offer/presentation.js?v=20261102-catalog-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from './offer/presentation.js?v=20261102-rubrics-r1';
 import verifiedCoats from './chiffrage/coats.js?v=20261028-business-r11';
 import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261028-business-r11';
 
 const root = document.getElementById('offerClientRoot');
+bindOfferScope(root);
 const endpoint = 'https://ozdvmllgxduzquiujcbg.supabase.co/functions/v1/chiffrage?action=clientOffer';
 const enc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({
   '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch]);

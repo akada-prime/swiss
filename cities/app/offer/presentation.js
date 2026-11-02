@@ -52,11 +52,20 @@ export function offerScope(groups, { asset, label = fr => fr }) {
     if (typeof item === 'string') return `<li>${e(item)}</li>`;
     const children = item.included ?? [];
     if (!children.length) return `<li>${e(item.label)}</li>`;
+    // A priced parent stays a module when it also becomes a section heading.
+    // All software uses the same visible list, independently of its pricing model.
+    const modules = [{label:item.label}, ...children];
     const themes = new Map();
-    for (const child of children) { const theme=child.theme || ''; if(!themes.has(theme))themes.set(theme,[]); themes.get(theme).push(child); }
-    return `<li class="prime-offer-scope-parent"><details class="prime-offer-included"><summary>${e(item.label)} <span>${children.length} ${children.length===1?label('fonction incluse','enthaltene Funktion'):label('fonctions incluses','enthaltene Funktionen')}</span></summary>${[...themes].map(([theme,rows])=>`${theme && theme!==item.label ? `<h5>${e(theme)}</h5>` : ''}<ul>${rows.map(child=>`<li>${e(child.label)}</li>`).join('')}</ul>`).join('')}</details></li>`;
+    for (const module of modules) {
+      const theme = module.theme && module.theme !== item.label ? module.theme : '';
+      if (!themes.has(theme)) themes.set(theme, []);
+      themes.get(theme).push(module);
+    }
+    return `<li class="prime-offer-scope-parent"><details class="prime-offer-scope-section"><summary class="prime-offer-scope-heading">${e(item.label)} <span>· ${modules.length} ${label('modules inclus','enthaltene Module')}</span></summary>${[...themes].map(([theme,rows])=>`${theme ? `<h6 class="prime-offer-scope-subheading">${e(theme)}</h6>` : ''}<ul class="prime-offer-scope-modules">${rows.map(module=>`<li>${e(module.label)}</li>`).join('')}</ul>`).join('')}</details></li>`;
   };
-  return `<div class="prime-offer-module-grid">${groups.map(({ product, items })=>`<section class="prime-offer-module-group"><h4 class="${product==='Abacus'?'brand-abacus':product==='innosolvcity'?'brand-innosolv':''}">${logos[product] ? `<img class="prime-offer-software-logo ${['ProConcept','Abacus'].includes(product)?'logo-on-dark':''}" src="${e(asset(`assets/logos/${logos[product]}`))}" alt="${e(product)}">${product==='Abacus'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/abacus-wordmark.png'))}" alt="Abacus">`:''}${product==='ProConcept'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/proconcept-dark.png'))}" alt="ProConcept">`:''}` : e(product)}</h4><ul>${items.map(itemHtml).join('')}</ul></section>`).join('')}</div>`;
+  const grouped = groups.some(group=>group.items.some(item=>typeof item==='object' && item.included?.length));
+  const controls = grouped ? `<div class="prime-offer-scope-tools"><button type="button" class="prime-offer-scope-toggle" data-scope-toggle data-expand-label="${e(label('Tout déplier','Alle aufklappen'))}" data-collapse-label="${e(label('Tout replier','Alle zuklappen'))}" aria-expanded="false">${label('Tout déplier','Alle aufklappen')}</button></div>` : '';
+  return `<div class="prime-offer-scope">${controls}<div class="prime-offer-module-grid">${groups.map(({ product, items })=>`<section class="prime-offer-module-group"><h4 class="${product==='Abacus'?'brand-abacus':product==='innosolvcity'?'brand-innosolv':''}">${logos[product] ? `<img class="prime-offer-software-logo ${['ProConcept','Abacus'].includes(product)?'logo-on-dark':''}" src="${e(asset(`assets/logos/${logos[product]}`))}" alt="${e(product)}">${product==='Abacus'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/abacus-wordmark.png'))}" alt="Abacus">`:''}${product==='ProConcept'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/proconcept-dark.png'))}" alt="ProConcept">`:''}` : e(product)}</h4><ul>${items.map(itemHtml).join('')}</ul></section>`).join('')}</div></div>`;
 }
 export function offerLcm(lcm, label, {prices, money} = {}) {
   if (!lcm) return '';

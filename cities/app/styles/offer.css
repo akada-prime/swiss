@@ -88,8 +88,8 @@
 }
 .chiffrage-offer-brand img {
   display: block;
-  width: 137px;
-  height: 60px;
+  width: calc(137px * var(--offer-logo-scale,1));
+  height: calc(60px * var(--offer-logo-scale,1));
   object-fit: contain
 }
 .chiffrage-offer-brand>span {
@@ -153,15 +153,24 @@
 .prime-offer-service-line {font-size:14px;color:var(--offer-text);}
 .prime-offer-service-line>span:first-child {padding-left:16px;}
 .prime-offer-service-total {border-top:1px solid var(--offer-border);font-weight:700;padding-top:16px;padding-bottom:16px;}
-.prime-offer-included summary {cursor:pointer;line-height:1.6;}
-.prime-offer-included summary>span {color:var(--offer-muted);font-size:14px;white-space:normal;}
-.prime-offer-included h5 {margin:10px 0 4px;font-size:inherit;}
 .prime-offer-module-group li.prime-offer-scope-parent {list-style:none;}
-.prime-offer-included ul {margin-top:8px;padding-left:20px;}
+.prime-offer-scope-parent+.prime-offer-scope-parent {margin-top:8px;}
+.prime-offer-scope-section .prime-offer-scope-heading {margin:0;font-size:inherit;line-height:inherit;font-weight:650;color:var(--offer-text);cursor:pointer;display:list-item;}
+.prime-offer-scope-section[open]>.prime-offer-scope-heading {margin-bottom:6px;}
+.prime-offer-scope-heading>span {font-weight:400;color:var(--offer-muted);}
+.prime-offer-scope-heading::marker {color:#f39449;}
+.prime-offer-scope-heading::-webkit-details-marker {color:#f39449;}
+.prime-offer-scope-tools {display:flex;justify-content:flex-end;margin-bottom:12px;}
+.prime-offer-scope-toggle {font:inherit;font-size:14px;min-height:40px;padding:6px 12px;border:1px solid var(--offer-border);border-radius:8px;background:transparent;color:var(--offer-text);cursor:pointer;}
+.prime-offer-scope-heading:focus-visible,.prime-offer-scope-toggle:focus-visible {outline:2px solid #a8d6ff;outline-offset:3px;}
+.prime-offer-scope-section .prime-offer-scope-subheading {margin:12px 0 6px;font-size:inherit;line-height:inherit;font-weight:600;color:var(--offer-text);}
+.prime-offer-scope-section .prime-offer-scope-modules {margin:0;padding-left:0;list-style-type:disc;}
 .prime-offer-annual-disclosure {margin-top:20px;padding-top:10px;border-top:1px solid #ffffff40;}
 .prime-offer-annual-disclosure summary {cursor:pointer;min-height:40px;display:list-item;align-content:center;font-size:14px;color:#c3d1e8;}
+.prime-offer-annual-disclosure summary::marker {color:#f39449;font-size:1.1em;}
+.prime-offer-annual-disclosure summary::-webkit-details-marker {color:#f39449;}
 .prime-offer-annual-disclosure .prime-offer-annual-breakdown {max-width:540px;}
-.prime-offer-included summary:focus-visible,.prime-offer-annual-disclosure summary:focus-visible {outline:2px solid #a8d6ff;outline-offset:4px;}
+.prime-offer-annual-disclosure summary:focus-visible {outline:2px solid #a8d6ff;outline-offset:4px;}
 @media(min-width:851px) {
   .client-offer :is(.prime-offer-module-group li,.prime-offer-price-section>p,.prime-offer-service-line,.prime-offer-annual-disclosure summary,.prime-offer-annual-breakdown) {font-size:16px;line-height:1.5;}
   .client-offer .prime-offer-service {--offer-service-size:16px;}
@@ -194,6 +203,7 @@
 
 /* Client-only signature inside the existing financial banner (no separate surface). */
 .client-offer {
+  --offer-logo-scale: 1.1;
   --offer-large-size: 44px;
   --offer-hero-bottom-space: 32px;
   --offer-editorial-gap: clamp(25px,4.8vw,58px);
@@ -252,6 +262,14 @@
   flex: 1 0 24px;
   height: 1px;
   background: #f39449;
+}
+@media (min-width: 601px) {
+  .client-offer .prime-offer-signature-kicker::before {
+    content: '';
+    flex: 0 0 48px;
+    height: 1px;
+    background: #f39449;
+  }
 }
 .client-offer .prime-offer-signature-disclosure {
   display: flow-root;

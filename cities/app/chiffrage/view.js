@@ -1,8 +1,9 @@
 import { includedForParent, optionApplies } from './module-catalog.js';
+import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from '../offer/presentation.js?v=20261102-catalog-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from '../offer/presentation.js?v=20261102-rubrics-r1';
 import { t, number } from '../core/i18n.js?v=20261028-offer-polish-r1';
 import { subscribePreferences } from '../core/preferences.js';
 import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261102-catalog-r1';
@@ -17,6 +18,7 @@ import { commercialPriceGroup, offerPriceGroups, publicCostDetails } from './com
 import { previewModule, moduleRollup, optionPreview } from './business-presentation.js';
 
 const root = document.getElementById('chiffrageRoot');
+bindOfferScope(root);
 const runtime = window.PrimeCommunesRuntime;
 const escape = runtime.escapeHtml;
 const endpoint = `${window.SUPABASE_URL}/functions/v1/chiffrage`;
