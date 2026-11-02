@@ -54,13 +54,16 @@ function renderOffer(o, map) {
   const scope = current && Array.isArray(o.scope) ? offerScope(o.scope.map(group=>({
     product:group.product, items:group.items.map(entry=>label(entry.fr,entry.de))
   })), { asset }) : `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
-  let hero = offerHero({ asset, name:o.commune, bfsId:o.bfs_id, population:fmt(o.population),
+  const communeName = [o.commune,canton].filter(Boolean).join(' ');
+  const quoteTitle = String(o.quote_title ?? '').trim();
+  const titlePrefix = [communeName,o.commune].find(name => name && quoteTitle.startsWith(`${name} `));
+  const referenceTitle = titlePrefix ? quoteTitle.slice(titlePrefix.length).trim() : quoteTitle;
+  const reference = [referenceTitle,`${label('Révision','Version')} ${o.revision}`].filter(Boolean).join(' · ');
+  const hero = offerHero({ asset, name:communeName, bfsId:o.bfs_id, population:fmt(o.population), reference,
     inhabitants:label('habitants','Einwohner'), heading:label('Votre projet, en chiffres.','Ihr Projekt in Zahlen.'),
     map:offerMap(map,o.bfs_id,label('Situation de la commune','Lage der Gemeinde')),
     identity:offerIdentity({asset,canton,cantonLabel:cantonNames[canton],coatHtml:coatSrc ? `<img src="${enc(coatSrc)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}),
     details:`${commercialSignature()}` });
-  const reference=`<p class="chiffrage-offer-reference">${enc(o.quote_title)} · ${label('Révision','Version')} ${enc(o.revision)}</p>`;
-  hero=hero.replace('<h2>',reference+'<h2>');
   root.innerHTML = `<article class="chiffrage-offer client-offer">
     ${offerBanner(hero,offerFigures(o.amounts,{label,money,municipal:true,annualBreakdown:o.annual_breakdown}))}
     <div class="chiffrage-offer-body prime-offer-commercial">

@@ -141,7 +141,6 @@
 }
 
 /* Municipal client summary and related services. */
-.client-offer .chiffrage-offer-reference { margin: 3px 0 12px; }
 .prime-offer-communal-figures { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:28px; }
 .prime-offer-communal-figures>div { min-width:0; border-top:1px solid #ffffff52; padding-top:18px; }
 .prime-offer-communal-figures>div>span,.prime-offer-communal-figures small { display:block; color:#c3d1e8; font-size:14px; line-height:1.5; }
@@ -174,8 +173,28 @@
   font-size: var(--offer-large-size);
 }
 .client-offer .chiffrage-offer-place {
+  display: block;
   font-size: 14px;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+.client-offer .chiffrage-offer-name {
+  display: block;
+  font-size: clamp(22px,calc(20px + .5vw),28px);
+  line-height: 1.15;
   font-weight: 700;
+}
+.client-offer .chiffrage-offer-metadata {
+  display: block;
+  margin-top: 3px;
+  color: #f8faff;
+}
+.client-offer .chiffrage-offer-metadata strong {
+  font-weight: 700;
+}
+.client-offer .chiffrage-offer-reference {
+  color: #b7c6e2;
+  font-weight: 400;
 }
 .client-offer .prime-offer-signature {
   margin: 25px 0 0;

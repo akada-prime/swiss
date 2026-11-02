@@ -4,12 +4,13 @@ export const escapeOffer = value => String(value ?? '').replace(/[&<>"']/g, ch =
   '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch]);
 const e = escapeOffer;
 export function offerHero({ asset, name, bfsId, population, heading, inhabitants,
-  brand = '', map = '', identity = '', details = '' }) {
+  brand = '', map = '', identity = '', details = '', reference = null }) {
+  const facts = `OFS ${e(bfsId)} · ${e(population)} ${e(inhabitants)}`;
   return `<header class="chiffrage-offer-hero">
     <div class="chiffrage-offer-brand"><img src="${e(asset('prime-logo-negative.svg'))}" width="137" height="60" alt="Prime Technologies">${brand ? `<span>${e(brand)}</span>` : ''}</div>
     <div class="chiffrage-offer-map" data-territory>${map}</div>
     <div class="chiffrage-offer-identity" data-identity>${identity}</div>
-    <p class="chiffrage-offer-place">${e(name)} <span>OFS ${e(bfsId)} · ${e(population)} ${e(inhabitants)}</span></p>
+    <p class="chiffrage-offer-place">${reference === null ? `${e(name)} <span>${facts}</span>` : `<strong class="chiffrage-offer-name">${e(name)}</strong><span class="chiffrage-offer-metadata"><strong>${facts}</strong> <span class="chiffrage-offer-reference">— ${e(reference)}</span></span>`}</p>
     <h2>${e(heading)}</h2>${details}</header>`;
 }
 export const offerBanner = (hero, figures = '') => `<div class="prime-offer-banner">${hero}${figures}</div>`;
