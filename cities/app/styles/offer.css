@@ -155,7 +155,7 @@
 .prime-offer-service-total {border-top:1px solid var(--offer-border);font-weight:700;padding-top:16px;padding-bottom:16px;}
 .prime-offer-module-group li.prime-offer-scope-parent {list-style:none;}
 .prime-offer-scope-parent+.prime-offer-scope-parent {margin-top:8px;}
-.prime-offer-scope-section .prime-offer-scope-heading {margin:0;font-size:inherit;line-height:inherit;font-weight:650;color:var(--offer-text);cursor:pointer;display:list-item;}
+.prime-offer-scope-section .prime-offer-scope-heading {margin:0;font-size:inherit;line-height:inherit;font-weight:650;color:var(--offer-text);cursor:pointer;display:list-item;list-style-position:outside;}
 .prime-offer-scope-section[open]>.prime-offer-scope-heading {margin-bottom:6px;}
 .prime-offer-scope-heading>span {font-weight:400;color:var(--offer-muted);}
 .prime-offer-scope-heading::marker {color:#f39449;}
