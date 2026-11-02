@@ -1,8 +1,11 @@
+import { includedForParent, optionApplies } from './module-catalog.js';
+import { customerModuleScope } from './module-scope.js';
+import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from '../offer/presentation.js?v=20261028-business-r11';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from '../offer/presentation.js?v=20261102-catalog-r1';
 import { t, number } from '../core/i18n.js?v=20261028-offer-polish-r1';
 import { subscribePreferences } from '../core/preferences.js';
-import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261025-prime-beta-r1';
+import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261102-catalog-r1';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js';
 import { calculationError } from './errors.js';
@@ -188,6 +191,14 @@ function listFigures(snapshot) {
     <span class="chiffrage-saved-parts"><span>${t('chiffrage.investment')}<b>${money(s.investment)}</b></span><span>${t('chiffrage.annual')}<b>${money(s.annual)}</b></span></span>
     `;
 }
+function renderCatalogManager(editing = null) {
+  state.mode='catalog';
+  root.innerHTML=header()+catalogEditor(state.moduleCatalog,localLabel,editing);
+}
+function catalogButton() {
+  return `<button type="button" class="chiffrage-button" data-action="manageCatalog">${localLabel('Gérer le catalogue','Katalog verwalten')}</button>`;
+}
+
 function renderList() {
   listObserver?.disconnect();
   snapshotQueue.length = 0;
@@ -195,7 +206,7 @@ function renderList() {
   state.mode = 'list'; state.draft = null; state.quote = null;
   const rows = state.quotes.filter(row => state.showArchived || !row.archived);
   root.innerHTML = header() + `<div class="chiffrage-actions">
-    <button class="chiffrage-button primary" data-action="new" ${!state.catalog ? 'disabled' : ''}>${t('chiffrage.new')}</button>
+    <button class="chiffrage-button primary" data-action="new" ${!state.catalog ? 'disabled' : ''}>${t('chiffrage.new')}</button>${catalogButton()}
     <label class="chiffrage-choice"><input type="checkbox" data-field="showArchived" ${state.showArchived ? 'checked' : ''}>${t('chiffrage.showArchived')}</label></div>
     ${state.catalog ? '' : `<p class="chiffrage-warning">${t('chiffrage.noCatalog')}</p>`}
     <div class="chiffrage-list">${rows.length ? rows.map(row =>
@@ -353,7 +364,7 @@ function productSection() {
         <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" data-missing-days="${days == null}" data-proposed-days="${escape(presetDays(id) ?? '')}" class="${current?.days != null && current.days !== presetDays(id) ? 'is-adjusted' : ''}" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j</span></label>
         ${referenceProfiles(state.catalog).find(row=>row.id===state.draft.reference?.id)?.module_group_labels?.[id] ? `<small>${t('chiffrage.groupedServices')}</small>` : ''}
       </div>` : `<span class="chiffrage-option-days">${days==null?localLabel('À préciser','Noch offen'):number(days)+' j'}<small>${days==null?'':money(days*dayRate())}</small></span>`}
-      ${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
+      ${selected.has(id)?includedFunctions(id):''}${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
   };
   return `<section class="chiffrage-section chiffrage-catalog"><p class="chiffrage-kicker">${localLabel('Périmètre logiciel','Softwareumfang')}</p><h2>${localLabel('Modules','Module')}</h2>
     <p class="chiffrage-helper">${localLabel('Les modules retenus en premier. Ouvre les options pour compléter le périmètre.','Gewählte Module zuerst. Weitere Optionen bei Bedarf öffnen.')}</p>
@@ -371,6 +382,11 @@ function productSection() {
 function rollupMarkup(row) {
   return `<span class="chiffrage-rollup"><span>${number(row.days)} j</span><span>${money(row.investment)} <small>${localLabel('invest.','Invest.')}</small></span><span>${money(row.annual)} <small>/ ${localLabel('an','Jahr')}</small></span>${row.incomplete?`<small>${localLabel('à compléter','ergänzen')}</small>`:''}</span>`;
 }
+function includedFunctions(parent) {
+  const children=includedForParent(state.draft,state.catalog,parent);
+  if(!children.length)return '';
+  return `<details class="chiffrage-included-functions"><summary>${children.length} ${localLabel('fonctions incluses','enthaltene Funktionen')}</summary><ul>${children.map(row=>`<li>${escape(localLabel(row.fr,row.de))}</li>`).join('')}</ul></details>`;
+}
 function pceModuleSection(result) {
   if(!state.draft.products.includes('pce')) return '';
   const rows=[['finances',t('chiffrage.finances')],...(state.draft.products.includes('innosolv')?[['interface','Interface ProConcept–innosolv']]:[]),['salaires',t('chiffrage.payroll')]];
@@ -378,7 +394,7 @@ function pceModuleSection(result) {
     let line=result?.lines.find(row=>row.family==='pce'&&row.item_code===key);
     if(!line&&key!=='interface')try{const copy=structuredClone(state.draft);copy.pce[key]=true;line=calculateQuote(copy,state.catalog).lines.find(row=>row.family==='pce'&&row.item_code===key);}catch{}
     const services=state.draft.services.filter(row=>row.item_code?.startsWith('pce-')&&(row.requires_pce_option?row.requires_pce_option===key:key==='finances'));
-    return `<div class="chiffrage-pce-entry"><label><input type="checkbox" data-field="pce.${key}" ${key==='interface'?'checked disabled':state.draft.pce[key]?'checked':''}>${escape(label)}</label><span>${money(line?.annual_pv)} / ${localLabel('an','Jahr')}</span>${services.map(row=>`<div>${escape(row.label||row.item_code)}${field(`service.${row.item_code}.days`,displayedServiceDays(row,state.catalog),t('chiffrage.days'),{step:.5})}</div>`).join('')}</div>`;
+    return `<div class="chiffrage-pce-entry"><label><input type="checkbox" data-field="pce.${key}" ${key==='interface'?'checked disabled':state.draft.pce[key]?'checked':''}>${escape(label)}</label><span>${money(line?.annual_pv)} / ${localLabel('an','Jahr')}</span>${state.draft.pce[key] ? includedFunctions('pce/ERP/'+key) : ''}${services.map(row=>`<div>${escape(row.label||row.item_code)}${field(`service.${row.item_code}.days`,displayedServiceDays(row,state.catalog),t('chiffrage.days'),{step:.5})}</div>`).join('')}</div>`;
   }).join('')}</div></details>`;
 }
 
@@ -390,7 +406,7 @@ const serviceTypes = [
   ['technique', 'Technique', 'Technik'],
   ['interfaces', 'Interfaces / développements', 'Schnittstellen / Entwicklung'],
   ['reserve', 'Réserve', 'Reserve'],
-  ['deplacements', 'Déplacements', 'Reisen']
+  ['deplacements', 'Déplacements (estimés)', 'Reisekosten (geschätzt)']
 ];
 function implementationPanel() {
   return `<section class="chiffrage-section chiffrage-implementation"><h3>${localLabel('Prestations par solution','Leistungen nach Lösung')}</h3><div data-implementation-summary>${implementationRows()}</div><p class="chiffrage-helper">${localLabel('Récapitulatif des prestations déjà retenues dans Modules, sans ajout au total.','Übersicht der bereits in Module enthaltenen Leistungen, ohne doppelte Verrechnung.')}</p></section>`;
@@ -493,7 +509,7 @@ function extraSection(scope = 'modules') {
     const selected = new Set((state.draft[kind] ?? []).map(line => line.item_code || line.label));
     const found = new Map();
     if (kind === 'primeLines') for (const option of catalogOptions) {
-      if (!selected.has(option.item_code)) found.set(option.item_code, { ...option, label:localLabel(option.label_fr,option.label_de??option.label_fr), source:'catalog' });
+      if (optionApplies(option,state.draft) && !selected.has(option.item_code)) found.set(option.item_code, { ...option, label:localLabel(option.label_fr,option.label_de??option.label_fr), source:'catalog' });
     }
     for (const profile of referenceProfiles(state.catalog)) for (const line of profile[key] ?? []) {
       if (line.category === 'hosting') continue;
@@ -503,7 +519,7 @@ function extraSection(scope = 'modules') {
     return [...found.values()];
   };
   const section = (kind, label) => {
-    const chosen = state.draft[kind].map((line,index)=>({...line,index})).filter(line=>line.category !== 'hosting');
+    const chosen = state.draft[kind].map((line,index)=>({...line,index})).filter(line=>line.category !== 'hosting' && optionApplies(line,state.draft));
     const options = available(kind);
     let result;try{result=calculateQuote(state.draft,state.catalog);}catch{}
     const sourceFamily=kind==='partners'?'partenaires':'prime';
@@ -538,7 +554,7 @@ function extraSection(scope = 'modules') {
     return `<details class="chiffrage-extra-group" data-disclosure-key="extras-${kind}-${scope}"><summary><span>${label}</span><small>${number(chosen.length)} ${localLabel('retenues','gewählt')}</small>${`<span data-rollup-kind="${kind}">${rollupMarkup(totals)}</span>`}</summary>${rows}
       <details class="chiffrage-extra-available" data-disclosure-key="available-${kind}-${scope}"><summary>${number(options.length)} ${localLabel('options non choisies','nicht gewählte Optionen')}</summary>
       ${options.map((line,index)=>{
-        const prepared=line.source==='catalog'?{...line,family:'prime',category:'license',quantity:1,unit_day_rate:dayRate(),investment_fixed_pv:0,annual_pv:line.annual_rule?.per_capita==null?null:0}:line;
+        const prepared=line.source==='catalog'?{...line,family:'prime',category:'license',quantity:1,unit_day_rate:dayRate(),investment_fixed_pv:line.investment_fixed_pv??0,annual_pv:line.annual_rule?.per_capita==null?(line.annual_pv??null):0}:line;
         const preview=optionPreview(state.draft,state.catalog,prepared,kind);
         return `<div class="chiffrage-option-preview"><span>${escape(line.label)}</span><span>${(preview?.selected_days??line.days)==null?localLabel('À préciser','Noch offen'):number((preview?.selected_days??line.days)*(line.quantity??1))+' j'}</span><strong>${preview?money(preview.investment_pv):localLabel('À préciser','Noch offen')}</strong><span>${preview?money(preview.annual_pv):localLabel('À préciser','Noch offen')} / ${t('chiffrage.ui.perYear')}</span><button type="button" class="chiffrage-button quiet" data-action="${line.source==='catalog'?'addPrimeOption':'addReferenceLine'}" data-code="${escape(line.item_code??'')}" data-kind="${kind}" data-index="${index}">${localLabel('Ajouter','Hinzufügen')}</button></div>`;
       }).join('')||`<p class="chiffrage-helper">${localLabel('Aucune autre option disponible.','Keine weitere Option verfügbar.')}</p>`}</details>
@@ -810,12 +826,12 @@ function offerSection() {
   try { result=calculateQuote(state.draft,state.catalog); }
   catch(error) { return `<section class="chiffrage-section"><p class="chiffrage-warning">${escape(errorMessage(error))}</p></section>`; }
   const priceDetail = offerBreakdown(publicCostDetails(result.lines).map(row=>({...row,label:localLabel(row.label_fr,row.label_de)})),{label:localLabel,money});
-  const themes=offerThemes(state.draft,state.catalog,document.documentElement.lang);
+  const themes=customerModuleScope(state.draft,state.catalog);
   const hostingLines=state.draft.primeLines.filter(line=>line.category==='hosting');
   const azHosting=hostingIncluded(state.draft) && (
     hostingLines.some(line=>line.item_code==='hosting-reference') ||
     /\bAZ(?: Informatique)?\b/i.test([state.draft.context?.hosting,...hostingLines.map(line=>line.label)].join(' ')));
-  const scope = offerScope(themes.map(group=>({product:group.name,items:group.themes})),{asset:assetUrl});
+  const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel});
   const lcm = ({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection;
   return `<article class="chiffrage-offer"><div class="chiffrage-offer-body"><section><h3>${localLabel('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
     ${scope}${offerServices(azHosting,lcm,{asset:assetUrl,label:localLabel,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
@@ -982,7 +998,7 @@ function renderEditor() {
     <div class="chiffrage-tab-panel" data-tab-panel="offer" ${state.editorTab==='offer'?'':'hidden'}><div id="chiffrageOffer">${offerSection()}</div></div>
     <div class="chiffrage-tab-panel" data-tab-panel="compare" ${state.editorTab==='compare'?'':'hidden'}>${comparisonSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="analysis" ${state.editorTab==='analysis'?'':'hidden'}><div id="chiffrageAnalysis">${analysis()}</div><div id="chiffrageDetail">${lineDetail()}</div></div>
-    ${state.internal ? `<div class="chiffrage-tab-panel" data-tab-panel="rates" ${state.editorTab==='rates'?'':'hidden'}>${internalMargins()}${rateInventory()}${technicalSection()}${extraSection('rates')}${hostingSection('internal')}${state.quote ? `<div class="chiffrage-section"><button class="chiffrage-button" data-action="exportInternal">${t('chiffrage.exportInternal')}</button></div>` : ''}</div>`:''}
+    ${state.internal ? `<div class="chiffrage-tab-panel" data-tab-panel="rates" ${state.editorTab==='rates'?'':'hidden'}>${catalogButton()}${internalMargins()}${rateInventory()}${technicalSection()}${extraSection('rates')}${hostingSection('internal')}${state.quote ? `<div class="chiffrage-section"><button class="chiffrage-button" data-action="exportInternal">${t('chiffrage.exportInternal')}</button></div>` : ''}</div>`:''}
     <footer class="chiffrage-editor-footer"><div class="chiffrage-actions"><button class="chiffrage-button primary" data-action="save">${t('chiffrage.save')}</button>${state.quote ? `<button class="chiffrage-button" data-action="export">${t('chiffrage.export')}</button><button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button><button class="chiffrage-button" data-action="copyLink">${t('chiffrage.resumeDesktop')}</button><button class="chiffrage-button primary" data-action="${shareReady?'shareOffer':'prepareShare'}" ${state.archived ? 'disabled' : ''} title="${shareReady ? '' : localLabel('Enregistre et finalise les montants avant le partage','Angebot vor dem Teilen fertigstellen und speichern')}">${shareReady ? localLabel('Partager l’offre client','Kundenangebot teilen') + ' ↗' : state.archived?localLabel('Chiffrage archivé','Archivierte Kalkulation'):currentCompletion().length?t('chiffrage.completion.beforeShare'):t('chiffrage.completion.saveBeforeShare')}</button><button class="chiffrage-button" data-action="manageShares">${localLabel('Gérer les liens','Links verwalten')}</button><details class="chiffrage-more"><summary>${t('chiffrage.workspace.93674815f7')}</summary><div class="chiffrage-actions"><button class="chiffrage-button" data-action="revisions">${t('chiffrage.revisions')}</button><button class="chiffrage-button" data-action="archive">${t('chiffrage.archive')}</button><button class="chiffrage-button chiffrage-danger" data-action="delete">${t('chiffrage.workspace.66e03d8bb9')}</button></div></details>`:''}</div><button class="chiffrage-inline" data-action="${state.internal?'clientMode':'internalMode'}">${state.internal?t('chiffrage.workspace.444c26c24e'):t('chiffrage.workspace.04c546339b')}</button></footer><div id="chiffrageShareResult" aria-live="polite"></div><div id="chiffrageHistory"></div></div><div id="chiffrageSummary">${financialPanel}</div></div></div>`;
   for (const node of root.querySelectorAll('details[data-disclosure-key]')) if(disclosureState.has(node.dataset.disclosureKey))node.open=disclosureState.get(node.dataset.disclosureKey);
   for(const node of root.querySelectorAll('[data-module-search]'))if(searches.has(node.dataset.moduleSearch)){node.value=searches.get(node.dataset.moduleSearch);node.dispatchEvent(new Event('input',{bubbles:true}));}
@@ -1213,6 +1229,31 @@ async function open(id) {
 
 root.addEventListener('submit', async event => {
   event.preventDefault();
+  if(event.target.id==='chiffrageCatalogForm') {
+    const form=event.target, kind=form.dataset.kind==='included'?'module_contents':'prime_options';
+    const index=form.dataset.index===''?null:Number(form.dataset.index);
+    const items=[...state.moduleCatalog[kind]];
+    const row=readCatalogRecord(form,index==null?{}:items[index]);
+    if(index==null)items.push(row);else items[index]=row;
+    const button=form.querySelector('[type=submit]');button.disabled=true;
+    try {
+      const updated=await api('saveModuleCatalog',{
+        expected_version:state.moduleCatalog.version,
+        module_contents:kind==='module_contents'?items:state.moduleCatalog.module_contents,
+        prime_options:kind==='prime_options'?items:state.moduleCatalog.prime_options
+      });
+      state.moduleCatalog=updated;
+      state.activeVersions={...state.activeVersions,commercial:updated.version};
+      state.activePrimeOptions=updated.prime_options;
+      if(!state.draft){state.catalog=updated.catalog;state.versions={...state.activeVersions};}
+      renderCatalogManager();
+      notice(()=>localLabel('Catalogue enregistré. Les offres existantes sont conservées.','Katalog gespeichert. Bestehende Angebote bleiben erhalten.'));
+    } catch(error) {
+      notice(()=>error.status===409?localLabel('Le catalogue a changé dans une autre session. Reviens au catalogue pour recharger avant de modifier.','Der Katalog wurde in einer anderen Sitzung geändert. Vor einer Änderung neu laden.'):errorMessage(error),true);
+      button.disabled=false;
+    }
+    return;
+  }
   if (['chiffrageLogin', 'chiffrageReconnect'].includes(event.target.id)) {
     const reconnect = event.target.id === 'chiffrageReconnect';
     const button = event.target.querySelector('button'); button.disabled = true;
@@ -1430,6 +1471,19 @@ root.addEventListener('click', async event => {
   const button = event.target.closest('[data-action]');
   if (!button) return;
   const action = button.dataset.action;
+  if(action==='manageCatalog') {
+    state.catalogReturn=state.mode;button.disabled=true;
+    try {state.moduleCatalog=await api('moduleCatalog');renderCatalogManager();}
+    catch(error){notice(()=>errorMessage(error),true);button.disabled=false;}return;
+  }
+  if(action==='catalogBack') {
+    if(state.catalogReturn==='editor' && state.draft)renderEditor();else renderList();return;
+  }
+  if(action==='catalogNew' || action==='catalogEdit') {
+    renderCatalogManager({kind:button.dataset.kind,index:action==='catalogNew'?null:Number(button.dataset.index)});return;
+  }
+  if(action==='catalogCancel'){renderCatalogManager();return;}
+
   if (action === 'completeQuote' || action === 'prepareShare') {
     if (!focusCompletion(Number(button.dataset.completionIndex??0)) && action==='prepareShare') root.querySelector('[data-action=save]')?.click();
     return;
@@ -1440,6 +1494,7 @@ root.addEventListener('click', async event => {
     try {
       const active=await api('catalog');
       const draft=structuredClone(state.draft);
+      draft.module_contents=structuredClone(active.catalog.parameters.module_contents ?? []);
       const previousServices=new Map((draft.moduleServices??[]).map(line=>[line.item_code,line]));
       const previousGlobal=new Map((draft.services??[]).map(line=>[line.item_code,line]));
       const profile=referenceProfiles(active.catalog).find(row=>row.default)??referenceProfiles(active.catalog)[0];
@@ -1626,15 +1681,16 @@ root.addEventListener('click', async event => {
   if (action === 'addPrimeOption') {
     const code=button.dataset.code ?? root.querySelector('[data-prime-option]')?.value;
     const option=state.activePrimeOptions.find(item=>item.item_code===code);
-    if (!option) return;
+    if (!option || !optionApplies(option,state.draft)) return;
     if (state.draft.primeLines.some(line=>line.item_code===code)) return;
     if (code==='prime-mandats-integres' && !state.draft.primeLines.some(line=>line.item_code==='prime-mandats-finance')) {
       notice(() => localLabel('Ajoute d’abord les mandats finance supplémentaires.','Zuerst zusätzliche Finanzmandate hinzufügen.'),true);return;
     }
     state.draft.primeLines.push({family:'prime',category:'license',item_code:code,
       label:localLabel(option.label_fr,option.label_de??option.label_fr),quantity:1,
-      days:option.days??null,unit_day_rate:dayRate(),investment_fixed_pv:0,
-      annual_rule:option.annual_rule??null,annual_pv:option.annual_rule?.per_capita==null?null:0,
+      days:option.days??null,unit_day_rate:dayRate(),investment_fixed_pv:option.investment_fixed_pv??0,
+      requires_product:option.requires_product,requires_pce_option:option.requires_pce_option,
+      annual_rule:option.annual_rule??null,annual_pv:option.annual_rule?.per_capita==null?(option.annual_pv??null):0,
       explanation:{source:option.source,method:option.method,sample_size:option.sample_size}});
     state.dirty=true;renderEditor();return;
   }
@@ -1780,7 +1836,7 @@ window.addEventListener('popstate', () => {
 subscribePreferences(name => {
   if (name === 'language') state.priceFeedback='';
   if (state.message && state.messageResolver) state.message=state.messageResolver();
-  if (state.authenticated) state.mode === 'editor' ? renderEditor() : renderList();
+  if (state.authenticated) state.mode === 'editor' ? renderEditor() : state.mode==='catalog' ? renderCatalogManager() : renderList();
   else if (state.loaded) renderLogin();
 });
 if (new URLSearchParams(location.search).get('view') === 'chiffrage') load();

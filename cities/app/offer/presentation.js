@@ -25,9 +25,9 @@ export function offerFigures(amounts, { label, money, incomplete = false, caveat
     }).join('')}</tbody></table>` : '';
   if (municipal) return `<section class="chiffrage-offer-summary"><div class="prime-offer-communal-figures">
     <div><span>${label("Coût d’investissement",'Investitionskosten')}</span><strong>${e(money(amounts.investment)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Une fois','Einmalig')}</small></div>
-    <div><span>${label('Coûts de fonctionnement (annuels)','Betriebskosten (jährlich)')}</span><strong>${e(money(amounts.annual)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Dès la 2e année','Ab dem zweiten Jahr')}</small>${annualDetails}</div>
+    <div><span>${label('Coûts de fonctionnement (annuels)','Betriebskosten (jährlich)')}</span><strong>${e(money(amounts.annual)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Dès la 2e année','Ab dem zweiten Jahr')}</small></div>
     <div><span>${label('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${e(money(amounts.tco5y)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Investissement + 4 annuités','Investition + 4 Jahresbeträge')}</small></div>
-    </div>${caveat}</section>`;
+    </div>${annualDetails ? `<details class="prime-offer-annual-disclosure"><summary>${label('Répartition des coûts annuels','Aufteilung der jährlichen Kosten')}</summary>${annualDetails}</details>` : ''}${caveat}</section>`;
   return `<section class="chiffrage-offer-summary"><div class="chiffrage-offer-figures">
     <div><span>${incomplete ? label('Investissement calculé à ce stade','Bisher berechnete Investition') : label('Investissement initial','Anfangsinvestition')}</span><strong>${e(money(amounts.investment))}</strong><small>${label('HT · une fois','exkl. MWST · einmalig')}</small></div>
     <div><span>${label('Coût annuel récurrent','Wiederkehrende Jahreskosten')}</span><strong>${e(money(amounts.annual))}</strong><small>${label('HT · dès la 2e année','exkl. MWST · ab dem zweiten Jahr')}</small></div>
@@ -47,8 +47,16 @@ export function offerMap(map, bfsId, label, fallback = '') {
   return `<svg viewBox="${box.join(' ')}" role="img" aria-label="${e(label)}"><g class="chiffrage-map-region">${(map.cantons??[]).map(row=>`<path d="${e(row.d)}"></path>`).join('')}</g><path class="chiffrage-map-selected" d="${e(selected.d)}"></path><circle class="chiffrage-map-point" cx="${center[0]}" cy="${center[1]}" r="7000"></circle></svg>`;
 }
 const logos = { innosolvcity:'innosolvcity.png', ProConcept:'proconcept-wordmark.png', Abacus:'abacus-negative.svg' };
-export function offerScope(groups, { asset }) {
-  return `<div class="prime-offer-module-grid">${groups.map(({ product, items })=>`<section class="prime-offer-module-group"><h4 class="${product==='Abacus'?'brand-abacus':product==='innosolvcity'?'brand-innosolv':''}">${logos[product] ? `<img class="prime-offer-software-logo ${['ProConcept','Abacus'].includes(product)?'logo-on-dark':''}" src="${e(asset(`assets/logos/${logos[product]}`))}" alt="${e(product)}">${product==='Abacus'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/abacus-wordmark.png'))}" alt="Abacus">`:''}${product==='ProConcept'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/proconcept-dark.png'))}" alt="ProConcept">`:''}` : e(product)}</h4><ul>${items.map(item=>`<li>${e(item)}</li>`).join('')}</ul></section>`).join('')}</div>`;
+export function offerScope(groups, { asset, label = fr => fr }) {
+  const itemHtml = item => {
+    if (typeof item === 'string') return `<li>${e(item)}</li>`;
+    const children = item.included ?? [];
+    if (!children.length) return `<li>${e(item.label)}</li>`;
+    const themes = new Map();
+    for (const child of children) { const theme=child.theme || ''; if(!themes.has(theme))themes.set(theme,[]); themes.get(theme).push(child); }
+    return `<li class="prime-offer-scope-parent"><details class="prime-offer-included"><summary>${e(item.label)} <span>${children.length} ${children.length===1?label('fonction incluse','enthaltene Funktion'):label('fonctions incluses','enthaltene Funktionen')}</span></summary>${[...themes].map(([theme,rows])=>`${theme && theme!==item.label ? `<h5>${e(theme)}</h5>` : ''}<ul>${rows.map(child=>`<li>${e(child.label)}</li>`).join('')}</ul>`).join('')}</details></li>`;
+  };
+  return `<div class="prime-offer-module-grid">${groups.map(({ product, items })=>`<section class="prime-offer-module-group"><h4 class="${product==='Abacus'?'brand-abacus':product==='innosolvcity'?'brand-innosolv':''}">${logos[product] ? `<img class="prime-offer-software-logo ${['ProConcept','Abacus'].includes(product)?'logo-on-dark':''}" src="${e(asset(`assets/logos/${logos[product]}`))}" alt="${e(product)}">${product==='Abacus'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/abacus-wordmark.png'))}" alt="Abacus">`:''}${product==='ProConcept'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/proconcept-dark.png'))}" alt="ProConcept">`:''}` : e(product)}</h4><ul>${items.map(itemHtml).join('')}</ul></section>`).join('')}</div>`;
 }
 export function offerLcm(lcm, label, {prices, money} = {}) {
   if (!lcm) return '';
@@ -67,13 +75,25 @@ export function offerServices(az, lcm, {asset, label, prices, money}) {
 }
 
 export function offerBreakdown(rows, { label, money, legacy = false }) {
-  const section = (heading, keys, hint = '') => {
+  const section = (heading, keys) => {
     const entries = rows.filter(row=>keys.includes(row.key));
-    return entries.length ? `<section class="prime-offer-price-section"><h3>${heading}</h3>${hint?`<p>${hint}</p>`:''}<div class="prime-offer-price-list">${entries.map(row=>`<div class="prime-offer-price-row"><h4>${e(row.label)}</h4><div class="prime-offer-price-values"><div><small>${label('Investissement','Investition')}</small><strong>${e(money(row.investment))}</strong></div><div><small>${label('Annuel dès N+1','Jährlich ab N+1')}</small><strong>${e(money(row.annual))}</strong></div></div></div>`).join('')}</div></section>` : '';
+    return entries.length ? `<section class="prime-offer-price-section"><h3>${heading}</h3><div class="prime-offer-price-list">${entries.map(row=>`<div class="prime-offer-price-row"><h4>${e(row.label)}</h4><div class="prime-offer-price-values"><div><small>${label('Investissement','Investition')}</small><strong>${e(money(row.investment))}</strong></div><div><small>${label('Annuel dès N+1','Jährlich ab N+1')}</small><strong>${e(money(row.annual))}</strong></div></div></div>`).join('')}</div></section>` : '';
   };
-  return legacy ? section(label('Répartition du prix','Preisaufteilung'),['solutions','partners','hosting']) : [
-    section(label('Votre accompagnement','Ihre Begleitung'),['implementation','migration','management','training','otherServices'],label('Installation, reprise, conduite de projet et prise en main : chaque étape est chiffrée séparément.','Einrichtung, Migration, Projektleitung und Einführung: Jede Etappe ist separat ausgewiesen.')),
-    section(label('Logiciels et maintenance','Software und Wartung'),['licenses']),
-    section(label('Technique, service et support','Technik, Dienstleistungen und Support'),['database','primePartners','lcm','hosting'])
-  ].join('');
+  if(legacy)return section(label('Répartition du prix','Preisaufteilung'),['solutions','partners','hosting']);
+  const services = rows.filter(row=>['implementation','migration','management','training','otherServices'].includes(row.key) &&
+    (Math.abs(row.investment ?? 0)>.005 || Math.abs(row.annual ?? 0)>.005));
+  const travel = row=>/^(?:Déplacements|Reisen|Reisekosten)\b/i.test(row.label || '');
+  const hasAnnual = services.some(row=>Math.abs(row.annual ?? 0)>.005);
+  const values = row=>`<span>${e(money(row.investment ?? 0).replace(/ CHF(?: HT)?$/, ''))}</span>${hasAnnual ? `<span>${e(money(row.annual ?? 0).replace(/ CHF(?: HT)?$/, ''))}</span>` : ''}`;
+  const title = row=>{
+    if(row.key==='implementation')return String(row.label || '').replace(/^(?:Mise en (?:œ|oe)uvre|Implementierung)\s*·\s*/i,'').replace(/^(?:Mise en (?:œ|oe)uvre|Implementierung)$/i,'Prime');
+    if(/^(?:Déplacements|Reisen|Reisekosten)$/i.test(row.label || ''))return label('Déplacements (estimés)','Reisekosten (geschätzt)');
+    return row.label;
+  };
+  const total = entries=>({investment:entries.reduce((sum,row)=>sum+(row.investment ?? 0),0),annual:entries.reduce((sum,row)=>sum+(row.annual ?? 0),0)});
+  const group = (heading, entries, subtotal=true)=>entries.length ? `<div class="prime-offer-service-subgroup">${heading ? `<div class="prime-offer-service-heading"><h4>${heading}</h4>${subtotal?values(total(entries)):''}</div>` : ''}${entries.map(row=>`<div class="prime-offer-service-line"><span>${e(title(row))}</span>${values(row)}</div>`).join('')}</div>` : '';
+  const accompaniment = ['migration','training','management','otherServices'].flatMap(key=>services.filter(row=>row.key===key&&!travel(row)));
+  const implementation = services.length ? `<section class="prime-offer-price-section"><h3>${label('Mise en oeuvre de votre projet','Umsetzung Ihres Projekts')}</h3><div class="prime-offer-implementation${hasAnnual?' has-annual':''}"><div class="prime-offer-service-columns"><span></span><span>${label('Investissement · CHF HT','Investition · CHF exkl. MWST')}</span>${hasAnnual?`<span>${label('Annuel · CHF HT','Jährlich · CHF exkl. MWST')}</span>`:''}</div>${group(label('Paramétrage et intégration','Konfiguration und Integration'),services.filter(row=>row.key==='implementation'))}${group(label('Accompagnement au déploiement','Begleitung der Einführung'),accompaniment)}${group('',services.filter(travel),false)}<div class="prime-offer-service-total"><strong>${label('Total mise en oeuvre','Total Umsetzung')}</strong>${values(total(services))}</div></div></section>` : '';
+  return implementation + section(label('Logiciels et maintenance','Software und Wartung'),['licenses']) +
+    section(label('Technique, service et support','Technik, Dienstleistungen und Support'),['database','primePartners','lcm','hosting']);
 }
