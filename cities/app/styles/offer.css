@@ -778,6 +778,12 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .b
 .prime-offer-lcm-price { display:block; margin:0 0 8px; color:var(--offer-text); font-size:var(--offer-service-size,18px); }
 .prime-offer-lcm-alternative p>span { display:block; margin-bottom:10px; }
 
-.prime-offer-annual-breakdown { margin:12px 0 0;font-size:14px;line-height:1.6; }
-.prime-offer-annual-breakdown div {display:flex;justify-content:space-between;gap:12px;}
-.prime-offer-annual-breakdown dd {margin:0;text-align:right;font-variant-numeric:tabular-nums;}
+.prime-offer-annual-breakdown { width:100%;min-width:0;margin:12px 0 0;border-collapse:collapse;font-size:14px;line-height:1.6; }
+.client-offer .prime-offer-banner .prime-offer-annual-breakdown :is(th,td) { height:auto;padding:0;border:0;background:none;color:inherit;font-size:inherit;font-weight:400;letter-spacing:normal;text-transform:none;text-align:right;font-variant-numeric:tabular-nums; }
+.client-offer .prime-offer-banner .prime-offer-annual-breakdown th:first-child { text-align:left; }
+.client-offer .prime-offer-banner .prime-offer-annual-breakdown :is(th,td)+:is(th,td) { padding-left:12px; }
+.prime-offer-annual-breakdown tbody td { white-space:nowrap; }
+.prime-offer-annual-breakdown thead,.client-offer .prime-offer-banner .prime-offer-annual-breakdown .prime-offer-annual-share { color:#c3d1e8; }
+.prime-offer-annual-breakdown tbody tr { cursor:default; }
+.prime-offer-annual-breakdown tbody tr:hover { background:none; }
+.prime-offer-annual-breakdown .prime-offer-annual-share { width:1%; }

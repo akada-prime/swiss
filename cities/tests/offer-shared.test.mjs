@@ -36,6 +36,23 @@ test('map tolerates missing geometry and escapes supplied paths',()=>{
  assert.match(result,/cx="20" cy="30"/);
 });
 
+test('annual breakdown labels software clearly and derives whole shares from the saved annual total',()=>{
+ const amounts={investment:107780,annual:37028,tco5y:255892};
+ const annualBreakdown={solutions:17428,lcm:6400,hosting:13200};
+ const html=offerFigures(amounts,{label,money,municipal:true,annualBreakdown});
+ const table=html.match(/<table class="prime-offer-annual-breakdown"[\s\S]*?<\/table>/)[0];
+ assert.match(table,/Logiciels/);
+ assert.doesNotMatch(table,/Solutions/);
+ assert.deepEqual([...table.matchAll(/class="prime-offer-annual-share">([^<]+)/g)].map(m=>m[1]),['47 %','17 %','36 %']);
+ assert.equal((table.match(/CHF/g)||[]).length,1);
+ const zero=offerFigures({...amounts,annual:0},{label,money,municipal:true,annualBreakdown:{solutions:0,lcm:0,hosting:0}});
+ assert.doesNotMatch(zero,/NaN|Infinity/);
+ assert.equal((zero.match(/class="prime-offer-annual-share">—/g)||[]).length,3);
+ const de=offerFigures(amounts,{label:(fr,de)=>de,money,municipal:true,annualBreakdown});
+ assert.match(de,/Software/);assert.match(de,/Anteil/);
+ assert.doesNotMatch(offerFigures(amounts,{label,money,municipal:true}),/prime-offer-annual-breakdown/);
+});
+
 test('public module dependency graph cannot load editor, calculations or private storage',()=>{
  const visited=new Set();
  function visit(url){
