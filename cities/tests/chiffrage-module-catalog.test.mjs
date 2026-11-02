@@ -5,7 +5,7 @@ import { catalogEditor,readCatalogRecord } from '../app/chiffrage/catalog-editor
 import { customerModuleScope } from '../app/chiffrage/module-scope.js';
 import { offerScope,offerBreakdown,offerFigures } from '../app/offer/presentation.js';
 import { calculateQuote } from '../app/chiffrage/calculate.js';
-import handler from '../supabase/functions/chiffrage/server.mjs';
+import handler, {signSession} from '../supabase/functions/chiffrage/server.mjs';
 
 const contents=[{"id":"pce-inclus-immobilisations","parent":"pce/ERP/finances","label_fr":"Immobilisation","label_de":"Anlagenbuchhaltung","theme_fr":"Finances","theme_de":"Finanzen","order":0,"enabled":true},{"id":"pce-inclus-debiteurs","parent":"pce/ERP/finances","label_fr":"Débiteurs","label_de":"Debitoren","theme_fr":"Finances","theme_de":"Finanzen","order":1,"enabled":true},{"id":"pce-inclus-creanciers","parent":"pce/ERP/finances","label_fr":"Créanciers","label_de":"Kreditoren","theme_fr":"Finances","theme_de":"Finanzen","order":2,"enabled":true},{"id":"pce-inclus-budgets","parent":"pce/ERP/finances","label_fr":"Budgets","label_de":"Budgets","theme_fr":"Finances","theme_de":"Finanzen","order":3,"enabled":true},{"id":"pce-inclus-planification","parent":"pce/ERP/finances","label_fr":"Planification financière","label_de":"Finanzplanung","theme_fr":"Finances","theme_de":"Finanzen","order":4,"enabled":true},{"id":"pce-inclus-brochures","parent":"pce/ERP/finances","label_fr":"Brochures cantonales","label_de":"Kantonale Broschüren","theme_fr":"Finances","theme_de":"Finanzen","order":5,"enabled":true},{"id":"pce-inclus-fsupload","parent":"pce/ERP/finances","label_fr":"Export fsupload","label_de":"Export fsupload","theme_fr":"Finances","theme_de":"Finanzen","order":6,"enabled":true},{"id":"pce-inclus-innosolv","parent":"pce/ERP/finances","label_fr":"Interfaces innosolv","label_de":"innosolv-Schnittstellen","theme_fr":"Finances","theme_de":"Finanzen","order":7,"enabled":true},{"id":"pce-inclus-employes","parent":"pce/ERP/salaires","label_fr":"Gestion des employés","label_de":"Mitarbeiterverwaltung","theme_fr":"Salaires","theme_de":"Löhne","order":8,"enabled":true},{"id":"pce-inclus-swissdec","parent":"pce/ERP/salaires","label_fr":"Interfaces SwissDec","label_de":"Swissdec-Schnittstellen","theme_fr":"Salaires","theme_de":"Löhne","order":9,"enabled":true}];
 const options=[{"item_code":"prime-pce-ebics","label_fr":"Interface PCE-EBICS","label_de":"PCE-EBICS-Schnittstelle","days":1,"annual_pv":0,"requires_product":"pce","annual_rule":null,"investment_fixed_pv":0,"enabled":true,"source":"Validation direction Prime, 02.11.2026","method":"approved_fixed_annual","sample_size":0},{"item_code":"prime-pce-revue-salaires","label_fr":"Revue des salaires PCE","label_de":"PCE-Lohnüberprüfung","days":3,"annual_pv":500,"requires_product":"pce","requires_pce_option":"salaires","annual_rule":null,"investment_fixed_pv":0,"enabled":true,"source":"Validation direction Prime, 02.11.2026","method":"approved_fixed_annual","sample_size":0},{"item_code":"prime-pce-arrangements","label_fr":"Arrangements de paiements PCE","label_de":"PCE-Zahlungsvereinbarungen","days":0.5,"annual_pv":0,"requires_product":"pce","requires_pce_option":"finances","annual_rule":null,"investment_fixed_pv":0,"enabled":true,"source":"Validation direction Prime, 02.11.2026","method":"approved_fixed_annual","sample_size":0},{"item_code":"prime-pce-budgets-excel","label_fr":"Import des budgets PCE via Excel","label_de":"PCE-Budgetimport aus Excel","days":1,"annual_pv":0,"requires_product":"pce","requires_pce_option":"finances","annual_rule":null,"investment_fixed_pv":0,"enabled":true,"source":"Validation direction Prime, 02.11.2026","method":"approved_fixed_annual","sample_size":0}];
@@ -78,4 +78,34 @@ test('catalog endpoints reject customer bearer tokens and untrusted origins',asy
   for(const action of ['moduleCatalog','saveModuleCatalog'])assert.equal((await handler(new Request('https://example.supabase.co/?action='+action,{headers:{Authorization:'Bearer '+'A'.repeat(43)}}))).status,401);
   assert.equal((await handler(new Request('https://example.supabase.co/?action=saveModuleCatalog',{method:'POST',headers:{'content-type':'application/json',origin:'https://evil.invalid'},body:'{}'}))).status,403);
  }finally{globalThis.Deno=old;}
+});
+
+test('authenticated catalog editing checks the active version and sends validated content through the atomic RPC',async()=>{
+ const oldDeno=globalThis.Deno,oldFetch=globalThis.fetch;
+ globalThis.Deno={env:{get:name=>({SUPABASE_URL:'https://example.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'synthetic-key'})[name]}};
+ const oldVersion='00000000-0000-4000-8000-000000000001',newVersion='00000000-0000-4000-8000-000000000002';
+ let active=oldVersion,writes=0;
+ globalThis.fetch=async(url,init={})=>{
+  const path=new URL(url).pathname;
+  if(path.endsWith('/rpc/chiffrage_update_modules')){
+   const body=JSON.parse(init.body);assert.equal(body.p_expected_version,oldVersion);
+   assert.equal(body.p_module_contents.length,10);assert.equal(body.p_prime_options[0].annual_pv,0);
+   writes++;active=newVersion;return new Response(JSON.stringify({version:newVersion}));
+  }
+  const values=path.endsWith('/chiffrage_catalog_versions')?[{id:active,vendor:'commercial',version:'test',active:true}]:
+    path.endsWith('/chiffrage_parameters')?[{catalog_version_id:active,content:catalog.parameters}]:[];
+  return new Response(JSON.stringify(values));
+ };
+ const request=(action,payload)=>new Request('https://example.supabase.co/?action='+action,{
+  method:payload?'POST':'GET',headers:{Authorization:'Bearer '+signSession(),origin:'https://akada-prime.github.io',...(payload?{'content-type':'application/json'}:{})},
+  ...(payload?{body:JSON.stringify(payload)}:{})});
+ try {
+  assert.equal((await handler(request('moduleCatalog'))).status,200);
+  const payload={expected_version:oldVersion,module_contents:contents,prime_options:options};
+  const saved=await handler(request('saveModuleCatalog',payload));
+  assert.equal(saved.status,200);assert.equal((await saved.json()).version,newVersion);assert.equal(writes,1);
+  assert.equal((await handler(request('saveModuleCatalog',payload))).status,409);assert.equal(writes,1);
+  assert.equal((await handler(request('saveModuleCatalog',{...payload,expected_version:newVersion,module_contents:[{...contents[0],parent:'unknown'}]}))).status,400);
+  assert.equal(writes,1);
+ }finally{globalThis.Deno=oldDeno;globalThis.fetch=oldFetch;}
 });

@@ -2,7 +2,7 @@
 const clean = (value, limit = 160) => String(value ?? '').trim().slice(0, limit);
 const vendors = new Set(['innosolv','abacus','pce']);
 export function moduleParents(catalog) {
-  const parents = (catalog?.items ?? []).filter(row=>vendors.has(row.vendor)).map(row=>({
+  const parents = (catalog?.items ?? []).filter(row=>vendors.has(row.vendor) && (row.vendor!=='abacus' || !String(row.item_code).includes('.') || String(row.item_code).endsWith('.1'))).map(row=>({
     key:`${row.vendor}/${row.product}/${row.item_code}`, vendor:row.vendor,
     label_fr:row.label_fr || row.label_de || row.item_code,
     label_de:row.label_de || row.label_fr || row.item_code

@@ -137,7 +137,8 @@ async function writeQuote(payload) {
     new Set(products).size !== products.length)
     throw new Error('Invalid product selection');
   const catalog = await loadCatalog(payload.catalog_versions);
-  input.module_contents = input.module_contents ?? catalog.parameters.module_contents ?? [];
+  if(input.module_contents == null && catalog.parameters.module_contents?.length)
+    input.module_contents = catalog.parameters.module_contents;
   let result;
   try { result = calculateQuote(input, catalog); }
   catch (error) {
