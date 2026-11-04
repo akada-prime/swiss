@@ -1,11 +1,11 @@
-import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js';
+import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261104-roadmap-beta-r1';
 import { includedForParent, optionApplies } from './module-catalog.js';
 import { bindOfferScope } from '../offer/interactions.js';
-import { customerModuleScope } from './module-scope.js?v=20261104-classification-r1';
+import { customerModuleScope } from './module-scope.js?v=20261104-roadmap-beta-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
 import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from '../offer/presentation.js?v=20261104-classification-r1';
-import { t, number } from '../core/i18n.js?v=20261028-offer-polish-r1';
+import { t, number } from '../core/i18n.js?v=20261104-roadmap-beta-r1';
 import { subscribePreferences } from '../core/preferences.js';
 import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261102-catalog-r1';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';

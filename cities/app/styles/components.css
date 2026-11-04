@@ -558,3 +558,8 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 }
 :is(.stats-toolbar label,.filters label){border-color:var(--pc-field-border);border-radius:var(--pc-field-radius)}
 :is(.stats-toolbar label,.filters label){background:var(--pc-field-bg)}
+
+/* Shared experimental status for Radar and Histoires. */
+.beta-nav-tab{position:relative}
+.feature-beta-badge{position:absolute;right:4px;top:1px;padding:1px 4px;border:1px solid #c58a3c80;border-radius:999px;color:var(--skin-text);background:#9a64151f;font-size:8px;font-weight:750;line-height:1.1;letter-spacing:.04em}
+.feature-beta-note{color:var(--skin-secondary);font-size:14px}

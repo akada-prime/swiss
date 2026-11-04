@@ -201,19 +201,38 @@ Document de référence :
 Principe directeur : déterministe d'abord ; raisonnement lourd seulement
 lorsqu'il apporte une information nouvelle ou réduit réellement le risque.
 
-## 3.0 — Chiffrage · à réaliser
+## 3.0 — Chiffrage · disponible et en évolution
 
-La 3.0 introduit le **Chiffrage communal** : partir d'une commune connue,
-sélectionner les solutions, modules et prestations puis appliquer les moteurs
-de calcul propres à innosolv, Abacus et ProConcept.
+Le chiffrage est utilisable : logiciels, modules, prestations, calculs, révisions
+et présentation client en lecture seule. Le classement des modules est livré.
+Radar! et Histoires restent signalés comme fonctionnalités bêta.
 
-Le chiffrage intègre les composantes techniques, l'hébergement, les partenaires
-et le LCM afin de produire une vue claire de l'investissement, des coûts annuels
-et du TCO. Les valeurs calculées restent explicables et peuvent être ajustées
-humainement avant export Excel.
+### Prochaine étape — catalogue, règles et dossier commercial
 
-Le moteur reste déterministe et vérifiable. La vraie offre contractuelle
-Word/PDF reste hors de Prime Communes.
+Finaliser les désignations (point 1), documenter les règles de calcul (6), puis
+produire le dossier Excel pour les commandes et la préparation Word (9).
+La vitrine d'options (2) peut suivre le catalogue sans attendre le configurateur.
+
+### Étape suivante — comparaison et rentabilité
+
+Comparer uniquement les PV des licences et prestations avec les offres
+historiques (5), hors PA, LCM et hébergement. Expliquer les écarts de périmètre.
+Suivre séparément les marges par offre/client et sur cinq ans (7).
+
+### Ensuite — calibration des prestations
+
+Jours de référence par module pour 1'000 habitants, progression adaptée et
+ajustements commerciaux conservés (3), à partir des dossiers historiques.
+
+### Évolution à confirmer — configuration client
+
+Choix d'options autorisées (2), réception des changements et validation Prime (4).
+Le périmètre et le fonctionnement précis restent à décider.
+
+### Transversal — expérience utilisateur
+
+L'UX interne (8) s'améliore à chaque étape. Le parcours standard reste court et
+les détails restent accessibles pour les cas particuliers.
 
 ## 3.5 — Pérenniser · à réaliser
 

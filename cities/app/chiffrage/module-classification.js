@@ -5,7 +5,7 @@ export const innosolvMeters = ['501','502','533'];
 export const proposedInnosolvOptions = new Set('10,29,30,205,206,208,210,211,212,502,533,25,33,34,35,122,124,132,209,214,207,138,136'.split(','));
 export const gemeindeOrder = '1,36,21,28,22,23,24,30,31,122,124,116,34,35,13,26,27,38,39,41,33,40,50,54,57,51,52,53,55,56,58,29,208,209,210,25,10,11,100,101,113,104,115,120,125,132,140,135,129,119,127,138,136,143,200,201,214,205,206,202,211,212,207,215,501,509,516,517,504,523,514,502,533,528,534,531,529,530,532'.split(',');
 const section = (key,fr,de,order) => ({key,fr,de,order});
-const base = section('standard','Les indispensables · standard Prime','Grundmodule · Prime-Standard',0);
+const base = section('standard','Modules de base innosolv','innosolv-Basismodule',0);
 const meters = section('meters','Gestion des compteurs','Zählerverwaltung',1);
 const chosen = section('chosen','Options choisies','Gewählte Optionen',2);
 export const proposedOptions = section('proposed','Options à proposer','Empfohlene Optionen',0);

@@ -23,7 +23,7 @@ test('Radar and Histoires are first-class deep-linked views', async () => {
   assert.match(styles, /views\/roadmap\.css/);
   assert.match(html, /type="module" src="app\/main\.js\?v=[^"]+"/);
   assert.match(html, /class="news-beta-note"/);
-  assert.match(html, /class="news-nav-badge"><!--i18n:page\.009-->SOBRE/);
+  assert.match(html, /class="feature-beta-badge"><!--i18n:page\.009-->BÊTA/);
   assert.doesNotMatch(html, /news-nav-dot/);
   assert.match(html, /La source publique primaire reste la référence/);
   assert.ok(html.indexOf('news-beta-note') < html.indexOf('news-intro'));
@@ -64,7 +64,7 @@ test('all seven view headers share one responsive typography contract', async ()
   assert.doesNotMatch(roadmap, /\.roadmap-intro(?:-copy)?\s*\{/);
   assert.match(globals, /\.workspace\{padding-top:50px\}/);
   assert.match(globals, /@media\(max-width:680px\)[\s\S]*\.workspace\{padding-top:26px\}/);
-  assert.match(news, /\.news-nav-badge\{/);
+  assert.match(await read('app/styles/components.css'), /\.feature-beta-badge\{/);
   assert.match(globals, /@media\(max-width:680px\)[\s\S]*\.view-tabs\{[^}]*overflow-x:auto/);
 });
 
@@ -212,7 +212,7 @@ test('roadmap keeps completed history and exposes 2.5 done, 3.0 Chiffrage and fu
   const roadmap = await read('Prime-Communes-Roadmap.md');
   assert.match(roadmap, /## 2\.0 — Radar! · Faire parler les communes · terminé/);
   assert.match(roadmap, /## 2\.5 — Socle consolidé · terminé/);
-  assert.match(roadmap, /## 3\.0 — Chiffrage · à réaliser/);
+  assert.match(roadmap, /## 3\.0 — Chiffrage · disponible et en évolution/);
   assert.match(roadmap, /## 3\.5 — Pérenniser · à réaliser/);
   assert.match(roadmap, /## Brainstorming futur — Intelligence commerciale \/ IA · non planifié/);
   assert.match(html, /journey-understand journey-done/);
