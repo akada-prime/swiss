@@ -4,7 +4,7 @@ const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<
 const names = {
   publisher_rent:'Rent annuel éditeurs · PA et PV', pce:'ProConcept · méthode et coefficients',
   sql:'SQL Server · utilisateurs et cores', oracle:'Oracle · Full et Light', day_rate:'Tarif journalier',
-  lcm:'LCM · classes et preuves', service_presets:'Jours standards par module',
+  lcm:'LCM', service_presets:'Jours standards par module',
   configuration_profiles:'Profils · jours, GP et déplacements', prime_options:'Options Prime · définitions et prix',
   hosting_presets:'Hébergement · propositions de référence', module_contents:'Fonctions incluses · parents et ordre',
   reference_rates:'Taux de référence', review:'Traçabilité et contrôles du catalogue'
@@ -38,26 +38,90 @@ const fields = {
 const statusLabel = (key,l) => ({confirmed:l('Confirmée','Bestätigt'),review:l('À confirmer','Zu bestätigen'),arbitrate:l('À arbitrer','Zu klären'),planned:l('Prévue','Geplant')})[key];
 const originLabel = (key,l) => ({alex:'Alex',code:l('Code constaté','Im Code festgestellt'),catalog:l('Catalogue source','Quellkatalog')})[key];
 
-// A readable parameter tree, never HTML supplied by the catalog. Unknown fields stay visible.
-export function parameterTable(value, label) {
-  const rows=[];
-  const walk=(node,path=[])=>{
-    if(node && typeof node==='object') {
-      const entries=Object.entries(node);
-      if(!entries.length) rows.push([path.join(' › '),'—']);
-      else for(const [key,child] of entries) {
-        const segment=Array.isArray(node) ? (child?.label_fr || child?.label || child?.item_code || (child?.up_to != null ? '≤ '+child.up_to : '#'+(Number(key)+1))) : fields[key] || key;
-        if(child!==undefined)walk(child,[...path,segment]);
+// Business tables first; provenance is kept in its own disclosure.
+const technicalKey = key => /source|evidence|sha256|^review$|^status$|conflict|alternative_tiers|explanation/.test(key);
+const scalar = value => value==null || typeof value!=='object';
+const meanings={population:'Habitants',meters:'Compteurs',taxes:'Taxes',employees:'Employés',
+  innosolv_plus_options:'PA innosolv + complément options',markup:'Majoration sur PA',margin:'Marge sur PV',
+  lookup:'Prix par palier',linear_rounded:'Interpolation puis arrondi',rounded_ratio:'Ratio puis arrondi',
+  unverified:'Prix manuel requis',prime_service_days:'Jours Prime admissibles',
+  project_days_including_partners_gp:'Jours du projet, GP et partenaires compris',hold:'Premier palier conservé'};
+
+const format = (value,l) => value==null ? l('À préciser','Noch offen') : typeof value==='boolean' ?
+  (value?l('Oui','Ja'):l('Non','Nein')) : typeof value==='number' ? new Intl.NumberFormat('de-CH',{maximumFractionDigits:4}).format(value).replace(/'/g,"'") : (meanings[value] || String(value));
+function compactTable(headers,rows,l,{wide=false,caption=''}={}) {
+  return `<div class="rule-parameter-scroll" tabindex="0" role="region" aria-label="${l('Tableau de référence','Referenztabelle')}"><table class="rule-parameters${wide?' rule-matrix':''}">${caption?`<caption>${e(caption)}</caption>`:''}<thead><tr>${headers.map(h=>`<th scope="col">${e(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((cell,i)=>i===0?`<th scope="row">${e(format(cell,l))}</th>`:`<td>${e(format(cell,l))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+function lcmTable(rows,l) {
+  let previous=0;
+  return compactTable([l('Habitants','Einwohner'),'Gold','Platinum'],[...rows].sort((a,b)=>a.up_to-b.up_to).map(row=>{
+    const range=`${format(previous===0?0:previous+1,l)}–${format(row.up_to,l)}`;previous=row.up_to;
+    return [range,row.gold,row.platinium];
+  }),l,{caption:'CHF HT / an'});
+}
+function sqlTables(sql,l) {
+  const rows=[['Forfait (CHF)',sql.user_base],['Utilisateur (CHF)',sql.price_per_user],['Seuil cores (hab.)',sql.core_from_population],['Cores',sql.default_cores],['Core (CHF)',sql.price_per_core]];
+  const a=sql.suggestion;
+  return compactTable([l('SQL · paramètre','SQL · Parameter'),l('Valeur','Wert')],rows,l)+
+    (a?`<h4>${l('Utilisateurs proposés','Vorgeschlagene Benutzer')}</h4>`+compactTable([l('Habitants','Einwohner'),l('Utilisateurs','Benutzer')],[[a.lowerPopulation,a.lowerUsers],[a.upperPopulation,a.upperUsers]],l):'');
+}
+export function parameterTable(value,l,catalog={}) {
+  const moduleName=key=>{
+    const item=(catalog.items ?? []).find(row=>`${row.vendor}/${row.product}/${row.item_code}`===key);
+    return item?.label_fr || item?.label_de || ({'pce/ERP/finances':'Finances PCE','pce/ERP/salaires':'Salaires PCE'})[key] || key;
+  };
+  const annualValue=row=>row.annual_rule ? `Habitants × ${format(row.annual_rule.per_capita,l)} · arrondi ${format(row.annual_rule.round_to,l)}` : row.annual_pv;
+
+  const render=(node)=>{
+    if(scalar(node))return compactTable([l('Paramètre','Parameter'),l('Valeur','Wert')],[[l('Valeur','Wert'),node]],l);
+    if(Array.isArray(node)) {
+      if(!node.length)return '';
+      if(node.every(scalar))return `<p class="rule-value-list">${e(node.map(v=>format(v,l)).join(' · '))}</p>`;
+      if(node.every(row=>row && typeof row==='object' && 'up_to' in row && ('gold' in row || 'platinium' in row)))return lcmTable(node,l);
+      if(node.every(row=>row && typeof row==='object' && 'up_to' in row && ('value' in row || 'ratio' in row))) {
+        const key=node.some(row=>'value' in row)?'value':'ratio';
+        return compactTable([l("Jusqu'à",'Bis'),fields[key]],node.map(row=>[row.up_to,row[key]]),l);
       }
-    } else rows.push([path.join(' › ') || label('Valeur','Wert'),node==null?label('Non renseigné','Nicht angegeben'):typeof node==='boolean'?(node?label('Oui','Ja'):label('Non','Nein')):node]);
+      if(node.every(row=>row && typeof row==='object' && 'parent' in row && ('label_fr' in row || 'label' in row)))return compactTable([l('Module parent','Übergeordnetes Modul'),l('Fonction incluse','Enthaltene Funktion')],node.map(row=>[moduleName(row.parent),(row.label_fr || row.label)+(row.enabled===false?' (désactivée)':'')]),l);
+      if(node.every(row=>row && typeof row==='object' && ('label_fr' in row || 'label' in row) && !('module_days' in row)) && node.some(row=>'days' in row || 'annual_pv' in row || 'investment_pv' in row || 'investment_fixed_pv' in row)) {
+        const has=key=>node.some(row=>key in row);
+        const keys=['days','investment_pv','investment_fixed_pv','annual_pv'].filter(key=>has(key) && (key!=='investment_fixed_pv' || !has('investment_pv')));
+        const headings={days:l('Jours','Tage'),investment_pv:l('Initial · CHF HT','Einmalig · CHF'),investment_fixed_pv:l('Licence initiale · CHF HT','Erstlizenz · CHF'),annual_pv:l('Annuel · CHF HT','Jährlich · CHF')};
+        const matrix=compactTable([l('Prestation / module','Leistung / Modul'),...keys.map(key=>headings[key])],node.map(row=>[(row.label_fr || row.label)+(row.quantity!=null && row.quantity!==1?' × '+format(row.quantity,l):'')+(row.enabled===false?' (désactivé)':''),...keys.map(key=>key==='annual_pv'?annualValue(row):row[key])]),l,{wide:keys.length>2});
+        const extras=node.map(row=>({title:row.label_fr || row.label,values:Object.fromEntries(Object.entries(row).filter(([key,v])=>!keys.includes(key) && !['label_fr','label_de','label','id','item_code','quantity','enabled'].includes(key) && !technicalKey(key) && v!=null))})).filter(row=>Object.keys(row.values).length);
+        return matrix+(extras.length?`<details class="rule-parameter-extra"><summary>${l('Conditions et autres paramètres','Bedingungen und weitere Parameter')}</summary>${extras.map(row=>`<h4>${e(row.title)}</h4>${render(row.values)}`).join('')}</details>`:'');
+      }
+      return node.map((row,i)=>`<section class="rule-parameter-group"><h4>${e(row?.label_fr || row?.label || row?.item_code || '#'+(i+1))}</h4>${render(Object.fromEntries(Object.entries(row ?? {}).filter(([key])=>!['label','label_fr','label_de','id'].includes(key))))}</section>`).join('');
+    }
+    if('core_from_population' in node && 'user_base' in node)return sqlTables(node,l);
+    if('lowerPopulation' in node && 'upperPopulation' in node)return compactTable([l('Habitants','Einwohner'),l('Utilisateurs','Benutzer')],[[node.lowerPopulation,node.lowerUsers],[node.upperPopulation,node.upperUsers]],l);
+    if('full_price' in node && 'light_price' in node)return compactTable([l('Oracle','Oracle'),l('Acquisition','Anschaffung'),l('Annuel','Jährlich')],[['Full',node.full_price,node.full_maintenance],['Light',node.light_price,node.light_maintenance]],l);
+    if(Object.keys(node).length && Object.values(node).every(v=>v && typeof v==='object' && !Array.isArray(v) && 'pa_rate' in v && 'pv_rate' in v))return compactTable([l('Classe','Klasse'),'PA','PV'],Object.entries(node).map(([key,v])=>[key,format(v.pa_rate*100,l)+' %',format(v.pv_rate*100,l)+' %']),l);
+    const entries=Object.entries(node).filter(([key,v])=>v!==undefined && !technicalKey(key));
+    const simple=entries.filter(([,v])=>scalar(v));
+    const nested=entries.filter(([,v])=>!scalar(v));
+    const singleWrapper=entries.length===1 && nested.length===1;
+    return (simple.length?compactTable([l('Paramètre','Parameter'),l('Valeur','Wert')],simple.map(([k,v])=>[fields[k] || moduleName(k),v]),l):'')+
+      nested.map(([key,child])=>`${singleWrapper?'':`<h4>${e(names[key] || fields[key] || key)}</h4>`}${render(child)}`).join('');
+  };
+  return render(value);
+}
+function provenance(value,l) {
+  const found=[];
+  const walk=(node,path=[])=>{
+    if(!node || typeof node!=='object')return;
+    for(const [key,child] of Object.entries(node)) {
+      if(technicalKey(key) && child!==undefined)found.push([path.join(' · '),fields[key] || key,child]);
+      else if(child && typeof child==='object')walk(child,[...path,Array.isArray(node)?child.label_fr || child.label || child.item_code || (child.up_to!=null?'≤ '+child.up_to:'#'+(Number(key)+1)):names[key] || fields[key] || key]);
+    }
   };
   walk(value);
-  return `<div class="rule-parameter-scroll" tabindex="0" role="region" aria-label="${label('Paramètres · défilement horizontal','Parameter · horizontal scrollen')}"><table class="rule-parameters"><thead><tr><th>${label('Paramètre / provenance','Parameter / Herkunft')}</th><th>${label('Valeur active','Aktueller Wert')}</th></tr></thead><tbody>${rows.map(([key,val])=>`<tr><th scope="row">${e(key)}</th><td>${e(val)}</td></tr>`).join('')}</tbody></table></div>`;
+  return found.length?`<pre>${e(found.map(([context,key,v])=>[context,key,typeof v==='object'?JSON.stringify(v,null,2):v].filter(Boolean).join(' · ')).join('\n\n'))}</pre>`:'';
 }
 function parameterRules(catalog) {
   return Object.entries(catalog?.parameters ?? {}).map(([key,value])=>({
     id:'parameter:'+key,chapter:'Paramètres actifs',title:names[key] || key,
-    summary:'Valeurs du catalogue actif · lecture seule',formula:"Ces paramètres sont lus au moment de l'ouverture du référentiel. Ils ne remplacent pas les versions enregistrées avec les anciennes offres.",
+    summary:'Lecture seule',formula:'',
     code:'Catalogue commercial protégé · '+key,origin:'catalog',status:'review',value,
     search:JSON.stringify(value)
   }));
@@ -84,7 +148,12 @@ export function referenceShell(catalog,l,filters={}) {
 function relatedParameters(row,catalog) {
   const p=catalog?.parameters ?? {};
   const keys={L04:['publisher_rent'],P01:['pce'],P02:['pce'],P03:['pce'],P04:['pce'],
-    T01:['sql'],T02:['sql'],T03:['oracle'],J03:['day_rate'],H01:['lcm'],H02:['lcm']};
+    T03:['oracle'],J03:['day_rate'],H01:['lcm']};
+  const pick=(object,keys)=>Object.fromEntries(keys.filter(key=>object?.[key]!==undefined).map(key=>[key,object[key]]));
+  if(row.id==='T01')return p.sql?.suggestion;
+  if(row.id==='T02')return p.sql ? Object.fromEntries(Object.entries(p.sql).filter(([key])=>key!=='suggestion')) : undefined;
+  const pceKeys={P01:['finance_basis','finance_ratio','finance_adjustment','finance_round_to','finance_base_item_codes'],P02:['pv_margin','pv_round_to','interface_pa','interface_pv'],P03:['salary_round_to','salary_pv_method','pv_margin','pv_round_to'],P04:['finance_basis','interface_pv','interface_pa']};
+  if(pceKeys[row.id] && p.pce)return pick(p.pce,pceKeys[row.id]);
   if(keys[row.id]) {
     const values=Object.fromEntries(keys[row.id].filter(key=>p[key]!==undefined).map(key=>[names[key] || key,p[key]]));
     return Object.keys(values).length?values:undefined;
@@ -103,7 +172,7 @@ export function referenceResults(catalog,l,filters={},openIds=new Set()) {
   ${rows.map(row=>{
     const heading=previous!==row.chapter?`<h3 class="rules-chapter">${e(row.chapter)}</h3>`:'';previous=row.chapter;
     const data=row.item ? {pricing_rule:row.item.pricing_rule,rate_class:row.item.rate_class ?? 'standard',source:row.item.source,source_grid_note:row.item.source_grid_note,conflict_sources:row.item.conflict_sources,alternative_tiers:row.item.alternative_tiers,source_sha256:row.item.source_sha256,catalog_version:row.item.catalog_version} : row.value===undefined ? relatedParameters(row,catalog) : row.value;
-    return heading+`<details class="rule-entry" data-rule-id="${e(row.id)}" ${openIds.has(row.id)?'open':''}><summary><span class="rule-name"><small>${e(row.id.startsWith('article:')?'SW / ID':row.id.startsWith('parameter:')?'PARAM':row.id)}</small><strong>${e(row.title)}</strong></span><span class="rule-principle">${e(row.summary)}</span><span class="rule-state"><span>${originLabel(row.origin,l)}</span><span class="rule-status" data-status="${row.status}">${statusLabel(row.status,l)}</span></span></summary><div class="rule-body"><p>${e(row.formula)}</p>${row.note?`<p class="rule-note">${e(row.note)}</p>`:''}<dl><dt>${l('Source / implémentation','Quelle / Implementierung')}</dt><dd>${e(row.code)}</dd></dl>${data===undefined?'':parameterTable(data,l)}</div></details>`;
+    return heading+`<details class="rule-entry" data-rule-id="${e(row.id)}" ${openIds.has(row.id)?'open':''}><summary><span class="rule-name"><small>${e(row.id.startsWith('article:')?'SW / ID':row.id.startsWith('parameter:')?'PARAM':row.id)}</small><strong>${e(row.title)}</strong></span><span class="rule-principle">${e(row.item?`${format(row.item.pricing_rule?.basis,l)} · ${format(row.item.pricing_rule?.kind,l)}`:row.summary)}</span><span class="rule-state"><span>${originLabel(row.origin,l)}</span><span class="rule-status" data-status="${row.status}">${statusLabel(row.status,l)}</span></span></summary><div class="rule-body">${data===undefined?`<p>${e(row.formula)}</p>${row.note?`<p class="rule-note">${e(row.note)}</p>`:''}`:parameterTable(data,l,catalog)+(row.formula?`<details class="rule-explanation"><summary>${l('Comprendre la règle','Regel verstehen')}</summary><p>${e(row.formula)}</p>${row.note?`<p>${e(row.note)}</p>`:''}</details>`:'')}<details class="rule-provenance"><summary>${l('Sources et détails techniques','Quellen und technische Details')}</summary><dl><dt>${l('Source / implémentation','Quelle / Implementierung')}</dt><dd>${e(row.code)}</dd></dl>${data===undefined?'':provenance(data,l)}</details></div></details>`;
   }).join('') || `<p class="rules-empty">${l('Aucune règle ne correspond à ces filtres.','Keine Regel entspricht diesen Filtern.')}</p>`}`;
 }
 export function bindReference(root,getCatalog,l,filters,openIds) {

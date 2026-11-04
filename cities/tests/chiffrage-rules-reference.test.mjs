@@ -24,7 +24,7 @@ test('live catalog values are projected read-only, and unverified grids remain f
   const before=structuredClone(catalog);
   assert.equal(catalogRules(catalog)[0].status,'arbitrate');
   const html=referenceResults(catalog,l,{kind:'parameters'});
-  assert.match(html,/Non renseigné/);assert.match(html,/>0<\/td>/);
+  assert.match(html,/À préciser/);assert.match(html,/>0<\/td>/);
   assert.match(html,/Test/);assert.deepEqual(catalog,before);
   assert.equal(referenceRows(catalog,'parameters').length,3);
   assert.match(referenceResults(catalog,l,{kind:'catalog'}),/&lt;img/);
@@ -54,4 +54,27 @@ test('reference loads active catalog separately without changing a quote catalog
   assert.match(action,/await api\('catalog'\)/);assert.match(action,/state.ruleCatalog=active.catalog/);
   assert.doesNotMatch(action,/state\.catalog\s*=|state\.draft\s*=|api\('save'/);
   assert.match(source,/state\.ruleCatalog=null/);
+});
+
+
+test('LCM remains a compact cross-table with one row per population class',()=>{
+  const html=parameterTable({lcm:[{up_to:2000,gold:123,platinium:456,status:'synthetic',source_reference:'source démonstration'},{up_to:3000,gold:234,platinium:null}]},l);
+  assert.match(html,/Habitants/);assert.match(html,/>Gold<\/th>/);assert.match(html,/>Platinum<\/th>/);assert.match(html,/<caption>CHF HT \/ an<\/caption>/);
+  assert.match(html,/2&#39;001–3&#39;000/);assert.match(html,/<td>123<\/td><td>456<\/td>/);
+  assert.doesNotMatch(html,/ › |source démonstration|État source/);
+  assert.equal((html.match(/<tbody><tr>|<\/tr><tr>/g)||[]).length,2);
+});
+test('SQL groups parameters once and keeps its population anchors in columns',()=>{
+  const html=parameterTable({sql:{user_base:111,price_per_user:22,core_from_population:8000,default_cores:2,price_per_core:null,suggestion:{lowerPopulation:1000,lowerUsers:4,upperPopulation:8000,upperUsers:30}}},l);
+  assert.match(html,/<th scope="row">Forfait \(CHF\)<\/th><td>111<\/td>/);
+  assert.match(html,/<th scope="row">1&#39;000<\/th><td>4<\/td>/);
+  assert.doesNotMatch(html,/ › |SQL Server · utilisateurs et cores ›/);
+});
+test('options, included functions and commercial rates also use comparison columns',()=>{
+  const options=parameterTable([{label_fr:'Option A',days:1,investment_fixed_pv:0,annual_pv:10},{label_fr:'Option B',days:2,investment_fixed_pv:0,annual_pv:20}],l);
+  assert.match(options,/Jours/);assert.equal((options.match(/<table/g)||[]).length,1);
+  assert.match(parameterTable({standard:{pa_rate:.11,pv_rate:.22}},l),/11 %<\/td><td>22 %/);
+  const html=referenceResults({...catalog,parameters:{sql:{user_base:1,core_from_population:2}}},l,{query:'T02'},new Set(['T02']));
+  assert.match(html,/class="rule-explanation"/);assert.match(html,/class="rule-provenance"/);
+  assert.doesNotMatch(html,/<details class="rule-provenance" open/);
 });
