@@ -83,7 +83,7 @@ test('public entry preserves v1/v2 offers, FR/DE, values and confidentiality',as
  for(const version of [1,2])for(const lang of ['fr-CH','de-CH']){
   const saved=Object.fromEntries(['document','location','navigator','fetch'].map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
   let html,finish;const rendered=new Promise(resolve=>finish=resolve);
-  const root={set innerHTML(value){html=value;finish();}};
+  const root={addEventListener(){},set innerHTML(value){html=value;finish();}};
   const response={version,commune:'Ballaigues',bfs_id:5744,canton:'VD',population:1200,quote_title:version===2?'Ballaigues VD v1.0':'Contrôle <test>',revision:4,
    amounts:{investment:107780,annual:37028,tco5y:255892},products:['Abacus'],
    buckets:{solutions:{investment:107780,annual:37028}},lcm:'Gold',
@@ -102,7 +102,7 @@ test('public entry preserves v1/v2 offers, FR/DE, values and confidentiality',as
     assert.match(html,lang==='de-CH'?/— v1\.0 · Version 4/:/— v1\.0 · Révision 4/);
    } else assert.match(html,/Contrôle &lt;test&gt;/);
    for(const value of Object.values(response.amounts)) assert.ok(html.replace(/<[^>]*>/g,'').includes(escapeOffer(money(value))));
-   assert.doesNotMatch(html,/NEVER_RENDER|annual_pa|margin|data-action|<input|<button|style=|A{43}/);
+   assert.doesNotMatch(html,/NEVER_RENDER|annual_pa|margin|data-action|<input|style=|A{43}/);
    assert.equal(calls.length,2);assert.equal(calls[0].options.headers.Authorization,'Bearer '+token);
    assert.equal(calls[0].options.cache,'no-store');
    assert.match(html,lang==='de-CH'?/Ihr Projekt in Zahlen/:/Votre projet, en chiffres/);

@@ -1,5 +1,27 @@
 # État de reprise — Prime Communes 2.0
 
+> **Partage et liste des chiffrages · 04.11.2026 :** GO utilisateur pour compacter
+> les cartes et uniformiser les quatre actions. Investissement/annuel prioritaires,
+> total cinq ans secondaire, Partager/Liens côte à côte. Un seul panneau refermable.
+> Publication idempotente par chiffrage/révision ; adresse lisible sous la forme
+> `offre.html#commune-canton/v1.0r5`, sans suffixe aléatoire. Variante distincte de la
+> même commune : incrément du mineur v1.1, v1.2 ; révision conservée en rN.
+> Activation/désactivation manuelle réversible ; aucune expiration automatique.
+> Migration `20261104222332_named_client_publications.sql` appliquée : 7 publications
+> nommées, 5 actives, 0 expiration ; états révoqués, compteurs et contenus figés
+> conservés. Fonctions RPC accessibles seulement au rôle serveur. Risque d'adresse
+> devinable expliqué et accepté par l'utilisateur avant ce lot.
+> PDF A4 issu exclusivement de la publication publique figée, tous modules présents,
+> options séparées et hors totaux. Logo Prime, pagination et en-têtes financiers
+> répétés ; téléchargement depuis le haut et le bas de la page client. Le PDF ne
+> gonfle pas les ouvertures web. Une erreur réseau est distinguée d'un lien désactivé.
+> Serveur Edge v26 actif avec pdf-lib 1.17.1. Contrôles : 212 tests, check/build,
+> six largeurs 360/430/768/1366/1920/2560 sans débordement et quatre boutons égaux,
+> cycle ouvrir/fermer et activation réversible sur données synthétiques, PDF trois
+> pages rendu et contrôlé. PDF Ballaigues récupéré en production (HTTP 200, application/pdf, nom de fichier lisible), sans incrément du compteur ; déclenchement vérifié dans Chrome ; l'événement de
+> téléchargement du navigateur distant n'a pas remonté, pas de recette iOS physique.
+> Aucun prix ni règle de calcul modifiés. Publication frontend à confirmer par CI.
+
 > **Radar · qualification du lot de 200 candidats · 29.10.2026 :** cinq candidats
 > analysés regroupés en trois nouveaux signaux communaux : Lausanne Abacus
 > (45018-01, offres 02.11 à 11 h 30), Lausanne ressources projet/Business Analysis
