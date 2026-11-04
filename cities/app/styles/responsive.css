@@ -629,7 +629,7 @@
      never a stranded button occupying one third of the navigation. */
   .view-tab[data-view="chiffrage"]{grid-column:1/-1}
 
-  .news-nav-badge { display: none; }
+  .feature-beta-badge { right:3px; top:1px; font-size:8px; }
 
   .sync-state {
     min-width: 116px;

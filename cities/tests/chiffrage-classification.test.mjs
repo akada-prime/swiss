@@ -38,7 +38,7 @@ test('customer grouping preserves selected names, excludes available choices, an
  assert.deepEqual(scope[0].items.map(i=>i.fr),['Module 1','Module 129','Module 502','Module 205']);
  assert.ok(scope[0].items.every(i=>i.section_fr && !('item_code' in i)));
  const html=offerScope(scope.map(g=>({product:g.product,items:g.items.map(i=>({label:i.fr,section:i.section_fr}))})),{asset:x=>x});
- for(const title of ['standard Prime','Gestion des compteurs','Options choisies'])assert.ok(html.includes(title));
+ for(const title of ['Modules de base innosolv','Gestion des compteurs','Options choisies'])assert.ok(html.includes(title));
  assert.equal((html.match(/<details class="prime-offer-scope-section">/g)||[]).length,3);
  assert.doesNotMatch(html,/<details[^>]*open|Options à proposer|Autres options/);
  assert.match(html,/data-scope-toggle/);

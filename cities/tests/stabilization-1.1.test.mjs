@@ -290,7 +290,7 @@ test('roadmap marks 2.5 complete and 3.0 as Chiffrage', async () => {
   assert.match(html, /<span class="roadmap-version">3\.5<\/span>/);
   assert.match(html, /<!--i18n:page\.270-->Pérenniser/);
   assert.match(html, /Brainstorming futur · non planifié/);
-  assert.match(roadmapRuntime, /data-roadmap-version', '2\.5'/);
+  assert.match(roadmapRuntime, /data-roadmap-version', '3\.0'/);
   assert.equal(pkg.version, '2.5.0');
   assert.match(html, /<span class="roadmap-version">1\.5<\/span>/);
   assert.match(html, /Mettre en perspective/);

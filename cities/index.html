@@ -28,7 +28,7 @@
       document.documentElement.lang = preference('prime-communes-language', ['fr', 'de'], 'fr');
     })();
   </script>
-  <link rel="stylesheet" href="app/styles/main.css?v=20261104-classification-r1">
+  <link rel="stylesheet" href="app/styles/main.css?v=20261104-roadmap-beta-r1">
 <style>
 html[data-initial-view]:not([data-initial-view="communes"]) #communesView{display:none!important}
 html[data-initial-view="map"] #mapView,
@@ -55,8 +55,8 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       <button class="view-tab active" data-view="communes"><!--i18n:page.006-->Communes</button>
       <button class="view-tab" data-view="map"><!--i18n:page.007-->Carte</button>
       <button class="view-tab" data-view="stats"><!--i18n:page.008-->Stats</button>
-      <button class="view-tab news-nav-tab" data-view="news">Radar!<span class="news-nav-badge"><!--i18n:page.009-->SOBRE</span></button>
-      <button class="view-tab" data-view="stories"><!--i18n:page.010-->Histoires</button>
+      <button class="view-tab beta-nav-tab" data-view="news">Radar!<span class="feature-beta-badge"><!--i18n:page.009-->BÊTA</span></button>
+      <button class="view-tab beta-nav-tab" data-view="stories"><!--i18n:page.010-->Histoires<span class="feature-beta-badge"><!--i18n:page.009-->BÊTA</span></button>
       <button class="view-tab" data-view="roadmap"><!--i18n:page.011-->Roadmap</button>
       <button class="view-tab" data-view="chiffrage"><!--i18n:chiffrage.nav-->Chiffrage</button>
     </nav>
@@ -183,7 +183,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
       <aside class="news-beta-note" aria-label="Sobriété numérique"><strong><!--i18n:page.081-->SOBRIÉTÉ</strong><span><!--i18n:page.082-->La veille privilégie les contrôles déterministes et les sources publiques structurées. L’IA n’est utilisée qu’en seconde lecture, lorsque son interprétation apporte une valeur réelle. La source publique primaire reste la référence.</span></aside>
       <div class="news-intro view-intro">
         <div><h1><!--i18n:page.083-->Ce qui bouge.<br><span><!--i18n:page.084-->Avant que ça bouge.</span></h1></div>
-        <div class="news-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.085-->Veille sobre du marché communal</p><p><!--i18n:page.086-->Prime Communes ne demande pas à l’IA de parcourir en permanence le web. Les sources sont surveillées avec les moyens les plus légers possibles ; l’IA intervient uniquement lorsqu’un changement mérite d’être compris, qualifié ou relié au marché Prime.</p><strong><!--i18n:page.087-->Détecter mécaniquement. Comprendre intelligemment. Calculer le moins possible.</strong></div>
+        <div class="news-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.085-->Veille sobre du marché communal</p><p><!--i18n:page.086-->Prime Communes ne demande pas à l’IA de parcourir en permanence le web. Les sources sont surveillées avec les moyens les plus légers possibles ; l’IA intervient uniquement lorsqu’un changement mérite d’être compris, qualifié ou relié au marché Prime.</p><strong><!--i18n:page.087-->Détecter mécaniquement. Comprendre intelligemment. Calculer le moins possible.</strong><p class="feature-beta-note"><!--i18n:feature.beta.note-->Version bêta · en cours d'amélioration</p></div>
       </div>
       <section class="news-panel" aria-label="Radar communal">
         <header class="news-panel-heading">
@@ -236,7 +236,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
     <section class="stories-view" id="storiesView" hidden>
       <div class="stories-intro view-intro">
         <div><h1><!--i18n:page.130-->Des communes.<br><span><!--i18n:page.131-->Des histoires.</span></h1></div>
-        <div class="stories-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.132-->Histoires de communes</p><p><!--i18n:page.133-->Derrière les chiffres, les logiciels et les marchés, il y a des territoires qui se transforment. Quelques histoires pour comprendre comment une commune est devenue ce qu’elle est aujourd’hui.</p><strong><!--i18n:page.134-->Radar! regarde devant. Histoires regarde derrière.</strong></div>
+        <div class="stories-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.132-->Histoires de communes</p><p><!--i18n:page.133-->Derrière les chiffres, les logiciels et les marchés, il y a des territoires qui se transforment. Quelques histoires pour comprendre comment une commune est devenue ce qu’elle est aujourd’hui.</p><strong><!--i18n:page.134-->Radar! regarde devant. Histoires regarde derrière.</strong><p class="feature-beta-note"><!--i18n:feature.beta.note-->Version bêta · en cours d'amélioration</p></div>
       </div>
       <section class="story-panel" aria-label="Histoires de communes">
         <header class="story-panel-heading">
@@ -249,7 +249,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
     <section class="roadmap-view" id="roadmapView" hidden>
       <div class="roadmap-intro view-intro">
         <div><h1><!--i18n:page.139-->La suite.<br><span><!--i18n:page.140-->Déjà pensée.</span></h1></div>
-        <div class="roadmap-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.141-->Prime Communes · Roadmap 2.5</p><p><!--i18n:page.142-->Le socle est consolidé. La prochaine grande étape transforme la connaissance du marché en chiffrage.</p><strong><!--i18n:page.143-->Observer. Comprendre. Chiffrer.</strong></div>
+        <div class="roadmap-intro-copy view-intro-copy"><p class="eyebrow"><!--i18n:page.141-->Prime Communes · Roadmap 3.0</p><p><!--i18n:page.142-->Le socle est consolidé et le chiffrage est disponible. Les prochaines étapes rendent les offres plus lisibles, comparables et faciles à préparer.</p><strong><!--i18n:page.143-->Observer. Comprendre. Chiffrer.</strong></div>
       </div>
       <ol class="roadmap-journey" aria-label="Trajectoire produit">
         <li class="journey-done"><span>1.0</span><strong><!--i18n:page.144-->Rassembler</strong></li>
@@ -307,9 +307,15 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
           </div>
         </article>
         <article class="roadmap-stage map-stage">
-          <header><span class="roadmap-version">3.0</span><div><p><!--i18n:page.216-->Prochaine grande version</p><h2><!--i18n:page.232-->Chiffrage</h2></div></header>
+          <header><span class="roadmap-version">3.0</span><div><p><!--i18n:page.216-->Disponible · en évolution</p><h2><!--i18n:page.232-->Chiffrage</h2></div></header>
           <div class="roadmap-items">
-            <div><strong><!--i18n:page.233-->Chiffrage communal</strong><span><!--i18n:page.234-->À partir d’une commune, sélectionner les solutions, modules et prestations puis appliquer les moteurs de calcul propres à innosolv, Abacus et ProConcept. Intégrer les composantes techniques, l’hébergement, les partenaires et le LCM pour obtenir investissement, coûts annuels et TCO. Les valeurs restent explicables et ajustables humainement avant export Excel.</span><small><!--i18n:page.235-->Le moteur reste déterministe et vérifiable ; l’offre contractuelle finale reste hors de Prime Communes.</small></div>
+            <div><strong><!--i18n:page.233-->Déjà disponible · chiffrage et offre client</strong><span><!--i18n:page.234-->Choix des logiciels, modules et prestations, calcul de l'investissement et des coûts annuels, révisions et lien client en lecture seule. Le classement des modules est livré ; les désignations restent à finaliser.</span><small><!--i18n:page.235-->Le calcul reste déterministe, vérifiable et ajustable par Prime.</small></div>
+<div><strong><!--i18n:roadmap.quote.next.title-->Prochaine étape · catalogue, règles et dossier commercial</strong><span><!--i18n:roadmap.quote.next.body-->Finaliser les désignations des modules, documenter toutes les règles de calcul et produire un Excel clair pour les commandes fournisseurs et la préparation de l'offre Word. Après le catalogue, présenter une sélection d'options au client.</span></div>
+<div><strong><!--i18n:roadmap.quote.compare.title-->Étape suivante · comparaison et rentabilité</strong><span><!--i18n:roadmap.quote.compare.body-->Comparer les prix de vente des licences et prestations avec les offres précédentes, en expliquant les écarts de périmètre. LCM, hébergement et prix d'achat restent hors de cette comparaison. Suivre séparément les marges par offre et par client, notamment sur cinq ans.</span></div>
+<div><strong><!--i18n:roadmap.quote.days.title-->Ensuite · calibrer les prestations</strong><span><!--i18n:roadmap.quote.days.body-->Établir des jours de référence par module pour 1'000 habitants, puis une progression adaptée à la taille et au projet. Exploiter les dossiers historiques et conserver les ajustements commerciaux de Prime.</span></div>
+<div><strong><!--i18n:roadmap.quote.client.title-->Évolution à confirmer · configuration par le client</strong><span><!--i18n:roadmap.quote.client.body-->Permettre au client de sélectionner des options autorisées et d'en comprendre le prix. Définir ensuite la réception des changements, les statuts et la validation Prime avant une nouvelle proposition.</span></div>
+<div><strong><!--i18n:roadmap.quote.ux.title-->À chaque étape · une utilisation plus simple</strong><span><!--i18n:roadmap.quote.ux.body-->Améliorer progressivement les parcours, les onglets et la lisibilité : une préparation rapide pour les offres standards, des détails accessibles pour les cas particuliers.</span></div>
+
           </div>
         </article>
         <article class="roadmap-stage ai-stage">
@@ -349,6 +355,6 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
 <div id="drawerRoot"></div>
 <div id="portraitRoot"></div>
 <button class="back-to-top" id="backToTop" type="button" aria-label="Retour en haut" title="Retour en haut"><span aria-hidden="true">↑</span></button>
-<script type="module" src="app/main.js?v=20261104-classification-r1"></script>
+<script type="module" src="app/main.js?v=20261104-roadmap-beta-r1"></script>
 </body>
 </html>

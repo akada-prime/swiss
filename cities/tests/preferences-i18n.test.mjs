@@ -76,8 +76,8 @@ test('the early bootstrap applies skin and html lang before styles and the main 
   assert.match(css, /skins\.css/);
   assert.match(css, /settings\.css/);
   assert.match(modules, /core\/preferences\.js\?v=20261024-completion-r1/);
-  assert.match(modules, /core\/runtime\.js\?v=20261024-completion-r1/);
-  assert.match(modules, /prime-communes-data-1\.5\.js\?v=20261024-completion-r1/);
+  assert.match(modules, /core\/runtime\.js\?v=20261104-roadmap-beta-r1/);
+  assert.match(modules, /prime-communes-data-1\.5\.js\?v=20261104-roadmap-beta-r1/);
   assert.match(modules, /chiffrage\/view\.js\?v=[\w-]+/);
   assert.match(await read('app/chiffrage/view.js'),
     /\.\/calculate\.js\?v=20261102-catalog-r1/);

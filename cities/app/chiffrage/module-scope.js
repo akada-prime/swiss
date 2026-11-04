@@ -1,4 +1,4 @@
-import { selectedModuleSection, presentationOrder, abacusFamily } from './module-classification.js';
+import { selectedModuleSection, presentationOrder, abacusFamily } from './module-classification.js?v=20261104-roadmap-beta-r1';
 // Customer-safe module names and included functions only; never raw catalog records.
 import { includedForParent, optionApplies } from './module-catalog.js';
 const products = {innosolv:'innosolvcity',pce:'ProConcept',abacus:'Abacus'};

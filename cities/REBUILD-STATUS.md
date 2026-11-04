@@ -555,3 +555,15 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   des liens actifs préparée avec garde sur l'ancien scope et invariance de tout
   le reste du payload. Aucun lien client ouvert pour la recette.
 - Roadmap et repères Bêta Radar!/Histoires : propositions uniquement à ce stade.
+
+## Roadmap et statuts bêta · 04.11.2026
+
+- Validation utilisateur de la roadmap proposée : Chiffrage disponible et en
+  évolution, prochaines étapes catalogue/règles/Excel, comparaison PV et marges,
+  calibration des jours, configuration client à préciser ; UX transversale.
+- Radar! et Histoires partagent le badge Bêta dans les onglets et une courte
+  mention dans leur page, en français et en allemand, PC et natel.
+- Rubrique innosolv renommée Modules de base innosolv, selon la nuance donnée.
+- Références de cache des traductions et de leurs consommateurs actualisées.
+- Validation : 192 tests et build, navigation et traductions FR/DE, six largeurs
+  sans débordement et statut visible dans les deux apparences.
