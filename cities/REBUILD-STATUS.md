@@ -567,3 +567,20 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
 - Références de cache des traductions et de leurs consommateurs actualisées.
 - Validation : 192 tests et build, navigation et traductions FR/DE, six largeurs
   sans débordement et statut visible dans les deux apparences.
+
+## 2026-11-04 · Référentiel global des règles
+
+- Dictionnaire indépendant des communes : 53 articles, 11 chapitres, origine et
+  validation métier séparées ; intentions futures explicitement identifiées.
+- Recherche accent-insensible, filtres chapitre/état, détails et tout déplier/replier.
+- Paramètres actifs et grilles par article lus via le catalogue authentifié ;
+  aucune copie de tarif privé dans le dépôt et aucune écriture en base.
+- Accès depuis le header du chiffrage. Retour au contexte et brouillon conservés ;
+  catalogue actif du référentiel distinct du catalogue d'une offre historique.
+- Documentation : `docs/chiffrage-rules-reference.md`. Contrôle ciblé registre,
+  exemples du moteur, échappement des données et absence de mutation.
+- Vérification : 198 tests passent et build réussi ; 11 contrôles ciblés repassés
+  après finition. Six largeurs 360–2560 px sans débordement du registre,
+  recherche, ouverture/fermeture, réinitialisation, grilles et paramètres vérifiés.
+  Commandes FR/DE et apparences Prime Dark/Helvetia contrôlées sur recette
+  synthétique ; rédaction métier française explicitement indiquée en allemand.
