@@ -533,3 +533,25 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
 - Le marqueur natif des rubriques passe en position extérieure : triangle et puces partagent le même retrait, titre et modules le même départ de texte.
 - Correction CSS ciblée, commune à tous les logiciels ; aucun changement fonctionnel ni financier.
 - Cache des feuilles actualisé pour les liens existants.
+
+## Classement des modules · 04.11.2026
+
+- Classement commun interne / projection client : standard Prime dans l'ordre
+  Licences&Presta, compteurs 501/502/533, options retenues ; options disponibles
+  réparties entre sélection commerciale et autres options, puis chapitres Gemeinde.
+- Sélection commerciale validée par Alex, incluant les ajouts 207, 138 et 136.
+  Les modules déjà retenus restent affichés quelle que soit leur catégorie.
+- Abacus : responsables de visa rattachés aux créanciers ; familles transversales
+  regroupées sous Fonctions complémentaires, CRM/Tool-Kit sous Programmes obligatoires.
+- La vue client ne publie que les noms et rubriques des modules retenus. Les
+  nouveaux classements ne modifient ni calcul, ni prix, ni jours, ni sélection.
+- Rubriques repliées par défaut et commande Tout déplier / Tout replier conservée.
+- Validation : 192 tests et build réussis, puis 13 tests ciblés après le dernier
+  ajustement de libellé. Aperçu client sur six largeurs sans débordement ; aperçu
+  du vrai rendu productSection avec les libellés Ballaigues : recherche Archivage,
+  visibilité des 20 modules retenus et présence des trois ajouts vérifiées.
+- Publication serveur préparée à partir de la version live 20 vérifiée identique
+  aux sources main ; authentification inchangée. Actualisation des cinq scopes
+  des liens actifs préparée avec garde sur l'ancien scope et invariance de tout
+  le reste du payload. Aucun lien client ouvert pour la recette.
+- Roadmap et repères Bêta Radar!/Histoires : propositions uniquement à ce stade.

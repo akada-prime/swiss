@@ -1,9 +1,10 @@
+import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js';
 import { includedForParent, optionApplies } from './module-catalog.js';
 import { bindOfferScope } from '../offer/interactions.js';
-import { customerModuleScope } from './module-scope.js';
+import { customerModuleScope } from './module-scope.js?v=20261104-classification-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from '../offer/presentation.js?v=20261102-rubrics-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from '../offer/presentation.js?v=20261104-classification-r1';
 import { t, number } from '../core/i18n.js?v=20261028-offer-polish-r1';
 import { subscribePreferences } from '../core/preferences.js';
 import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261102-catalog-r1';
@@ -298,7 +299,6 @@ function availableModules() {
 }
 
 // The source Gemeinde sheet uses this business order; suffix modules follow their parent.
-const gemeindeOrder = '1,36,21,28,22,23,24,30,31,122,124,116,34,35,13,26,27,38,39,41,33,40,50,54,57,51,52,53,55,56,58,29,208,209,210,25,10,11,100,101,113,104,115,120,125,132,140,135,129,119,127,138,136,143,200,201,214,205,206,202,211,212,207,215,501,509,516,517,504,523,514,502,533,528,534,531,529,530,532'.split(',');
 const abacusOrder = '10510.1,10510.208,10510.206,10510.218,10510.219,10510.205,10510.211,10510.214,10510.222,10510.215,10510.21,10510.212,10510.209,10510.22,10510.207,10510.224,10510.221,10510.225,10510.228,10510.229,10510.23,10520.1,10520.222,10520.223,10520.226,10520.227,10520.224,10520.205,10520.228,10520.207,10520.231,10520.209,10520.225,10520.233,10520.235,10530.1,10530.232,10530.205,10530.207,10530.209,10530.22,10530.234,10530.235,10530.237,10530.24,10530.242,10530.244,10530.245,10530.246,10531.1,10531.101,10540.1,10540.206,10540.244,10540.205,10540.199,10540.207,10540.209,10540.21,10540.243,10540.25,10540.254,10540.255,10540.26,10540.261,10540.262,10540.263,10540.264,10540.265,10540.266,10540.267,10540.27,10570.1,10570.206,10570.27,10570.205,10570.208,10570.209,10570.207,10570.272,10570.21,10570.28,10566.1,10566.205,10566.266,10566.269,10566.274,10566.275,10560,10560.205,10560.209,10560.258,10560.206,10560.207,10560.26,10560.263,10560.264,10560.265,10560.259,10560.266,10560.267,10560.268,10560.269,10560.272,10560.274,10560.276,10560.278,10560.279,10560.28,10560.282,10575.1,10575.214,10575.205,10575.209,10575.207,10575.211,10575.216,10575.215,10575.212,10575.213,10575.21,10575.218,10575.219,10575.24,10575.242,10575.244,10555.1,10555.205,10555.25,10555.251,10555.252,10555.255,10555.256,10555.257,10555.261,10555.262,10555.263,10555.265,10555.266,10555.267,10555.268,10555.269,10555.272,10555.273,10555.274,10555.275,10555.276,10515.1,10515.205,10515.21,10515.211,10515.24,10515.241,10515.242,10515.245,10593.1,10593.214,10582.1,10582.216,10583.1,10583.221,10583.216,10587.1,10581.1,10576.1,10577.1,10575.241,10598.1,10595.1,10594.1,10572.1,10572.101,10572.205,10572.207,10572.212,10572.221,10572.222,10572.223,10572.224,10572.226,10572.23,10572.231,10573.1,10550.1,10550.205,10550.254,10550.252,10550.258,10550.256,10550.255,10550.261,10550.262,10503.1,10503.25,10503.245,10503.255,10503.256,10503.257,10503.258,10503.286'.split(',');
 function moduleOrder(item) {
   const order = item.vendor === 'innosolv' ? gemeindeOrder : abacusOrder;
@@ -344,11 +344,6 @@ function productSection() {
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(item);
   }
-  const domain = item => item.vendor === 'abacus' ?
-    (modules.find(row=>row.vendor==='abacus' && row.item_code===`${item.item_code.split('.')[0]}.1`)?.[document.documentElement.lang==='de'?'label_de':'label_fr'] ??
-      localLabel('Autres fonctions Abacus','Weitere Abacus-Funktionen')) :
-    item.product==='Versorger' ? localLabel('Énergie','Energie') :
-      localLabel('Gestion communale','Gemeindeverwaltung');
   let calculated;
   try { calculated = calculateQuote(state.draft, state.catalog); } catch { /* Unknown amounts stay explicit. */ }
   const entry = item => {
@@ -374,10 +369,14 @@ function productSection() {
         const included = entries.filter(item => selected.has(`${item.vendor}/${item.product}/${item.item_code}`));
         const other = entries.filter(item => !selected.has(`${item.vendor}/${item.product}/${item.item_code}`));
         const brand = { innosolv:'innosolvcity', abacus:'Abacus', pce:'ProConcept' }[group] ?? group;
-        const domains=new Map();for(const item of included){const title=domain(item);if(!domains.has(title))domains.set(title,[]);domains.get(title).push(item);}
+        const renderGroups=(rows,chosen)=>classifiedModules(rows,{selected:chosen}).map(section=>`<div class="chiffrage-domain"><h4>${escape(localLabel(section.fr,section.de))}</h4>${section.items.map(entry).join('')}</div>`).join('');
+        const available = group==='innosolv' ? [proposedOptions,otherOptions].map(section=>({
+          ...section,items:other.filter(item=>availableModuleSection(item).key===section.key)
+        })).filter(section=>section.items.length) : [{key:'all',fr:'Options disponibles',de:'Verfügbare Optionen',items:other}];
+        const optionsHtml=available.map(section=>`<details class="chiffrage-subdetail" data-disclosure-key="options-${escape(group)}-${section.key}"><summary>${escape(localLabel(section.fr,section.de))} · ${section.items.length}</summary><div class="chiffrage-module-list">${renderGroups(section.items,false)}</div></details>`).join('');
         return `<details class="chiffrage-module-set" data-disclosure-key="modules-${escape(group)}"><summary><span>${escape(brand)}</span><small>${included.length} ${t('chiffrage.workspace.f8352fa70a')}</small>${`<span data-rollup-vendor="${escape(group)}">${rollupMarkup(moduleRollup(calculated,group))}</span>`}</summary>
-          <div class="chiffrage-module-list">${[...domains].map(([title,items])=>`<div class="chiffrage-domain"><h4>${escape(title)}</h4>${items.map(entry).join('')}</div>`).join('')}</div>
-          ${other.length ? `<details class="chiffrage-subdetail" data-disclosure-key="options-${escape(group)}"><summary>${t('chiffrage.workspace.af758b49cd')} · ${other.length}</summary><input class="chiffrage-module-search" data-module-search="${escape(group)}" type="search" placeholder="${localLabel('Chercher un module','Modul suchen')}" aria-label="${localLabel('Chercher un module','Modul suchen')}"><div class="chiffrage-module-list">${other.map(entry).join('')}</div></details>` : ''}</details>`;
+          <div class="chiffrage-module-list">${renderGroups(included,true)}</div>
+          ${other.length ? `<input class="chiffrage-module-search" data-module-search="${escape(group)}" type="search" placeholder="${localLabel('Chercher un module','Modul suchen')}" aria-label="${localLabel('Chercher un module','Modul suchen')}">${optionsHtml}` : ''}</details>`;
       }).join('')}${pceModuleSection(calculated)}</div></section>`;
 }
 
@@ -833,7 +832,7 @@ function offerSection() {
   const azHosting=hostingIncluded(state.draft) && (
     hostingLines.some(line=>line.item_code==='hosting-reference') ||
     /\bAZ(?: Informatique)?\b/i.test([state.draft.context?.hosting,...hostingLines.map(line=>line.label)].join(' ')));
-  const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel});
+  const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),section:localLabel(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel});
   const lcm = ({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection;
   return `<article class="chiffrage-offer"><div class="chiffrage-offer-body"><section><h3>${localLabel('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
     ${scope}${offerServices(azHosting,lcm,{asset:assetUrl,label:localLabel,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
@@ -1276,9 +1275,11 @@ root.addEventListener('submit', async event => {
 root.addEventListener('input', event => {
   if (event.target.dataset.moduleSearch) {
     const query=event.target.value.toLocaleLowerCase(document.documentElement.lang);
-    event.target.closest('details')?.querySelectorAll('.chiffrage-module-entry').forEach(node=>{
+    const scope=event.target.closest('.chiffrage-module-set');
+    scope?.querySelectorAll('.chiffrage-subdetail .chiffrage-module-entry').forEach(node=>{
       node.hidden=!node.textContent.toLocaleLowerCase(document.documentElement.lang).includes(query);
     });
+    if(query)scope?.querySelectorAll('.chiffrage-subdetail').forEach(detail=>{detail.open=[...detail.querySelectorAll('.chiffrage-module-entry')].some(node=>!node.hidden);});
     return;
   }
   const path = event.target.dataset.field;
