@@ -1,3 +1,4 @@
+import { referenceShell, bindReference } from './rules-reference-view.js?v=20261104-rules-r1';
 import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261104-roadmap-beta-r1';
 import { includedForParent, optionApplies } from './module-catalog.js';
 import { bindOfferScope } from '../offer/interactions.js';
@@ -37,6 +38,19 @@ const field = (key, value, label, { min = 0, step = 1 } = {}) =>
 const textField = (key, value, label) =>
   `<label>${label}<input data-field="${key}" value="${escape(value ?? '')}"></label>`;
 const localLabel = (fr, de) => document.documentElement.lang === 'de' ? de : frenchTypography(fr);
+const ruleFilters={kind:'rules',query:'',chapter:'',status:''};
+const ruleOpenIds=new Set();
+const updateRuleResults=bindReference(root,()=>state.ruleCatalog,localLabel,ruleFilters,ruleOpenIds);
+function renderReference() {
+  state.mode='reference';
+  root.innerHTML=`<div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="referenceBack">← ${localLabel('Revenir au chiffrage','Zurück zur Kalkulation')}</button><button type="button" class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div>`+referenceShell(state.ruleCatalog,localLabel,ruleFilters);
+  updateRuleResults();
+}
+function referenceButton() {
+  if(['catalog','new'].includes(state.mode))return '';
+  return `<button type="button" class="chiffrage-button" data-action="openReference">${localLabel('Référentiel des règles','Regelreferenz')}</button>`;
+}
+
 const cantonName = code => ({ JU: 'Jura', VD: 'Vaud', GE: 'Genève', FR: 'Fribourg',
   NE: 'Neuchâtel', VS: 'Valais', BE: 'Berne' })[code] ?? code;
 // GitHub Pages serves the source tree; Vite copies public assets to the build root.
@@ -123,7 +137,7 @@ function focusCompletion(index=0) {
 function header() {
   return `<div class="chiffrage-header"><div>${state.draft ? `<p class="chiffrage-kicker">${state.revision ? t('chiffrage.revision', { revision: state.revision }) : t('chiffrage.workspace.2005dfeb6b')}</p><h2>${t('chiffrage.title')}</h2>` : `<h2>${t('chiffrage.workspace.b246604ad2')}</h2>`}</div>
     <div class="chiffrage-actions">${state.draft ? `<button class="chiffrage-button quiet" data-action="list">← ${t('chiffrage.back')}</button><button class="chiffrage-button primary" data-action="save">${t('chiffrage.save')}</button>` : ''}
-      <button class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></div>
+      ${referenceButton()}<button class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></div>
     <p class="chiffrage-status${state.error ? ' error' : ''}" role="status">${escape(state.message)}</p><div data-completion-container>${completionPanel()}</div>`;
 }
 
@@ -1474,6 +1488,24 @@ root.addEventListener('click', async event => {
   const button = event.target.closest('[data-action]');
   if (!button) return;
   const action = button.dataset.action;
+  if(action==='openReference') {
+    const session=state.session;
+    button.disabled=true;
+    try {
+      const active=await api('catalog');
+      if(!state.authenticated || state.session!==session)return;
+      state.ruleReturn={mode:state.mode,scroll:window.scrollY};
+      state.ruleCatalog=active.catalog;
+      renderReference();root.querySelector('#rules-title')?.scrollIntoView({block:'start'});
+    } catch(error){notice(()=>errorMessage(error),true);}
+    finally{if(button.isConnected)button.disabled=false;}return;
+  }
+  if(action==='referenceBack') {
+    if(state.ruleReturn?.mode==='editor' && state.draft)renderEditor();
+    else if(state.ruleReturn?.mode==='catalog')renderCatalogManager();
+    else if(state.ruleReturn?.mode==='new')renderNew();else renderList();
+    window.scrollTo({top:state.ruleReturn?.scroll ?? 0,behavior:'instant'});return;
+  }
   if(action==='manageCatalog') {
     state.catalogReturn=state.mode;button.disabled=true;
     try {state.moduleCatalog=await api('moduleCatalog');renderCatalogManager();}
@@ -1725,7 +1757,7 @@ root.addEventListener('click', async event => {
       await api('logout', {}); state.session = null; sessionStorage.removeItem(sessionKey);
       state.loaded = false; state.authenticated = false;
       listObserver?.disconnect(); snapshotQueue.length=0; listSnapshots.clear();
-      state.catalog = null; state.quotes = []; state.draft = null; state.pendingCommune = null;
+      state.catalog = null; state.ruleCatalog=null;state.ruleReturn=null;ruleOpenIds.clear(); state.quotes = []; state.draft = null; state.pendingCommune = null;
       state.message = ''; renderLogin(); return;
     }
     if (action === 'open') { await open(button.dataset.id); return; }
@@ -1839,7 +1871,7 @@ window.addEventListener('popstate', () => {
 subscribePreferences(name => {
   if (name === 'language') state.priceFeedback='';
   if (state.message && state.messageResolver) state.message=state.messageResolver();
-  if (state.authenticated) state.mode === 'editor' ? renderEditor() : state.mode==='catalog' ? renderCatalogManager() : renderList();
+  if (state.authenticated) state.mode === 'editor' ? renderEditor() : state.mode==='catalog' ? renderCatalogManager() : state.mode==='reference' ? renderReference() : renderList();
   else if (state.loaded) renderLogin();
 });
 if (new URLSearchParams(location.search).get('view') === 'chiffrage') load();
