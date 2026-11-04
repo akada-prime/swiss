@@ -1,244 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-11-02T13:30:19.551Z",
+    "generatedAt": "2026-11-04T12:59:37.500Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "a58e8ec154062bd08a289a50f8bf2242c83c7f90ffceae9a62485490cb499775",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport COGE",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2023_rapports/PR23.08RA_COGE_RapportGestion2022.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2023-04-27",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2023_rapports/PR23.08RA_COGE_RapportGestion2022.pdf"
-        ]
-      }
-    },
-    {
-      "id": "1e9b8bf544efb92b6aee0a4d1f528544649422800b767d575fb6d782070de83d",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "PR22.32PR",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.32PR_Cyberadministration.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2022-11-03",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : cyber",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.32PR_Cyberadministration.pdf"
-        ]
-      }
-    },
-    {
-      "id": "dc1b412354b2daa68bdbcee2d06d0baaba59fe903d4075ea5ba787f0d14429ef",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2022_rapports/PR22.32RA_Cyberadministration.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2022-10-12",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : cyber",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2022_rapports/PR22.32RA_Cyberadministration.pdf"
-        ]
-      }
-    },
-    {
-      "id": "135fef25fc9cbf19d8933ea442aee306653b76baaf3a8f50a1108583a33a8aa9",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "PR22.24PR",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.24PR_ParticipationPopulationPDLGare-Lac.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2022-08-25",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : population",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.24PR_ParticipationPopulationPDLGare-Lac.pdf"
-        ]
-      }
-    },
-    {
-      "id": "bd47164137c5a7124f04598cbc99e85c14ef8f5bb8b95e8aa88abce27d705735",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "PR22.15PR",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.15PR_TransformationNumerique.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2022-08-11",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : numérique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.15PR_TransformationNumerique.pdf"
-        ]
-      }
-    },
-    {
-      "id": "1395374408be4e19604942ef306679e4b572fc8ffcbe9cf38a7b5fcb705aa5dd",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2022_rapports/PR22.15RA_TransformationNumerique.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2022-08-11",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : numérique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2022_rapports/PR22.15RA_TransformationNumerique.pdf"
-        ]
-      }
-    },
-    {
-      "id": "2703ec450b594c862298a73c3cbbf3dacf1e079bbe05a9ff12bcd8610193a326",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "gestion de la Municipalité durant l'année 2021",
-      "url": "https://yverdon.rapportannuel.ch/",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2022-04-13",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://yverdon.rapportannuel.ch/"
-        ]
-      }
-    },
-    {
-      "id": "8e669966b018062d5ec49e9ced7855014a9c175fe493f1cb0544dcff259fa958",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Réponse à l'observation 4.1.1 de la Commission chargée d'examiner la gestion des biens communaux en 2021",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.08PR_Complement_ReponseCC_Voeux_2021.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2022_preavis/PR22.08PR_Complement_ReponseCC_Voeux_2021.pdf"
-        ]
-      }
-    },
-    {
-      "id": "1d2ba00385d04d7876350f77861a6a97e760ee7d19d4396451baa1538be0a18f",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport COGE",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2022_rapports/COGE_RapportGestion2021.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2022-04-14",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2022_rapports/COGE_RapportGestion2021.pdf"
-        ]
-      }
-    },
     {
       "id": "1fe09615baea936bac9ad336904f03f77f7b1dc4ae22f5681f69b475f239e1a8",
       "sourceId": "yverdon-preavis",
@@ -5068,6 +4834,141 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "009e2039bcb563fe301c53a361049faeaffa2a831327d6ebdb5252828a787bd5",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Remplacement de l’ERP communal de la Ville de Fribourg",
+      "url": "https://www.simap.ch/fr/?search=5a2454c7-e61e-4e82-9964-4799f8d23ef7",
+      "detectedAt": "2026-11-04T12:59:37.497Z",
+      "publicationDate": "2026-11-04",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : erp",
+      "status": "pending"
+    },
+    {
+      "id": "0690effb686577fb95606e58831d960ad66711307ce6e6c9df7f003a5c2657fa",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Beschaffung von digital souveränen schulischen Arbeitsumgebungen für alle Schulen der Schweiz",
+      "url": "https://www.simap.ch/fr/?search=7abe28e6-480e-41fc-b2e9-c0c53246b690",
+      "detectedAt": "2026-11-04T12:59:37.497Z",
+      "publicationDate": "2026-11-04",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : numérique",
+      "status": "pending"
+    },
+    {
+      "id": "628368158a0ea7c799e3b6dcf662f3bb78f153595706e00da5afa8b60cb8e19e",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Periodische Verkehrsdatenerhebung 2027-2029",
+      "url": "https://www.simap.ch/fr/?search=0785175d-659b-4a5d-9752-77a5c555165e",
+      "detectedAt": "2026-11-04T12:59:37.497Z",
+      "publicationDate": "2026-11-04",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "631f3df7595f7c8af98666692f2ec47d827bfa885b52da2dc4b055652acc29ae",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "SP Steigerhubel, Steigerhubelstrasse 55b, Rasenplätze, BKP 496.5 Landschaftsarchitektur",
+      "url": "https://www.simap.ch/fr/?search=2885016a-2278-45ea-9874-afad97a9d9d3",
+      "detectedAt": "2026-11-04T12:59:37.497Z",
+      "publicationDate": "2026-11-04",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "e6462aecf280c4b09a1895b7ffc657ce6e2189159cf074d767b93d3f63dabafc",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "RFI - Lehrmittel und digitale Lehrmittel Stadt Bern",
+      "url": "https://www.simap.ch/fr/?search=285e8634-2986-4d88-986d-8ed388baaf2f",
+      "detectedAt": "2026-11-04T12:59:37.497Z",
+      "publicationDate": "2026-11-04",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : digital",
+      "status": "pending"
+    },
+    {
+      "id": "71556998f60e682248b305e4fa51550e0946e1b1ab0c88543c11ab6dee7338c5",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Diagnosegeräte und Software für PKW",
+      "url": "https://www.simap.ch/fr/?search=396ac5f8-6237-4738-bace-b2ae21261687",
+      "detectedAt": "2026-11-04T12:59:37.497Z",
+      "publicationDate": "2026-11-03",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : logiciel",
+      "status": "pending"
+    },
+    {
+      "id": "b0b15b522559a0cebc6f9db1955d1a07d535268b468bce54b62fda747bdad099",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Conversion du système SAP ECC vers SAP S4HANA Private Cloud",
+      "url": "https://www.simap.ch/fr/?search=ae8b0c31-fe66-46e6-9ad9-d255ec352ff6",
+      "detectedAt": "2026-11-04T12:59:37.497Z",
+      "publicationDate": "2026-11-03",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : cloud",
+      "status": "pending"
+    },
+    {
+      "id": "0a3f4e8808807337fd44bc8c234a6ef8c64f0e9c572e03e914f4d1a626abd82f",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Projet d’agglomération de 6e génération Coude du Rhône (PA6)",
+      "url": "https://www.simap.ch/fr/?search=e2be1e9d-ec03-47eb-a7ea-a6e568f35b1f",
+      "detectedAt": "2026-11-04T12:59:37.497Z",
+      "publicationDate": "2026-11-03",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "82a0f076da0db4f9c3c83822b293d7ad4c96988e570aa74a936768c40e36b3f8",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Acacias 11 – Lot CVC",
+      "url": "https://www.simap.ch/fr/?search=abff5184-d8e3-4292-b9fd-79e7ae98c2fc",
+      "detectedAt": "2026-11-04T12:59:37.497Z",
+      "publicationDate": "2026-11-03",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : digital",
       "status": "pending"
     }
   ]
