@@ -178,8 +178,8 @@ function readListSnapshot(row, node) {
         const figures = savedQuoteFigures(saved.snapshot);
         const ready = Boolean(figures && !figures.incomplete && saved.snapshot?.result?.offer_options_ready!==false && !row.archived);
         shareButton.disabled = !ready;
-        shareButton.textContent = ready ? localLabel('Partager l’offre client','Kundenangebot teilen') + ' ↗' :
-          localLabel('Brouillon à finaliser avant partage','Entwurf vor dem Teilen abschließen');
+        shareButton.textContent = ready ? localLabel('Partager','Teilen') + ' ↗' :
+          localLabel('Brouillon','Entwurf');
       }
     } catch {
       listSnapshots.delete(key);
@@ -206,9 +206,8 @@ function listCanton(canton) {
 function listFigures(snapshot) {
   const s = savedQuoteFigures(snapshot);
   if (!s) return `<span>${t('chiffrage.ui.savedUnavailable')}</span>`;
-  return `<span class="chiffrage-saved-tco"><span>${t('chiffrage.ui.savedTco')}${s.incomplete ? ` · ${t('chiffrage.ui.provisional')}` : ''}</span><b>${money(s.tco5y)}</b></span>
-    <span class="chiffrage-saved-parts"><span>${t('chiffrage.investment')}<b>${money(s.investment)}</b></span><span>${t('chiffrage.annual')}<b>${money(s.annual)}</b></span></span>
-    `;
+  return `<span class="chiffrage-saved-parts"><span>${t('chiffrage.investment')}<b>${money(s.investment)}</b></span><span>${t('chiffrage.annual')}<b>${money(s.annual)}</b></span></span>
+    <span class="chiffrage-saved-tco"><span>${t('chiffrage.ui.savedTco')}${s.incomplete ? ` · ${t('chiffrage.ui.provisional')}` : ''}</span><b>${money(s.tco5y)}</b></span>`;
 }
 function renderCatalogManager(editing = null) {
   state.mode='catalog';
@@ -224,16 +223,19 @@ function renderList() {
   history.replaceState(history.state,'',quoteAddress(null));
   state.mode = 'list'; state.draft = null; state.quote = null;
   const rows = state.quotes.filter(row => state.showArchived || !row.archived);
-  root.innerHTML = header() + `<div class="chiffrage-actions">
-    <button class="chiffrage-button primary" data-action="new" ${!state.catalog ? 'disabled' : ''}>${t('chiffrage.new')}</button>${catalogButton()}
-    <label class="chiffrage-choice"><input type="checkbox" data-field="showArchived" ${state.showArchived ? 'checked' : ''}>${t('chiffrage.showArchived')}</label></div>
+  root.innerHTML = `<h2>${t('chiffrage.workspace.b246604ad2')}</h2><div class="chiffrage-list-toolbar">
+    <button class="chiffrage-button primary" data-action="new" ${!state.catalog ? 'disabled' : ''}>${localLabel('Nouveau','Neu')}</button>
+    <button class="chiffrage-button" data-action="manageCatalog">${localLabel('Catalogue','Katalog')}</button>
+    <button class="chiffrage-button" data-action="openReference">${localLabel('Règles','Regeln')}</button>
+    <button class="chiffrage-button quiet" data-action="logout">${localLabel('Déconnexion','Abmelden')}</button></div>
+    <p class="chiffrage-status${state.error ? ' error' : ''}" role="status">${escape(state.message)}</p>
+    <label class="chiffrage-choice chiffrage-list-archives"><input type="checkbox" data-field="showArchived" ${state.showArchived ? 'checked' : ''}>${t('chiffrage.showArchived')}</label>
     ${state.catalog ? '' : `<p class="chiffrage-warning">${t('chiffrage.noCatalog')}</p>`}
     <div class="chiffrage-list">${rows.length ? rows.map(row =>
       `<article class="chiffrage-list-item"><button data-action="open" data-id="${escape(row.id)}"><span class="chiffrage-saved-heading"><span data-list-canton>${listCanton(communes().find(item => Number(item.id) === Number(row.bfs_id))?.canton)}</span><strong>${escape(row.title)}</strong></span>
-      <small>${escape(row.commune_name)} · OFS ${row.bfs_id} · ${t('chiffrage.revision', {
-        revision: row.current_revision })}</small><span class="chiffrage-saved-figures" data-list-figures aria-live="polite">${t('chiffrage.ui.savedLoading')}</span></button>
-    <div class="chiffrage-list-share-actions"><button type="button" class="chiffrage-button chiffrage-share-list" data-action="shareOffer" data-id="${escape(row.id)}" disabled>${localLabel('Vérification de l’offre…','Angebot wird geprüft…')}</button>
-      <button type="button" class="chiffrage-button chiffrage-manage-list" data-action="manageShares" data-id="${escape(row.id)}">${localLabel('Liens et ouvertures','Links und Aufrufe')} ↗</button></div>
+      <small>${escape(row.commune_name)} · OFS ${row.bfs_id} · R${row.current_revision}</small><span class="chiffrage-saved-figures" data-list-figures aria-live="polite">${t('chiffrage.ui.savedLoading')}</span></button>
+    <div class="chiffrage-list-share-actions"><button type="button" class="chiffrage-button chiffrage-share-list" data-action="shareOffer" data-id="${escape(row.id)}" disabled>${localLabel('Vérification…','Prüfung…')}</button>
+      <button type="button" class="chiffrage-button chiffrage-manage-list" data-action="manageShares" data-id="${escape(row.id)}">${localLabel('Liens','Links')} ↗</button></div>
     <div class="chiffrage-share-result" data-share-result aria-live="polite"></div></article>`).join('') : `<p>${t('chiffrage.empty')}</p>`}</div><div id="chiffrageShareResult" aria-live="polite"></div>`;
   const byId = new Map(rows.map(row => [String(row.id), row]));
   listObserver = new IntersectionObserver(entries => {
@@ -1017,7 +1019,7 @@ function renderEditor() {
     <div class="chiffrage-tab-panel" data-tab-panel="compare" ${state.editorTab==='compare'?'':'hidden'}>${comparisonSection()}</div>
     <div class="chiffrage-tab-panel" data-tab-panel="analysis" ${state.editorTab==='analysis'?'':'hidden'}><div id="chiffrageAnalysis">${analysis()}</div><div id="chiffrageDetail">${lineDetail()}</div></div>
     ${state.internal ? `<div class="chiffrage-tab-panel" data-tab-panel="rates" ${state.editorTab==='rates'?'':'hidden'}>${catalogButton()}${internalMargins()}${rateInventory()}${technicalSection()}${extraSection('rates')}${hostingSection('internal')}${state.quote ? `<div class="chiffrage-section"><button class="chiffrage-button" data-action="exportInternal">${t('chiffrage.exportInternal')}</button></div>` : ''}</div>`:''}
-    <footer class="chiffrage-editor-footer"><div class="chiffrage-actions"><button class="chiffrage-button primary" data-action="save">${t('chiffrage.save')}</button>${state.quote ? `<button class="chiffrage-button" data-action="export">${t('chiffrage.export')}</button><button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button><button class="chiffrage-button" data-action="copyLink">${t('chiffrage.resumeDesktop')}</button><button class="chiffrage-button primary" data-action="${shareReady?'shareOffer':'prepareShare'}" ${state.archived ? 'disabled' : ''} title="${shareReady ? '' : localLabel('Enregistre et finalise les montants avant le partage','Angebot vor dem Teilen fertigstellen und speichern')}">${shareReady ? localLabel('Partager l’offre client','Kundenangebot teilen') + ' ↗' : state.archived?localLabel('Chiffrage archivé','Archivierte Kalkulation'):offerOptionReview(state.draft,state.catalog).issues.length?localLabel('Compléter les options','Optionen ergänzen'):currentCompletion().length?t('chiffrage.completion.beforeShare'):t('chiffrage.completion.saveBeforeShare')}</button><button class="chiffrage-button" data-action="manageShares">${localLabel('Gérer les liens','Links verwalten')}</button><details class="chiffrage-more"><summary>${t('chiffrage.workspace.93674815f7')}</summary><div class="chiffrage-actions"><button class="chiffrage-button" data-action="revisions">${t('chiffrage.revisions')}</button><button class="chiffrage-button" data-action="archive">${t('chiffrage.archive')}</button><button class="chiffrage-button chiffrage-danger" data-action="delete">${t('chiffrage.workspace.66e03d8bb9')}</button></div></details>`:''}</div><button class="chiffrage-inline" data-action="${state.internal?'clientMode':'internalMode'}">${state.internal?t('chiffrage.workspace.444c26c24e'):t('chiffrage.workspace.04c546339b')}</button></footer><div id="chiffrageShareResult" aria-live="polite"></div><div id="chiffrageHistory"></div></div><div id="chiffrageSummary">${financialPanel}</div></div></div>`;
+    <footer class="chiffrage-editor-footer"><div class="chiffrage-actions"><button class="chiffrage-button primary" data-action="save">${t('chiffrage.save')}</button>${state.quote ? `<button class="chiffrage-button" data-action="export">${t('chiffrage.export')}</button><button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button><button class="chiffrage-button" data-action="copyLink">${t('chiffrage.resumeDesktop')}</button><button class="chiffrage-button primary" data-action="${shareReady?'shareOffer':'prepareShare'}" ${state.archived ? 'disabled' : ''} title="${shareReady ? '' : localLabel('Enregistre et finalise les montants avant le partage','Angebot vor dem Teilen fertigstellen und speichern')}">${shareReady ? localLabel('Partager','Teilen') + ' ↗' : state.archived?localLabel('Chiffrage archivé','Archivierte Kalkulation'):offerOptionReview(state.draft,state.catalog).issues.length?localLabel('Compléter les options','Optionen ergänzen'):currentCompletion().length?t('chiffrage.completion.beforeShare'):t('chiffrage.completion.saveBeforeShare')}</button><button class="chiffrage-button" data-action="manageShares">${localLabel('Gérer les liens','Links verwalten')}</button><details class="chiffrage-more"><summary>${t('chiffrage.workspace.93674815f7')}</summary><div class="chiffrage-actions"><button class="chiffrage-button" data-action="revisions">${t('chiffrage.revisions')}</button><button class="chiffrage-button" data-action="archive">${t('chiffrage.archive')}</button><button class="chiffrage-button chiffrage-danger" data-action="delete">${t('chiffrage.workspace.66e03d8bb9')}</button></div></details>`:''}</div><button class="chiffrage-inline" data-action="${state.internal?'clientMode':'internalMode'}">${state.internal?t('chiffrage.workspace.444c26c24e'):t('chiffrage.workspace.04c546339b')}</button></footer><div id="chiffrageShareResult" aria-live="polite"></div><div id="chiffrageHistory"></div></div><div id="chiffrageSummary">${financialPanel}</div></div></div>`;
   for (const node of root.querySelectorAll('details[data-disclosure-key]')) if(disclosureState.has(node.dataset.disclosureKey))node.open=disclosureState.get(node.dataset.disclosureKey);
   for(const node of root.querySelectorAll('[data-module-search]'))if(searches.has(node.dataset.moduleSearch)){node.value=searches.get(node.dataset.moduleSearch);node.dispatchEvent(new Event('input',{bubbles:true}));}
   if (scroll) window.scrollTo({top:scroll,behavior:'instant'});
@@ -1433,6 +1435,20 @@ async function loadComparison() {
 
 // Customer shares use a separate, frozen server-side projection.
 // The editor's 12-hour session is never put into the public URL.
+function renderSharedLinks(rows,id) {
+  const links=rows.filter(row=>row.public_slug).sort((a,b)=>b.revision-a.revision);
+  const render=row=>{const url=offerShareUrl(row.public_slug),active=!row.revoked_at;return `<div class="chiffrage-share-link" data-link-id="${escape(row.id)}">
+    <div class="chiffrage-share-link-heading"><strong>${escape(row.public_version)}r${row.revision}</strong>
+    <button class="chiffrage-button chiffrage-link-switch" role="switch" aria-checked="${active}" aria-label="${localLabel('Activer le lien','Link aktivieren')} ${escape(row.public_version)}r${row.revision}" data-action="setSharedActive" data-active="${!active}" data-id="${escape(id)}">${active?localLabel('Actif','Aktiv'):localLabel('Inactif','Inaktiv')}</button></div>
+    <input class="chiffrage-share-url" aria-label="${localLabel('Adresse du lien','Linkadresse')}" value="${escape(url)}" readonly>
+    <div class="chiffrage-share-actions"><button class="chiffrage-button" data-action="copySharedOffer">${localLabel('Copier','Kopieren')}</button><a class="chiffrage-button" href="${escape(url)}" target="_blank" rel="noopener noreferrer">${localLabel('Ouvrir','Öffnen')} ↗</a></div>
+    <small>${linkCount(row.open_count)}${row.last_opened_at?' · '+dateTimeLabel(row.last_opened_at):''}</small><p class="chiffrage-share-copy-status" role="status"></p></div>`;};
+  return `<section class="chiffrage-share-panel"><div class="chiffrage-share-panel-heading"><h3>${localLabel('Partage client','Kundenfreigabe')}</h3>${shareCloseControl()}</div>
+  ${links.length?render(links[0]):`<p>${localLabel('Aucun lien publié.','Noch kein Link veröffentlicht.')}</p><button class="chiffrage-button" data-action="shareOffer" data-id="${escape(id)}">${localLabel('Publier','Veröffentlichen')}</button>`}
+  ${links.length>1?`<details><summary>${localLabel('Historique','Verlauf')} (${links.length-1})</summary>${links.slice(1).map(render).join('')}</details>`:''}
+  <p class="chiffrage-helper">${localLabel('Sans expiration automatique. Ouvertures non uniques, aperçus compris.','Ohne automatisches Ablaufdatum. Aufrufe einschließlich eigener Vorschauen.')}</p>
+  <button class="chiffrage-inline" data-action="manageShares" data-refresh="true" data-id="${escape(id)}">${localLabel('Actualiser','Aktualisieren')} ↻</button></section>`;
+}
 function offerShareUrl(token) {
   const url = new URL('offre.html', new URL('./', document.baseURI));
   url.hash = token;
@@ -1450,35 +1466,6 @@ function sharePanel(content, source = null) {
   return node;
 }
 
-// Safari requires window.open and ClipboardItem.write to be invoked within
-// the click itself. Both must start BEFORE awaiting the publishing API.
-function openSharePreview() {
-  const preview = window.open('', '_blank');
-  if (!preview) return null;
-  try {
-    preview.opener = null;
-    preview.document.title = localLabel('Préparation de l’offre Prime…', 'Prime-Angebot vorbereiten…');
-    preview.document.body.textContent = localLabel('Préparation de votre offre client…',
-      'Ihr Kundenangebot wird vorbereitet…');
-    preview.document.body.style.cssText = 'font:18px system-ui;padding:35px;color:#172746';
-  } catch { /* Navigation after the response still works without a placeholder. */ }
-  return preview;
-}
-
-function startShareClipboard() {
-  if (!navigator.clipboard?.write || typeof ClipboardItem === 'undefined') return null;
-  let resolveLink, rejectLink;
-  const link = new Promise((resolve, reject) => { resolveLink = resolve; rejectLink = reject; });
-  try {
-    const item = new ClipboardItem({ 'text/plain': link.then(url =>
-      new Blob([url], { type: 'text/plain' })) });
-    const result = navigator.clipboard.write([item]).then(() => true, () => false);
-    return { resolve: resolveLink, reject: rejectLink, result };
-  } catch { return null; }
-}
-function dateLabel(value) {
-  return new Date(value).toLocaleDateString(document.documentElement.lang === 'de' ? 'de-CH' : 'fr-CH');
-}
 function dateTimeLabel(value) {
   return new Date(value).toLocaleString(document.documentElement.lang === 'de' ? 'de-CH' : 'fr-CH',
     { day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit' });
@@ -1595,135 +1582,38 @@ root.addEventListener('click', async event => {
   }
 
 
-  if (action === 'shareOffer') {
-    const id = button.dataset.id ?? state.quote;
-    if (!id) return;
-    if (state.mode === 'editor' && state.dirty) {
-      sharePanel(`<p class="chiffrage-warning">${localLabel('Enregistre d’abord tes modifications avant le partage.','Änderungen vor dem Teilen speichern.')}</p>`, button);
-      return;
-    }
-    // Must happen before the first await, otherwise iOS Safari blocks the tab.
-    const preview = openSharePreview();
-    const clipboard = startShareClipboard();
-    button.disabled = true;
-    sharePanel(`<p class="chiffrage-share-progress" role="status">${localLabel('Création du lien privé…','Privaten Link erstellen…')}</p>`, button);
+  if (action === 'shareOffer' || action === 'manageShares') {
+    const id=button.dataset.id ?? state.quote;
+    if(!id)return;
+    const panel=button.closest('.chiffrage-list-item')?.querySelector('[data-share-result]')??root.querySelector('#chiffrageShareResult');
+    if(action==='manageShares' && button.dataset.refresh!=='true' && panel?.querySelector('.chiffrage-share-panel')){panel.replaceChildren();return;}
+    if(action==='shareOffer' && state.mode==='editor' && state.dirty){notice(()=>localLabel('Enregistre avant de partager.','Vor dem Teilen speichern.'),true);return;}
+    button.disabled=true;
     try {
-      const shared = await api('publishOffer', { id });
-      const url = offerShareUrl(shared.token);
-      clipboard?.resolve(url);
-      if (preview && !preview.closed) preview.location.replace(url);
-      const container = sharePanel(`<section class="chiffrage-share-panel">
-        <div class="chiffrage-share-panel-heading"><h3>${localLabel('Offre client prête à partager','Kundenangebot zum Teilen bereit')}</h3>${shareCloseControl()}</div>
-        <p>${localLabel('Lecture seule · révision figée','Schreibgeschützt · feste Version')} ${shared.revision} · ${localLabel('Expire le','Gültig bis')} ${dateLabel(shared.expires_at)}</p>
-        <label>${localLabel('Lien privé','Privater Link')}<input class="chiffrage-share-url" value="${escape(url)}" readonly></label>
-        <div class="chiffrage-share-actions"><button class="chiffrage-button" data-action="copySharedOffer">${localLabel('Copier le lien','Link kopieren')}</button>
-        <a class="chiffrage-button primary" href="${escape(url)}" target="_blank" rel="noopener noreferrer">${localLabel('Ouvrir l’offre client','Kundenangebot öffnen')} ↗</a></div>
-        <p class="chiffrage-share-copy-status" role="status">${localLabel('Lien créé. Ouverture de l’onglet client…','Link erstellt. Kundenansicht wird geöffnet…')}</p>
-        <div class="chiffrage-share-monitor"><span>${localLabel('Ouvertures depuis la publication','Aufrufe seit Veröffentlichung')} : <strong>${linkCount(shared.open_count)}</strong></span>
-        <button type="button" class="chiffrage-button" data-action="manageShares" data-id="${escape(id)}">${localLabel('Actualiser / gérer les liens','Aktualisieren / Links verwalten')} ↻</button></div>
-        <p class="chiffrage-helper">${localLabel('Ce lien donne accès uniquement à cette offre.','Dieser Link öffnet nur dieses Angebot.')}</p>
-      </section>`, button);
-      if (clipboard) void clipboard.result.then(copied => {
-        const status=container?.querySelector('.chiffrage-share-copy-status');
-        if (status) status.textContent = copied ?
-          localLabel('✓ Lien copié · nouvel onglet ouvert.','✓ Link kopiert · neuer Tab geöffnet.') :
-          localLabel('Lien prêt : touche « Copier le lien » pour le copier dans Safari.','Link bereit: Zum Kopieren « Link kopieren » wählen.');
-      });
-      else {
-        const status=container?.querySelector('.chiffrage-share-copy-status');
-        if (status) status.textContent = localLabel('Lien prêt : touche « Copier le lien » pour le copier.','Link bereit: Zum Kopieren « Link kopieren » wählen.');
-      }
-      if (!preview) {
-        const status=container?.querySelector('.chiffrage-share-copy-status');
-        if (status) status.textContent += ' ' + localLabel('Safari a bloqué l’onglet automatique : utilise « Ouvrir l’offre client ».','Safari hat den neuen Tab blockiert: « Kundenangebot öffnen » wählen.');
-      }
-    } catch (error) {
-      clipboard?.reject(new Error('Offer publication failed'));
-      if (preview && !preview.closed) preview.close();
-      sharePanel(`<div class="chiffrage-share-error" role="alert">
-        <strong>${localLabel('Lien non créé','Link nicht erstellt')}</strong>
-        <p>${error.status === 422 ?
-          localLabel('Ce chiffrage est provisoire : finalise les montants et enregistre-le avant de le partager.','Dieser Entwurf ist unvollständig: Preise bestätigen und speichern.') :
-          localLabel('Une erreur est survenue lors de la publication. Réessaie ou vérifie la connexion.','Fehler beim Teilen. Bitte erneut versuchen oder Verbindung prüfen.')}</p>
-      </div>`, button);
-    } finally { if(button.isConnected) button.disabled=false; }
+      if(action==='shareOffer')await api('publishOffer',{id});
+      const links=await api('sharedOffers',undefined,{id});
+      sharePanel(renderSharedLinks(links,id),button);
+    }catch(error){sharePanel(`<p role="alert">${escape(errorMessage(error))}</p>${shareCloseControl()}`,button);}
+    finally{if(button.isConnected)button.disabled=false;}
+    return;
+  }
+  if(action==='setSharedActive') {
+    const row=button.closest('[data-link-id]'),id=button.dataset.id;
+    button.disabled=true;
+    try {
+      await api('setOfferActive',{id,link_id:row.dataset.linkId,active:button.dataset.active==='true'});
+      const links=await api('sharedOffers',undefined,{id});sharePanel(renderSharedLinks(links,id),button);
+    }catch(error){const status=row.querySelector('[role="status"]');status.textContent=errorMessage(error);button.disabled=false;}
     return;
   }
   if (action === 'closeSharePanel') {
-    const container=button.closest('[data-share-result],#chiffrageShareResult');
-    if (container) container.replaceChildren();
-    return;
+    button.closest('[data-share-result],#chiffrageShareResult')?.replaceChildren();return;
   }
   if (action === 'copySharedOffer') {
-    const url=button.closest('.chiffrage-share-panel')?.querySelector('.chiffrage-share-url');
-    if (!url) return;
-    try {
-      await navigator.clipboard.writeText(url.value);
-      const status=button.closest('.chiffrage-share-panel')?.querySelector('.chiffrage-share-copy-status');
-      if(status) status.textContent=localLabel('✓ Lien copié dans le presse-papiers.','✓ Link in die Zwischenablage kopiert.');
-    } catch {
-      url.focus(); url.select();
-      const status=button.closest('.chiffrage-share-panel')?.querySelector('.chiffrage-share-copy-status');
-      if(status) status.textContent=localLabel('Safari bloque la copie automatique : maintiens ton doigt sur le lien sélectionné et choisis « Copier ».','Safari blockiert das Kopieren: Den ausgewählten Link gedrückt halten und « Kopieren » wählen.');
-    }
-    return;
-  }
-
-  if (action === 'manageShares') {
-    const id=button.dataset.id ?? state.quote;
-    if (!id) return;
-    const existing=button.closest('.chiffrage-share-panel');
-    // The header/footer button acts as a toggle; refresh control does not.
-    if (existing?.dataset.shareMode === 'manage' && button.dataset.refresh !== 'true') {
-      existing.closest('[data-share-result],#chiffrageShareResult')?.replaceChildren();
-      return;
-    }
-    button.disabled = true;
-    try {
-      const links=await api('sharedOffers',undefined,{id});
-      const now=Date.now();
-      const active=links.filter(row=>!row.revoked_at && new Date(row.expires_at).getTime()>now);
-      const total=active.reduce((sum,row)=>sum+Number(row.open_count ?? 0),0);
-      sharePanel(`<details open class="chiffrage-share-panel" data-share-mode="manage" data-share-id="${escape(id)}">
-        <summary>${localLabel('Liens clients et ouvertures','Kundenlinks und Aufrufe')}</summary>
-        <p class="chiffrage-share-monitor">
-          ${localLabel('Ouvertures des liens actifs','Aufrufe aktiver Links')} : <strong>${linkCount(total)}</strong>
-          <span class="chiffrage-share-help">${localLabel('Non uniques · tes essais et aperçus comptent aussi. Pas de suivi individuel.','Nicht eindeutig · eigene Tests zählen mit. Keine Besucherverfolgung.')}</span>
-        </p>
-        <button type="button" class="chiffrage-button" data-action="manageShares" data-refresh="true" data-id="${escape(id)}">${localLabel('Actualiser les compteurs','Aufrufe aktualisieren')} ↻</button>
-        <div class="chiffrage-share-link-list">${active.length ? active.map(row=>`<div class="chiffrage-share-link" data-link-id="${escape(row.id)}">
-          <span><strong>${localLabel('Révision','Version')} ${row.revision}</strong>
-            <small>${localLabel('Expire le','Gültig bis')} ${dateLabel(row.expires_at)}</small>
-            <span class="chiffrage-share-counter">${linkCount(row.open_count)}</span>
-            ${row.last_opened_at ? `<small>${localLabel('Dernière ouverture','Letzter Aufruf')} : ${dateTimeLabel(row.last_opened_at)}</small>` : `<small>${localLabel('Pas encore ouvert','Noch nicht geöffnet')}</small>`}
-          </span>
-          <button type="button" class="chiffrage-button chiffrage-danger" data-action="revokeSharedOffer" data-id="${escape(id)}" data-link-id="${escape(row.id)}">${localLabel('Supprimer le lien','Link löschen')}</button>
-        </div>`).join('') : `<p>${localLabel('Aucun lien actif.','Keine aktiven Links.')}</p>`}</div>
-        <p class="chiffrage-share-feedback" role="status"></p>
-      </details>`,button);
-    } catch(error) {
-      sharePanel(`<div class="chiffrage-share-error" role="alert">${localLabel('Impossible de charger les ouvertures.','Aufrufe konnten nicht geladen werden.')}</div><button class="chiffrage-button" data-action="closeSharePanel">${localLabel('Fermer','Schließen')} ×</button>`,button);
-    } finally { if(button.isConnected) button.disabled=false; }
-    return;
-  }
-  if (action === 'revokeSharedOffer') {
-    const id=button.dataset.id ?? state.quote;
-    const linkId=button.dataset.linkId;
-    if(!id || !linkId) return;
-    // One action: immediately revoke at the server, then remove from active list.
-    // Keep the DB tombstone for traceability, but never expose the token again.
-    button.disabled=true;
-    try {
-      await api('revokeOffer',{id,link_id:linkId});
-      const manage=button.closest('.chiffrage-share-panel')?.querySelector('[data-action="manageShares"][data-refresh="true"]');
-      if (manage) manage.click();
-      else sharePanel(`<div class="chiffrage-share-progress" role="status">${localLabel('Lien supprimé et immédiatement désactivé.','Link entfernt und sofort gesperrt.')}</div>
-        ${shareCloseControl()}`,button);
-    } catch(error) {
-      button.disabled=false;
-      const feedback=button.closest('.chiffrage-share-panel')?.querySelector('.chiffrage-share-feedback');
-      if (feedback) feedback.textContent=localLabel('Échec de la suppression : le lien peut encore être actif. Réessaie.','Löschen fehlgeschlagen: Link kann noch aktiv sein.');
-    }
+    const row=button.closest('[data-link-id]'),url=row?.querySelector('.chiffrage-share-url'),status=row?.querySelector('[role="status"]');
+    if(!url)return;
+    try{await navigator.clipboard.writeText(url.value);status.textContent=localLabel('Lien copié.','Link kopiert.');}
+    catch{url.focus();url.select();status.textContent=localLabel('Sélectionne puis copie le lien.','Link auswählen und kopieren.');}
     return;
   }
 

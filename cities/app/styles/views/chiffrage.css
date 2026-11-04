@@ -133,7 +133,7 @@
 .chiffrage-list-share-actions>.chiffrage-button{width:100%;margin:0;padding:12px 15px;text-align:center}
 .chiffrage-list-share-actions>.chiffrage-share-list{width:100%;margin:0}
 .chiffrage-share-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.chiffrage-share-panel-heading .chiffrage-share-close{margin-left:auto;flex-shrink:0}
+.chiffrage-share-panel-heading .chiffrage-share-close{margin-left:auto;flex-shrink:0;width:auto;min-height:36px;padding:6px 10px}
 .chiffrage-share-monitor{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 0}
 .chiffrage-share-monitor strong,.chiffrage-share-counter{font-size:17px;font-weight:750;color:var(--skin-accent);font-variant-numeric:tabular-nums}
 .chiffrage-share-help{font-size:12px;color:var(--skin-muted);flex-basis:100%;line-height:1.45}
@@ -272,3 +272,31 @@
 .chiffrage-showcase-candidates small,.chiffrage-showcase-candidates strong{display:block}
 .chiffrage-showcase-candidates small{font-size:14px;color:var(--skin-secondary);margin-bottom:4px}
 .chiffrage-showcase-candidates .chiffrage-button{flex:none}
+
+/* Compact saved offers: two primary amounts, a secondary five-year total. */
+.chiffrage-list-toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:14px 0 12px}
+.chiffrage-list-toolbar .chiffrage-button{width:100%;min-height:42px;padding:10px 8px}
+.chiffrage-list-archives{font-size:13px;margin:0}
+.chiffrage-list{margin-top:14px;align-items:start}
+.chiffrage-list-item>[data-action="open"]{padding:16px}
+.chiffrage-list small{margin-top:7px;font-size:12px}
+.chiffrage-saved-figures{margin-top:12px;padding-top:12px}
+.chiffrage-saved-parts{margin-top:0;gap:12px}
+.chiffrage-saved-parts b{font-size:clamp(18px,1.6vw,23px);margin-top:4px;letter-spacing:-.03em}
+.chiffrage-saved-tco{flex-direction:row;flex-wrap:wrap;justify-content:space-between;gap:4px;margin-top:12px;font-size:12px}
+.chiffrage-saved-tco b{font-size:14px;letter-spacing:0;color:var(--skin-secondary)}
+.chiffrage-list-share-actions{grid-template-columns:1fr 1fr;padding:0 16px 14px}
+.chiffrage-list-share-actions>.chiffrage-button{padding:9px 10px;min-height:40px;font-size:13px}
+.chiffrage-share-panel{gap:10px;margin:0;padding:12px;border-radius:9px}
+#chiffrageShareResult>.chiffrage-share-panel{margin-top:14px}
+.chiffrage-share-panel h3{font-size:15px}
+.chiffrage-share-link{display:grid;gap:8px;padding:10px 0}
+.chiffrage-share-link-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chiffrage-share-link-heading .chiffrage-link-switch{width:auto;min-height:36px;padding:6px 12px;font-size:12px;text-align:center}
+.chiffrage-link-switch[aria-checked="true"]{color:var(--skin-accent);border-color:var(--skin-accent)}
+.chiffrage-share-link input{font-size:13px;padding:9px}
+.chiffrage-share-link .chiffrage-share-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chiffrage-share-link .chiffrage-share-actions>*{padding:8px;min-height:40px;text-align:center;font-size:13px;text-decoration:none}
+.chiffrage-share-link small{margin:0}
+.chiffrage-share-link [role="status"]:empty{display:none}
+@media(max-width:600px){.chiffrage-list-toolbar{grid-template-columns:1fr 1fr}}

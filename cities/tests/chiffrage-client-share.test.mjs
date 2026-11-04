@@ -64,7 +64,7 @@ test('incomplete or mismatched quote snapshots are not shareable',()=>{
 });
 
 test('sharing management still requires editor authorization and same origin',async()=>{
-  for(const action of ['publishOffer','sharedOffers','revokeOffer']){
+  for(const action of ['publishOffer','sharedOffers','revokeOffer','setOfferActive']){
     const response=await handler(new Request('https://example.supabase.co/functions/v1/chiffrage?action='+action));
     assert.equal(response.status,401,action);
   }
@@ -104,17 +104,13 @@ test('finalized SQL investment with null optional annual PV remains shareable',(
   assert.ok(!JSON.stringify(published).includes('investment_pa'));
 });
 
-test('Safari creates the preview tab before async publishing, with inline feedback and direct copy',()=>{
-  const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
-  const share=view.slice(view.indexOf("if (action === 'shareOffer')"),view.indexOf("if (action === 'copySharedOffer')"));
-  assert.match(share,/const preview = openSharePreview\(\);/);
-  assert.match(share,/const clipboard = startShareClipboard\(\);/);
-  assert.ok(share.indexOf('openSharePreview()') < share.indexOf("await api('publishOffer'"));
-  assert.match(share,/sharePanel\(/);
-  assert.match(view,/new ClipboardItem/);
-  assert.match(view,/\[data-share-result\]/);
-  assert.match(view,/Brouillon à finaliser avant partage/);
-  assert.match(view,/shareButton\.disabled = !ready/);
+test('publishing reuses one panel with direct copy and explicit open controls',()=>{
+ const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
+ assert.doesNotMatch(view,/openSharePreview|startShareClipboard|shared.token/);
+ assert.match(view,/await api\('publishOffer',\{id\}\)/);
+ assert.match(view,/data-action="copySharedOffer"/);
+ assert.match(view,/offerShareUrl\(row.public_slug\)/);
+ assert.match(view,/shareButton\.disabled = !ready/);
 });
 
 test('the four distinct accompaniment prices and LCM reconcile exactly without exposing PA',()=>{
@@ -253,19 +249,14 @@ test('SQL counter has service-only execution and no per-visitor event table',()=
   assert.doesNotMatch(sql,/create table .*visitor|insert into .*events/i);
 });
 
-test('share panels are dismissible and link revocation is a single server action',()=>{
-  const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
-  assert.match(view,/data-action="closeSharePanel"/);
-  assert.match(view,/data-action="manageShares" data-id=/);
-  assert.match(view,/data-action="revokeSharedOffer"/);
-  assert.match(view,/data-action="manageShares" data-refresh="true"/);
-  assert.match(view,/linkCount\(row\.open_count\)/);
-  const revoke=view.slice(view.indexOf("if (action === 'revokeSharedOffer')"),
-    view.indexOf("if (action === 'copyLink')"));
-  assert.match(revoke,/await api\('revokeOffer'/);
-  assert.doesNotMatch(revoke,/window\.confirm/);
+test('links are manually reversible and the closed panel leaves no duplicate summary',()=>{
+ const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
+ assert.match(view,/data-action="closeSharePanel"/);
+ assert.match(view,/role="switch" aria-checked=/);
+ assert.match(view,/await api\('setOfferActive'/);
+ assert.match(view,/panel.replaceChildren\(\)/);
+ assert.doesNotMatch(view,/details open class="chiffrage-share-panel"|revokeSharedOffer/);
 });
-
 
 test('commercial offer owns its contrast without client cascade overrides',()=>{
   const css=readFileSync(new URL('../app/styles/offer.css',import.meta.url),'utf8');

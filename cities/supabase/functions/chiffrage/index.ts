@@ -9,6 +9,7 @@ Deno.serve(async request => {
   const headers = { 'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Headers': 'authorization, content-type',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Expose-Headers':'Content-Disposition',
     'Vary': 'Origin' };
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers });
   const response = await handler(request);
