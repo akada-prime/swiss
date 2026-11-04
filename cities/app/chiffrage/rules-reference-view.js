@@ -52,7 +52,7 @@ export function parameterTable(value, label) {
     } else rows.push([path.join(' › ') || label('Valeur','Wert'),node==null?label('Non renseigné','Nicht angegeben'):typeof node==='boolean'?(node?label('Oui','Ja'):label('Non','Nein')):node]);
   };
   walk(value);
-  return `<div class="rule-parameter-scroll"><table class="rule-parameters"><thead><tr><th>${label('Paramètre / provenance','Parameter / Herkunft')}</th><th>${label('Valeur active','Aktueller Wert')}</th></tr></thead><tbody>${rows.map(([key,val])=>`<tr><th scope="row">${e(key)}</th><td>${e(val)}</td></tr>`).join('')}</tbody></table></div>`;
+  return `<div class="rule-parameter-scroll" tabindex="0" role="region" aria-label="${label('Paramètres · défilement horizontal','Parameter · horizontal scrollen')}"><table class="rule-parameters"><thead><tr><th>${label('Paramètre / provenance','Parameter / Herkunft')}</th><th>${label('Valeur active','Aktueller Wert')}</th></tr></thead><tbody>${rows.map(([key,val])=>`<tr><th scope="row">${e(key)}</th><td>${e(val)}</td></tr>`).join('')}</tbody></table></div>`;
 }
 function parameterRules(catalog) {
   return Object.entries(catalog?.parameters ?? {}).map(([key,value])=>({

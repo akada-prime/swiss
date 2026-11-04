@@ -584,3 +584,12 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   recherche, ouverture/fermeture, réinitialisation, grilles et paramètres vérifiés.
   Commandes FR/DE et apparences Prime Dark/Helvetia contrôlées sur recette
   synthétique ; rédaction métier française explicitement indiquée en allemand.
+
+## 2026-11-04 · Défilement horizontal du référentiel sur Natel
+
+- Le conteneur des paramètres limite désormais sa largeur et porte le
+  défilement horizontal natif ; tableau à largeur minimale lisible, cellules
+  autorisées à revenir à la ligne. Région accessible au clavier et au toucher.
+- Recette réelle à 360 px : document 345 px sans débordement global,
+  tableau 600 px dans un conteneur 225 px ; scrollLeft passe de 0 à 40
+  avec une action clavier. 11 contrôles ciblés passent.
