@@ -1,4 +1,4 @@
-import { referenceShell, bindReference } from './rules-reference-view.js?v=20261104-rules-r1';
+import { referenceShell, bindReference } from './rules-reference-view.js?v=20261104-rules-scroll-r2';
 import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261104-roadmap-beta-r1';
 import { includedForParent, optionApplies } from './module-catalog.js';
 import { bindOfferScope } from '../offer/interactions.js';
