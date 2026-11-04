@@ -593,3 +593,17 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
 - Recette réelle à 360 px : document 345 px sans débordement global,
   tableau 600 px dans un conteneur 225 px ; scrollLeft passe de 0 à 40
   avec une action clavier. 11 contrôles ciblés passent.
+
+## 2026-11-04 · Tableaux métier compacts dans tout le référentiel
+
+- Remplacement du déroulé de chemins techniques par des tables adaptées : LCM
+  tranche/Gold/Platinum, Oracle Full/Light × acquisition/annuel, SQL paramètres
+  courts et repères habitants/utilisateurs, PA/PV par classe, options/prestations
+  en colonnes et grilles par palier. Tous les autres groupes utilisent des
+  libellés locaux, sans répéter le chemin parent à chaque ligne.
+- Conditions supplémentaires, explications et sources conservées dans des
+  replis distincts ; les noms des modules sont lus dans le catalogue chargé.
+  Les articles n'affichent que leurs paramètres pertinents. Aucun tarif,
+  calcul, droit, enregistrement ou lien client modifié.
+- 14 contrôles ciblés passent. LCM/SQL vérifiés à 360 px et LCM sur les six
+  largeurs 360–2560 px, sans débordement global. Recette synthétique uniquement.

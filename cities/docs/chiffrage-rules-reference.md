@@ -58,3 +58,17 @@ Une évolution de paramètre ou de grille apparaît à la prochaine ouverture gr
 à la lecture du catalogue actif. L'historique financier reste celui des
 révisions d'offres et de leurs versions tarifaires ; l'édition du dictionnaire
 n'est pas un archivage exécutable des anciennes versions du moteur.
+
+
+## Tableaux de lecture métier
+
+Les chemins d'objets ne sont pas des libellés de ligne. Le contexte est donné
+une seule fois par le chapitre ou le groupe. LCM : une tranche par ligne,
+Gold et Platinum en colonnes ; SQL : paramètres courts et repères de population
+séparés ; Oracle : Full/Light et acquisition/annuel ; PA/PV : colonnes par
+classe ; options et prestations : une ligne par article et colonnes de valeurs.
+Les grilles tarifaires présentent leurs paliers en lignes. Les profils et
+paramètres imbriqués se regroupent sous des titres locaux, sans répéter le chemin.
+Les noms de modules sont résolus depuis le catalogue privé déjà chargé.
+Les conditions supplémentaires, la formule et la provenance restent accessibles
+sous des replis distincts. Aucun changement de calcul ni de valeur tarifaire.
