@@ -1,7 +1,7 @@
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 import { bindOfferScope } from './offer/interactions.js';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from './offer/presentation.js?v=20261102-rubrics-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from './offer/presentation.js?v=20261104-classification-r1';
 import verifiedCoats from './chiffrage/coats.js?v=20261028-business-r11';
 import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261028-business-r11';
 
@@ -54,7 +54,7 @@ function renderOffer(o, map) {
   const detailed=Array.isArray(o.cost_details)?o.cost_details.map(row=>({...row,label:label(row.label_fr,row.label_de)})):null;
   const priceDetail = offerBreakdown(detailed ?? rows.map(row=>({...row,label:names.get(row.key)||legacyNames[row.key]||row.key})),{label,money,legacy:!current});
   const scope = current && Array.isArray(o.scope) ? offerScope(o.scope.map(group=>({
-    product:group.product, items:group.items.map(entry=>({label:label(entry.fr,entry.de),included:(entry.included??[]).map(child=>({label:label(child.fr,child.de),theme:label(child.theme_fr??'',child.theme_de??child.theme_fr??'')}))}))
+    product:group.product, items:group.items.map(entry=>({label:label(entry.fr,entry.de),section:label(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:label(child.fr,child.de),theme:label(child.theme_fr??'',child.theme_de??child.theme_fr??'')}))}))
   })), { asset, label }) : `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
   const communeName = [o.commune,canton].filter(Boolean).join(' ');
   const quoteTitle = String(o.quote_title ?? '').trim();

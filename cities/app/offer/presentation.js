@@ -48,8 +48,18 @@ export function offerMap(map, bfsId, label, fallback = '') {
 }
 const logos = { innosolvcity:'innosolvcity.png', ProConcept:'proconcept-wordmark.png', Abacus:'abacus-negative.svg' };
 export function offerScope(groups, { asset, label = fr => fr }) {
+  groups=groups.map(group=>{
+    const sections=new Map(), items=[];
+    for(const item of group.items) {
+      if(typeof item==='string' || !item.section){items.push(item);continue;}
+      if(!sections.has(item.section)){const section={label:item.section,items:[]};sections.set(item.section,section);items.push(section);}
+      sections.get(item.section).items.push(item);
+    }
+    return {...group,items};
+  });
   const itemHtml = item => {
     if (typeof item === 'string') return `<li>${e(item)}</li>`;
+    if(Array.isArray(item.items))return `<li class="prime-offer-scope-parent"><details class="prime-offer-scope-section"><summary class="prime-offer-scope-heading">${e(item.label)} <span>· ${item.items.length} ${label('modules','Module')}</span></summary><ul class="prime-offer-scope-modules">${item.items.map(itemHtml).join('')}</ul></details></li>`;
     const children = item.included ?? [];
     if (!children.length) return `<li>${e(item.label)}</li>`;
     // A priced parent stays a module when it also becomes a section heading.
@@ -63,7 +73,7 @@ export function offerScope(groups, { asset, label = fr => fr }) {
     }
     return `<li class="prime-offer-scope-parent"><details class="prime-offer-scope-section"><summary class="prime-offer-scope-heading">${e(item.label)} <span>· ${modules.length} ${label('modules inclus','enthaltene Module')}</span></summary>${[...themes].map(([theme,rows])=>`${theme ? `<h6 class="prime-offer-scope-subheading">${e(theme)}</h6>` : ''}<ul class="prime-offer-scope-modules">${rows.map(module=>`<li>${e(module.label)}</li>`).join('')}</ul>`).join('')}</details></li>`;
   };
-  const grouped = groups.some(group=>group.items.some(item=>typeof item==='object' && item.included?.length));
+  const grouped = groups.some(group=>group.items.some(item=>typeof item==='object' && (item.items?.length || item.included?.length)));
   const controls = grouped ? `<div class="prime-offer-scope-tools"><button type="button" class="prime-offer-scope-toggle" data-scope-toggle data-expand-label="${e(label('Tout déplier','Alle aufklappen'))}" data-collapse-label="${e(label('Tout replier','Alle zuklappen'))}" aria-expanded="false">${label('Tout déplier','Alle aufklappen')}</button></div>` : '';
   return `<div class="prime-offer-scope">${controls}<div class="prime-offer-module-grid">${groups.map(({ product, items })=>`<section class="prime-offer-module-group"><h4 class="${product==='Abacus'?'brand-abacus':product==='innosolvcity'?'brand-innosolv':''}">${logos[product] ? `<img class="prime-offer-software-logo ${['ProConcept','Abacus'].includes(product)?'logo-on-dark':''}" src="${e(asset(`assets/logos/${logos[product]}`))}" alt="${e(product)}">${product==='Abacus'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/abacus-wordmark.png'))}" alt="Abacus">`:''}${product==='ProConcept'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/proconcept-dark.png'))}" alt="ProConcept">`:''}` : e(product)}</h4><ul>${items.map(itemHtml).join('')}</ul></section>`).join('')}</div></div>`;
 }
