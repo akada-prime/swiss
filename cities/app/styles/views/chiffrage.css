@@ -244,6 +244,7 @@
 .rule-parameters th,.rule-parameters td{padding:8px 12px;vertical-align:top;border-bottom:1px solid var(--line);overflow-wrap:anywhere;white-space:normal}
 .rule-parameters th{font-weight:500;width:65%;text-transform:none;letter-spacing:normal}
 .rule-parameters thead th{font-weight:700}
+.rule-parameters thead th:last-child{width:35%}
 .rule-parameters td{font-variant-numeric:tabular-nums}
 @media(max-width:1000px){.rules-filters{grid-template-columns:1fr 1fr}.rules-columns,.rule-entry>summary{grid-template-columns:minmax(180px,1fr) minmax(200px,1.2fr) 125px;gap:12px}}
 @media(max-width:650px){.rules-filters{grid-template-columns:1fr}.rules-columns{display:none}.rule-entry>summary{grid-template-columns:1fr;gap:8px;padding-right:12px}.rule-state{display:flex;gap:12px;flex-wrap:wrap}.rule-body{padding-left:18px}.rule-body dl{grid-template-columns:1fr}.rule-parameters th{width:60%}.rule-parameters th,.rule-parameters td{padding:8px 4px}.rules-heading h2{overflow-wrap:anywhere}}
