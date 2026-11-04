@@ -1,7 +1,7 @@
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 import { bindOfferScope } from './offer/interactions.js';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown } from './offer/presentation.js?v=20261104-classification-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions } from './offer/presentation.js?v=20261104-options-r1';
 import verifiedCoats from './chiffrage/coats.js?v=20261028-business-r11';
 import { offerPriceGroups } from './chiffrage/commercial-breakdown.js?v=20261028-business-r11';
 
@@ -72,6 +72,7 @@ function renderOffer(o, map) {
       <section class="client-offer-scope"><h3>${label('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
         ${scope}${offerServices(o.hosting_provider==='az',o.lcm,{asset,label,prices:o.lcm_prices,money})}
       </section>
+      ${offerOptions(o.optional_options,{label,money})}
       <section class="client-offer-breakdown"><h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
         ${priceDetail}
       </section>

@@ -1,3 +1,4 @@
+import {offerOptionReview} from '../../../app/chiffrage/offer-options.js';
 import { customerModuleScope } from '../../../app/chiffrage/module-scope.js';
 export { customerModuleScope } from '../../../app/chiffrage/module-scope.js';
 // Customer-safe allowlist: only commercially approved software labels and PV totals.
@@ -44,7 +45,10 @@ export function publicOfferFromSaved(quote, catalog) {
   const selectedAnnual=rollup(line=>line.family==='lcm','annual');
   const lcmPrices=chosen==='gold' && finite(gold) && finite(platinum) && gold>=0 && platinum>=0 &&
     Math.abs(selectedAnnual-gold)<.01 ? {gold,platinum} : null;
+  const optional=offerOptionReview(snapshot.input,catalog);
+  if(optional.issues.length)return null;
   return {
+    ...(optional.options.length?{optional_options:optional.options}:{}),
     ...(lcmPrices ? {lcm_prices:lcmPrices} : {}),
     version:2,quote_title:short(quote.title),commune:short(quote.commune_name),
     bfs_id:Number(quote.bfs_id),canton:short(quote.canton,2).toUpperCase(),

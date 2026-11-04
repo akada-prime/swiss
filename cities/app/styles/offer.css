@@ -839,3 +839,32 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .b
 .prime-offer-annual-breakdown tbody tr { cursor:default; }
 .prime-offer-annual-breakdown tbody tr:hover { background:none; }
 .prime-offer-annual-breakdown .prime-offer-annual-share { width:1%; }
+
+.chiffrage-offer-body.has-offer-options{grid-template-columns:minmax(0,1fr)}
+/* Optional ideas own a separate perimeter from the modules already included. */
+.prime-offer-options{margin:32px 0;border:1px solid #ff943e70;border-radius:16px;background:linear-gradient(115deg,#ff943e0a,transparent 70%)}
+.prime-offer-options-disclosure>summary{display:flex;gap:18px;align-items:center;justify-content:space-between;position:relative;padding:22px 24px 22px 46px;cursor:pointer;list-style:none;font-weight:400}
+.prime-offer-options-disclosure>summary::-webkit-details-marker{display:none}
+.prime-offer-options-disclosure>summary:before{content:'▸';position:absolute;left:22px;top:24px;color:#ff943e}
+.prime-offer-options-disclosure[open]>summary:before{content:'▾'}
+.prime-offer-options-disclosure>summary strong{display:block;font-size:23px;line-height:1.25;font-weight:650;color:inherit}
+.prime-offer-options-disclosure>summary small{display:block;margin-top:6px;font-size:14px;color:inherit;opacity:.85}
+.prime-offer-options-count{font-size:14px;white-space:nowrap;color:#ff943e}
+.prime-offer-options-body{padding:0 24px 24px}
+.prime-offer-options-body>p{font-size:15px;line-height:1.55;margin:0 0 20px}
+.prime-offer-option-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.prime-offer-option{display:flex;flex-direction:column;min-width:0;padding:22px;border:1px solid #ff943e40;border-radius:12px;background:#ff943e07}
+.prime-offer-option-badge{font-size:14px;line-height:1.4;font-weight:650;letter-spacing:.035em;text-transform:uppercase;color:#ff943e}
+.prime-offer-option h4{font-size:21px;line-height:1.25;margin:14px 0 10px;overflow-wrap:anywhere}
+.prime-offer-option>p{font-size:16px;line-height:1.5;margin:0 0 24px}
+.prime-offer-option-prices{margin:auto 0 0;padding-top:16px;border-top:1px solid #ff943e40;display:grid;gap:14px}
+.prime-offer-option-prices dt{font-size:14px;line-height:1.4}
+.prime-offer-option-prices dd{font-size:20px;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.3;margin:4px 0 0;overflow-wrap:anywhere}
+.prime-offer-option-detail{margin-top:20px;font-size:15px;line-height:1.5}
+.prime-offer-option-detail>summary,.prime-offer-options-more>summary{cursor:pointer;font-weight:600;color:#ff943e}
+.prime-offer-option-detail>p{white-space:pre-line}
+.prime-offer-options-more{margin-top:22px}
+.prime-offer-options-more>.prime-offer-option-grid{margin-top:16px}
+.prime-offer-options summary:focus-visible{outline:2px solid #ff943e;outline-offset:4px}
+@media(max-width:900px){.prime-offer-option-grid{grid-template-columns:1fr}.prime-offer-option-prices{grid-template-columns:1fr 1fr}.prime-offer-options-disclosure>summary{align-items:flex-start;flex-wrap:wrap}.prime-offer-options-count{margin-left:auto}}
+@media(max-width:430px){.prime-offer-options-body{padding:0 16px 16px}.prime-offer-option{padding:18px}.prime-offer-option-prices{grid-template-columns:1fr}.prime-offer-options-disclosure>summary{padding:20px 16px 20px 38px}.prime-offer-options-disclosure>summary:before{left:16px}.prime-offer-options-disclosure>summary strong{font-size:21px}}
