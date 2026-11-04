@@ -1,4 +1,4 @@
-import { ruleArticles, catalogRules, matchingRules, referenceVersion } from './rules-reference.js?v=20261104-rules-r1';
+import { ruleArticles, catalogRules, matchingRules, referenceVersion } from './rules-reference.js?v=20261104-options-r1';
 
 const e = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const names = {

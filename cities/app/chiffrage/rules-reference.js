@@ -1,6 +1,6 @@
 // Global read-only rule dictionary. Generic formulas only; real values come from the authenticated catalog.
 // Editorial business text is authored in French; UI controls support FR/DE.
-export const referenceVersion = '2026-11-04.1';
+export const referenceVersion = '2026-11-04.2';
 export const ruleArticles = [
   {
     "id": "G01",
@@ -177,6 +177,17 @@ export const ruleArticles = [
     "origin": "alex",
     "status": "confirmed",
     "note": ""
+  },
+  {
+    "id": "S08",
+    "chapter": "Sélection et dépendances",
+    "title": "Options proposées au client",
+    "summary": "Une vitrine choisie par Prime, repliée et hors des totaux.",
+    "formula": "Au plus six options compatibles non retenues ; trois vignettes mises en avant. Titre et bénéfice renseignés, jours et prix connus avant partage. Chaque supplément est la différence calculée par le moteur en ajoutant uniquement cette option sur une copie du chiffrage. Les totaux restent inchangés. Les fonctions incluses ne sont pas des options à monnayer.",
+    "code": "offer-options.js ; client-projection.mjs ; décision Alex · 04.11.2026",
+    "origin": "alex",
+    "status": "confirmed",
+    "note": "La vitrine est consultative. Le choix interactif du client et son circuit de validation restent distincts."
   },
   {
     "id": "L01",

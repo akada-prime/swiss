@@ -607,3 +607,18 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   calcul, droit, enregistrement ou lien client modifié.
 - 14 contrôles ciblés passent. LCM/SQL vérifiés à 360 px et LCM sur les six
   largeurs 360–2560 px, sans débordement global. Recette synthétique uniquement.
+
+## 2026-11-04 · Vitrine consultative d'options
+- Pour aller plus loin, replié, distinct des licences et fonctions incluses.
+  Trois vignettes, trois possibilités supplémentaires au maximum derrière
+  un deuxième repli. Aucune liste automatique côté client.
+- Offre → Options à présenter au client : sélection, rédaction, jours,
+  ordre et retrait. Compatibilité et présence dans le périmètre vérifiées.
+- Suppléments via le moteur sur une copie ; aucun effet sur les totaux.
+  Métadonnées conservées dans le JSON d'entrée ; publication de textes/PV
+  seulement. Aucun changement de schéma, tarifs ou offre existante.
+- 208 tests et build passent avant perte de l'environnement de travail ;
+  30 contrôles ciblés après finition, six largeurs sans débordement.
+  Replis inclus/options indépendants et détails vérifiés en recette synthétique.
+- Publication poursuivie depuis le dépôt après indisponibilité de l'environnement.
+  CI requise sur les sources finales avant intégration. Règle S08 documentée.

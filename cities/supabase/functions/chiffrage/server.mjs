@@ -1,3 +1,4 @@
+import {validateOfferOptions,offerOptionReview} from '../../../app/chiffrage/offer-options.js';
 import { moduleParents, validateModuleCatalog } from '../../../app/chiffrage/module-catalog.js';
 import { createHmac, createHash, randomUUID, randomBytes, timingSafeEqual } from 'node:crypto';
 import { Buffer } from 'node:buffer';
@@ -136,6 +137,7 @@ async function writeQuote(payload) {
     !['innosolv', 'abacus', 'pce'].includes(product)) ||
     new Set(products).size !== products.length)
     throw new Error('Invalid product selection');
+  if(input.client_options!==undefined)input.client_options=validateOfferOptions(input.client_options);
   const catalog = await loadCatalog(payload.catalog_versions);
   if(input.module_contents == null && catalog.parameters.module_contents?.length)
     input.module_contents = catalog.parameters.module_contents;
@@ -152,6 +154,7 @@ async function writeQuote(payload) {
       code === 'technicalPriceRequired' ? 'SQL core price unconfirmed: enter an investment PV' :
         'Service days required');
   }
+  if(input.client_options?.length)result.offer_options_ready=offerOptionReview(input,catalog).issues.length===0;
   const id = payload.id ?? randomUUID();
   const saved = await db('rpc/chiffrage_write', { method: 'POST', payload: {
     p_id: id, p_expected_revision: payload.expected_revision ?? null,

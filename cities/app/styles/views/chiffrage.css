@@ -258,3 +258,17 @@
 .rule-value-list{font-size:14px;line-height:1.5}
 @media(max-width:1000px){.rules-filters{grid-template-columns:1fr 1fr}.rules-columns,.rule-entry>summary{grid-template-columns:minmax(180px,1fr) minmax(200px,1.2fr) 125px;gap:12px}}
 @media(max-width:650px){.rules-filters{grid-template-columns:1fr}.rules-columns{display:none}.rule-entry>summary{grid-template-columns:1fr;gap:8px;padding-right:12px}.rule-state{display:flex;gap:12px;flex-wrap:wrap}.rule-body{padding-left:18px}.rule-body dl{grid-template-columns:1fr}.rule-parameters thead th:first-child{width:48%}.rule-parameters th,.rule-parameters td{padding:8px 4px}.rules-heading h2{overflow-wrap:anywhere}}
+
+.chiffrage-showcase-editor>summary{display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;font-size:17px}
+.chiffrage-showcase-editor>summary::marker{color:var(--orange)}
+.chiffrage-showcase-selection fieldset{min-width:0;border:1px solid var(--skin-border);border-radius:12px;padding:20px;margin:20px 0;background:var(--skin-tint)}
+.chiffrage-showcase-selection legend{padding:0 8px;font-weight:650;overflow-wrap:anywhere}
+.chiffrage-showcase-editor textarea{width:100%;min-height:88px;padding:12px;border:1px solid var(--pc-field-border);border-radius:var(--pc-field-radius);color:var(--skin-text);background:var(--pc-field-bg);font-size:16px;resize:vertical}
+.chiffrage-showcase-selection details{margin:14px 0}
+.chiffrage-showcase-picker{margin-top:20px}
+.chiffrage-showcase-candidates{max-height:420px;overflow-y:auto;margin-top:14px}
+.chiffrage-showcase-candidates>div{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--skin-border)}
+.chiffrage-showcase-candidates>div>span{min-width:0;overflow-wrap:anywhere}
+.chiffrage-showcase-candidates small,.chiffrage-showcase-candidates strong{display:block}
+.chiffrage-showcase-candidates small{font-size:14px;color:var(--skin-secondary);margin-bottom:4px}
+.chiffrage-showcase-candidates .chiffrage-button{flex:none}
