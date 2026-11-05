@@ -11,4 +11,4 @@ import './prime-communes-communes-1.2.js?v=20261104-roadmap-beta-r1';
 import './prime-communes-news-2.0.js?v=20261104-roadmap-beta-r1';
 import './prime-communes-stories-2.0.js?v=20261104-roadmap-beta-r1';
 import './prime-communes-roadmap-1.2.js';
-import './chiffrage/view.js?v=20261104-share-r3';
+import './chiffrage/view.js?v=20261105-share-delete-r1';

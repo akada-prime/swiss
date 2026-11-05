@@ -64,7 +64,7 @@ test('incomplete or mismatched quote snapshots are not shareable',()=>{
 });
 
 test('sharing management still requires editor authorization and same origin',async()=>{
-  for(const action of ['publishOffer','sharedOffers','revokeOffer','setOfferActive']){
+  for(const action of ['publishOffer','sharedOffers','revokeOffer','setOfferActive','deleteOffer']){
     const response=await handler(new Request('https://example.supabase.co/functions/v1/chiffrage?action='+action));
     assert.equal(response.status,401,action);
   }
@@ -251,7 +251,8 @@ test('SQL counter has service-only execution and no per-visitor event table',()=
 
 test('links are manually reversible and the closed panel leaves no duplicate summary',()=>{
  const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
- assert.match(view,/data-action="closeSharePanel"/);
+ assert.doesNotMatch(view,/data-action="closeSharePanel"/);
+ assert.match(view,/chiffrage-button chiffrage-danger.*data-action="deleteSharedOffer"/);
  assert.match(view,/role="switch" aria-checked=/);
  assert.match(view,/await api\('setOfferActive'/);
  assert.match(view,/panel.replaceChildren\(\)/);
@@ -286,7 +287,7 @@ test('Gold publication includes only saved LCM annual PV prices when reconciled'
 // A status change must leave the existing disclosure and its focusable switch intact.
 test('activation updates the existing switch without replacing any share panel',async()=>{
  const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
- const start=view.indexOf("  if(action==='setSharedActive')"),end=view.indexOf("  if (action === 'closeSharePanel')",start);
+ const start=view.indexOf("  if(action==='setSharedActive')"),end=view.indexOf("  if(action==='deleteSharedOffer')",start);
  const action=view.slice(start,end);assert.doesNotMatch(action,/innerHTML|renderSharedLinks|sharePanel\(|replaceChildren/);
  const run=new (Object.getPrototypeOf(async function(){}).constructor)('action','button','api','localLabel','errorMessage',action);
  const status={textContent:''},row={dataset:{linkId:'link'},isConnected:true,querySelector:()=>status};
@@ -297,4 +298,17 @@ test('activation updates the existing switch without replacing any share panel',
  assert.equal(button.attrs['aria-checked'],'false');assert.equal(button.dataset.active,'true');assert.equal(button.disabled,false);
  await run('setSharedActive',button,async()=>{throw Error('offline');},(fr)=>fr,()=> 'error');
  assert.equal(button.attrs['aria-checked'],'false');assert.equal(status.textContent,'error');assert.equal(button.disabled,false);
+});
+
+test('deleting a publication is confirmed and scoped to a single link, preserving quotes',async()=>{
+ const original=globalThis.fetch;let call;
+ globalThis.fetch=async(url,options)=>{call={url:String(url),options};return new Response('[{"id":"removed-link"}]',{headers:{'Content-Type':'application/json'}});};
+ try{
+  const response=await handler(new Request('https://example.supabase.co/functions/v1/chiffrage?action=deleteOffer',{method:'POST',headers:{Authorization:'Bearer '+signSession(),Origin:'https://akada-prime.github.io','Content-Type':'application/json'},body:JSON.stringify({id,link_id:id})}));
+  assert.equal(response.status,200);assert.deepEqual(await response.json(),{deleted:true});
+  assert.equal(call.options.method,'DELETE');assert.match(call.url,/chiffrage_client_links/);assert.match(call.url,/chiffrage_id=eq/);assert.match(call.url,/public_slug=not.is.null/);
+  const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
+  const action=view.slice(view.indexOf("  if(action==='deleteSharedOffer')"),view.indexOf("  if (action === 'copySharedOffer')"));
+  assert.ok(action.indexOf('window.confirm')<action.indexOf("await api('deleteOffer'"));
+ }finally{globalThis.fetch=original;}
 });

@@ -1436,12 +1436,12 @@ function renderSharedLinks(rows,id,currentRevision=null,ready=true) {
   const links=rows.filter(row=>row.public_slug).sort((a,b)=>b.revision-a.revision);
   const render=row=>{const url=offerShareUrl(row.public_slug),active=!row.revoked_at;return `<div class="chiffrage-share-link" data-link-id="${escape(row.id)}">
     <div class="chiffrage-share-link-heading"><strong>${escape(row.public_version)}r${row.revision}</strong>
-    <button type="button" class="chiffrage-button chiffrage-link-switch" role="switch" aria-checked="${active}" aria-label="${localLabel('Activer le lien','Link aktivieren')} ${escape(row.public_version)}r${row.revision}" data-action="setSharedActive" data-active="${!active}" data-id="${escape(id)}">${active?localLabel('Actif','Aktiv'):localLabel('Inactif','Inaktiv')}</button></div>
+    <button type="button" class="chiffrage-button chiffrage-link-switch" role="switch" aria-checked="${active}" aria-label="${localLabel('Activer le lien','Link aktivieren')} ${escape(row.public_version)}r${row.revision}" data-action="setSharedActive" data-active="${!active}" data-id="${escape(id)}">${active?localLabel('Actif','Aktiv'):localLabel('Inactif','Inaktiv')}</button><button type="button" class="chiffrage-button chiffrage-danger" data-action="deleteSharedOffer" data-id="${escape(id)}" data-version="${escape(row.public_version)}r${row.revision}">${localLabel('Supprimer','Löschen')}</button></div>
     <input class="chiffrage-share-url" aria-label="${localLabel('Adresse du lien','Linkadresse')}" value="${escape(url)}" readonly>
     <div class="chiffrage-share-actions"><button type="button" class="chiffrage-button" data-action="copySharedOffer">${localLabel('Copier','Kopieren')}</button><a class="chiffrage-button" href="${escape(url)}" target="_blank" rel="noopener noreferrer">${localLabel('Ouvrir','Öffnen')} ↗</a></div>
     <div class="chiffrage-share-stats"><small>${linkCount(row.open_count)}${row.last_opened_at?' · '+dateTimeLabel(row.last_opened_at):''}</small><button type="button" class="chiffrage-share-refresh" data-action="refreshShares" data-id="${escape(id)}" aria-label="${localLabel('Actualiser les ouvertures','Aufrufe aktualisieren')}" title="${localLabel('Actualiser','Aktualisieren')}">↻</button></div><p class="chiffrage-share-copy-status" role="status"></p></div>`;};
   const needsPublication=!links.length || currentRevision && !links.some(row=>row.revision===Number(currentRevision));
-  return `<section class="chiffrage-share-panel"><div class="chiffrage-share-panel-heading"><h3>${localLabel('Partage client','Kundenfreigabe')}</h3>${shareCloseControl()}</div>
+  return `<section class="chiffrage-share-panel"><div class="chiffrage-share-panel-heading"><h3>${localLabel('Partage client','Kundenfreigabe')}</h3></div>
   ${links.length?render(links[0]):`<p>${localLabel('Aucun lien publié.','Noch kein Link veröffentlicht.')}</p>`}
   ${needsPublication?`<button type="button" class="chiffrage-button" data-action="shareOffer" data-id="${escape(id)}" ${ready?'':'disabled'}>${ready?localLabel('Publier cette révision','Diese Version veröffentlichen'):localLabel('Finaliser avant publication','Vor Veröffentlichung fertigstellen')}</button>`:''}
   ${links.length>1?`<details class="chiffrage-share-history"><summary>${localLabel('Historique','Verlauf')} (${links.length-1})</summary>${links.slice(1).map(render).join('')}</details>`:''}
@@ -1486,9 +1486,6 @@ function sharePanel(content, source = null) {
 function dateTimeLabel(value) {
   return new Date(value).toLocaleString(document.documentElement.lang === 'de' ? 'de-CH' : 'fr-CH',
     { day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit' });
-}
-function shareCloseControl() {
-  return `<button type="button" class="chiffrage-button quiet chiffrage-share-close" data-action="closeSharePanel">${localLabel('Fermer','Schließen')} ×</button>`;
 }
 function linkCount(value) {
   const n = Number(value ?? 0);
@@ -1611,7 +1608,7 @@ root.addEventListener('click', async event => {
     try {
       if(action==='shareOffer')await api('publishOffer',{id});
       await loadSharedLinks(id,panel);
-    }catch(error){if(panel.isConnected)panel.innerHTML=`<p role="alert">${escape(errorMessage(error))}</p>${shareCloseControl()}`;}
+    }catch(error){if(panel.isConnected)panel.innerHTML=`<p role="alert">${escape(errorMessage(error))}</p>`;}
     finally{if(button.isConnected)button.disabled=false;}
     return;
   }
@@ -1628,10 +1625,16 @@ root.addEventListener('click', async event => {
     finally{if(button.isConnected)button.disabled=false;}
     return;
   }
-  if (action === 'closeSharePanel') {
-    const disclosure=button.closest('.chiffrage-share-disclosure');
-    if(disclosure)disclosure.open=false;
-    else button.closest('[data-share-result],#chiffrageShareResult')?.replaceChildren();
+  if(action==='deleteSharedOffer') {
+    const row=button.closest('[data-link-id]'),id=button.dataset.id,panel=button.closest('[data-share-result],#chiffrageShareResult');
+    if(!row||!panel)return;
+    if(!window.confirm(localLabel(`Supprimer le lien client ${button.dataset.version} ? Son accès sera supprimé. Le chiffrage et ses révisions seront conservés.`,`Kundenlink ${button.dataset.version} löschen? Der Zugriff wird entfernt. Kalkulation und Versionen bleiben erhalten.`)))return;
+    button.disabled=true;
+    try {
+      await api('deleteOffer',{id,link_id:row.dataset.linkId});
+      if(panel.isConnected)await loadSharedLinks(id,panel);
+    }catch(error){if(row.isConnected)row.querySelector('[role="status"]').textContent=errorMessage(error);}
+    finally{if(button.isConnected)button.disabled=false;}
     return;
   }
   if (action === 'copySharedOffer') {

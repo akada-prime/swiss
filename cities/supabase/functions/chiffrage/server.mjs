@@ -225,6 +225,11 @@ async function setClientLinkActive(payload) {
   const rows=await db('chiffrage_client_links',{method:'PATCH',returning:true,query:{select:'id,revision,created_at,expires_at,revoked_at,open_count,last_opened_at,public_slug,public_version',id:`eq.${payload.link_id}`,chiffrage_id:`eq.${payload.id}`,public_slug:'not.is.null'},payload:{revoked_at:payload.active?null:new Date().toISOString()}});
   return rows.length?json(publicLinkMetadata(rows[0])):fail('Offer link unavailable',404);
 }
+async function deleteClientLink(payload) {
+  if(!uuidPattern.test(payload?.id ?? '') || !uuidPattern.test(payload?.link_id ?? ''))return fail('Invalid link reference',400);
+  const rows=await db('chiffrage_client_links',{method:'DELETE',returning:true,query:{select:'id',id:`eq.${payload.link_id}`,chiffrage_id:`eq.${payload.id}`,public_slug:'not.is.null'}});
+  return rows.length?json({deleted:true}):fail('Offer link unavailable',404);
+}
 async function revokeClientLink(payload) {
   if (!uuidPattern.test(payload?.id ?? '') || !uuidPattern.test(payload?.link_id ?? ''))
     return fail('Invalid link reference', 400);
@@ -308,6 +313,7 @@ export default async function handler(request) {
       return publishClientOffer(await body(request));
     if (action === 'sharedOffers' && request.method === 'GET')
       return sharedClientLinks(url.searchParams.get('id'));
+    if(action==='deleteOffer' && request.method==='POST')return await deleteClientLink(await body(request));
     if(action==='setOfferActive' && request.method==='POST')return await setClientLinkActive(await body(request));
     if (action === 'revokeOffer' && request.method === 'POST')
       return revokeClientLink(await body(request));

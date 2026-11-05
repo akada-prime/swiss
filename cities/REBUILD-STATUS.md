@@ -1,5 +1,18 @@
 # État de reprise — Prime Communes 2.0
 
+> **Gestion des publications · 05.11.2026 :** retrait du bouton Fermer redondant ;
+> bouton Supprimer explicite par publication, classe de bouton danger partagée,
+> confirmation native identique au reste du chiffrage. Suppression limitée au lien
+> demandé et à son chiffrage parent ; les révisions et le chiffrage restent intacts.
+> Actif/Inactif reste la suspension réversible. Aucun lien réel supprimé en recette.
+> Edge v27 déployé ; session d'éditeur et contrôle d'origine conservés, accès DELETE
+> réservé au serveur. 214 tests et build passent ; six largeurs sans débordement,
+> bouton lisible de 96 px, annulation et suppression sur données synthétiques vérifiées.
+> Diagnostic des options : zéro client_options dans les huit offres actives et zéro
+> optional_options publié. La vitrine existe ; configurer Offre > Options à présenter
+> au client, enregistrer et publier une nouvelle révision. Aucune option commerciale
+> ni aucun montant ajoutés automatiquement aux offres existantes.
+
 > **Cohérence de la liste et du partage · 04.11.2026 :** une seule grille financière :
 > le montant cinq ans commence sous l'annuel. Métadonnées alignées sur le titre.
 > Suppression du bouton Partager des cartes ; un seul dérouleur natif « Lien »
