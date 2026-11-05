@@ -328,3 +328,7 @@
 .chiffrage-share-history .chiffrage-share-link+.chiffrage-share-link{border-top:1px solid var(--skin-border-soft);padding-top:10px}
 .chiffrage-share-result[aria-busy="true"]{min-height:48px;opacity:.65}
 .chiffrage-share-result[aria-busy="true"]:empty:before{content:'…';display:block;padding:12px 0;color:var(--skin-muted)}
+
+/* Shared actions keep the same labelled controls as the rest of Chiffrage. */
+.chiffrage-share-link-heading{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px}
+.chiffrage-share-link-heading>.chiffrage-button{width:auto;min-height:42px;padding:8px 10px;font-size:14px;text-align:center}
