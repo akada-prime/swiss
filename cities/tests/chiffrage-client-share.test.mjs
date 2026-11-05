@@ -110,7 +110,7 @@ test('publishing reuses one panel with direct copy and explicit open controls',(
  assert.match(view,/await api\('publishOffer',\{id\}\)/);
  assert.match(view,/data-action="copySharedOffer"/);
  assert.match(view,/offerShareUrl\(row.public_slug\)/);
- assert.match(view,/shareButton\.disabled = !ready/);
+ assert.match(view,/publish\.disabled=!ready/);
 });
 
 test('the four distinct accompaniment prices and LCM reconcile exactly without exposing PA',()=>{
@@ -281,4 +281,20 @@ test('Gold publication includes only saved LCM annual PV prices when reconciled'
   assert.equal(publicOfferFromSaved(q).lcm_prices,undefined);
   delete q.snapshot.result.summary.lcm;
   assert.equal(publicOfferFromSaved(q).lcm_prices,undefined);
+});
+
+// A status change must leave the existing disclosure and its focusable switch intact.
+test('activation updates the existing switch without replacing any share panel',async()=>{
+ const view=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');
+ const start=view.indexOf("  if(action==='setSharedActive')"),end=view.indexOf("  if (action === 'closeSharePanel')",start);
+ const action=view.slice(start,end);assert.doesNotMatch(action,/innerHTML|renderSharedLinks|sharePanel\(|replaceChildren/);
+ const run=new (Object.getPrototypeOf(async function(){}).constructor)('action','button','api','localLabel','errorMessage',action);
+ const status={textContent:''},row={dataset:{linkId:'link'},isConnected:true,querySelector:()=>status};
+ const button={dataset:{id:'quote',active:'false'},isConnected:true,disabled:false,closest:()=>row,attrs:{},setAttribute(k,v){this.attrs[k]=v;}};
+ let call;
+ await run('setSharedActive',button,async(a,p)=>{call={a,p};assert.equal(button.disabled,true);},(fr)=>fr,()=> 'error');
+ assert.deepEqual(call,{a:'setOfferActive',p:{id:'quote',link_id:'link',active:false}});
+ assert.equal(button.attrs['aria-checked'],'false');assert.equal(button.dataset.active,'true');assert.equal(button.disabled,false);
+ await run('setSharedActive',button,async()=>{throw Error('offline');},(fr)=>fr,()=> 'error');
+ assert.equal(button.attrs['aria-checked'],'false');assert.equal(status.textContent,'error');assert.equal(button.disabled,false);
 });

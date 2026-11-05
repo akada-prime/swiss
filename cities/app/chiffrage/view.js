@@ -173,20 +173,17 @@ function readListSnapshot(row, node) {
       const canton = saved.snapshot?.input?.canton;
       if (canton) node.querySelector('[data-list-canton]').innerHTML = listCanton(canton);
       node.querySelector('[data-list-figures]').innerHTML = listFigures(saved.snapshot);
-      const shareButton = node.closest('.chiffrage-list-item')?.querySelector('[data-action="shareOffer"]');
-      if (shareButton) {
-        const figures = savedQuoteFigures(saved.snapshot);
-        const ready = Boolean(figures && !figures.incomplete && saved.snapshot?.result?.offer_options_ready!==false && !row.archived);
-        shareButton.disabled = !ready;
-        shareButton.textContent = ready ? localLabel('Partager','Teilen') + ' ↗' :
-          localLabel('Brouillon','Entwurf');
-      }
+      const card=node.closest('.chiffrage-list-item'),figures=savedQuoteFigures(saved.snapshot);
+      const ready=Boolean(figures && !figures.incomplete && saved.snapshot?.result?.offer_options_ready!==false && !row.archived);
+      if(card)card.dataset.shareReady=String(ready);
+      const publish=card?.querySelector('[data-action="shareOffer"]');
+      if(publish){publish.disabled=!ready;publish.textContent=ready?localLabel('Publier cette révision','Diese Version veröffentlichen'):localLabel('Finaliser avant publication','Vor Veröffentlichung fertigstellen');}
     } catch {
       listSnapshots.delete(key);
       if (node.isConnected) {
         node.querySelector('[data-list-figures]').textContent = t('chiffrage.ui.savedUnavailable');
         const shareButton = node.closest('.chiffrage-list-item')?.querySelector('[data-action="shareOffer"]');
-        if (shareButton) shareButton.textContent = localLabel('Offre indisponible','Angebot nicht verfügbar');
+        if (shareButton){shareButton.disabled=true;shareButton.textContent = localLabel('Offre indisponible','Angebot nicht verfügbar');}
       }
     }
   });
@@ -206,8 +203,9 @@ function listCanton(canton) {
 function listFigures(snapshot) {
   const s = savedQuoteFigures(snapshot);
   if (!s) return `<span>${t('chiffrage.ui.savedUnavailable')}</span>`;
-  return `<span class="chiffrage-saved-parts"><span>${t('chiffrage.investment')}<b>${money(s.investment)}</b></span><span>${t('chiffrage.annual')}<b>${money(s.annual)}</b></span></span>
-    <span class="chiffrage-saved-tco"><span>${t('chiffrage.ui.savedTco')}${s.incomplete ? ` · ${t('chiffrage.ui.provisional')}` : ''}</span><b>${money(s.tco5y)}</b></span>`;
+  const amount=value=>money(value).replace(/[\u00a0\u202f]/g,"'");
+  return `<span class="chiffrage-saved-parts"><span>${t('chiffrage.investment')}<b>${amount(s.investment)}</b></span><span>${t('chiffrage.annual')}<b>${amount(s.annual)}</b></span></span>
+    <span class="chiffrage-saved-tco"><span>${t('chiffrage.ui.savedTco')}${s.incomplete ? ` · ${t('chiffrage.ui.provisional')}` : ''}</span><b>${amount(s.tco5y)}</b></span>`;
 }
 function renderCatalogManager(editing = null) {
   state.mode='catalog';
@@ -223,7 +221,7 @@ function renderList() {
   history.replaceState(history.state,'',quoteAddress(null));
   state.mode = 'list'; state.draft = null; state.quote = null;
   const rows = state.quotes.filter(row => state.showArchived || !row.archived);
-  root.innerHTML = `<h2>${t('chiffrage.workspace.b246604ad2')}</h2><div class="chiffrage-list-toolbar">
+  root.innerHTML = `<h2 class="chiffrage-list-title">${t('chiffrage.workspace.b246604ad2')}</h2><div class="chiffrage-list-toolbar">
     <button class="chiffrage-button primary" data-action="new" ${!state.catalog ? 'disabled' : ''}>${localLabel('Nouveau','Neu')}</button>
     <button class="chiffrage-button" data-action="manageCatalog">${localLabel('Catalogue','Katalog')}</button>
     <button class="chiffrage-button" data-action="openReference">${localLabel('Règles','Regeln')}</button>
@@ -232,11 +230,10 @@ function renderList() {
     <label class="chiffrage-choice chiffrage-list-archives"><input type="checkbox" data-field="showArchived" ${state.showArchived ? 'checked' : ''}>${t('chiffrage.showArchived')}</label>
     ${state.catalog ? '' : `<p class="chiffrage-warning">${t('chiffrage.noCatalog')}</p>`}
     <div class="chiffrage-list">${rows.length ? rows.map(row =>
-      `<article class="chiffrage-list-item"><button data-action="open" data-id="${escape(row.id)}"><span class="chiffrage-saved-heading"><span data-list-canton>${listCanton(communes().find(item => Number(item.id) === Number(row.bfs_id))?.canton)}</span><strong>${escape(row.title)}</strong></span>
+      `<article class="chiffrage-list-item" data-share-ready="pending" data-current-revision="${row.current_revision}"><button data-action="open" data-id="${escape(row.id)}"><span class="chiffrage-saved-heading"><span data-list-canton>${listCanton(communes().find(item => Number(item.id) === Number(row.bfs_id))?.canton)}</span><strong>${escape(row.title)}</strong></span>
       <small>${escape(row.commune_name)} · OFS ${row.bfs_id} · R${row.current_revision}</small><span class="chiffrage-saved-figures" data-list-figures aria-live="polite">${t('chiffrage.ui.savedLoading')}</span></button>
-    <div class="chiffrage-list-share-actions"><button type="button" class="chiffrage-button chiffrage-share-list" data-action="shareOffer" data-id="${escape(row.id)}" disabled>${localLabel('Vérification…','Prüfung…')}</button>
-      <button type="button" class="chiffrage-button chiffrage-manage-list" data-action="manageShares" data-id="${escape(row.id)}">${localLabel('Liens','Links')} ↗</button></div>
-    <div class="chiffrage-share-result" data-share-result aria-live="polite"></div></article>`).join('') : `<p>${t('chiffrage.empty')}</p>`}</div><div id="chiffrageShareResult" aria-live="polite"></div>`;
+    <details class="chiffrage-share-disclosure" data-share-id="${escape(row.id)}"><summary>${localLabel('Lien','Kundenlink')}</summary>
+    <div class="chiffrage-share-result" data-share-result aria-live="polite"></div></details></article>`).join('') : `<p>${t('chiffrage.empty')}</p>`}</div><div id="chiffrageShareResult" aria-live="polite"></div>`;
   const byId = new Map(rows.map(row => [String(row.id), row]));
   listObserver = new IntersectionObserver(entries => {
     for (const entry of entries) if (entry.isIntersecting) {
@@ -1435,20 +1432,40 @@ async function loadComparison() {
 
 // Customer shares use a separate, frozen server-side projection.
 // The editor's 12-hour session is never put into the public URL.
-function renderSharedLinks(rows,id) {
+function renderSharedLinks(rows,id,currentRevision=null,ready=true) {
   const links=rows.filter(row=>row.public_slug).sort((a,b)=>b.revision-a.revision);
   const render=row=>{const url=offerShareUrl(row.public_slug),active=!row.revoked_at;return `<div class="chiffrage-share-link" data-link-id="${escape(row.id)}">
     <div class="chiffrage-share-link-heading"><strong>${escape(row.public_version)}r${row.revision}</strong>
-    <button class="chiffrage-button chiffrage-link-switch" role="switch" aria-checked="${active}" aria-label="${localLabel('Activer le lien','Link aktivieren')} ${escape(row.public_version)}r${row.revision}" data-action="setSharedActive" data-active="${!active}" data-id="${escape(id)}">${active?localLabel('Actif','Aktiv'):localLabel('Inactif','Inaktiv')}</button></div>
+    <button type="button" class="chiffrage-button chiffrage-link-switch" role="switch" aria-checked="${active}" aria-label="${localLabel('Activer le lien','Link aktivieren')} ${escape(row.public_version)}r${row.revision}" data-action="setSharedActive" data-active="${!active}" data-id="${escape(id)}">${active?localLabel('Actif','Aktiv'):localLabel('Inactif','Inaktiv')}</button></div>
     <input class="chiffrage-share-url" aria-label="${localLabel('Adresse du lien','Linkadresse')}" value="${escape(url)}" readonly>
-    <div class="chiffrage-share-actions"><button class="chiffrage-button" data-action="copySharedOffer">${localLabel('Copier','Kopieren')}</button><a class="chiffrage-button" href="${escape(url)}" target="_blank" rel="noopener noreferrer">${localLabel('Ouvrir','Öffnen')} ↗</a></div>
-    <small>${linkCount(row.open_count)}${row.last_opened_at?' · '+dateTimeLabel(row.last_opened_at):''}</small><p class="chiffrage-share-copy-status" role="status"></p></div>`;};
+    <div class="chiffrage-share-actions"><button type="button" class="chiffrage-button" data-action="copySharedOffer">${localLabel('Copier','Kopieren')}</button><a class="chiffrage-button" href="${escape(url)}" target="_blank" rel="noopener noreferrer">${localLabel('Ouvrir','Öffnen')} ↗</a></div>
+    <div class="chiffrage-share-stats"><small>${linkCount(row.open_count)}${row.last_opened_at?' · '+dateTimeLabel(row.last_opened_at):''}</small><button type="button" class="chiffrage-share-refresh" data-action="refreshShares" data-id="${escape(id)}" aria-label="${localLabel('Actualiser les ouvertures','Aufrufe aktualisieren')}" title="${localLabel('Actualiser','Aktualisieren')}">↻</button></div><p class="chiffrage-share-copy-status" role="status"></p></div>`;};
+  const needsPublication=!links.length || currentRevision && !links.some(row=>row.revision===Number(currentRevision));
   return `<section class="chiffrage-share-panel"><div class="chiffrage-share-panel-heading"><h3>${localLabel('Partage client','Kundenfreigabe')}</h3>${shareCloseControl()}</div>
-  ${links.length?render(links[0]):`<p>${localLabel('Aucun lien publié.','Noch kein Link veröffentlicht.')}</p><button class="chiffrage-button" data-action="shareOffer" data-id="${escape(id)}">${localLabel('Publier','Veröffentlichen')}</button>`}
-  ${links.length>1?`<details><summary>${localLabel('Historique','Verlauf')} (${links.length-1})</summary>${links.slice(1).map(render).join('')}</details>`:''}
-  <p class="chiffrage-helper">${localLabel('Sans expiration automatique. Ouvertures non uniques, aperçus compris.','Ohne automatisches Ablaufdatum. Aufrufe einschließlich eigener Vorschauen.')}</p>
-  <button class="chiffrage-inline" data-action="manageShares" data-refresh="true" data-id="${escape(id)}">${localLabel('Actualiser','Aktualisieren')} ↻</button></section>`;
+  ${links.length?render(links[0]):`<p>${localLabel('Aucun lien publié.','Noch kein Link veröffentlicht.')}</p>`}
+  ${needsPublication?`<button type="button" class="chiffrage-button" data-action="shareOffer" data-id="${escape(id)}" ${ready?'':'disabled'}>${ready?localLabel('Publier cette révision','Diese Version veröffentlichen'):localLabel('Finaliser avant publication','Vor Veröffentlichung fertigstellen')}</button>`:''}
+  ${links.length>1?`<details class="chiffrage-share-history"><summary>${localLabel('Historique','Verlauf')} (${links.length-1})</summary>${links.slice(1).map(render).join('')}</details>`:''}
+  <div class="chiffrage-share-notes"><p>${localLabel('Sans expiration · ouvertures non uniques, aperçus compris.','Ohne Ablaufdatum · Aufrufe einschließlich eigener Vorschauen, nicht eindeutig.')}</p></div></section>`;
 }
+async function loadSharedLinks(id,container) {
+  const card=container.closest('.chiffrage-list-item');
+  container.setAttribute('aria-busy','true');
+  try {
+    const rows=await api('sharedOffers',undefined,{id});
+    if(!container.isConnected)return;
+    const historyOpen=container.querySelector('.chiffrage-share-history')?.open;
+    container.innerHTML=renderSharedLinks(rows,id,card?.dataset.currentRevision,card?card.dataset.shareReady==='true':!state.dirty&&!state.archived&&!currentCompletion().length&&!offerOptionReview(state.draft,state.catalog).issues.length);
+    if(historyOpen && container.querySelector('.chiffrage-share-history'))container.querySelector('.chiffrage-share-history').open=true;
+  }catch(error){if(container.isConnected)container.innerHTML=`<p role="alert">${escape(errorMessage(error))}</p><button class="chiffrage-button" data-action="refreshShares" data-id="${escape(id)}">${localLabel('Réessayer','Erneut versuchen')}</button>`;}
+  finally{container.removeAttribute('aria-busy');}
+}
+root.addEventListener('toggle',event=>{
+  const detail=event.target;
+  if(detail.matches?.('details.chiffrage-share-disclosure') && detail.open){
+    const container=detail.querySelector('[data-share-result]');
+    if(!container.hasChildNodes())void loadSharedLinks(detail.dataset.shareId,container);
+  }
+},true);
 function offerShareUrl(token) {
   const url = new URL('offre.html', new URL('./', document.baseURI));
   url.hash = token;
@@ -1475,7 +1492,8 @@ function shareCloseControl() {
 }
 function linkCount(value) {
   const n = Number(value ?? 0);
-  return `${Number.isFinite(n) && n > 0 ? Math.trunc(n) : 0} ${localLabel('ouverture(s)','Aufruf(e)')}`;
+  const count=Number.isFinite(n) && n>0?Math.trunc(n):0;
+  return `${count} ${count===1?localLabel('ouverture','Aufruf'):localLabel('ouvertures','Aufrufe')}`;
 }
 
 root.addEventListener('click', async event => {
@@ -1582,32 +1600,39 @@ root.addEventListener('click', async event => {
   }
 
 
-  if (action === 'shareOffer' || action === 'manageShares') {
+  if (action === 'shareOffer' || action === 'manageShares' || action==='refreshShares') {
     const id=button.dataset.id ?? state.quote;
     if(!id)return;
     const panel=button.closest('.chiffrage-list-item')?.querySelector('[data-share-result]')??root.querySelector('#chiffrageShareResult');
-    if(action==='manageShares' && button.dataset.refresh!=='true' && panel?.querySelector('.chiffrage-share-panel')){panel.replaceChildren();return;}
+    if(!panel)return;
+    if(action==='manageShares' && panel.hasChildNodes()){panel.replaceChildren();return;}
     if(action==='shareOffer' && state.mode==='editor' && state.dirty){notice(()=>localLabel('Enregistre avant de partager.','Vor dem Teilen speichern.'),true);return;}
     button.disabled=true;
     try {
       if(action==='shareOffer')await api('publishOffer',{id});
-      const links=await api('sharedOffers',undefined,{id});
-      sharePanel(renderSharedLinks(links,id),button);
-    }catch(error){sharePanel(`<p role="alert">${escape(errorMessage(error))}</p>${shareCloseControl()}`,button);}
+      await loadSharedLinks(id,panel);
+    }catch(error){if(panel.isConnected)panel.innerHTML=`<p role="alert">${escape(errorMessage(error))}</p>${shareCloseControl()}`;}
     finally{if(button.isConnected)button.disabled=false;}
     return;
   }
   if(action==='setSharedActive') {
-    const row=button.closest('[data-link-id]'),id=button.dataset.id;
+    const row=button.closest('[data-link-id]'),id=button.dataset.id,active=button.dataset.active==='true';
     button.disabled=true;
     try {
-      await api('setOfferActive',{id,link_id:row.dataset.linkId,active:button.dataset.active==='true'});
-      const links=await api('sharedOffers',undefined,{id});sharePanel(renderSharedLinks(links,id),button);
-    }catch(error){const status=row.querySelector('[role="status"]');status.textContent=errorMessage(error);button.disabled=false;}
+      await api('setOfferActive',{id,link_id:row.dataset.linkId,active});
+      if(!button.isConnected)return;
+      button.setAttribute('aria-checked',String(active));button.dataset.active=String(!active);
+      button.textContent=active?localLabel('Actif','Aktiv'):localLabel('Inactif','Inaktiv');
+      row.querySelector('[role="status"]').textContent='';
+    }catch(error){if(row.isConnected)row.querySelector('[role="status"]').textContent=errorMessage(error);}
+    finally{if(button.isConnected)button.disabled=false;}
     return;
   }
   if (action === 'closeSharePanel') {
-    button.closest('[data-share-result],#chiffrageShareResult')?.replaceChildren();return;
+    const disclosure=button.closest('.chiffrage-share-disclosure');
+    if(disclosure)disclosure.open=false;
+    else button.closest('[data-share-result],#chiffrageShareResult')?.replaceChildren();
+    return;
   }
   if (action === 'copySharedOffer') {
     const row=button.closest('[data-link-id]'),url=row?.querySelector('.chiffrage-share-url'),status=row?.querySelector('[role="status"]');

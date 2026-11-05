@@ -1,5 +1,18 @@
 # État de reprise — Prime Communes 2.0
 
+> **Cohérence de la liste et du partage · 04.11.2026 :** une seule grille financière :
+> le montant cinq ans commence sous l'annuel. Métadonnées alignées sur le titre.
+> Suppression du bouton Partager des cartes ; un seul dérouleur natif « Lien »
+> à triangle orange contient toutes les commandes et explications. Partage client /
+> Fermer sur la même ligne, adresse et Copier/Ouvrir sur toute la largeur ;
+> rafraîchissement placé à côté des ouvertures. Une révision non publiée peut être
+> publiée depuis le dérouleur, seulement si ses montants sont finalisés.
+> Actif/Inactif met à jour le bouton en place : panneau, historique et focus conservés,
+> y compris en cas d'échec. Le rafraîchissement conserve aussi l'historique ouvert.
+> Hauteur financière réservée pendant le chargement pour éviter les sauts de cible.
+> Aucun serveur, tarif ou contenu d'offre modifié. Contrôles fonctionnels synthétiques,
+> 213 tests et build ; recette responsive 360–2560 px avant publication.
+
 > **Partage et liste des chiffrages · 04.11.2026 :** GO utilisateur pour compacter
 > les cartes et uniformiser les quatre actions. Investissement/annuel prioritaires,
 > total cinq ans secondaire, Partager/Liens côte à côte. Un seul panneau refermable.
@@ -20,7 +33,8 @@
 > cycle ouvrir/fermer et activation réversible sur données synthétiques, PDF trois
 > pages rendu et contrôlé. PDF Ballaigues récupéré en production (HTTP 200, application/pdf, nom de fichier lisible), sans incrément du compteur ; déclenchement vérifié dans Chrome ; l'événement de
 > téléchargement du navigateur distant n'a pas remonté, pas de recette iOS physique.
-> Aucun prix ni règle de calcul modifiés. Publication frontend à confirmer par CI.
+> Aucun prix ni règle de calcul modifiés. PR #105 fusionnée en 24aa7b4 ; CI 843 puis 844 réussies.
+> Déploiement Pages 41927450128 terminé avec succès.
 
 > **Radar · qualification du lot de 200 candidats · 29.10.2026 :** cinq candidats
 > analysés regroupés en trois nouveaux signaux communaux : Lausanne Abacus
