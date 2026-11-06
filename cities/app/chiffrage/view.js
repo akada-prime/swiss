@@ -1,4 +1,4 @@
-import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel} from './workspace-ui.js?v=20261106-workspace-r1';
+import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261106-workspace-r2';
 import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261106-prime-options-r1';
 import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261106-workspace-r1';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261104-options-r1';
@@ -298,7 +298,7 @@ async function firstDraft(row) {
   state.editorTab = 'composer';
   state.mode = 'editor';
   notice('');
-  renderEditor();
+  renderEditor({resetScroll:true});
 }
 
 async function openPendingCommune() {
@@ -992,7 +992,7 @@ function lineDetail() {
         ${line.overrides?.investment == null ? '' : ` · ${t('chiffrage.theoreticalPv')} ${money(line.calculated_investment)}`}</td>` : ''}</tr>`).join('')}</tbody></table></div></details>`;
 }
 
-function renderEditor() {
+function renderEditor({resetScroll=false}={}) {
   const mobilePanel = root.querySelector('details.chiffrage-mobile-summary');
   if (mobilePanel) state.mobileSummaryOpen = mobilePanel.open;
   const scroll = window.scrollY;
@@ -1019,7 +1019,7 @@ function renderEditor() {
     <div id="chiffrageShareResult" tabindex="-1" aria-live="polite"></div><div id="chiffrageHistory" tabindex="-1"></div></div><div id="chiffrageSummary">${financialPanel}</div></div></div>${workspaceActions(shareReady)}</div>`;
   for (const node of root.querySelectorAll('details[data-disclosure-key]')) if(disclosureState.has(node.dataset.disclosureKey))node.open=disclosureState.get(node.dataset.disclosureKey);
   for(const node of root.querySelectorAll('[data-module-search]'))if(searches.has(node.dataset.moduleSearch)){node.value=searches.get(node.dataset.moduleSearch);node.dispatchEvent(new Event('input',{bubbles:true}));}
-  if (scroll) window.scrollTo({top:scroll,behavior:'instant'});
+  restoreWorkspaceScroll(window,scroll,{opening:resetScroll});
   if (!state.map) void loadTerritory();
   void loadCoat(state.draft);
 }
@@ -1241,7 +1241,7 @@ async function open(id) {
   history.replaceState(history.state,'',quoteAddress(id));
   state.editorTab = 'composer'; state.internal = false; state.dirty = false;
   state.comparison=[];state.comparisonData=[];state.comparisonLoading=false;++comparisonRequest;state.lastFinancial=null;state.priceFeedback='';clearTimeout(priceFeedbackTimer);
-  renderEditor();
+  renderEditor({resetScroll:true});
 }
 
 root.addEventListener('submit', async event => {

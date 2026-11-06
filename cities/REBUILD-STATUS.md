@@ -718,3 +718,14 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   223 tests et build réussis. Détails : docs/chiffrage-workspace-qa.md.
 - Données de recette synthétiques, vrai runtime ; pas de Safari/iPhone physique
   ni d'actions serveur en production. PR préparée pour revue, sans merge auto.
+
+## 2026-11-06 — Ouverture du dossier au sommet
+
+- Nouveau chiffrage et ouverture d'un dossier existant demandent explicitement
+  un départ en haut. Les rafraîchissements pendant le travail conservent leur
+  position ; changer de rubrique garde son accès direct au panneau.
+- Politique de défilement dans workspace-ui.js, test des trois états (ouvrir,
+  conserver, position nulle). 224 tests et build réussis. Ouverture depuis la
+  liste vérifiée en recette Natel, position 0 ; saisie ensuite à 626 px.
+- Aucun style ou calcul modifié ; audit des triangles/couleurs communiqué
+  séparément, sans élargir ce correctif. Cache du runtime renouvelé.
