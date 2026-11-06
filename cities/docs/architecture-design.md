@@ -78,6 +78,9 @@ views/stats.css
 views/radar.css
 views/stories.css
 views/roadmap.css
+offer.css
+views/chiffrage.css
+chiffrage-workspace.css
 responsive.css
 skins.css
 settings.css
@@ -92,6 +95,30 @@ settings.css
 | Responsive | adaptations de disposition et lisibilité, après les vues |
 | Skins | deux palettes de tokens sémantiques ; le mode Automatique résout l'une des deux avant l'affichage |
 | Paramètres | chrome du panneau de préférences, responsive |
+
+### Espace de chiffrage interne
+
+`chiffrage/workspace-ui.js` possède l'identité compacte du dossier, la navigation
+des rubriques, la fermeture des menus et le focus au changement de rubrique.
+`chiffrage/view.js` conserve les événements, les données et les appels existants ;
+`offer-options-editor.js` possède les options préparées et leurs formulaires.
+Les fonctions publiques de `offer/presentation.js` restent réservées à l'aperçu
+et à l'offre client, sans réintroduire leur grand bandeau dans la saisie interne.
+
+`chiffrage-workspace.css` possède le shell vendeur, les onglets persistants, le
+résumé latéral/mobile, les actions et les formulaires d'options. Les contrôles
+métier, listes et grilles de prestations restent dans `views/chiffrage.css`,
+avec leurs variantes responsive regroupées. Le fichier responsive général ne
+redéfinit plus ces lignes de prestations. L'échelle 4/8/12/16/24/32/48 alimente
+des alias de relation : éléments liés, titre, champs, panneaux et cartes.
+
+Le shell général est compacté uniquement si l'éditeur est présent dans la vue
+visible. Son menu Navigation conserve les destinations et les préférences.
+Le `body` utilise alors `overflow-x:clip` pour éviter le conteneur de défilement
+intermédiaire créé par `overflow-x:hidden`, qui empêchait les onglets sticky.
+La navigation occupe la voie du haut ; une seule barre de sauvegarde occupe le
+bas. Sur Natel, le focus d'un champ remet cette dernière dans le flux afin de
+laisser la place au clavier. Ce comportement doit aussi être vérifié sur iOS.
 
 Règles :
 

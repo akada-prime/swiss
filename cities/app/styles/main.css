@@ -8,7 +8,8 @@
 @import url('./views/stories.css');
 @import url('./views/roadmap.css');
 @import url('./offer.css?v=20261106-offer-rhythm-r1');
-@import url('./views/chiffrage.css?v=20261106-prime-options-r1');
-@import url('./responsive.css?v=20261104-roadmap-beta-r1');
+@import url('./views/chiffrage.css?v=20261106-workspace-r1');
+@import url('./chiffrage-workspace.css?v=20261106-workspace-r1');
+@import url('./responsive.css?v=20261106-workspace-r1');
 @import url('./skins.css?v=20261028-business-r11');
 @import url('./settings.css');
