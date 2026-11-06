@@ -686,3 +686,19 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   Replis inclus/options indépendants et détails vérifiés en recette synthétique.
 - Publication poursuivie depuis le dépôt après indisponibilité de l'environnement.
   CI requise sur les sources finales avant intégration. Règle S08 documentée.
+
+
+## 2026-11-06 — Finition de la présentation client
+
+- CSS partagé : échelle 4/8/12/16/24/32/48 et relations sémantiques ;
+  cartes 16 px, rubriques 32 px, padding 16/24 px. Cumul avant les options
+  supprimé, variantes responsive regroupées, focus et triangles unifiés.
+- Hiérarchie des montants : investissement/annuel alignés ; cinq ans secondaire.
+  Colonnes des prestations stables, logos proportionnés, footer PDF compact.
+- Recette : 48 cas Chrome (six largeurs, FR/DE, ouvert/replié, public et fixture
+  des composants internes). Aucun débordement ; écart financier 0 px ;
+  cible minimale 44 px. 219 tests et build réussis, commande PDF vérifiée
+  sur réponse locale. Aucun appel aux publications ni écriture métier.
+- Détails et limites : docs/offer-presentation-qa.md. Pas de validation Safari
+  ni d'iPhone physique ; parcours interne authentifié non rejoué.
+- Sources préparées pour revue ; pas de merge automatique de main.
