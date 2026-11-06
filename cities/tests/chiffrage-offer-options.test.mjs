@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {calculateQuote} from '../app/chiffrage/calculate.js';
 import {offerOptionCandidates,priceOfferOption,offerOptionReview,validateOfferOptions} from '../app/chiffrage/offer-options.js';
 import {offerOptions} from '../app/offer/presentation.js';
-import {offerOptionsEditor} from '../app/chiffrage/offer-options-editor.js';
+import {offerOptionsEditor,optionPriceMessage,optionReadinessMessage} from '../app/chiffrage/offer-options-editor.js';
 import {publicOfferFromSaved} from '../supabase/functions/chiffrage/client-projection.mjs';
 const l=fr=>fr,money=v=>v+' CHF HT';
 const input={"products":[],"modules":[],"dimensions":{"population":1000},"primeLines":[],"partners":[],"services":[],"moduleServices":[],"lcm":{"selection":"none"},"hosting":{"included":false}};
@@ -58,4 +58,49 @@ test("module supplement includes source days and its project-management effect",
   c.parameters.publisher_rent={abacus:{standard:{pa_rate:.1,pv_rate:.2}}};c.parameters.service_presets={standard:{'abacus/ERP/test':2}};
   const draft={...structuredClone(input),products:['abacus'],projectManagement:{basis:'prime_service_days',percent:50,round_days:1}},candidate=offerOptionCandidates(draft,c).find(row=>row.kind==='module');
   assert.deepEqual(priceOfferOption(draft,c,candidate),{investment:300,annual:20});
+});
+test('Prime optional annual PV is editable per offer, including explicit zero with zero days',()=>{
+ const c=structuredClone(catalog);c.parameters.prime_options[0].annual_pv=null;
+ const record={...selected,days:0,annual_override:0};
+ const draft={...structuredClone(input),client_options:[record]},unchanged=structuredClone(draft);
+ const candidate=offerOptionCandidates(draft,c)[0];
+ assert.equal(priceOfferOption(draft,c,candidate,{days:0}),null);
+ assert.deepEqual(priceOfferOption(draft,c,candidate,record),{investment:0,annual:0});
+ const review=offerOptionReview(draft,c);assert.deepEqual(review.issues,[]);assert.equal(review.options[0].annual,0);
+ assert.deepEqual(draft,unchanged);assert.equal(c.parameters.prime_options[0].annual_pv,null);
+ const q={...quoteFor(draft),snapshot:{...quoteFor(draft).snapshot,result:calculateQuote(draft,c)}};
+ const published=publicOfferFromSaved(q,c);assert.equal(published.optional_options[0].annual,0);assert.equal(published.optional_options[0].investment,0);
+ assert.doesNotMatch(JSON.stringify(published.optional_options),/annual_override|days|item_code/);
+ assert.deepEqual(published.amounts,{investment:0,annual:0,tco5y:0});
+ const editor=offerOptionsEditor(draft,c,l,money);
+ assert.match(editor,/data-showcase-field="annual_override" value="0"/);assert.match(editor,/Jours \(0 autorisé\)/);
+});
+test('custom Prime price overrides catalog formulas without changing them; blank restores reference',()=>{
+ const c=structuredClone(catalog);c.parameters.prime_options[0].annual_rule={per_capita:.2,round_to:10};
+ const candidate=offerOptionCandidates(input,c)[0],original=structuredClone(c);
+ assert.deepEqual(priceOfferOption(input,c,candidate,{days:0}),{investment:0,annual:200});
+ assert.deepEqual(priceOfferOption(input,c,candidate,{days:0,annual_override:499}),{investment:0,annual:499});
+ assert.deepEqual(priceOfferOption(input,c,candidate,{days:0,annual_override:0}),{investment:0,annual:0});
+ const clean=validateOfferOptions([{...selected,days:0,annual_override:''}])[0];
+ assert.equal(clean.annual_override,undefined);assert.deepEqual(priceOfferOption(input,c,candidate,clean),{investment:0,annual:200});assert.deepEqual(c,original);
+});
+test('Prime annual pricing formulas are recognized even without a fixed annual PV',()=>{
+ const c=structuredClone(catalog);c.parameters.prime_options[0].annual_pv=null;c.parameters.prime_options[0].annual_pricing={chf_per_inhabitant:.2,minimum:500,round_to:10};
+ const candidate=offerOptionCandidates(input,c)[0];
+ assert.deepEqual(priceOfferOption(input,c,candidate,{days:0}),{investment:0,annual:500});
+});
+test('annual overrides cannot alter publisher options or accept negative or nonfinite prices',()=>{
+ for(const annual_override of [-1,Infinity,NaN,100000001])assert.throws(()=>validateOfferOptions([{...selected,annual_override}]));
+ for(const vendor of ['innosolv','abacus','pce']){
+  const row={...selected,key:vendor+'/ERP/test',annual_override:0};assert.throws(()=>validateOfferOptions([row]));
+ }
+ assert.equal(validateOfferOptions([{...selected,annual_override:'0'}])[0].annual_override,0);
+});
+
+test('completion identifies the missing annual price rather than blaming valid zero days or filled texts',()=>{
+ const c=structuredClone(catalog);c.parameters.prime_options[0].annual_pv=null;
+ const candidate=offerOptionCandidates(input,c)[0],record={...selected,days:0};
+ assert.equal(optionPriceMessage(candidate,record,l),'Prix annuel Prime à préciser (0 CHF autorisé).');
+ const hint=optionReadinessMessage(candidate,record,null,l);assert.match(hint,/Prix annuel Prime/);assert.doesNotMatch(hint,/titre client|bénéfice client|Jours à préciser/);
+ assert.equal(optionReadinessMessage(candidate,{...record,annual_override:0},{investment:0,annual:0},l),'Prête pour la vitrine client.');
 });

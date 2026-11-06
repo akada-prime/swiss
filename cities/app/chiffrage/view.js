@@ -1,5 +1,5 @@
-import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js';
-import {offerOptionsEditor} from './offer-options-editor.js';
+import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261106-prime-options-r1';
+import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261106-prime-options-r1';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261104-options-r1';
 import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261104-roadmap-beta-r1';
 import { includedForParent, optionApplies } from './module-catalog.js';
@@ -1296,14 +1296,14 @@ root.addEventListener('input', event => {
   }
   if(event.target.dataset.showcaseField&&state.draft){
     const index=Number(event.target.dataset.showcaseIndex),field=event.target.dataset.showcaseField,row=state.draft.client_options?.[index];
-    if(!row||!['days','label_fr','label_de','benefit_fr','benefit_de','description_fr','description_de'].includes(field))return;
-    row[field]=field==='days'?(event.target.value===''?null:Number(event.target.value)):event.target.value;
+    if(!row||!['days','annual_override','label_fr','label_de','benefit_fr','benefit_de','description_fr','description_de'].includes(field))return;
+    row[field]=['days','annual_override'].includes(field)?(event.target.value===''?null:Number(event.target.value)):event.target.value;
     state.dirty=true;
     const candidate=offerOptionCandidates(state.draft,state.catalog).find(item=>item.key===row.key),price=candidate?priceOfferOption(state.draft,state.catalog,candidate,row):null;
     const node=root.querySelector(`[data-showcase-price="${index}"]`);
-    if(node)node.textContent=price?`${localLabel('Suppléments','Aufpreise')} : ${money(price.investment)} · ${money(price.annual)} / ${localLabel('an','Jahr')}`:localLabel('Prix à compléter : renseigne les jours ou finalise le chiffrage.','Preis ergänzen: Tage angeben oder Kalkulation abschliessen.');
+    if(node){node.hidden=!price;node.textContent=price?`${localLabel('Suppléments','Aufpreise')} : ${money(price.investment)} · ${money(price.annual)} / ${localLabel('an','Jahr')}`:'';}
     const ready=root.querySelector(`[data-showcase-readiness="${index}"]`);
-    if(ready)ready.textContent=price&&row.label_fr.trim()&&row.benefit_fr.trim()?localLabel('Prête pour la vitrine client.','Bereit für die Kundenansicht.'):localLabel('À compléter avant de partager : titre, bénéfice et prix.','Vor dem Teilen ergänzen: Titel, Nutzen und Preis.');
+    if(ready)ready.textContent=optionReadinessMessage(candidate,row,price,localLabel);
     refreshFinancials();notice(()=>t('chiffrage.completion.unsaved'));return;
   }
 
