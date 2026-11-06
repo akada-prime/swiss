@@ -1,5 +1,20 @@
 # État de reprise — Prime Communes 2.0
 
+> **Options commerciales Prime · 06.11.2026 :** 0 jour était déjà valide ;
+> l'interface registre foncier était bloquée par un prix annuel absent du catalogue.
+> Ajout d'un prix annuel PV personnalisé dans les options à présenter, limité aux
+> produits Prime, enregistré dans client_options.annual_override. 0 CHF est explicite,
+> une valeur vide reprend le tarif de référence ; le catalogue général reste intact.
+> Le calcul accepte aussi les tarifs Prime annual_pricing sans prix fixe. Les prix
+> éditeur innosolv/Abacus/PCE ne deviennent pas modifiables par ce champ.
+> Message de complétude ciblé : titre, bénéfice, jours ou prix annuel manquant ;
+> aucune injonction à ressaisir des jours valables ni répétition du même message.
+> 12 tests ciblés passent, build réussi ; suite complète vérifiée par la CI de ce lot.
+> Recette synthétique des saisies 0/0, 0/500 et retour au tarif de référence ;
+> six largeurs 360–2560 sans débordement. Aucun chiffrage réel ni tarif de référence
+> modifié. Les publications existantes restent figées ; enregistrer et publier
+> une nouvelle révision pour transmettre un prix personnalisé au client.
+
 > **Gestion des publications · 05.11.2026 :** retrait du bouton Fermer redondant ;
 > bouton Supprimer explicite par publication, classe de bouton danger partagée,
 > confirmation native identique au reste du chiffrage. Suppression limitée au lien

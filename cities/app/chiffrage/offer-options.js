@@ -10,10 +10,11 @@ export function validateOfferOptions(value) {
   if(!Array.isArray(value)||value.length>maxOfferOptions)throw new Error('Invalid offer options');
   const seen=new Set();
   return value.map(row=>{
-    const key=shortOfferText(row?.key,180),days=offerNumber(row?.days);
+    const key=shortOfferText(row?.key,180),days=offerNumber(row?.days),annual=offerNumber(row?.annual_override);
     if(!/^(innosolv|abacus|prime|pce)\/[\w.-]+\/[\w.-]+$/.test(key)||seen.has(key)||days!==null&&(!Number.isFinite(days)||days<0||days>1000))throw new Error('Invalid offer option');
+    if(annual!==null&&(!key.startsWith('prime/')||!Number.isFinite(annual)||annual<0||annual>100000000))throw new Error('Invalid Prime option annual price');
     seen.add(key);
-    return {key,label_fr:shortOfferText(row.label_fr,100),label_de:shortOfferText(row.label_de,100),benefit_fr:shortOfferText(row.benefit_fr,180),benefit_de:shortOfferText(row.benefit_de,180),description_fr:shortOfferText(row.description_fr,700),description_de:shortOfferText(row.description_de,700),days};
+    return {key,label_fr:shortOfferText(row.label_fr,100),label_de:shortOfferText(row.label_de,100),benefit_fr:shortOfferText(row.benefit_fr,180),benefit_de:shortOfferText(row.benefit_de,180),description_fr:shortOfferText(row.description_fr,700),description_de:shortOfferText(row.description_de,700),days,...(annual!==null?{annual_override:annual}:{})};
   });
 }
 export function offerOptionCandidates(input,catalog) {
@@ -39,8 +40,11 @@ export function priceOfferOption(input,catalog,candidate,record={}) {
       next.moduleServices=[...(next.moduleServices??[]),{family:'prestations_module',item_code:candidate.key,level:'standard',days,suggested_days:days}];
     }else if(candidate.kind==='prime'){
       const item=candidate.source;
-      if(!item.annual_rule&&item.annual_pv==null)return null;
-      next.primeLines=[...(next.primeLines??[]),{...structuredClone(item),family:'prime',category:'license',label:item.label_fr,quantity:1,days,unit_day_rate:input.commercial?.dayRate??catalog.parameters.day_rate}];
+      const override=record.annual_override;
+      if(override!=null&&(!Number.isFinite(override)||override<0||override>100000000))return null;
+      if(override==null&&!item.annual_rule&&!item.annual_pricing&&item.annual_pv==null)return null;
+      const annualFields=override==null?{}:{annual_pv:override,annual_rule:null,annual_pricing:null,annual_override:override};
+      next.primeLines=[...(next.primeLines??[]),{...structuredClone(item),...annualFields,family:'prime',category:'license',label:item.label_fr,quantity:1,days,unit_day_rate:input.commercial?.dayRate??catalog.parameters.day_rate}];
     }else if(candidate.kind==='pce'){
       next.pce={...next.pce,salaires:true};
       const line=(next.services??[]).find(row=>row.item_code==='pce-salaires');
@@ -49,7 +53,7 @@ export function priceOfferOption(input,catalog,candidate,record={}) {
     }else return null;
     const after=calculateQuote(next,catalog);
     if(days==null||after.status==='incomplete')return null;
-    const investment=after.summary.investment-before.summary.investment,annual=after.summary.annual-before.summary.annual;
+    const investment=after.summary.investment-before.summary.investment,annual=candidate.kind==='prime'&&record.annual_override!=null?record.annual_override:after.summary.annual-before.summary.annual;
     return Number.isFinite(investment)&&Number.isFinite(annual)&&investment>=0&&annual>=0?{investment,annual}:null;
   }catch{return null;}
 }
