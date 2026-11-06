@@ -31,7 +31,7 @@ test('seller identity is compact and separate from the public commercial hero', 
 });
 
 test('detailed calculation rows become labeled two-column cards on narrow screens', () => {
-  const detail = view.slice(view.indexOf('function lineDetail() {'), view.indexOf('function renderEditor() {'));
+  const detail = view.slice(view.indexOf('function lineDetail() {'), view.indexOf('function renderEditor('));
   assert.match(detail, /chiffrage-line-detail/);
   assert.match(detail, /data-label="\$\{t\('chiffrage\.modules'\)\}"/);
   assert.match(detail, /data-label="\$\{t\('chiffrage\.quantity'\)\}"/);

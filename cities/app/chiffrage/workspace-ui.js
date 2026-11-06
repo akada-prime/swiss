@@ -32,3 +32,8 @@ export function focusWorkspacePanel(root,key) {
   panel.focus({preventScroll:true});
   panel.scrollIntoView({block:'start',behavior:'instant'});
 }
+
+// Opening a dossier starts at its identity; rerenders preserve the ongoing work.
+export function restoreWorkspaceScroll(viewport,position,{opening=false}={}) {
+  if(opening || position)viewport.scrollTo({top:opening?0:position,behavior:'instant'});
+}

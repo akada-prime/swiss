@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel} from '../app/chiffrage/workspace-ui.js';
+import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from '../app/chiffrage/workspace-ui.js';
 
 test('seller identity escapes editable names, keeps revision and offers explicit rename without a second logo',()=>{
   const html=workspaceIdentity({name:'Ballaigues <test>',canton:'VD',bfs:5744,population:"1'196",inhabitants:'habitants',title:'Variante "test"',revision:13,identity:'<span>coat</span>',map:'',reference:'Locale',tariffs:'2026',label:fr=>fr});
@@ -31,4 +31,13 @@ test('selecting workspace content focuses its panel and scrolls directly there',
   focusWorkspacePanel({querySelector:selector=>{assert.equal(selector,'[data-tab-panel="modules"]');return panel;}},'modules');
   assert.deepEqual(calls,[['focus',{preventScroll:true}],['scroll',{block:'start',behavior:'instant'}]]);
   assert.doesNotThrow(()=>focusWorkspacePanel({querySelector:()=>null},'unknown'));
+});
+
+test('opening a dossier resets a scrolled list, while editing preserves the working position',()=>{
+  const calls=[],viewport={scrollTo:options=>calls.push(options)};
+  restoreWorkspaceScroll(viewport,850,{opening:true});
+  restoreWorkspaceScroll(viewport,420);
+  restoreWorkspaceScroll(viewport,0);
+  restoreWorkspaceScroll(viewport,0,{opening:true});
+  assert.deepEqual(calls,[{top:0,behavior:'instant'},{top:420,behavior:'instant'},{top:0,behavior:'instant'}]);
 });
