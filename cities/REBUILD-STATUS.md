@@ -702,3 +702,19 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
 - Détails et limites : docs/offer-presentation-qa.md. Pas de validation Safari
   ni d'iPhone physique ; parcours interne authentifié non rejoué.
 - Sources préparées pour revue ; pas de merge automatique de main.
+
+## 2026-11-06 — Espace de travail interne du chiffrage
+
+- Bandeau communal reconstruit pour le vendeur, renommage explicite, navigation
+  générale compacte limitée à l'éditeur. Résumé mobile/latéral et onglets sticky ;
+  une seule barre Enregistrer/état/Actions en bas, menus clavier et focus direct.
+- Options en fiches repliées, champs rédactionnels en une colonne sur Natel,
+  jours/annuel alignés par subgrid. Prestations et ajustements compactés ;
+  synthèse financière avant les justificatifs dépliables.
+- Propriétaires CSS séparés, anciennes surcharges des prestations retirées du
+  responsive général. Aucun moteur, tarif, schéma, publication ou offre modifié.
+- Premier champ à 570 px au lieu de 1409 px sur 430 px ; 589 au lieu de 1476
+  sur 360 px. 168 cas navigateur finaux sur six formats, FR/DE, deux skins.
+  223 tests et build réussis. Détails : docs/chiffrage-workspace-qa.md.
+- Données de recette synthétiques, vrai runtime ; pas de Safari/iPhone physique
+  ni d'actions serveur en production. PR préparée pour revue, sans merge auto.
