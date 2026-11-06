@@ -142,7 +142,8 @@ test('public client signature remains compact, accessible and translated',()=>{
  assert.match(js, /Le bon sens paysan de Prime\./);
  assert.match(js, /Primes gesunder Bauernverstand\./);
  assert.match(js, /Un forfait, ça se juge à la dernière facture\./);
- assert.match(css, /\.prime-offer-signature-disclosure summary:focus-visible/);
+ // Focus is owned by the shared offer controls, including the signature.
+ assert.match(css, /:is\(summary,button\):focus-visible\s*\{[^}]*outline:2px solid var\(--offer-accent\)/);
  assert.match(css, /\.prime-offer-signature-disclosure\[open\] summary::after/);
  assert.match(css, /min-height: 44px/);
  assert.doesNotMatch(css, /!important/);
