@@ -286,3 +286,16 @@ nouvel invariant.
   doit pas redevenir un point d'extension généraliste.
 - MapLibre 6.7.0 est chargé depuis `unpkg.com` et exige WebGL2. L'état d'erreur
   est contrôlé, mais le rendu matériel doit être testé sur une machine WebGL2.
+
+### Accent graphique et couleur de lecture
+
+Les skins distinguent `--skin-accent` (bordures et aplats),
+`--skin-accent-text` (liens et accents textuels) et `--skin-selected-text`
+(texte sur fond sélectionné). Le composant partagé d'état sélectionné utilise
+ce dernier token : pas de bleu sombre imposé au texte en Dark.
+`--skin-disclosure` conserve la signification orange du déplié avec une teinte
+adaptée au contraste du fond. L'éditeur possède une géométrie de triangle
+8 × 10 px commune ; l'offre conserve son propriétaire et la même géométrie.
+Les trois paires texte/fond et indicateur/fond sont testées dans
+`tests/chiffrage-readability.test.mjs`. Ces tests ciblés ne certifient pas
+l'accessibilité complète de l'application.
