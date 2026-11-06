@@ -25,6 +25,9 @@ html[data-skin="prime-darkweb"] {
   --skin-hover:rgba(255,255,255,.045);
   --skin-tint:rgba(255,255,255,.025);
   --skin-accent:#0878d1;
+  --skin-accent-text:#8fcaff;
+  --skin-disclosure:#f39449;
+  --skin-selected-text:#f5f7fb;
   --skin-accent-soft:rgba(10,102,170,.18);
   --skin-focus:#66c7ff;
   --skin-shadow:0 32px 80px rgba(0,0,0,.35);
@@ -58,6 +61,9 @@ html[data-skin="helvetia"] {
   --skin-hover:#f1f3f4;
   --skin-tint:#f7f8f8;
   --skin-accent:#b5222a;
+  --skin-accent-text:#b5222a;
+  --skin-disclosure:#a5450b;
+  --skin-selected-text:#b5222a;
   --skin-accent-soft:#f8e9e9;
   --skin-focus:#a21b23;
   --skin-shadow:0 8px 24px rgba(23,38,50,.07);
@@ -89,6 +95,9 @@ html[data-skin="light"] {
   --skin-hover:#eef5fc;
   --skin-tint:#f6faff;
   --skin-accent:#126bc0;
+  --skin-accent-text:#126bc0;
+  --skin-disclosure:#a5450b;
+  --skin-selected-text:#126bc0;
   --skin-accent-soft:#e6f2ff;
   --skin-focus:#1669bc;
   --skin-shadow:0 12px 32px rgba(23,65,110,.08);

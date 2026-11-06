@@ -544,7 +544,7 @@ html.portrait-open,body.portrait-open{overflow:hidden}
   --pc-control-radius:11px;
   --pc-field-radius:11px;
   --pc-control-selected-bg:var(--skin-accent-soft);
-  --pc-control-selected-text:var(--skin-accent);
+  --pc-control-selected-text:var(--skin-selected-text);
   --pc-control-selected-border:var(--skin-accent);
 }
 :is(.view-tab.active,.stats-segment button.active,

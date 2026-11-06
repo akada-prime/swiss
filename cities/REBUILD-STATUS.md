@@ -729,3 +729,17 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   liste vérifiée en recette Natel, position 0 ; saisie ensuite à 626 px.
 - Aucun style ou calcul modifié ; audit des triangles/couleurs communiqué
   séparément, sans élargir ce correctif. Cache du runtime renouvelé.
+
+## 2026-11-07 — Indicateurs et textes lisibles
+
+- Dépliés de l'éditeur : triangle plein 8 × 10 px, même géométrie que l'offre
+  publique, indépendant de la police et du marqueur Safari. Orientation seule
+  différente selon l'état. Orange clair en Dark, orange foncé en Helvetia.
+- Séparation des tokens d'accent graphique, texte d'action et texte sélectionné.
+  Les onglets actifs sont clairs en Dark ; les liens du chiffrage deviennent
+  bleu clair. Les couleurs graphiques, fonds et dégradés restent inchangés.
+- 227 tests, build et diff propres ; 3 tests de contraste sur les palettes et
+  fonds sélectionnés composités. 96 cas Chrome sur six formats, FR/DE et deux
+  skins sans débordement ; marqueurs fermé/ouvert mesurés. Pas d'iPhone physique.
+- Dark Jura reste une proposition de troisième thème, sans changement de
+  préférence, mode automatique, thème par défaut ou présentation publique.
