@@ -171,7 +171,7 @@ test('desktop search restores an incompatible filter on cancel, then commits glo
     value: '',
     addEventListener(type, fn) { events[type] = fn; },
     dispatchEvent(event) { events[event.type](); },
-    focus() {}, blur() {}
+    focus() {}, blur() {}, setAttribute() {}
   };
   const controls = {
     query: input,
@@ -185,6 +185,7 @@ test('desktop search restores an incompatible filter on cancel, then commits glo
   const context = {
     document: { getElementById: id => controls[id], documentElement: { lang: 'fr' }, addEventListener() {} },
     Event,
+    t: key => key,
     mobileMedia: { matches: false },
     marketOnly: '', primeOnly: false, eadminOnly: false, issuesOnly: false,
     updateDistrictOptions() { controls.district.value = ''; },

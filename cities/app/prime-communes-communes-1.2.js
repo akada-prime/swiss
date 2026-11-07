@@ -522,6 +522,16 @@ import {t} from './core/i18n.js?v=20261107-jura-r1';
 
   render = function renderCommunesView() {
     baseRender();
+    const empty = document.getElementById('communeSearchEmpty');
+    const noResults = all.length > 0 && !document.querySelector('#rows tr');
+    empty.hidden = !noResults;
+    empty.nextElementSibling.hidden = noResults;
+    document.querySelector('.result-line .portrait-hint').hidden = noResults;
+    document.getElementById('exportBtn').disabled = noResults;
+    if (noResults) {
+      empty.querySelector('strong').textContent = t('communes.noSearch');
+      empty.querySelector('p').textContent = t('communes.searchHint');
+    }
     decorateCommuneIdentity();
     decorateHostingColumn();
     normalizeEmptyCells();
@@ -529,6 +539,9 @@ import {t} from './core/i18n.js?v=20261107-jura-r1';
   };
 
   buildMobileSearch();
+  document.getElementById('issuesCard').addEventListener('click', () => {
+    requestAnimationFrame(() => scrollToSearchResult(document.querySelector('.result-line')));
+  });
   document.addEventListener('prime-language-change', () => {
     const portrait = document.querySelector('#portraitRoot .commune-portrait[data-commune-id]');
     const commune = portrait && all.find(item => String(item.id) === portrait.dataset.communeId);
@@ -617,6 +630,7 @@ import {t} from './core/i18n.js?v=20261107-jura-r1';
     const translateClearQuery = () => {
       const label = document.documentElement.lang.startsWith('de') ? 'Suche leeren' : 'Effacer la recherche';
       clearQuery.setAttribute('aria-label', label);
+      desktopInput.setAttribute('aria-label', t('search.communeSoftware'));
     };
     translateClearQuery();
     document.addEventListener('prime-language-change', translateClearQuery);

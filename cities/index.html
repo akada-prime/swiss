@@ -28,7 +28,7 @@
       document.documentElement.lang = preference('prime-communes-language', ['fr', 'de'], 'fr');
     })();
   </script>
-  <link rel="stylesheet" href="app/styles/main.css?v=20261107-search-tabs-r1">
+  <link rel="stylesheet" href="app/styles/main.css?v=20261107-results-r1">
 <style>
 html[data-initial-view]:not([data-initial-view="communes"]) #communesView{display:none!important}
 html[data-initial-view="map"] #mapView,
@@ -80,6 +80,21 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   <section class="workspace">
     <div id="communesView">
     <div class="intro-row view-intro"><div><h1><!--i18n:page.013-->Les communes.<br><span><!--i18n:page.014-->Enfin lisibles.</span></h1></div><div class="intro-summary view-intro-copy"><p class="eyebrow"><!--i18n:page.015-->Marché suisse · Delimo P99</p><p class="intro-copy"><!--i18n:page.016-->Une vue unique du marché communal suisse : population, qualité des livraisons, logiciels et opportunités.</p><p class="intro-count"><strong id="headerCommuneCount">—</strong> <!--i18n:page.017-->communes, une seule vue</p></div></div>
+    <section class="data-panel">
+      <div class="filters">
+        <div class="search"><label><span aria-hidden="true">⌕</span><input id="query" type="search" enterkeyhint="search" aria-label="Rechercher une commune, un logiciel…" placeholder="Rechercher une commune, un logiciel…"></label><button id="clearQuery" type="button" aria-label="Effacer la recherche">×</button></div>
+        <div class="market-toggles" id="territoryFilters" aria-label="Marché"><button class="filter-toggle market-toggle" data-market="Welsch">Welsch</button><button class="filter-toggle market-toggle" data-market="Uf Tüütsch">Uf&nbsp;Tüütsch</button><button class="filter-toggle market-toggle" data-market="Ticino">TI</button></div>
+        <div class="canton-district-group">
+          <label class="canton-filter"><span><!--i18n:page.030-->Canton</span><select id="canton"><option value="Tous"><!--i18n:page.031-->Tous</option></select></label>
+          <label id="districtFilter" hidden><span><!--i18n:page.032-->District</span><select id="district"><option value=""><!--i18n:page.033-->Tous les districts</option></select></label>
+        </div>
+        <label class="solution-filter"><span><!--i18n:page.034-->Solution</span><select id="solution"><option value="Tous"><!--i18n:page.035-->Toutes</option></select></label>
+        <button class="filter-toggle" id="primeOnly"><!--i18n:page.036-->Clients&nbsp;Prime</button><button class="filter-toggle" id="eadminOnly">eAdmin</button><span class="filters-separator" aria-hidden="true"></span><button class="filter-toggle" id="districtsToggle" aria-expanded="false" aria-controls="territoryFilters"><!--i18n:page.037-->Territoire</button><button class="filter-toggle" id="issuesOnly" hidden><!--i18n:page.038-->À surveiller</button>
+      </div>
+      <div class="result-line"><span class="result-count" role="status"><strong id="resultCount">0</strong> <!--i18n:page.039-->résultats</span><div class="result-actions"><button id="reset" type="button"><!--i18n:page.040-->Réinitialiser</button><button class="result-export" id="exportBtn" type="button"><!--i18n:page.042-->↓ Exporter (.tsv)</button></div><small class="portrait-hint"><b>#</b> <!--i18n:page.041-->ouvre le portrait communal</small></div>
+      <div class="commune-search-empty" id="communeSearchEmpty" hidden><strong></strong><p></p></div>
+      <div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="rows"></tbody></table><p class="table-limit" id="limit"></p></div>
+    </section>
     <section class="kpi-grid">
       <article class="kpi-card hero-kpi"><div class="kpi-top"><span class="kpi-label"><!--i18n:page.018-->Population couverte</span><span class="kpi-country"><img class="swiss-mark" src="public/swiss-mark.svg" alt="Suisse"><span class="kpi-badge">100%</span></span></div><strong id="population">—</strong><p><span id="communeCount">—</span> <!--i18n:page.019-->communes</p><div class="sparkline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
       <article class="kpi-card"><div class="kpi-top"><span class="kpi-label"><!--i18n:page.020-->Communes ≥ 10’000</span><span class="kpi-badge" id="over10kShare">—</span></div><strong id="over10k">—</strong><p><span id="over10kPop">—</span> <!--i18n:page.057-->habitants · <span id="over10kPopShare">—</span> <!--i18n:page.022-->du pays</p></article>
@@ -99,20 +114,6 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         <span class="delimo-control-arrow" id="ofsArrow">→</span>
       </span>
     </button>
-    <section class="data-panel">
-      <div class="filters">
-        <div class="search"><label><span aria-hidden="true">⌕</span><input id="query" type="search" enterkeyhint="search" placeholder="Rechercher une commune, un logiciel…"></label><button id="clearQuery" type="button" aria-label="Effacer la recherche">×</button></div>
-        <div class="market-toggles" id="territoryFilters" aria-label="Marché"><button class="filter-toggle market-toggle" data-market="Welsch">Welsch</button><button class="filter-toggle market-toggle" data-market="Uf Tüütsch">Uf&nbsp;Tüütsch</button><button class="filter-toggle market-toggle" data-market="Ticino">TI</button></div>
-        <div class="canton-district-group">
-          <label class="canton-filter"><span><!--i18n:page.030-->Canton</span><select id="canton"><option value="Tous"><!--i18n:page.031-->Tous</option></select></label>
-          <label id="districtFilter" hidden><span><!--i18n:page.032-->District</span><select id="district"><option value=""><!--i18n:page.033-->Tous les districts</option></select></label>
-        </div>
-        <label class="solution-filter"><span><!--i18n:page.034-->Solution</span><select id="solution"><option value="Tous"><!--i18n:page.035-->Toutes</option></select></label>
-        <button class="filter-toggle" id="primeOnly"><!--i18n:page.036-->Clients&nbsp;Prime</button><button class="filter-toggle" id="eadminOnly">eAdmin</button><span class="filters-separator" aria-hidden="true"></span><button class="filter-toggle" id="districtsToggle" aria-expanded="false" aria-controls="territoryFilters"><!--i18n:page.037-->Territoire</button><button class="filter-toggle" id="issuesOnly" hidden><!--i18n:page.038-->À surveiller</button>
-      </div>
-      <div class="result-line"><span><strong id="resultCount">0</strong> <!--i18n:page.039-->résultats <button id="reset"><!--i18n:page.040-->Réinitialiser</button></span><small class="portrait-hint"><b>#</b> <!--i18n:page.041-->ouvre le portrait communal</small><button class="result-export" id="exportBtn"><!--i18n:page.042-->↓ Exporter (.tsv)</button></div>
-      <div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="rows"></tbody></table><p class="table-limit" id="limit"></p></div>
-    </section>
     </div>
     <section class="map-view" id="mapView" hidden>
       <div class="map-intro view-intro">
@@ -356,6 +357,6 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
 <div id="drawerRoot"></div>
 <div id="portraitRoot"></div>
 <button class="back-to-top" id="backToTop" type="button" aria-label="Retour en haut" title="Retour en haut"><span aria-hidden="true">↑</span></button>
-<script type="module" src="app/main.js?v=20261107-search-tabs-r1"></script>
+<script type="module" src="app/main.js?v=20261107-results-r1"></script>
 </body>
 </html>
