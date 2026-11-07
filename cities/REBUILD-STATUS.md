@@ -2,7 +2,7 @@
 
 > **Signature visuelle · 07.11.2026** — Dark Jura reprend le dégradé de titre
 > de Prime Dark. Le sélecteur d'apparence affiche trois pictogrammes vectoriels :
-> chapeau et engrenage pour Automatique, signe Prime 1 pour Prime Dark et crosse
+> chapeau et engrenage pour Automatique, fichier PNG Prime 1 original pour Prime Dark et crosse
 > bâloise bleutée pour Dark Jura. 228 tests et build réussis.
 
 > **Dark Jura · 07.11.2026** — Troisième palette disponible dans Apparence,
