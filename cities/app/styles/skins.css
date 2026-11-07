@@ -1,5 +1,8 @@
 /* Only interface appearance belongs here. Status and map/data colours retain
    their own meaning independently of the selected skin. */
+html:is([data-skin="prime-darkweb"],[data-skin="jura-dark"]) {
+  --skin-hero:linear-gradient(90deg,#3ea6ff,#7d73ff 45%,#ff5630 90%);
+}
 html[data-skin="prime-darkweb"] {
   color-scheme:dark;
   --quote-surface:#10151e;--quote-nav:#0d121a;--quote-active:#202a38;
@@ -33,7 +36,6 @@ html[data-skin="prime-darkweb"] {
   --skin-shadow:0 32px 80px rgba(0,0,0,.35);
   --skin-ambient-blue:#0068c9;
   --skin-ambient-warm:#ff4b20;
-  --skin-hero:linear-gradient(90deg,#3ea6ff,#7d73ff 45%,#ff5630 90%);
   --skin-mobile-search:#070b12;
 }
 /* Dark Jura is opt-in. Existing Dark/Helvetia and automatic selection stay intact.
@@ -64,7 +66,6 @@ html[data-skin="jura-dark"] {
   --skin-shadow:0 18px 42px #0003;
   --skin-ambient-blue:#1777bd;
   --skin-ambient-warm:#e76847;
-  --skin-hero:linear-gradient(90deg,#8acfff,#b7aaff 48%,#ffb18e 95%);
   --skin-mobile-search:#152337;
   --pc-field-bg:#263e54;
   --pc-field-border:#88a2ba;
