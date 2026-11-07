@@ -28,7 +28,7 @@
       document.documentElement.lang = preference('prime-communes-language', ['fr', 'de'], 'fr');
     })();
   </script>
-  <link rel="stylesheet" href="app/styles/main.css?v=20261107-appearance-r3">
+  <link rel="stylesheet" href="app/styles/main.css?v=20261107-search-tabs-r1">
 <style>
 html[data-initial-view]:not([data-initial-view="communes"]) #communesView{display:none!important}
 html[data-initial-view="map"] #mapView,
@@ -101,7 +101,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
     </button>
     <section class="data-panel">
       <div class="filters">
-        <label class="search"><span>⌕</span><input id="query" type="search" enterkeyhint="search" placeholder="Rechercher une commune, un logiciel…"></label>
+        <div class="search"><label><span aria-hidden="true">⌕</span><input id="query" type="search" enterkeyhint="search" placeholder="Rechercher une commune, un logiciel…"></label><button id="clearQuery" type="button" aria-label="Effacer la recherche">×</button></div>
         <div class="market-toggles" id="territoryFilters" aria-label="Marché"><button class="filter-toggle market-toggle" data-market="Welsch">Welsch</button><button class="filter-toggle market-toggle" data-market="Uf Tüütsch">Uf&nbsp;Tüütsch</button><button class="filter-toggle market-toggle" data-market="Ticino">TI</button></div>
         <div class="canton-district-group">
           <label class="canton-filter"><span><!--i18n:page.030-->Canton</span><select id="canton"><option value="Tous"><!--i18n:page.031-->Tous</option></select></label>
@@ -356,6 +356,6 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
 <div id="drawerRoot"></div>
 <div id="portraitRoot"></div>
 <button class="back-to-top" id="backToTop" type="button" aria-label="Retour en haut" title="Retour en haut"><span aria-hidden="true">↑</span></button>
-<script type="module" src="app/main.js?v=20261107-jura-r1"></script>
+<script type="module" src="app/main.js?v=20261107-search-tabs-r1"></script>
 </body>
 </html>

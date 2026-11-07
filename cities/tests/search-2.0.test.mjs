@@ -85,7 +85,7 @@ test('selecting a mobile search result filters the table and scrolls to its row 
     value: 'Del',
     dispatchEvent(inputEvent) {
       event = inputEvent;
-      rows = [{ dataset: { id: '6711' }, scrollIntoView: options => { scroll = options; } }];
+      rows = [{ dataset: { id: '6711' }, getBoundingClientRect: () => ({ top: 300, height: 60 }) }];
     }
   };
   const context = {
@@ -97,6 +97,7 @@ test('selecting a mobile search result filters the table and scrolls to its row 
       querySelectorAll: () => rows,
       querySelector: () => { throw new Error('commune row missing from filtered table'); }
     },
+    window: { scrollY: 150, innerHeight: 600, scrollTo: options => { scroll = options; } },
     requestAnimationFrame: callback => callback(),
     Event: class { constructor(type, options) { this.type = type; this.bubbles = options.bubbles; } }
   };
@@ -106,7 +107,8 @@ test('selecting a mobile search result filters the table and scrolls to its row 
   assert.equal(event.bubbles, true);
   assert.equal(overlay.hidden, true);
   assert.equal(blurred, true);
-  assert.equal(scroll.block, 'center');
+  assert.equal(scroll.top, 180);
+  assert.equal(scroll.left, 0);
 });
 
 test('mobile search suspends inherited filters on typing and restores them on cancel', async () => {
@@ -165,17 +167,24 @@ test('desktop search restores an incompatible filter on cancel, then commits glo
   const end = runtime.indexOf('  // Apply the canonical layout immediately', start);
   assert.ok(start >= 0 && end > start);
   const events = {};
-  const input = { value: '', addEventListener(type, fn) { events[type] = fn; }, blur() {} };
+  const input = {
+    value: '',
+    addEventListener(type, fn) { events[type] = fn; },
+    dispatchEvent(event) { events[event.type](); },
+    focus() {}, blur() {}
+  };
   const controls = {
     query: input,
     canton: { value: 'VD' },
     district: { value: '' },
     solution: { value: 'Tous' },
-    reset: { addEventListener() {} }
+    reset: { addEventListener() {} },
+    clearQuery: { addEventListener(type, fn) { events.clear = fn; }, setAttribute() {} }
   };
   let renders = 0;
   const context = {
-    document: { getElementById: id => controls[id] },
+    document: { getElementById: id => controls[id], documentElement: { lang: 'fr' }, addEventListener() {} },
+    Event,
     mobileMedia: { matches: false },
     marketOnly: '', primeOnly: false, eadminOnly: false, issuesOnly: false,
     updateDistrictOptions() { controls.district.value = ''; },
@@ -196,5 +205,9 @@ test('desktop search restores an incompatible filter on cancel, then commits glo
   events.keydown({ key: 'Enter' });
   assert.equal(controls.canton.value, 'Tous');
   assert.equal(input.value, 'Delémont');
+  controls.canton.value = 'JU';
+  events.clear();
+  assert.equal(input.value, '');
+  assert.equal(controls.canton.value, 'JU');
   assert.ok(renders >= 3);
 });
