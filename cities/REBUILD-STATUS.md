@@ -4,6 +4,7 @@
 > de Prime Dark. Le sélecteur d'apparence affiche trois pictogrammes vectoriels :
 > chapeau et engrenage pour Automatique, fichier PNG Prime 1 original pour Prime Dark et crosse
 > bâloise bleutée pour Dark Jura. 228 tests et build réussis.
+> Ancienne approximation SVG retirée après vérification de ses références.
 
 > **Dark Jura · 07.11.2026** — Troisième palette disponible dans Apparence,
 > mémorisée et appliquée avant le rendu. Le mode Automatique continue de suivre
