@@ -1,6 +1,6 @@
-import {t, number, date, locale} from './core/i18n.js?v=20261104-roadmap-beta-r1';
+import {t, number, date, locale} from './core/i18n.js?v=20261107-jura-r1';
 import { signals as germanSignals, analysis as germanAnalysis } from './i18n/editorial-de.js';
-import { getPreference } from './core/preferences.js';
+import { getPreference } from './core/preferences.js?v=20261107-jura-r1';
 (() => {
   'use strict';
 

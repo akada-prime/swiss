@@ -44,7 +44,7 @@
 }
 
 .stats-prime-eyebrow{
-  color:#8c9aaf;
+  color:var(--skin-secondary);
   font-size:10px;
   font-weight:800;
   letter-spacing:.16em;
@@ -73,7 +73,7 @@
   align-items:center;
   gap:8px 12px;
   margin-top:11px;
-  color:#76869a;
+  color:var(--skin-secondary);
   font-size:10px;
   line-height:1.25;
 }

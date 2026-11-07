@@ -1,5 +1,13 @@
 # État de reprise — Prime Communes 2.0
 
+> **Dark Jura · 07.11.2026** — Troisième palette disponible dans Apparence,
+> mémorisée et appliquée avant le rendu. Le mode Automatique continue de suivre
+> Prime Dark et Helvetia Hell. Les rôles communs pilotent les surfaces, le texte,
+> les bordures, les sélections et les champs des vues internes. Les couleurs
+> de marque, de données et d'états gardent leur signification. Les anciennes
+> exceptions Helvetia et le style dédié de l'offre publique restent distincts.
+> Contrôles locaux : 228 tests et build.
+
 > **Options commerciales Prime · 06.11.2026 :** 0 jour était déjà valide ;
 > l'interface registre foncier était bloquée par un prix annuel absent du catalogue.
 > Ajout d'un prix annuel PV personnalisé dans les options à présenter, limité aux

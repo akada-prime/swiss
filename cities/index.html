@@ -19,7 +19,7 @@
         try { const value = localStorage.getItem(key); return accepted.includes(value) ? value : fallback; }
         catch { return fallback; }
       };
-      const storedSkin = preference('prime-communes-skin', ['auto', 'prime-darkweb', 'helvetia', 'light'], 'prime-darkweb');
+      const storedSkin = preference('prime-communes-skin', ['auto', 'prime-darkweb', 'jura-dark', 'helvetia', 'light'], 'prime-darkweb');
       const skinPreference = storedSkin === 'light' ? 'helvetia' : storedSkin;
       const systemSkin = typeof window.matchMedia === 'function'
         ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'prime-darkweb' : 'helvetia')
@@ -28,7 +28,7 @@
       document.documentElement.lang = preference('prime-communes-language', ['fr', 'de'], 'fr');
     })();
   </script>
-  <link rel="stylesheet" href="app/styles/main.css?v=20261107-readable-r1">
+  <link rel="stylesheet" href="app/styles/main.css?v=20261107-jura-r1">
 <style>
 html[data-initial-view]:not([data-initial-view="communes"]) #communesView{display:none!important}
 html[data-initial-view="map"] #mapView,
@@ -69,6 +69,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
     <fieldset><legend><!--i18n:page.002-->Apparence</legend>
       <label><input type="radio" name="skin" value="auto"><span class="settings-choice-icon settings-choice-auto" aria-hidden="true"></span><span><!--i18n:settings.appearanceAuto-->Automatique</span></label>
       <label><input type="radio" name="skin" value="prime-darkweb"><span class="settings-choice-icon settings-choice-dark" aria-hidden="true"></span><span>Prime Dark</span></label>
+      <label><input type="radio" name="skin" value="jura-dark"><span class="settings-choice-icon settings-choice-jura" aria-hidden="true"></span><span>Dark Jura<small><!--i18n:settings.appearanceJuraHint-->Contrastes renforcés</small></span></label>
       <label><input type="radio" name="skin" value="helvetia"><span class="settings-choice-icon settings-choice-helvetia" aria-hidden="true"></span><span>Helvetia Hell</span></label>
     </fieldset>
     <fieldset><legend><!--i18n:page.004-->Langue</legend>
@@ -355,6 +356,6 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
 <div id="drawerRoot"></div>
 <div id="portraitRoot"></div>
 <button class="back-to-top" id="backToTop" type="button" aria-label="Retour en haut" title="Retour en haut"><span aria-hidden="true">↑</span></button>
-<script type="module" src="app/main.js?v=20261106-workspace-r2"></script>
+<script type="module" src="app/main.js?v=20261107-jura-r1"></script>
 </body>
 </html>

@@ -9,8 +9,8 @@ import { customerModuleScope } from './module-scope.js?v=20261104-roadmap-beta-r
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
 import { offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions } from '../offer/presentation.js?v=20261104-options-r1';
-import { t, number } from '../core/i18n.js?v=20261104-roadmap-beta-r1';
-import { subscribePreferences } from '../core/preferences.js';
+import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
+import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
 import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261102-catalog-r1';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js';

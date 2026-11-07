@@ -43,7 +43,7 @@
   height:27px;
   border:1px solid var(--skin-border-soft);
   border-radius:8px;
-  color:#6f8096;
+  color:var(--skin-secondary);
   background:var(--skin-tint);
   font-size:10px;
   font-weight:750;
@@ -300,9 +300,7 @@ html.portrait-open,body.portrait-open{overflow:hidden}
   padding:34px;
   border-left:1px solid rgba(83,169,229,.2);
   background:
-    radial-gradient(circle at 85% 8%,rgba(115,77,212,.17),transparent 34%),
-    radial-gradient(circle at 10% 35%,rgba(15,130,194,.14),transparent 32%),
-    #07101b;
+    var(--skin-tint);
   box-shadow:-32px 0 90px rgba(0,0,0,.46);
 }
 .portrait-close{
@@ -336,13 +334,13 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 }
 .portrait-heading{display:flex;align-items:center;gap:18px;padding:28px 54px 26px 0}
 .portrait-heading>img{width:62px;height:62px;object-fit:contain;filter:drop-shadow(0 8px 15px rgba(0,0,0,.28))}
-.portrait-heading p{margin:0 0 6px;color:#6dbdf2;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
-.portrait-heading h2{margin:0;color:#f1f6fb;font-size:38px;line-height:1.02;letter-spacing:-.045em}
+.portrait-heading p{margin:0 0 6px;color:var(--skin-secondary);font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.portrait-heading h2{margin:0;color:var(--skin-text);font-size:38px;line-height:1.02;letter-spacing:-.045em}
 .portrait-heading span{display:block;margin-top:7px;color:#78889c;font-size:11px}
 .portrait-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 22px}
 .portrait-facts>div{padding:13px 14px;border:1px solid rgba(255,255,255,.07);border-radius:13px;background:rgba(2,7,14,.34)}
-.portrait-facts dt{color:#65758a;font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
-.portrait-facts dd{margin:5px 0 0;color:#c9d4df;font-size:13px;font-weight:650;line-height:1.35}
+.portrait-facts dt{color:var(--skin-secondary);font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.portrait-facts dd{margin:5px 0 0;color:var(--skin-text);font-size:13px;font-weight:650;line-height:1.35}
 .portrait-public-context{padding:20px;border:1px solid rgba(75,160,218,.18);border-radius:20px;background:rgba(8,18,30,.66)}
 .portrait-section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:16px}
 .portrait-section-title span{color:#6b7c91;font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
@@ -355,12 +353,12 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 .portrait-wiki-card{display:grid;grid-template-columns:112px minmax(0,1fr);gap:16px;align-items:start}
 .portrait-wiki-card>img{width:112px;height:112px;object-fit:cover;border-radius:13px;background:#111a26}
 .portrait-wiki-card p,.portrait-wiki-fallback p{margin:0;color:#aeb9c7;font-size:13px;line-height:1.62}
-.portrait-wiki-card a{display:inline-flex;margin-top:13px;color:#70c5fa;font-size:12px;font-weight:750;text-decoration:none}
+.portrait-wiki-card a{display:inline-flex;margin-top:13px;color:var(--skin-accent-text);font-size:12px;font-weight:750;text-decoration:none}
 .portrait-wiki-card a:hover{text-decoration:underline}
 .portrait-wiki-fallback{padding:16px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(0,0,0,.18)}
 .portrait-wiki-fallback strong{display:block;margin-bottom:7px;color:#d7e0e9;font-size:13px}
-.portrait-source{margin:18px 0 0;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);color:#617085;font-size:9.5px;line-height:1.5}
-.portrait-system{margin-top:14px;padding:20px;border:1px solid rgba(75,160,218,.18);border-radius:20px;background:rgba(8,18,30,.66)}
+.portrait-source{margin:18px 0 0;padding-top:14px;border-top:1px solid rgba(255,255,255,.06);color:var(--skin-secondary);font-size:9.5px;line-height:1.5}
+.portrait-system{margin-top:14px;padding:20px;border:1px solid rgba(75,160,218,.18);border-radius:20px;background:var(--skin-tint)}
 .portrait-system-facts{margin:0}
 .portrait-system-notes{margin-top:12px;padding:15px;border:1px solid rgba(255,255,255,.07);border-radius:13px;background:rgba(2,7,14,.34)}
 .portrait-system-notes span{color:#8296ad;font-size:11px;font-weight:800}
@@ -447,13 +445,13 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 
 /* 2.0.5 · Wikipedia source readability */
 .portrait-source{
-  color:#8797aa;
+  color:var(--skin-secondary);
   font-size:11px;
   line-height:1.55;
 }
 @media(max-width:680px){
   .portrait-source{
-    color:#97a6b8;
+    color:var(--skin-secondary);
     font-size:11.5px;
     line-height:1.6;
   }
@@ -536,6 +534,16 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 .stats-rank-label span{font-size:11px}
 .stats-rank>small{font-size:10.5px;line-height:1.4}
 
+
+/* Shared affordances on the application shell. Component focus rules can refine them. */
+:where(.app-shell) :where(a,button,input,select,textarea,summary):focus-visible {
+  outline:2px solid var(--skin-focus);
+  outline-offset:3px;
+}
+:where(.app-shell) :where(input,textarea)::placeholder {
+  color:var(--skin-secondary);
+  opacity:1;
+}
 
 /* Shared visual primitives: one language for navigation, active choices and fields.
    View styles own layout; the active/field treatment does not get reinvented. */

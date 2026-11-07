@@ -1,4 +1,4 @@
-import { getPreference, setPreference } from './preferences.js';
+import { getPreference, setPreference } from './preferences.js?v=20261107-jura-r1';
 
 const trigger = document.getElementById('settingsTrigger');
 const panel = document.getElementById('settingsPanel');

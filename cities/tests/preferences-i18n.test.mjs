@@ -22,9 +22,9 @@ test('local preferences validate defaults, restore values and update the documen
     return mediaQuery;
   };
   globalThis.document = { documentElement: { dataset: {}, lang: 'fr' } };
-  const { defaults, choices, getPreference, setPreference, subscribePreferences, applyPreferences } = await import('../app/core/preferences.js');
+  const { defaults, choices, getPreference, setPreference, subscribePreferences, applyPreferences } = await import('../app/core/preferences.js?v=20261107-jura-r1');
   assert.deepEqual(defaults, { skin: 'prime-darkweb', language: 'fr' });
-  assert.deepEqual(choices.skin, ['auto', 'prime-darkweb', 'helvetia']);
+  assert.deepEqual(choices.skin, ['auto', 'prime-darkweb', 'jura-dark', 'helvetia']);
   assert.equal(getPreference('skin'), 'prime-darkweb');
   assert.equal(getPreference('language'), 'fr');
   const changes = [];
@@ -47,6 +47,12 @@ test('local preferences validate defaults, restore values and update the documen
   mediaQuery.matches = false;
   mediaListener();
   assert.equal(document.documentElement.dataset.skin, 'helvetia');
+
+  setPreference('skin','jura-dark');
+  applyPreferences();
+  assert.equal(document.documentElement.dataset.skin,'jura-dark');
+  mediaQuery.matches=true;mediaListener();
+  assert.equal(document.documentElement.dataset.skin,'jura-dark');
 
   values.set('prime-communes-skin', 'light');
   values.set('prime-communes-language', 'de');
@@ -75,15 +81,15 @@ test('the early bootstrap applies skin and html lang before styles and the main 
   const modules = await read('app/main.js');
   assert.match(css, /skins\.css/);
   assert.match(css, /settings\.css/);
-  assert.match(modules, /core\/preferences\.js\?v=20261024-completion-r1/);
-  assert.match(modules, /core\/runtime\.js\?v=20261104-roadmap-beta-r1/);
-  assert.match(modules, /prime-communes-data-1\.5\.js\?v=20261104-roadmap-beta-r1/);
+  assert.match(modules, /core\/preferences\.js\?v=20261107-jura-r1/);
+  assert.match(modules, /core\/runtime\.js\?v=20261107-jura-r1/);
+  assert.match(modules, /prime-communes-data-1\.5\.js\?v=20261107-jura-r1/);
   assert.match(modules, /chiffrage\/view\.js\?v=[\w-]+/);
   assert.match(await read('app/chiffrage/view.js'),
     /\.\/calculate\.js\?v=20261102-catalog-r1/);
   assert.match(html, /id="settingsTrigger"[^>]*aria-haspopup="dialog"/);
   assert.match(html, /id="settingsPanel"[^>]*role="dialog"[^>]*hidden/);
-  assert.equal((html.match(/name="skin"/g) || []).length, 3);
+  assert.equal((html.match(/name="skin"/g) || []).length, 4);
   assert.match(html, /name="skin" value="auto"/);
   assert.doesNotMatch(html, /name="skin" value="light"/);
   assert.match(html, /prefers-color-scheme: dark/);
@@ -114,7 +120,7 @@ test('settings opens as a dialog, changes both preferences and closes with Escap
   const node = id => ({ id, hidden:id !== 'settingsTrigger', dataset:{}, setAttribute(name,value){ this[name] = value; },
     addEventListener(name,handler){ listeners.set(`${id}:${name}`,handler); }, focus(){ document.activeElement = this; } });
   const trigger = node('settingsTrigger'), panel = node('settingsPanel'), backdrop = node('settingsBackdrop'), close = node('settingsClose');
-  const radios = ['auto','prime-darkweb','helvetia'].map(value => ({ name:'skin', value, checked:false, addEventListener(name,handler){ listeners.set(`${value}:${name}`,handler); } }));
+  const radios = ['auto','prime-darkweb','jura-dark','helvetia'].map(value => ({ name:'skin', value, checked:false, addEventListener(name,handler){ listeners.set(`${value}:${name}`,handler); } }));
   radios.push(...['fr','de'].map(value => ({ name:'language', value, checked:false, addEventListener(name,handler){ listeners.set(`${value}:${name}`,handler); } })));
   panel.querySelectorAll = selector => selector === 'input[type=radio]' ? radios : [close, ...radios];
   globalThis.document = { documentElement:{ dataset:{}, lang:'fr' }, activeElement:trigger,

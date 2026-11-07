@@ -1,4 +1,4 @@
-import {t} from './core/i18n.js?v=20261104-roadmap-beta-r1';
+import {t} from './core/i18n.js?v=20261107-jura-r1';
 (() => {
   'use strict';
 

@@ -286,6 +286,7 @@ export default {
   "page.273": "Un socle durable, sécurisé et lisible dans le temps.",
   "settings.trigger": "Paramètres",
   "settings.close": "Fermer",
+  "settings.appearanceJuraHint": "Contrastes renforcés",
   "settings.appearanceAuto": "Automatique",
   "search.communeSoftware": "Rechercher une commune, un logiciel…",
   "search.commune": "Rechercher une commune…",

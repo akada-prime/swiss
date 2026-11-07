@@ -286,6 +286,7 @@ export default {
   "page.273": "Ein dauerhaftes, sicheres und über die Zeit lesbares Fundament.",
   "settings.trigger": "Einstellungen",
   "settings.close": "Schliessen",
+  "settings.appearanceJuraHint": "Erhöhter Kontrast",
   "settings.appearanceAuto": "Automatisch",
   "search.communeSoftware": "Gemeinde oder Software suchen…",
   "search.commune": "Gemeinde suchen…",

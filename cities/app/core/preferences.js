@@ -2,7 +2,7 @@
 // resolve remote values before the local fallback without changing callers.
 export const defaults = Object.freeze({ skin: 'prime-darkweb', language: 'fr' });
 export const choices = Object.freeze({
-  skin: Object.freeze(['auto', 'prime-darkweb', 'helvetia']),
+  skin: Object.freeze(['auto', 'prime-darkweb', 'jura-dark', 'helvetia']),
   language: Object.freeze(['fr', 'de'])
 });
 const keys = Object.freeze({ skin: 'prime-communes-skin', language: 'prime-communes-language' });

@@ -9,7 +9,7 @@ const ratio=(a,b)=>{const [lo,hi]=[luminance(a),luminance(b)].sort((x,y)=>x-y);r
 function palette(name){const block=skins.split(`html[data-skin="${name}"] {`)[1].split('}')[0];return key=>block.match(new RegExp(`--${key}:([^;]+);`))[1];}
 
 test('action text has AA contrast on the workspace surfaces in each palette',()=>{
- for(const name of ['prime-darkweb','helvetia']){
+ for(const name of ['prime-darkweb','jura-dark','helvetia']){
   const p=palette(name);
   for(const surface of ['quote-surface','quote-nav']){
    const contrast=ratio(rgb(p('skin-accent-text')),rgb(p(surface)));
@@ -20,7 +20,7 @@ test('action text has AA contrast on the workspace surfaces in each palette',()=
 
 test('selected text stays readable on the composited selected background',()=>{
  assert.match(components,/--pc-control-selected-text:var\(--skin-selected-text\)/);
- for(const name of ['prime-darkweb','helvetia']){
+ for(const name of ['prime-darkweb','jura-dark','helvetia']){
   const p=palette(name),base=rgb(p('quote-nav')),tint=rgb(p('skin-accent-soft'));
   const bg=tint.length===4?tint.slice(0,3).map((c,i)=>c*tint[3]+base[i]*(1-tint[3])):tint;
   assert.ok(ratio(rgb(p('skin-selected-text')),bg)>=4.5,name);
@@ -28,8 +28,17 @@ test('selected text stays readable on the composited selected background',()=>{
 });
 
 test('disclosure indicators contrast with both working surfaces',()=>{
- for(const name of ['prime-darkweb','helvetia']){
+ for(const name of ['prime-darkweb','jura-dark','helvetia']){
   const p=palette(name);
   for(const surface of ['quote-surface','quote-nav'])assert.ok(ratio(rgb(p('skin-disclosure')),rgb(p(surface)))>=3,`${name}/${surface}`);
  }
+});
+
+test('Dark Jura keeps working text above enhanced contrast and fields identifiable',()=>{
+ const p=palette('jura-dark');
+ for(const text of ['skin-text','skin-secondary','skin-muted','skin-accent-text']){
+  for(const bg of ['quote-surface','quote-nav'])assert.ok(ratio(rgb(p(text)),rgb(p(bg)))>=7,`${text}/${bg}`);
+ }
+ assert.ok(ratio(rgb(p('pc-field-border')),rgb(p('pc-field-bg')))>=3);
+ for(const color of p('pc-primary-action').match(/#[a-f0-9]{6}/g))assert.ok(ratio(rgb('#ffffff'),rgb(color))>=4.5);
 });

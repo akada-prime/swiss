@@ -93,7 +93,7 @@ settings.css
 | Assets produit | dimensions et traitement des marques Prime/partenaires |
 | Vues | règles légitimes propres à un seul domaine |
 | Responsive | adaptations de disposition et lisibilité, après les vues |
-| Skins | deux palettes de tokens sémantiques ; le mode Automatique résout l'une des deux avant l'affichage |
+| Skins | trois palettes de tokens sémantiques, dont Dark Jura sur choix explicite ; Automatique résout Prime Dark ou Helvetia Hell avant l'affichage |
 | Paramètres | chrome du panneau de préférences, responsive |
 
 ### Espace de chiffrage interne
@@ -167,13 +167,16 @@ Les contrôles statiques ne remplacent pas la vérification sur iPhone.
 `app/core/preferences.js` expose `getPreference`, `setPreference` et un abonnement
 aux changements. Les valeurs validées `skin` et `language` sont conservées sous
 `prime-communes-skin` et `prime-communes-language` dans `localStorage`, avec
-`prime-darkweb` et `fr` par défaut. L'apparence accepte `auto`, `prime-darkweb`
-et `helvetia` : `auto` suit `prefers-color-scheme` et résout Prime Dark en mode
+`prime-darkweb` et `fr` par défaut. L'apparence accepte `auto`, `prime-darkweb`,
+`jura-dark` et `helvetia` : `auto` suit `prefers-color-scheme` et résout Prime Dark en mode
 sombre ou Helvetia Hell en mode clair. L'ancienne valeur `light` est relue comme
 `helvetia` pour préserver les navigateurs existants. La garde synchrone dans le
 `<head>` pose le Skin résolu et `lang` avant les styles et le rendu ; le module
 reprend le même contrat après chargement. Il n'existe pas de compte, d'avatar ou
 de profil fictif.
+Les vues consomment les rôles partagés de `skins.css` pour les surfaces, le texte,
+les bordures, le focus et les états interactifs. Les couleurs de marque, de
+séries graphiques et les indicateurs métier gardent des rôles dédiés.
 Lorsque les profils existeront, un adaptateur pourra résoudre profil distant >
 préférence locale > valeur par défaut sans changer les consommateurs.
 

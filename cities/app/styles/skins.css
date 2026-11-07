@@ -36,6 +36,68 @@ html[data-skin="prime-darkweb"] {
   --skin-hero:linear-gradient(90deg,#3ea6ff,#7d73ff 45%,#ff5630 90%);
   --skin-mobile-search:#070b12;
 }
+/* Dark Jura is opt-in. Existing Dark/Helvetia and automatic selection stay intact.
+   Opaque working surfaces and explicit text/field roles keep contrast predictable. */
+html[data-skin="jura-dark"] {
+  color-scheme:dark;
+  --skin-page:#101c2a;
+  --skin-shell:linear-gradient(150deg,#132438 0%,#152337 38%,#201e34 74%,#251e2a 100%);
+  --skin-header:#142235;
+  --skin-panel:#18283a;
+  --skin-card:linear-gradient(145deg,#21364c,#1b2d40);
+  --skin-control:#20364c;
+  --skin-elevated:#263b51;
+  --skin-text:#f0f5fb;
+  --skin-secondary:#c4d1df;
+  --skin-muted:#b2c2d4;
+  --skin-border:#566e86;
+  --skin-border-soft:#405970;
+  --skin-border-faint:#344b62;
+  --skin-hover:#304960;
+  --skin-tint:#203448;
+  --skin-accent:#3999ed;
+  --skin-accent-text:#a5d8ff;
+  --skin-disclosure:#ffb66e;
+  --skin-selected-text:#f0f5fb;
+  --skin-accent-soft:#233e59;
+  --skin-focus:#b7e1ff;
+  --skin-shadow:0 18px 42px #0003;
+  --skin-ambient-blue:#1777bd;
+  --skin-ambient-warm:#e76847;
+  --skin-hero:linear-gradient(90deg,#8acfff,#b7aaff 48%,#ffb18e 95%);
+  --skin-mobile-search:#152337;
+  --pc-field-bg:#263e54;
+  --pc-field-border:#88a2ba;
+  --pc-primary-action:linear-gradient(130deg,#1264ad,#4054b6);
+  --pc-card-bg:var(--skin-card);
+  --pc-card-line:var(--skin-border-soft);
+  --pc-text:var(--skin-text);
+  --pc-muted:var(--skin-secondary);
+  --pc-table-secondary:var(--skin-secondary);
+  --pc-table-empty:var(--skin-muted);
+  --pc-kpi-accent:var(--skin-accent-text);
+  --pc-blue:var(--skin-accent-text);
+  --pc-blue-strong:var(--skin-accent);
+  --ink:var(--skin-text);
+  --muted:var(--skin-muted);
+  --line:var(--skin-border);
+  --blue:var(--skin-accent-text);
+  --quote-surface:#18283a;
+  --quote-nav:#142235;
+  --quote-active:#304960;
+  --quote-input:var(--pc-field-bg);
+  --quote-input-border:var(--pc-field-border);
+  --quote-primary:var(--pc-primary-action);
+  --quote-button-shadow:0 4px 16px #0003;
+  --quote-tab-shadow:0 0 0 1px #3999ed44;
+  --quote-summary:linear-gradient(155deg,#243c58,#182b40);
+  --quote-summary-border:#627e9b;
+  --quote-summary-shadow:0 12px 32px #0002;
+  --quote-number:#a5d8ff;
+  --quote-success:#9cddbd;
+  --quote-warning:#ffd28b;
+  --quote-danger:#ffb1b1;
+}
 html[data-skin="helvetia"] {
   color-scheme:light;
   --quote-surface:#fff;--quote-nav:#f7f8f9;--quote-active:#fff;
@@ -107,6 +169,11 @@ html[data-skin="light"] {
   --skin-mobile-search:#f3f7fc;
 }
 
+/* Preserve the established desktop reading level in Prime Dark. */
+@media (min-width:1101px) {
+  html[data-skin="prime-darkweb"] { --skin-secondary:#b5c2d2; }
+}
+
 /* Shared application chrome. Geography, series, status and product marks are
    deliberately excluded from these selectors. */
 html[data-skin] body{background:var(--skin-page);color:var(--skin-text)}
@@ -151,7 +218,7 @@ html[data-skin] .map-autocomplete,
 html[data-skin] .map-autocomplete button{background:var(--skin-control);color:var(--skin-text);border-color:var(--skin-border-soft);color-scheme:inherit}
 html[data-skin] .maplibre-toolbar .map-search input{background:transparent;color:var(--skin-text);color-scheme:inherit}
 html[data-skin] .filter-toggle.on:not(.warning),
-html[data-skin] .maplibre-view-buttons button.active{background:var(--skin-accent-soft);border-color:var(--skin-accent);color:var(--skin-accent)}
+html[data-skin] .maplibre-view-buttons button.active{background:var(--skin-accent-soft);border-color:var(--skin-accent);color:var(--skin-selected-text)}
 html[data-skin] .mobile-search-overlay{background:var(--skin-mobile-search);color:var(--skin-text)}
 html[data-skin] .mobile-search-header{background:var(--skin-header);border-color:var(--skin-border)}
 html[data-skin] .mobile-search-result,
