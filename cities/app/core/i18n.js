@@ -1,7 +1,7 @@
 import { frenchTypography } from './french-typography.js?v=20261028-offer-polish-r1';
-import fr from '../i18n/fr.js?v=20261104-roadmap-beta-r1';
-import de from '../i18n/de.js?v=20261104-roadmap-beta-r1';
-import { getPreference, subscribePreferences } from './preferences.js';
+import fr from '../i18n/fr.js?v=20261107-jura-r1';
+import de from '../i18n/de.js?v=20261107-jura-r1';
+import { getPreference, subscribePreferences } from './preferences.js?v=20261107-jura-r1';
 
 const catalogues = { fr, de };
 const markedNodes = [];

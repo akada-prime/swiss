@@ -1,6 +1,6 @@
 import { stories as germanStories } from './i18n/editorial-de.js';
-import { getPreference } from './core/preferences.js';
-import { t } from './core/i18n.js?v=20261104-roadmap-beta-r1';
+import { getPreference } from './core/preferences.js?v=20261107-jura-r1';
+import { t } from './core/i18n.js?v=20261107-jura-r1';
 
 (() => {
   'use strict';
