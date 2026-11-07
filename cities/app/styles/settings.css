@@ -23,7 +23,7 @@
   background:#101c2a center / 22px 22px no-repeat;
 }
 .settings-choice-auto{background-image:url('../../public/appearance-auto.svg')}
-.settings-choice-dark{background-image:url('../../public/prime-one-negative.svg')}
+.settings-choice-dark{background-image:url('../../public/prime-one-negative.png')}
 .settings-choice-jura{background-image:url('../../public/appearance-jura.svg')}
 .settings-choice-helvetia{margin-inline:7px;border-radius:3px;background:#8e2430}
 .settings-choice-helvetia::before,.settings-choice-helvetia::after{content:"";position:absolute;background:#f7f3ec}
