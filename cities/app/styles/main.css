@@ -1,5 +1,5 @@
 /* Prime Communes 2.0 — single deterministic style entry. */
-@import url('./foundation.css?v=20261107-jura-r1');
+@import url('./foundation.css?v=20261107-search-tabs-r1');
 @import url('./components.css?v=20261107-jura-r1');
 @import url('./product-assets.css');
 @import url('./views/map.css?v=20261107-jura-r1');
@@ -9,7 +9,7 @@
 @import url('./views/roadmap.css?v=20261107-jura-r1');
 @import url('./offer.css?v=20261106-offer-rhythm-r1');
 @import url('./views/chiffrage.css?v=20261107-readable-r1');
-@import url('./chiffrage-workspace.css?v=20261107-readable-r1');
-@import url('./responsive.css?v=20261107-jura-r1');
+@import url('./chiffrage-workspace.css?v=20261107-search-tabs-r1');
+@import url('./responsive.css?v=20261107-search-tabs-r1');
 @import url('./skins.css?v=20261107-appearance-r2');
 @import url('./settings.css?v=20261107-appearance-r3');

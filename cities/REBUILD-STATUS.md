@@ -1,5 +1,9 @@
 # État de reprise — Prime Communes 2.0
 
+> **Navigation du chiffrage et recherche · 07.11.2026** — Onglets mieux
+> délimités avec un repère actif, effacement du texte seul par × et défilement
+> vertical explicite après une recherche mobile. 228 tests et build réussis.
+
 > **Signature visuelle · 07.11.2026** — Dark Jura reprend le dégradé de titre
 > de Prime Dark. Le sélecteur d'apparence affiche trois pictogrammes vectoriels :
 > chapeau et engrenage pour Automatique, fichier PNG Prime 1 original pour Prime Dark et crosse

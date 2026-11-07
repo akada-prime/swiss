@@ -275,6 +275,16 @@
 }
 
 /* Mobile 2027 search surface. Desktop keeps the compact table filter. */
+.filters .search{position:relative}
+.filters .search label{width:100%}
+.filters .search #query{padding-inline-end:38px}
+#query::-webkit-search-cancel-button{display:none}
+#clearQuery{position:absolute;inset-inline-end:3px;top:50%;transform:translateY(-50%);width:38px;height:38px;padding:0;border:0;border-radius:8px;background:transparent;color:var(--skin-secondary);font-size:23px;line-height:1;cursor:pointer}
+.filters .search:has(#query:placeholder-shown) #clearQuery{visibility:hidden}
+#clearQuery:is(:hover,:focus-visible){background:var(--skin-hover);color:var(--skin-text)}
+@media(max-width:760px){
+  .filters .search #query,.mobile-search-header input[type=search]{font-size:16px}
+}
 .mobile-search-overlay{display:none}
 @media(max-width:680px){
   html.mobile-search-open,

@@ -393,11 +393,19 @@ import {t} from './core/i18n.js?v=20261107-jura-r1';
     sourceInput.dispatchEvent(new Event('input', { bubbles: true }));
   }
 
+  function scrollToSearchResult(target, center = false) {
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    const offset = center ? (window.innerHeight - rect.height) / 2 : 0;
+    // A wide table row must never pan the outer viewport horizontally.
+    window.scrollTo({ top: window.scrollY + rect.top - offset, left: 0 });
+  }
+
   function scrollToCommuneRow(commune) {
     requestAnimationFrame(() => {
       const row = [...document.querySelectorAll('.table-wrap tbody tr')]
         .find(item => item.dataset.id === String(commune.id));
-      (row || document.querySelector('.result-line'))?.scrollIntoView({ block: row ? 'center' : 'start' });
+      scrollToSearchResult(row || document.querySelector('.result-line'), Boolean(row));
     });
   }
 
@@ -483,7 +491,7 @@ import {t} from './core/i18n.js?v=20261107-jura-r1';
         else {
           mobileSearchPreviousFilters = null;
           closeMobileSearch();
-          requestAnimationFrame(() => document.querySelector('.result-line')?.scrollIntoView({ block: 'start' }));
+          requestAnimationFrame(() => scrollToSearchResult(document.querySelector('.result-line')));
         }
       }
     });
@@ -598,6 +606,21 @@ import {t} from './core/i18n.js?v=20261107-jura-r1';
       desktopInput.blur();
     }
   });
+  const clearQuery = document.getElementById('clearQuery');
+  if (clearQuery) {
+    clearQuery.addEventListener('click', () => {
+      if (desktopPreviousFilters) desktopPreviousFilters.query = '';
+      desktopInput.value = '';
+      desktopInput.dispatchEvent(new Event('input', { bubbles: true }));
+      if (!mobileMedia.matches) desktopInput.focus({ preventScroll: true });
+    });
+    const translateClearQuery = () => {
+      const label = document.documentElement.lang.startsWith('de') ? 'Suche leeren' : 'Effacer la recherche';
+      clearQuery.setAttribute('aria-label', label);
+    };
+    translateClearQuery();
+    document.addEventListener('prime-language-change', translateClearQuery);
+  }
   document.getElementById('reset')?.addEventListener('click', () => {
     desktopPreviousFilters = desktopFocusFilters = null;
   });
