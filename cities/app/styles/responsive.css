@@ -69,73 +69,6 @@
   .market-toggles{min-height:44px}
   .market-toggles .market-toggle{min-height:36px;font-size:13px}
 
-  .result-line{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
-    align-items:stretch;
-    gap:10px;
-    margin:16px 2px 12px;
-  }
-  .result-line>span{
-    min-width:0;
-    min-height:46px;
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:0 8px 0 10px;
-    border:1px solid var(--skin-border-soft);
-    border-radius:11px;
-    background:var(--skin-control);
-    color:#8794a7;
-    font-size:12px;
-    flex-wrap:wrap;
-    padding-top:7px;
-    padding-bottom:7px;
-    white-space:normal;
-  }
-  .result-line #resultCount{
-    display:inline-grid;
-    place-items:center;
-    flex:none;
-    min-width:4ch;
-    height:32px;
-    padding:0 7px;
-    border:1px solid rgba(55,162,236,.34);
-    border-radius:8px;
-    color:var(--skin-accent-text);
-    background:rgba(10,102,170,.18);
-    font-size:16px;
-    font-weight:750;
-    font-variant-numeric:tabular-nums;
-  }
-  .result-line #reset{
-    float:none;
-    min-height:30px;
-    margin-left:auto;
-    padding:0 9px;
-    border:1px solid var(--skin-border-soft);
-    border-radius:8px;
-    color:#a9b5c6;
-    background:var(--skin-tint);
-    font-size:11px;
-    font-weight:650;
-    white-space:nowrap;
-  }
-  .result-line #reset:active{
-    color:#d9f0ff;
-    border-color:rgba(55,162,236,.42);
-    background:rgba(10,102,170,.14);
-  }
-  .result-line .result-export{
-    min-height:46px;
-    padding:0 12px;
-    border:1px solid var(--skin-border-soft);
-    border-radius:11px;
-    color:#9ba9bc;
-    background:var(--skin-control);
-    white-space:nowrap;
-  }
-
   /* Same row identity as desktop; mobile only controls available width. */
   .table-wrap table{min-width:800px}
   .table-wrap.logiciels-hidden table{min-width:770px}
@@ -487,11 +420,6 @@
   .filter-toggle{font-size:12.5px}
   .filter-toggle:hover,.news-filters button:hover,.maplibre-view-buttons button:hover{border-color:rgba(87,180,241,.34);color:#e2edf6;background:rgba(31,118,178,.12)}
 
-  .result-line{color:#a8b4c4}
-
-  .portrait-hint{color:#a4b2c4}
-  .result-line .result-export{border-color:rgba(255,255,255,.19);background:rgba(255,255,255,.065);color:#c0c9d5}
-
   .table-wrap{border-color:rgba(255,255,255,.2);background:rgba(5,10,18,.3)}
   .table-wrap th{color:var(--skin-secondary);background:var(--skin-tint)}
   .table-wrap td{border-top-color:rgba(255,255,255,.125);color:var(--pc-table-secondary)}
@@ -609,11 +537,6 @@
 .results th,
 .commune-rank {
   font-size: var(--pc-type-min);
-}
-
-.result-line #reset {
-  float: none;
-  margin-left: 9px;
 }
 
 @media (max-width: 680px) {

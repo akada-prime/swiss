@@ -1,5 +1,9 @@
 # État de reprise — Prime Communes 2.0
 
+> **Liste des communes · 07.11.2026** — Recherche et résultats placés sous
+> l'introduction, avant les indicateurs. Barre d'actions compacte, état sans
+> résultat FR/DE et retour au tableau depuis le contrôle Delimo.
+
 > **Navigation du chiffrage et recherche · 07.11.2026** — Onglets mieux
 > délimités avec un repère actif, effacement du texte seul par × et défilement
 > vertical explicite après une recherche mobile. 228 tests et build réussis.

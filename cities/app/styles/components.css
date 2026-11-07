@@ -389,57 +389,23 @@ html.portrait-open,body.portrait-open{overflow:hidden}
 }
 
 
-/* 2.0.5 · result-line readability polish */
-.result-line #reset{
-  float:none;
-  min-height:32px;
-  margin-left:8px;
-  padding:0 11px;
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:9px;
-  color:#c3cedc;
-  background:var(--skin-border-faint);
-  font-size:12px;
-  font-weight:700;
-  white-space:nowrap;
-  transition:border-color .16s ease,color .16s ease,background .16s ease,transform .16s ease;
-}
-.result-line #reset:hover,.result-line #reset:focus-visible{
-  color:#e7f3fb;
-  border-color:rgba(77,168,229,.38);
-  background:rgba(27,111,168,.12);
-  outline:none;
-}
-.result-line #reset:active{transform:translateY(1px)}
-.portrait-hint{
-  color:#93a3b7;
-  font-size:11.5px;
-  line-height:1.35;
-}
-.portrait-hint b{
-  width:23px;
-  height:23px;
-  color:#a9dcfb;
-  font-size:10px;
-}
+/* Commune result count and actions share one compact toolbar. */
+#communesView .data-panel + .kpi-grid{margin-top:18px}
+.result-line{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin:12px 0 8px;color:var(--skin-secondary)}
+.result-count{white-space:nowrap}
+.result-line .result-count strong{color:var(--skin-text);font-size:16px;font-variant-numeric:tabular-nums}
+.result-actions{display:flex;flex-wrap:wrap;gap:4px;margin-inline-start:auto}
+.result-line .result-actions button{float:none;min-height:36px;padding:0 7px;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--skin-secondary);font-size:12px;white-space:nowrap}
+.result-line .result-actions button:not(:disabled):is(:hover,:focus-visible){border-color:var(--skin-focus);color:var(--skin-text)}
+.result-line .result-actions button:disabled{opacity:.5;cursor:default}
+.result-line .portrait-hint{order:3;margin:0;color:var(--skin-secondary)}
+.commune-search-empty{padding:20px 16px;border:1px solid var(--skin-border-soft);border-radius:12px;background:var(--skin-tint)}
+.commune-search-empty strong{color:var(--skin-text)}
+.commune-search-empty p{margin:6px 0 0;color:var(--skin-secondary);font-size:14px}
 @media(max-width:680px){
-  .result-line{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
-    align-items:center;
-    gap:9px 10px;
-  }
-  .result-line>span{min-width:0}
-  .result-line .result-export{justify-self:end}
-  .portrait-hint{
-    display:inline-flex;
-    grid-column:1/-1;
-    grid-row:2;
-    justify-self:start;
-    margin:0 0 1px 2px;
-    color:#8f9fb3;
-    font-size:11px;
-  }
+  .result-line{gap:2px 6px}
+  .result-line .result-actions button{padding-inline:4px;min-height:44px}
+  .result-line .portrait-hint{flex-basis:100%;margin-bottom:4px}
 }
 
 
