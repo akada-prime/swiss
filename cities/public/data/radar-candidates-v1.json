@@ -1,140 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-11-05T13:13:17.004Z",
+    "generatedAt": "2026-11-09T13:54:46.477Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "12677b454a36e83e17ee82ec5c50bb17379787c8093eb134d41d85282c28895f",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport COGE sur gestion 2014",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2015_rapports/COGE_Rapport__sur_gestion__2014.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2015-06-25",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2015_rapports/COGE_Rapport__sur_gestion__2014.pdf"
-        ]
-      }
-    },
-    {
-      "id": "857e8bb46688ab0efd7c004cd40d4433b3486c59de67592c6e6c9d3033375d2f",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "PR15.20PR",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2015_preavis/PR15.20PR_Gestion_2014.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2015-04-29",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2015_preavis/PR15.20PR_Gestion_2014.pdf"
-        ]
-      }
-    },
-    {
-      "id": "6fa1a0013e15a51572518a5cc8e6b5ee95ff791a9bd6b3fa3138bf8ca46c8026",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport COGE sur gestion 2013",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2014_rapports/COGE_Rapport_sur_gestion_2013.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2014-06-26",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2014_rapports/COGE_Rapport_sur_gestion_2013.pdf"
-        ]
-      }
-    },
-    {
-      "id": "c06b90154ee701210a3ac30e9c37ddb3407f19a29043818504795f696a9cd687",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Gestion",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2014_preavis/PR14.20PR_Gestion_2013_light.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2014-04-30",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2014_preavis/PR14.20PR_Gestion_2013_light.pdf"
-        ]
-      }
-    },
-    {
-      "id": "8ffa139b334ef60d9c98f90da8a6df1f562c42da1c5967a533f61a437090604b",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "PR13.27PR",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2013_preavis/PR13.27PR_Modernisation_stationsDetenteGaz.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2013-08-26",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : modernisation",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2013_preavis/PR13.27PR_Modernisation_stationsDetenteGaz.pdf"
-        ]
-      }
-    },
     {
       "id": "c7db481ff3433d04b79e5fe78dec9b9c43aab6b9aba27a37438fed8a1d181d1d",
       "sourceId": "yverdon-preavis",
@@ -4672,6 +4542,81 @@
       "publicationDate": "2022-04-14",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "7d9302be2a38e598bd92982bff0f232d1b0d62875f388e016838803bc18c319e",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Führung des Sekretariats der Kommission zur Pflege der Orts- und Landschaftsbilder (OLK)",
+      "url": "https://www.simap.ch/fr/?search=1192633a-74f1-48fd-8ec0-6b6d3b388c46",
+      "detectedAt": "2026-11-09T13:54:40.441Z",
+      "publicationDate": "2026-11-09",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : digital",
+      "status": "pending"
+    },
+    {
+      "id": "185e346a08e7b22ec1b13e888bd29f18716797ceb1e3cda3940df0372490dfbe",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Geografisches Informationssytem (GIS+AM)",
+      "url": "https://www.simap.ch/fr/?search=2f206509-0258-4a45-b44b-7308df09bbe1",
+      "detectedAt": "2026-11-09T13:54:40.441Z",
+      "publicationDate": "2026-11-07",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : système d'information",
+      "status": "pending"
+    },
+    {
+      "id": "1d5561439f2068ca75c6b8c29ea755cd9e3ac1732c1314f5352f2980b3c45f79",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Fourniture de plaques pour la production de plaques d’immatriculation",
+      "url": "https://www.simap.ch/fr/?search=04362d35-b26f-4d3d-95a4-90e91dab1322",
+      "detectedAt": "2026-11-09T13:54:40.441Z",
+      "publicationDate": "2026-11-07",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : application",
+      "status": "pending"
+    },
+    {
+      "id": "37458a112b48c01a1335440fee94f472c2a83aa87c431068dd403ac449ccca3a",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Baumeister Modernisierung Bahnhof Thurnen",
+      "url": "https://www.simap.ch/fr/?search=cbc65640-3374-44a1-b2f0-24b7a3712d34",
+      "detectedAt": "2026-11-09T13:54:40.441Z",
+      "publicationDate": "2026-11-06",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "9a9249a23e45222fd2243688ed203192b12a7424872bc977a34539eb115ee185",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Baumeisterarbeiten Station Randa",
+      "url": "https://www.simap.ch/fr/?search=37f0af24-4d96-4964-8e17-2297cb9f022b",
+      "detectedAt": "2026-11-09T13:54:40.441Z",
+      "publicationDate": "2026-11-06",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
       "status": "pending"
     }
   ]
