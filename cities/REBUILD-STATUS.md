@@ -1,5 +1,17 @@
 # État de reprise — Prime Communes 2.0
 
+> **Chiffrage · revue du 11.11.2026** — Lot préparé, non publié : navigation
+> générale sur ordinateur, commandes visibles en haut, barre mobile conservée,
+> identité Hell lisible, renommage explicite, liens et hébergement réorganisés,
+> logos négatifs originaux sur supports cohérents, contours d'onglets uniformes.
+> Sélection de commune en liste accessible avec clavier, sans datalist native.
+> Les règles concurrentes du composant de partage ont été regroupées.
+> 232 tests réussis (4 nouveaux) et build. Recette visuelle à terminer : le
+> navigateur distant ne joint pas le serveur local. Six formats, trois thèmes
+> et Safari/iPhone non validés pour ce lot. Aucune donnée, référence métier,
+> offre publiée ni règle de calcul modifiée. Le rapprochement Excel du Vaud
+> est livré séparément et reste soumis à validation métier.
+
 > **Liste des communes · 07.11.2026** — Recherche et résultats placés sous
 > l'introduction, avant les indicateurs. Barre d'actions compacte, état sans
 > résultat FR/DE et retour au tableau depuis le contrôle Delimo.
