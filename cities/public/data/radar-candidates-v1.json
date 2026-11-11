@@ -1,114 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-11-09T13:54:46.477Z",
+    "generatedAt": "2026-11-11T12:43:17.948Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "c7db481ff3433d04b79e5fe78dec9b9c43aab6b9aba27a37438fed8a1d181d1d",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2013_rapports/PR13.27RA_Modernisation_stationsDetenteGaz.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2013-08-26",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : modernisation",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2013_rapports/PR13.27RA_Modernisation_stationsDetenteGaz.pdf"
-        ]
-      }
-    },
-    {
-      "id": "8a56e1db266b90a56fef1a37440cc6c8b94c1759d27d9ea50f4032c3cc5d78b8",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "PR13.26PR",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2013_preavis/PR13.26PR_OptimisationTelegestionGaz.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2013-08-26",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Municipalite/Preavis/2013_preavis/PR13.26PR_OptimisationTelegestionGaz.pdf"
-        ]
-      }
-    },
-    {
-      "id": "d1bb80bd8ffceb4e2cf4c43769fe822af328d9276d665ed8be8a35a2c971e88e",
-      "sourceId": "yverdon-preavis",
-      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
-      "municipality": "Yverdon-les-Bains",
-      "bfsId": 5938,
-      "scopeLabel": "",
-      "title": "Rapport",
-      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2013_rapports/PR13.26RA_OptimisationTelegestionGaz.pdf",
-      "detectedAt": "2026-09-24T10:01:57.177Z",
-      "publicationDate": "2013-08-16",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "historical-document",
-        "reason": "Archive municipale ancienne identifiée par son titre et son URL ; aucune actualisation ni nouvelle fenêtre commerciale établie dans ce candidat. Non publié, sans présumer une attribution ou une livraison.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2013_rapports/PR13.26RA_OptimisationTelegestionGaz.pdf"
-        ]
-      }
-    },
-    {
-      "id": "c399913dd86407a433a4a888f8a0563c310b84d68187bec4e60204072e57aaaf",
-      "sourceId": "gland-preavis",
-      "sourceLabel": "Gland · rapports et préavis 2026",
-      "municipality": "Gland",
-      "bfsId": 5721,
-      "scopeLabel": "",
-      "title": "Rapport de la Commission des finances",
-      "url": "https://www.gland.ch/fileadmin/documents/pdf/Conseil_communal/2026-2031/rapports_commissions/PREAVIS_5_RAPPORT_COM_FIN.pdf",
-      "detectedAt": "2026-09-24T10:01:58.598Z",
-      "publicationDate": null,
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : finance",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "unrelated-finance",
-        "reason": "Rapport COFIN n° 5 consulté : arrêté d’imposition 2027, finances et endettement ; pas de projet SI identifié.",
-        "sourceVerification": "primary-pdf-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.gland.ch/fileadmin/documents/pdf/Conseil_communal/2026-2031/rapports_commissions/PREAVIS_5_RAPPORT_COM_FIN.pdf"
-        ]
-      }
-    },
     {
       "id": "2d34563fd581ff88315d86794b0f28ec3e05d4dedd54b08d740cba83dde8fde8",
       "sourceId": "gland-preavis",
@@ -4617,6 +4513,66 @@
       "publicationDate": "2026-11-06",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "bc4fca64c7b59f93728eddaf769f58da44b69741d005565e8bb8838a0cb2a1a1",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Beschaffung E-Reinigungsmaschine 2 m2",
+      "url": "https://www.simap.ch/fr/?search=db83c433-cfb5-4da3-b830-b65ad0f40d22",
+      "detectedAt": "2026-11-11T12:43:17.944Z",
+      "publicationDate": "2026-11-11",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "53c7ee148fbf88066c82dd0960686295c85c3464b4f671e8162de548f8aea7df",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "AF11 Ersatz RAMP Refit RABe 515",
+      "url": "https://www.simap.ch/fr/?search=475bda0a-e32d-4f6a-8c15-25da61de0044",
+      "detectedAt": "2026-11-11T12:43:17.944Z",
+      "publicationDate": "2026-11-10",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "b65fef81ae9538424a2338de7a8cd6ae922d366e59d20ceb46e18e7b109dd74e",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "WTO Rechtsberatung 2026 - 2031",
+      "url": "https://www.simap.ch/fr/?search=9729c7ad-0c3e-4f15-be77-1846cf9ea4c3",
+      "detectedAt": "2026-11-11T12:43:17.944Z",
+      "publicationDate": "2026-11-10",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : numérique",
+      "status": "pending"
+    },
+    {
+      "id": "c15d5d82c39033d1ab96dec1a73b238cc20e6b799e0117b20602d4ac4d83a602",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Mise à disposition d’un/une Gestionnaire des achats publics informatiques",
+      "url": "https://www.simap.ch/fr/?search=a9962cae-5105-40fd-96b0-57a5c2a27bbd",
+      "detectedAt": "2026-11-11T12:43:17.944Z",
+      "publicationDate": "2026-11-10",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
       "status": "pending"
     }
   ]
