@@ -2,24 +2,24 @@ import { bindCommunePicker } from './commune-picker.js';
 import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261106-workspace-r2';
 import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261106-prime-options-r1';
 import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261106-workspace-r1';
-import { referenceShell, bindReference } from './rules-reference-view.js?v=20261104-options-r1';
+import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
 import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261104-roadmap-beta-r1';
 import { includedForParent, optionApplies } from './module-catalog.js';
 import { bindOfferScope } from '../offer/interactions.js';
-import { customerModuleScope } from './module-scope.js?v=20261104-roadmap-beta-r1';
+import { customerModuleScope } from './module-scope.js?v=20261111-subscriptions-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions } from '../offer/presentation.js?v=20261104-options-r1';
+import { offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261111-subscriptions-r1';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
-import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261102-catalog-r1';
+import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261111-subscriptions-r1';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
-import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js';
+import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261111-subscriptions-r1';
 import { calculationError } from './errors.js';
 import bundledCoats from './coats.js?v=20261028-business-r11';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261025-prime-beta-r1';
 import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261028-business-r11';
-import { commercialPriceGroup, offerPriceGroups, publicCostDetails } from './commercial-breakdown.js?v=20261028-business-r11';
+import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261111-subscriptions-r1';
 
 import { previewModule, moduleRollup, optionPreview } from './business-presentation.js';
 
@@ -852,7 +852,7 @@ function offerSection() {
   const optionalShowcase=offerOptions(offerOptionReview(state.draft,state.catalog).options,{label:localLabel,money});
   const lcm = ({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection;
   return `<article class="chiffrage-offer"><div class="chiffrage-offer-body${optionalShowcase?' has-offer-options':''}"><section><h3>${localLabel('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
-    ${scope}${offerServices(azHosting,lcm,{asset:assetUrl,label:localLabel,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
+    ${scope}${offerPublisherBilling(publisherBillingRows(result.lines),{label:localLabel,money})}${offerServices(azHosting,lcm,{asset:assetUrl,label:localLabel,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
     ${azHosting ? '' : `<p>${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p>`}</section>${optionalShowcase}
     <section><h3>${localLabel('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>${priceDetail}<p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
 }

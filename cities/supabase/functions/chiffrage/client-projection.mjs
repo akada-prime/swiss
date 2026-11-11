@@ -3,7 +3,7 @@ import { customerModuleScope } from '../../../app/chiffrage/module-scope.js';
 export { customerModuleScope } from '../../../app/chiffrage/module-scope.js';
 // Customer-safe allowlist: only commercially approved software labels and PV totals.
 // No raw input/result, catalog versions, item codes, PA, margins, rates, or services days.
-import { publicPriceBreakdown, publicCostDetails, annualComponents } from '../../../app/chiffrage/commercial-breakdown.js';
+import { publicPriceBreakdown, publicCostDetails, annualComponents, publisherBillingRows } from '../../../app/chiffrage/commercial-breakdown.js';
 
 const products = {innosolv:'innosolvcity',pce:'ProConcept',abacus:'Abacus'};
 const finite = value => typeof value === 'number' && Number.isFinite(value);
@@ -61,6 +61,7 @@ export function publicOfferFromSaved(quote, catalog) {
     amounts:{investment:s.investment,annual:s.annual,tco5y:s.investment+4*s.annual},
     breakdown,buckets,
     cost_details:publicCostDetails(snapshot.result.lines),
+    ...(publisherBillingRows(snapshot.result.lines).length ? {publisher_billing:publisherBillingRows(snapshot.result.lines)} : {}),
     annual_breakdown:annualComponents(breakdown)
   };
 }

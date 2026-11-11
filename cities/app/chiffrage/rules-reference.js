@@ -1,7 +1,8 @@
 // Global read-only rule dictionary. Generic formulas only; real values come from the authenticated catalog.
 // Editorial business text is authored in French; UI controls support FR/DE.
-export const referenceVersion = '2026-11-04.2';
+export const referenceVersion = '2026-11-11.1';
 export const ruleArticles = [
+  {id:'L-ESS',chapter:'Licences éditeurs',title:'Abonnement facturé directement par l’éditeur',summary:'Le budget inclut l’abonnement, avec une facturation distincte de Prime.',formula:'Utilisateurs proposés = moitié des collaborateurs, arrondie au supérieur. Annuel = utilisateurs × prix mensuel privé × 12. PA = PV ; aucune remise de première année ni marge Prime sur cet abonnement.',code:'Décision Alex · 11.11.2026 ; calculate.js / monthly_per_user',origin:'alex',status:'confirmed',note:'Les tarifs sont versionnés dans le catalogue privé. Les anciens dossiers ne sont pas recalculés automatiquement.'},
   {
     "id": "G01",
     "chapter": "Principes",

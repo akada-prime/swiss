@@ -22,6 +22,7 @@ export async function exportClientPdf(o) {
   const figures=[['Investissement',o.amounts.investment,22],['Annuel dès N+1',o.amounts.annual,22],['Total sur 5 ans',o.amounts.tco5y,16]];
   figures.forEach(([name,value,size],i)=>{const x=M+i*(CW/3+3);t(name,x,y,9,false,muted);t(fmt(value),x,y+19,size,true,navy);t('CHF HT',x,y+46,9,false,muted);});y+=78;
   paragraph('Investissement initial + quatre annuités. Montants en CHF HT.',{size:9,color:muted});rule();
+  if(o.publisher_billing?.length){heading("Facturation directe par l'éditeur");paragraph("Abonnements inclus dans le budget annuel, facturés directement par l'éditeur et séparément de Prime.");for(const row of o.publisher_billing)paragraph(`${row.label}${Number.isInteger(row.users)?' - '+row.users+' utilisateurs':''} : ${fmt(row.annual)} CHF HT / an`,{b:true});}
   heading('Solutions et modules retenus');
   for(const group of o.scope??[]){heading(group.product,2);let section='';for(const entry of group.items??[]){if(entry.section_fr&&section!==entry.section_fr){section=entry.section_fr;paragraph(section,{b:true,size:10,color:muted});}paragraph(entry.fr+(entry.included?.length?' - modules inclus':''),{b:true});for(const child of entry.included??[])paragraph('- '+child.fr,{indent:14,size:10,gap:2});}}
   if(o.lcm)paragraph(`Accompagnement LCM : ${o.lcm}`,{b:true});if(o.hosting)paragraph(`Hébergement${o.hosting_provider==='az'?' : AZ Informatique':''}`,{b:true});

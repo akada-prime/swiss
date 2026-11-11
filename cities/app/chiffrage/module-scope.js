@@ -28,7 +28,7 @@ export function customerModuleScope(input, catalog) {
         byCode.get(`${module.vendor}/${module.product}/129VD`) : null);
     if(!original)continue; // Don't invent names from internal item codes.
     let display=original;
-    if(module.vendor==='abacus'){
+    if(module.vendor==='abacus' && original.billing_mode !== 'publisher_direct'){
       // Critical: only the parent .1 of the Abacus module group is visible.
       // Never send individual Abacus function / submodule labels.
       const family=abacusFamily(module);

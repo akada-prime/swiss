@@ -9,7 +9,7 @@ export function serviceApplies(entry, input) {
 export function defaultModule(item, catalog, profileId) {
   const profile = referenceProfiles(catalog).find(row => row.id === profileId);
   const defaults = profile?.default_modules?.[item.vendor];
-  return defaults ? defaults.includes(item.item_code === '129VD' ? '129' : item.item_code) : item.default_selected;
+  return defaults ? defaults.includes(item.item_code) || defaults.includes(item.item_code === '129VD' ? '129' : item.item_code) : item.default_selected;
 }
 export function referenceProfiles(catalog) {
   return catalog.parameters.configuration_profiles ?? [];

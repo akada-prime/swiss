@@ -74,3 +74,12 @@ export function annualComponents(rows) {
   for(const row of rows)values[row.key==='hosting'?'hosting':row.key==='lcm'?'lcm':'solutions']+=row.annual??0;
   return values;
 }
+
+// Customer-safe subscription notice. Never expose PA, rates, raw item codes or catalog rules.
+export function publisherBillingRows(lines = []) {
+  return lines.filter(line => line.billing_mode === 'publisher_direct').map(line => ({
+    label: String(line.label ?? '').slice(0, 160),
+    annual: line.annual_pv,
+    ...(line.explanation?.kind === 'monthly_per_user' ? { users: line.explanation.quantity } : {})
+  }));
+}
