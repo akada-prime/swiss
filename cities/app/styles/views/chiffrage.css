@@ -19,6 +19,14 @@
 .chiffrage-panel{max-width:680px;padding:28px;border:1px solid var(--skin-border);border-radius:14px;background:var(--quote-surface);margin:20px 0}
 .chiffrage-panel h2{margin:0 0 20px;letter-spacing:-.025em}
 .chiffrage-panel form{display:grid;gap:16px}
+.chiffrage-commune-picker{display:grid;gap:8px;position:relative;min-width:0}
+.chiffrage-commune-picker [role=listbox]{display:grid;max-height:320px;overflow-y:auto;border:1px solid var(--skin-border);border-radius:10px;background:var(--skin-elevated)}
+.chiffrage-commune-picker [role=listbox][hidden]{display:none}
+.chiffrage-commune-picker [role=option]{display:flex;gap:8px;align-items:center;justify-content:space-between;text-align:left;padding:12px;min-height:48px;border:0;border-bottom:1px solid var(--skin-border-soft);background:transparent;color:var(--skin-text)}
+.chiffrage-commune-picker [role=option]:last-child{border-bottom:0}
+.chiffrage-commune-picker [role=option]:is(:hover,[aria-selected=true]){background:var(--skin-accent-soft)}
+.chiffrage-commune-picker [role=option] span{flex:none;font-size:13px;color:var(--skin-secondary)}
+.chiffrage-commune-picker [role=status]{font-size:14px;line-height:1.5;color:var(--skin-secondary)}
 .chiffrage-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:12px;margin-top:24px}
 .chiffrage-list button{display:block;width:100%;min-width:0;padding:22px;text-align:left;border:1px solid var(--skin-border);border-radius:12px;background:var(--quote-surface);color:var(--skin-text);transition:border-color .16s,background .16s}
 .chiffrage-list button:hover{border-color:var(--skin-accent);background:var(--skin-hover)}
@@ -328,15 +336,18 @@
 .chiffrage-list-item{min-width:0;border:1px solid var(--skin-border);border-radius:12px;background:var(--quote-surface);overflow:hidden}
 .chiffrage-list-item>[data-action="open"]{border:0;border-radius:0}
 .chiffrage-list-item>.chiffrage-share-list{width:calc(100% - 32px);margin:0 16px 14px;padding:11px 14px;text-align:center;border:1px solid var(--skin-border-soft)}
-.chiffrage-share-panel{display:grid;gap:14px;margin:20px 0;padding:20px;border:1px solid var(--skin-border);border-radius:14px;background:var(--quote-surface)}
-.chiffrage-share-panel h3{margin:0;font-size:var(--pc-section-heading-size);color:var(--skin-text)}
+.chiffrage-hosting-row-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.chiffrage-hosting-line>label:first-of-type{grid-column:1/-1}
+.chiffrage-hosting-line{margin-top:12px;padding:16px;border:1px solid var(--skin-border-soft);border-radius:10px;background:var(--skin-tint)}
+.chiffrage-share-panel{display:grid;gap:10px;margin:0;padding:12px;border:1px solid var(--skin-border);border-radius:9px;background:var(--quote-surface)}
+.chiffrage-share-panel h3{margin:0;font-size:15px;color:var(--skin-text)}
 .chiffrage-share-panel p{margin:0;color:var(--skin-secondary);line-height:1.5}
 .chiffrage-share-panel label{display:grid;gap:7px;color:var(--skin-secondary);min-width:0}
 .chiffrage-share-panel input{width:100%;min-width:0;padding:12px;border:1px solid var(--pc-field-border);border-radius:var(--pc-field-radius);background:var(--pc-field-bg);color:var(--skin-text);font-size:16px}
 .chiffrage-share-actions{display:flex;flex-wrap:wrap;gap:10px}
 .chiffrage-share-actions a.chiffrage-button{text-decoration:none}
-.chiffrage-share-link{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--skin-border-soft)}
-.chiffrage-share-link small{display:block;color:var(--skin-muted)}
+.chiffrage-share-link{display:grid;grid-template-columns:minmax(0,1fr);align-items:stretch;gap:12px;padding:16px 0;border-top:1px solid var(--skin-border-soft)}
+.chiffrage-share-link small{display:block;margin:0;color:var(--skin-muted)}
 @media(max-width:600px){
 .chiffrage-share-actions .chiffrage-button{flex:1 1 auto}}
 
@@ -353,8 +364,8 @@
 .chiffrage-list-share-actions{display:grid;gap:8px;padding:0 16px 15px}
 .chiffrage-list-share-actions>.chiffrage-button{width:100%;margin:0;padding:12px 15px;text-align:center}
 .chiffrage-list-share-actions>.chiffrage-share-list{width:100%;margin:0}
-.chiffrage-share-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.chiffrage-share-panel-heading .chiffrage-share-close{margin-left:auto;flex-shrink:0;width:auto;min-height:36px;padding:6px 10px}
+.chiffrage-share-panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap}
+.chiffrage-share-panel-heading .chiffrage-share-close{margin-left:auto;flex-shrink:0;width:auto;min-height:36px;padding:6px 0 6px 10px;font-size:13px;border:0;background:transparent}
 .chiffrage-share-monitor{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 0}
 .chiffrage-share-monitor strong,.chiffrage-share-counter{font-size:17px;font-weight:750;color:var(--skin-accent-text);font-variant-numeric:tabular-nums}
 .chiffrage-share-help{font-size:12px;color:var(--skin-muted);flex-basis:100%;line-height:1.45}
@@ -363,10 +374,6 @@
 .chiffrage-share-link .chiffrage-share-counter{display:block;margin:6px 0 3px}
 .chiffrage-share-feedback:not(:empty){color:var(--quote-warning);font-weight:600}
 .chiffrage-share-panel button:disabled{opacity:.6;cursor:progress}
-@media(max-width:600px){
-.chiffrage-share-link{flex-wrap:wrap;gap:12px}
-.chiffrage-share-link>.chiffrage-button{width:100%}
-}
 .chiffrage-completion{margin:0 0 20px;padding:16px 18px;border:1px solid var(--skin-border);border-left:3px solid var(--skin-accent);border-radius:8px;background:var(--skin-tint);font-size:14px;line-height:1.5}
 .chiffrage-completion ul{list-style:none;padding:0;margin:8px 0 0}
 .chiffrage-completion li+li{margin-top:4px}
@@ -544,17 +551,13 @@
 .chiffrage-saved-tco b{font-size:14px;letter-spacing:0;color:var(--skin-secondary)}
 .chiffrage-list-share-actions{grid-template-columns:1fr 1fr;padding:0 16px 14px}
 .chiffrage-list-share-actions>.chiffrage-button{padding:9px 10px;min-height:40px;font-size:13px}
-.chiffrage-share-panel{gap:10px;margin:0;padding:12px;border-radius:9px}
-#chiffrageShareResult>.chiffrage-share-panel{margin-top:14px}
-.chiffrage-share-panel h3{font-size:15px}
-.chiffrage-share-link{display:grid;gap:8px;padding:10px 0}
-.chiffrage-share-link-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#chiffrageShareResult>.chiffrage-share-panel{margin:16px 24px 24px;padding:20px;max-width:960px}
+.chiffrage-share-link-heading{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px}
 .chiffrage-share-link-heading .chiffrage-link-switch{width:auto;min-height:36px;padding:6px 12px;font-size:12px;text-align:center}
 .chiffrage-link-switch[aria-checked="true"]{color:var(--skin-accent-text);border-color:var(--skin-accent)}
-.chiffrage-share-link input{font-size:13px;padding:9px}
-.chiffrage-share-link .chiffrage-share-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.chiffrage-share-link .chiffrage-share-actions>*{padding:8px;min-height:40px;text-align:center;font-size:13px;text-decoration:none}
-.chiffrage-share-link small{margin:0}
+.chiffrage-share-link input{width:100%;font-size:16px;min-height:44px;padding:8px 10px}
+.chiffrage-share-link .chiffrage-share-actions{display:flex;flex-wrap:wrap;gap:8px}
+.chiffrage-share-link .chiffrage-share-actions>*{display:flex;align-items:center;justify-content:center;padding:8px;min-height:44px;text-align:center;font-size:14px;text-decoration:none}
 .chiffrage-share-link [role="status"]:empty{display:none}
 @media(max-width:600px){
 .chiffrage-list-toolbar{grid-template-columns:1fr 1fr}}
@@ -571,12 +574,8 @@
 .chiffrage-share-disclosure[open]>summary:before,.chiffrage-share-history[open]>summary:before{transform:rotate(90deg)}
 .chiffrage-share-disclosure .chiffrage-share-result:not(:empty){padding:0}
 .chiffrage-share-disclosure .chiffrage-share-panel{border:0;border-radius:0;padding:2px 0 0;background:transparent}
-.chiffrage-share-panel-heading{flex-wrap:nowrap}
-.chiffrage-share-panel-heading .chiffrage-share-close{font-size:13px;border:0;background:transparent;min-height:36px;padding:6px 0 6px 10px}
 .chiffrage-list .chiffrage-share-link{grid-template-columns:minmax(0,1fr);justify-content:stretch;align-items:stretch;border-top:0;padding:4px 0 10px}
 .chiffrage-share-link-heading strong{font-size:14px}
-.chiffrage-share-link .chiffrage-share-actions>*{display:flex;align-items:center;justify-content:center;font-size:14px;min-height:44px}
-.chiffrage-share-link input{font-size:16px;min-height:44px;padding:8px 10px}
 .chiffrage-share-stats{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .chiffrage-share-stats small{line-height:1.5}
 .chiffrage-share-notes{border-top:1px solid var(--skin-border-soft);padding-top:8px}
@@ -588,5 +587,4 @@
 .chiffrage-share-result[aria-busy="true"]:empty:before{content:'…';display:block;padding:12px 0;color:var(--skin-muted)}
 
 /* Shared actions keep the same labelled controls as the rest of Chiffrage. */
-.chiffrage-share-link-heading{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px}
 .chiffrage-share-link-heading>.chiffrage-button{width:auto;min-height:44px;padding:8px 10px;font-size:14px;text-align:center}

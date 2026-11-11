@@ -686,20 +686,10 @@
 .chiffrage-offer-body .logo-on-light {
   display: none;
 }
-/* Orange text keeps sufficient contrast on the light internal preview. */
+/* Negative wordmarks share the same dark presentation surface in a light preview. */
 html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) { --offer-accent:#a84a00; }
-html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .logo-on-dark {
-  display: none;
-}
-html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .logo-on-light {
-  display: block;
-}
-html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .brand-innosolv {
-  background: #162b47;
-  padding: 5px 8px;
-  border-radius: 6px;
-  width: max-content;
-  max-width: 100%;
+html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .prime-offer-module-group>h4:has(img) {
+  width:max-content;max-width:100%;padding:8px 12px;border-radius:8px;background:var(--skin-logo-surface,#26313a);
 }
 
 .prime-offer-lcm-price { display:block; margin:0 0 8px; color:var(--offer-text); font-size:var(--offer-service-size,18px); }
