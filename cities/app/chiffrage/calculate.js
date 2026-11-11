@@ -49,6 +49,17 @@ export function effective(calculatedValue, overrideValue = null) {
 // closed; the engine never interpolates an unknown editor price.
 export function priceCatalogItem(item, dimensions) {
   const rule = item.pricing_rule;
+  if (rule?.kind === 'monthly_per_user') {
+    const count = finite(dimensions[rule.basis], rule.basis);
+    const share = finite(rule.users_per_unit, 'user share');
+    const monthly = finite(rule.monthly_price, 'monthly price');
+    if (count < 0 || share < 0 || monthly < 0) throw new Error('Invalid subscription pricing');
+    const users = Math.ceil(count * share);
+    return { value: users * monthly * 12, explanation: {
+      kind: rule.kind, item_code: item.item_code, basis: rule.basis,
+      entered_quantity: count, quantity: users, source: item.source,
+      catalog_version: item.catalog_version } };
+  }
   if (!rule || !Array.isArray(rule.tiers) || !rule.tiers.length) {
     throw new Error(`Missing pricing rule for ${item.item_code}`);
   }
@@ -256,6 +267,7 @@ export function calculateQuote(input, catalog) {
       annual_pa: effective(rent.pa, selected.pa_override).effective_value,
       annual_pv: effective(rent.pv, selected.pv_override).effective_value,
       software: true, explanation: priced.explanation,
+      ...(item.billing_mode === 'publisher_direct' ? { billing_mode: 'publisher_direct' } : {}),
       overrides: { pa: selected.pa_override ?? null, pv: selected.pv_override ?? null } });
   }
   if (choices.has('pce')) {
@@ -410,13 +422,13 @@ export function calculateQuote(input, catalog) {
   const knownInvestmentCost = sum('investment_pa');
   const knownAnnualCost = sum('annual_pa');
   const publisherAnnualPa = sum('annual_pa', lines.filter(line =>
-    line.family === 'innosolv' || line.family === 'abacus'));
+    (line.family === 'innosolv' || line.family === 'abacus') && line.billing_mode !== 'publisher_direct'));
   const software = lines.filter(line => line.software || line.family === 'prime' &&
     line.category === 'support');
   const softwarePa = sum('annual_pa', software);
   const softwarePv = sum('annual_pv', software);
   const publisherSoftwarePa = sum('annual_pa', software.filter(line =>
-    line.family === 'innosolv' || line.family === 'abacus'));
+    (line.family === 'innosolv' || line.family === 'abacus') && line.billing_mode !== 'publisher_direct'));
   const missingTechnical = lines.filter(line => line.family === 'technique' && line.investment_pv == null)
     .map(line => line.item_code);
   const missingServiceDays = input.reference ? lines.filter(line =>

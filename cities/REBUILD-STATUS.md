@@ -1,5 +1,16 @@
 # État de reprise — Prime Communes 2.0
 
+> **Décisions métier · 11.11.2026** — Standard privé versionné et nouvelle
+> révision du Vaud : sélection Abacus et jours alignés sur le classeur validé,
+> Chiens à un demi-jour, innoconnect sélectionné à un jour. Welsch ajouté au
+> seul dossier du Vaud. Réserve, reprise et autres prestations conservées.
+> ESS : abonnement mensuel par utilisateur, moitié des collaborateurs arrondie
+> au supérieur, PA = PV, sans remise de première année ; mention de facturation
+> directe dans l'aperçu, les nouvelles publications et le PDF. Anciennes
+> révisions, références historiques et liens publiés conservés. 235 tests et
+> build réussis, rapprochement privé et invariants contrôlés. Serveur v29.
+> Safari/iPhone et recette visuelle complète non effectués.
+
 > **Chiffrage · revue du 11.11.2026** — Lot préparé, non publié : navigation
 > générale sur ordinateur, commandes visibles en haut, barre mobile conservée,
 > identité Hell lisible, renommage explicite, liens et hébergement réorganisés,
