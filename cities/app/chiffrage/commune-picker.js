@@ -1,4 +1,4 @@
-import { workspaceEscape as escape } from './workspace-ui.js';
+import { workspaceEscape as escape } from './workspace-ui.js?v=20261112-kanban-r1';
 
 const normalize = value => String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 export function matchingCommunes(rows, query) {

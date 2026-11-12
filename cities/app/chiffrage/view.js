@@ -1,7 +1,8 @@
-import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-workspace-review-r1';
+import {bindKanban,boardHtml,boardRibbon,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261112-kanban-r1';
+import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-kanban-r1';
 import { portalUsers, suggestedPortalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
-import { bindCommunePicker } from './commune-picker.js';
-import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261106-workspace-r2';
+import { bindCommunePicker } from './commune-picker.js?v=20261112-kanban-r1';
+import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261112-kanban-r1';
 import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261112-workspace-review-r1';
 import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261112-workspace-review-r1';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
@@ -34,8 +35,8 @@ const endpoint = `${window.SUPABASE_URL}/functions/v1/chiffrage`;
 const sessionKey = 'prime-chiffrage-session';
 const state = { authenticated: false, loaded: false, catalog: null, versions: {},
   activeVersions: {}, activePrimeOptions: [],
-  quotes: [], quote: null, draft: null, revision: null, title: '', archived: false,
-  showArchived: false, mode: 'list', message: '', error: false, loading: null,
+  quotes: [], quote: null, draft: null, revision: null, title:'',
+  board:{version:1,column_titles:defaultColumns},quoteStage:0,saveNumber:0,mode:'list', message: '', error: false, loading: null,
   pendingCommune: null, internal: false, dirty: false,
   editorTab: 'composer', session: sessionStorage.getItem(sessionKey), comparison: [], map: null, mobileSummaryOpen: false };
 const money = value => value == null ? '—' : `${number(Math.round(value), {
@@ -65,6 +66,7 @@ const assetPrefix = document.querySelector('script[type="module"][src*="/assets/
 const assetUrl = path => new URL(assetPrefix + path, new URL(document.documentElement.dataset.chiffrageAssets || './', document.baseURI)).href;
 const tariffLabel = catalog => [...new Set((catalog?.items??[]).map(item=>item.catalog_version).filter(Boolean))].slice(0,3).join(' · ') || '—';
 const errorMessage = error => {
+  if(error.code==='quoteFinalized')return localLabel('Chiffrage en lecture seule. Replace-le dans une autre colonne pour le modifier.','Schreibgeschützte Kalkulation. Zum Bearbeiten in eine andere Spalte verschieben.');
   if (error.code==='portalUsersRequired' || error.message==='Portal users required') return localLabel('Précise le nombre d’utilisateurs du portail.','Anzahl der Portalbenutzer ergänzen.');
   if (error.status === 401) return t('chiffrage.sessionExpired');
   if (error.status === 409) return t('chiffrage.revisionConflict');
@@ -183,7 +185,7 @@ function readListSnapshot(row, node) {
       if (canton) node.querySelector('[data-list-canton]').innerHTML = listCanton(canton);
       node.querySelector('[data-list-figures]').innerHTML = listFigures(saved.snapshot);
       const card=node.closest('.chiffrage-list-item'),figures=savedQuoteFigures(saved.snapshot);
-      const ready=Boolean(figures && !figures.incomplete && saved.snapshot?.result?.offer_options_ready!==false && !row.archived);
+      const ready=Boolean(figures && !figures.incomplete && saved.snapshot?.result?.offer_options_ready!==false);
       if(card)card.dataset.shareReady=String(ready);
       const publish=card?.querySelector('[data-action="shareOffer"]');
       if(publish){publish.disabled=!ready;publish.textContent=ready?localLabel('Publier la version enregistrée','Gespeicherte Version veröffentlichen'):localLabel('Finaliser avant publication','Vor Veröffentlichung fertigstellen');}
@@ -225,24 +227,24 @@ function catalogButton() {
 }
 
 function renderList() {
+  boardController?.destroy();
   listObserver?.disconnect();
   snapshotQueue.length = 0;
   history.replaceState(history.state,'',quoteAddress(null));
   state.mode = 'list'; state.draft = null; state.quote = null;
-  const rows = state.quotes.filter(row => state.showArchived || !row.archived);
+  const rows=state.quotes;
   root.innerHTML = `<h2 class="chiffrage-list-title">${t('chiffrage.workspace.b246604ad2')}</h2><div class="chiffrage-list-toolbar">
     <button class="chiffrage-button primary" data-action="new" ${!state.catalog ? 'disabled' : ''}>${localLabel('Nouveau','Neu')}</button>
     <button class="chiffrage-button" data-action="manageCatalog">${localLabel('Catalogue','Katalog')}</button>
     <button class="chiffrage-button" data-action="openReference">${localLabel('Règles','Regeln')}</button>
     <button class="chiffrage-button quiet" data-action="logout">${localLabel('Déconnexion','Abmelden')}</button></div>
     <p class="chiffrage-status${state.error ? ' error' : ''}" role="status">${escape(state.message)}</p>
-    <label class="chiffrage-choice chiffrage-list-archives"><input type="checkbox" data-field="showArchived" ${state.showArchived ? 'checked' : ''}>${t('chiffrage.showArchived')}</label>
     ${state.catalog ? '' : `<p class="chiffrage-warning">${t('chiffrage.noCatalog')}</p>`}
-    <div class="chiffrage-list">${rows.length ? rows.map(row =>
-      `<article class="chiffrage-list-item" data-share-ready="pending" data-current-revision="${row.current_revision}"><button data-action="open" data-id="${escape(row.id)}"><span class="chiffrage-saved-heading"><span data-list-canton>${listCanton(communes().find(item => Number(item.id) === Number(row.bfs_id))?.canton)}</span><strong>${escape(row.title)}</strong></span>
-      <small>${escape(row.commune_name)} · OFS ${row.bfs_id} · R${row.current_revision}</small><span class="chiffrage-saved-figures" data-list-figures aria-live="polite">${t('chiffrage.ui.savedLoading')}</span></button>
-    <details class="chiffrage-share-disclosure" data-share-id="${escape(row.id)}"><summary>${localLabel('Lien','Kundenlink')}</summary>
-    <div class="chiffrage-share-result" data-share-result aria-live="polite"></div></details></article>`).join('') : `<p>${t('chiffrage.empty')}</p>`}</div><div id="chiffrageShareResult" aria-live="polite"></div>`;
+    ${boardHtml(rows,state.board.column_titles,(row,stage)=>`<article class="chiffrage-list-item" data-quote-card="${escape(row.id)}" data-share-ready="pending" data-current-revision="${row.current_revision}">
+    ${boardRibbon(stage,state.board.column_titles[stage])}<button type="button" class="chiffrage-card-open" data-action="open" data-id="${escape(row.id)}"><span class="chiffrage-saved-heading"><span data-list-canton>${listCanton(communes().find(item=>Number(item.id)===Number(row.bfs_id))?.canton)}</span><strong>${escape(row.title)}</strong></span><small>${escape(row.commune_name)} · OFS ${row.bfs_id} · <span class="chiffrage-save-number" title="${localLabel('Enregistrements manuels','Manuelle Speicherungen')}">#${saveNumber(row)}</span></small><span class="chiffrage-saved-figures" data-list-figures aria-live="polite">${t('chiffrage.ui.savedLoading')}</span></button>
+    <div class="chiffrage-card-workflow"><button type="button" data-drag-handle aria-label="${localLabel('Déplacer le chiffrage','Kalkulation verschieben')}" title="${localLabel('Glisser pour déplacer','Zum Verschieben ziehen')}">⠿</button><label><span class="chiffrage-visually-hidden">${localLabel('Déplacer vers','Verschieben nach')}</span><select data-move-quote="${escape(row.id)}" aria-label="${localLabel('Déplacer vers','Verschieben nach')}">${state.board.column_titles.map((title,index)=>`<option value="${index}" ${stage===index?'selected':''}>${escape(title)}</option>`).join('')}</select></label></div>
+    <details class="chiffrage-share-disclosure" data-share-id="${escape(row.id)}"><summary>${localLabel('Lien','Kundenlink')}</summary><div class="chiffrage-share-result" data-share-result aria-live="polite"></div></details></article>`,localLabel)}<div id="chiffrageShareResult" aria-live="polite"></div>`;
+  boardController=bindKanban(root,{onMove:moveBoardQuote,onRename:renameBoardColumn,onRefresh:refreshBoard,label:localLabel});
   const byId = new Map(rows.map(row => [String(row.id), row]));
   listObserver = new IntersectionObserver(entries => {
     for (const entry of entries) if (entry.isIntersecting) {
@@ -250,8 +252,42 @@ function renderList() {
       readListSnapshot(byId.get(entry.target.dataset.id), entry.target);
     }
   }, { rootMargin:'300px' });
-  root.querySelectorAll('.chiffrage-list [data-action="open"]').forEach(node => listObserver.observe(node));
+  root.querySelectorAll('[data-kanban] [data-action="open"]').forEach(node => listObserver.observe(node));
 }
+
+let boardController;
+const boardSignature=board=>JSON.stringify([board.version,board.quotes.map(row=>[row.id,row.current_revision,row.save_number,row.title,row.workflow_stage,row.workflow_order])]);
+async function refreshBoard(){
+ if(state.mode!=='list')return;
+ const board=await api('board');if(state.mode!=='list'||boardController?.busy||board.version<state.board.version)return;
+ if(boardSignature(board)!==boardSignature({...state.board,quotes:state.quotes})){state.board=board;state.quotes=board.quotes;renderList();}
+}
+async function updateBoard(action,payload){
+ try{
+  const board=await api(action,{...payload,expected_version:state.board.version});
+  state.board={...state.board,...board};
+  const latest=await api('board');state.board=latest;state.quotes=latest.quotes;
+  if(state.mode==='editor'){
+   const row=state.quotes.find(row=>row.id===state.quote);state.quoteStage=quoteStage(row);renderEditor();
+  }else renderList();
+  notice(()=>localLabel('Tableau enregistré.','Board gespeichert.'));
+ }catch(error){
+  try{const board=await api('board');state.board=board;state.quotes=board.quotes;if(state.mode==='list')renderList();else{const row=state.quotes.find(row=>row.id===state.quote);state.quoteStage=quoteStage(row);renderEditor();}}catch{}
+  notice(()=>error.status===409?localLabel('Le tableau a été modifié par un collègue. Il est actualisé ; refais ton déplacement.','Das Board wurde geändert und aktualisiert. Bitte erneut verschieben.'):errorMessage(error),true);
+ }
+}
+const moveBoardQuote=(id,stage,before_id)=>{
+ const card=[...root.querySelectorAll('[data-quote-card]')].find(node=>node.dataset.quoteCard===id);
+ const column=root.querySelector(`[data-kanban] [data-stage="${stage}"]`);
+ if(card&&column){
+  const list=column.querySelector('[data-card-list]'),before=[...list.querySelectorAll('[data-quote-card]')].find(node=>node.dataset.quoteCard===before_id);
+  list.insertBefore(card,before??list.querySelector('.chiffrage-column-empty'));
+  card.querySelector('.chiffrage-card-ribbon')?.remove();card.insertAdjacentHTML('afterbegin',boardRibbon(stage,state.board.column_titles[stage]));card.querySelector('[data-move-quote]').value=stage;
+  root.querySelectorAll('[data-kanban] [data-stage]').forEach(col=>{const count=col.querySelectorAll('[data-quote-card]').length;col.querySelector('.chiffrage-column-count').textContent=count;col.querySelector('.chiffrage-column-empty').hidden=count>0;});
+ }
+ return updateBoard('moveQuote',{id,stage,before_id});
+};
+const renameBoardColumn=(column,title)=>updateBoard('renameColumn',{column,title});
 
 function communes() { return runtime.rows ?? []; }
 function communeOption(row) { return `${row.name} · OFS ${row.id}`; }
@@ -301,7 +337,7 @@ async function firstDraft(row) {
   state.title = `${row.name} — ${t('chiffrage.ui.variant')} ${1 + state.quotes.filter(quote => Number(quote.bfs_id) === Number(row.id)).length}`;
   state.revision = null;
   state.quote = null;
-  state.archived = false;
+  state.quoteStage=0;state.saveNumber=0;
   state.editorTab = 'composer';
   state.mode = 'editor';
   notice('');
@@ -836,7 +872,7 @@ function displayReference(reference) {
 function workspaceHero() {
   return workspaceIdentity({name:state.draft.name,canton:state.draft.canton,bfs:state.draft.bfs_id,
     population:number(state.draft.dimensions.population),inhabitants:t('chiffrage.workspace.a46028df66'),
-    title:state.title,revision:state.revision,identity:territoryIdentity(),map:territoryMap(),
+    title:state.title,revision:state.revision,saveNumber:state.saveNumber,locked:state.quoteStage===2,identity:territoryIdentity(),map:territoryMap(),
     reference:displayReference(state.draft.reference),tariffs:tariffLabel(state.catalog),label:localLabel});
 }
 
@@ -847,7 +883,7 @@ function workspaceNavigation() {
 
 function workspaceActions() {
   const primaryActions = state.quote ? `<button class="chiffrage-button" data-action="manageShares">${localLabel('Partager','Teilen')}</button><button class="chiffrage-button" data-action="export">${t('chiffrage.export')}</button>` : '';
-  return `<footer class="chiffrage-editor-footer"><div class="chiffrage-editor-save-state"><span class="chiffrage-save-indicator" data-dirty="${state.dirty}"></span><p class="chiffrage-status${state.error?' error':''}" role="status">${escape(state.error?state.message:state.dirty?localLabel('Modifié','Geändert'):state.message||localLabel(state.quote?'Enregistré':'Non enregistré',state.quote?'Gespeichert':'Nicht gespeichert'))}</p></div><div class="chiffrage-actions"><button type="button" class="chiffrage-button primary" data-action="save">${localLabel('Enregistrer','Speichern')}</button><div class="chiffrage-desktop-actions">${primaryActions}</div><details class="chiffrage-workspace-menu chiffrage-action-menu" data-workspace-menu><summary>${localLabel('Dossier','Dossier')}</summary><div class="chiffrage-menu-panel"><button class="chiffrage-button" data-action="openReference">${localLabel('Référentiel des règles','Regelreferenz')}</button>${state.quote?`<div class="chiffrage-mobile-actions">${primaryActions}</div><button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button><button class="chiffrage-button" data-action="copyLink">${localLabel('Copier l’adresse interne','Interne Adresse kopieren')}</button><button class="chiffrage-button" data-action="revisions">${localLabel('Historique des versions','Versionsverlauf')}</button><button class="chiffrage-button" data-action="${state.archived?'unarchiveQuote':'archive'}">${localLabel(state.archived?'Désarchiver':'Archiver',state.archived?'Wiederherstellen':'Archivieren')}</button><button class="chiffrage-button chiffrage-danger" data-action="delete">${t('chiffrage.workspace.66e03d8bb9')}</button>`:''}<button class="chiffrage-button" data-action="${state.internal?'clientMode':'internalMode'}">${localLabel(state.internal?'Revenir au projet':'Tarifs et marges',state.internal?'Zum Projekt':'Tarife und Margen')}</button><button class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></details></div></footer>`;
+  return `<footer class="chiffrage-editor-footer"><div class="chiffrage-editor-save-state"><span class="chiffrage-save-indicator" data-dirty="${state.dirty}"></span><p class="chiffrage-status${state.error?' error':''}" role="status">${escape(state.error?state.message:state.dirty?localLabel('Modifié','Geändert'):state.message||localLabel(state.quote?'Enregistré':'Non enregistré',state.quote?'Gespeichert':'Nicht gespeichert'))}</p></div><div class="chiffrage-actions"><button type="button" class="chiffrage-button primary" data-action="save" ${state.quoteStage===2?'disabled':''}>${localLabel('Enregistrer','Speichern')}</button><div class="chiffrage-desktop-actions">${primaryActions}</div><details class="chiffrage-workspace-menu chiffrage-action-menu" data-workspace-menu><summary>${localLabel('Dossier','Dossier')}</summary><div class="chiffrage-menu-panel"><button class="chiffrage-button" data-action="openReference">${localLabel('Référentiel des règles','Regelreferenz')}</button>${state.quote?`<div class="chiffrage-mobile-actions">${primaryActions}</div><button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button><button class="chiffrage-button" data-action="copyLink">${localLabel('Copier l’adresse interne','Interne Adresse kopieren')}</button><button class="chiffrage-button" data-action="revisions">${localLabel('Historique des versions','Versionsverlauf')}</button><button class="chiffrage-button chiffrage-danger" data-action="delete">${t('chiffrage.workspace.66e03d8bb9')}</button>`:''}<button class="chiffrage-button" data-action="${state.internal?'clientMode':'internalMode'}">${localLabel(state.internal?'Revenir au projet':'Tarifs et marges',state.internal?'Zum Projekt':'Tarife und Margen')}</button><button class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></details></div></footer>`;
 }
 
 function offerSection() {
@@ -870,7 +906,7 @@ function offerSection() {
 }
 
 function variantName(row) {
-  const same = state.quotes.filter(item => Number(item.bfs_id) === Number(state.draft.bfs_id) && !item.archived);
+  const same = state.quotes.filter(item => Number(item.bfs_id) === Number(state.draft.bfs_id));
   return `${t('chiffrage.ui.variant')} ${same.findIndex(item => item.id === row.id) + 1} · ${row.title}`;
 }
 function comparisonLabel(row) {
@@ -898,7 +934,7 @@ function comparisonValue(value, row) {
   return escape(typeof value === 'number' ? number(value) : value);
 }
 function comparisonSection() {
-  const candidates = state.quotes.filter(row => Number(row.bfs_id) === Number(state.draft.bfs_id) && !row.archived);
+  const candidates = state.quotes.filter(row => Number(row.bfs_id) === Number(state.draft.bfs_id));
   const chosen = state.comparisonData ?? [], ids = new Set(state.comparison);
   const rows = comparisonRows(chosen);
   const different = rows.filter(row => row.different), common = rows.filter(row => !row.different);
@@ -986,14 +1022,17 @@ function renderEditor({resetScroll=false}={}) {
   state.internal=state.editorTab==='rates';
   const tabs = [['composer',localLabel('Projet','Projekt')],['modules',localLabel('Modules','Module')],['offer',localLabel('Offre','Angebot')],['compare',localLabel('Comparer','Vergleichen')],['rates',localLabel('Tarifs','Tarife')]];
   const legacy=state.quote && (Object.entries(state.activeVersions).some(([key,id])=>state.versions[key]!==id));
-  const financialPanel = summary();
-  root.innerHTML = `<div class="chiffrage-editor">${workspaceNavigation()}${workspaceActions()}<div class="chiffrage-workspace"><div id="chiffrageContext">${workspaceHero()}</div><div id="chiffrageMobileSummary">${mobileSummary()}</div>${workspaceTabs(tabs,state.editorTab,t('chiffrage.workspace.dd4e272518'))}<div data-completion-container>${completionPanel()}</div>${legacy?`<details class="chiffrage-standard-notice" data-disclosure-key="legacy"><summary>${localLabel('Ancien standard · tarifs d’origine conservés','Älterer Standard · ursprüngliche Tarife erhalten')}</summary><p>${localLabel('Cette variante conserve ses tarifs. Tu peux créer une variante avec les références actuelles et tes valeurs saisies.','Diese Variante behält ihre Tarife. Eine neue Variante kann die aktuellen Referenzen mit deinen Eingaben verwenden.')}</p><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></details>`:''}<div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}">
+  boardController?.destroy();
+  const financialPanel=summary();
+  const workflow=state.quote?`<div class="chiffrage-editor-workflow"><label>${localLabel('Avancement','Fortschritt')}<select data-editor-stage>${state.board.column_titles.map((title,index)=>`<option value="${index}" ${index===state.quoteStage?'selected':''}>${escape(title)}</option>`).join('')}</select></label>${state.quoteStage===2?`<p role="status">${localLabel('Lecture seule · replace le dossier dans une autre colonne pour le modifier.','Schreibgeschützt · zum Bearbeiten in eine andere Spalte verschieben.')}</p>`:''}</div>`:'';
+  root.innerHTML = `<div class="chiffrage-editor">${workspaceNavigation()}${workspaceActions()}<div class="chiffrage-workspace"><div id="chiffrageContext">${workspaceHero()}</div><div id="chiffrageMobileSummary">${mobileSummary()}</div>${workflow}${workspaceTabs(tabs,state.editorTab,t('chiffrage.workspace.dd4e272518'))}<div data-completion-container>${completionPanel()}</div>${legacy?`<details class="chiffrage-standard-notice" data-disclosure-key="legacy"><summary>${localLabel('Ancien standard · tarifs d’origine conservés','Älterer Standard · ursprüngliche Tarife erhalten')}</summary><p>${localLabel('Cette variante conserve ses tarifs. Tu peux créer une variante avec les références actuelles et tes valeurs saisies.','Diese Variante behält ihre Tarife. Eine neue Variante kann die aktuellen Referenzen mit deinen Eingaben verwenden.')}</p><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></details>`:''}<div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}">
     <div class="chiffrage-fields"><div class="chiffrage-tab-panel" id="chiffrage-panel-composer" tabindex="-1" data-tab-panel="composer" ${state.editorTab==='composer'?'':'hidden'}>${composerSection()}</div>
     <div class="chiffrage-tab-panel" id="chiffrage-panel-modules" tabindex="-1" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}</div>
     <div class="chiffrage-tab-panel" id="chiffrage-panel-offer" tabindex="-1" data-tab-panel="offer" ${state.editorTab==='offer'?'':'hidden'}><div class="chiffrage-offer-jump"><a href="#chiffrageOffer">${localLabel('Aperçu de l’offre','Angebotsvorschau')}</a><a href="#chiffrageOptionEditor">${localLabel('Préparer les options','Optionen vorbereiten')} · ${state.draft.client_options?.length??0}</a></div><div id="chiffrageOptionEditor">${offerOptionsEditor(state.draft,state.catalog,localLabel,money)}</div><div id="chiffrageOffer">${offerSection()}</div><details class="chiffrage-section"><summary>${localLabel('Détail du calcul','Berechnungsdetails')}</summary><div id="chiffrageDetail">${lineDetail()}</div></details></div>
     <div class="chiffrage-tab-panel" id="chiffrage-panel-compare" tabindex="-1" data-tab-panel="compare" ${state.editorTab==='compare'?'':'hidden'}>${comparisonSection()}</div>
     ${state.internal ? `<div class="chiffrage-tab-panel" id="chiffrage-panel-rates" tabindex="-1" data-tab-panel="rates" ${state.editorTab==='rates'?'':'hidden'}><div class="chiffrage-workspace-tools">${catalogButton()}</div>${internalMargins()}${rateInventory()}${state.quote ? `<div class="chiffrage-section"><button class="chiffrage-button" data-action="exportInternal">${t('chiffrage.exportInternal')}</button></div>` : ''}</div>`:''}
     </div><div id="chiffrageSummary">${financialPanel}</div></div></div></div>`;
+  if(state.quoteStage===2){root.querySelectorAll('.chiffrage-fields input,.chiffrage-fields select,.chiffrage-fields textarea,.chiffrage-fields button:not([data-scope-toggle])').forEach(node=>node.disabled=true);root.querySelectorAll('.chiffrage-rename input').forEach(node=>node.disabled=true);}
   for (const node of root.querySelectorAll('details[data-disclosure-key]')) if(disclosureState.has(node.dataset.disclosureKey))node.open=disclosureState.get(node.dataset.disclosureKey);
   for(const node of root.querySelectorAll('[data-module-search]'))if(searches.has(node.dataset.moduleSearch)){node.value=searches.get(node.dataset.moduleSearch);node.dispatchEvent(new Event('input',{bubbles:true}));}
   restoreWorkspaceScroll(window,scroll,{opening:resetScroll});
@@ -1048,7 +1087,6 @@ function refreshFinancials() {
 
 function setValue(path, raw, isCheckbox = false) {
   if (path === 'title') { state.title = raw; state.dirty=true; const title=root.querySelector('.chiffrage-rename>summary>span');if(title)title.textContent=raw; return; }
-  if (path === 'showArchived') { state.showArchived = isCheckbox && raw; renderList(); return; }
   state.dirty = true;
   const parts = path.split('.');
   if (parts[0] === 'service' || parts[0] === 'moduleService') {
@@ -1185,8 +1223,8 @@ async function load() {
     try {
     await api('status');
     state.authenticated = true;
-    const [catalog, quotes] = await Promise.all([api('catalog'), api('list', undefined,
-      { archived: 'all' })]);
+    const [catalog,board]=await Promise.all([api('catalog'),api('board')]);
+    const quotes=board.quotes;state.board=board;
     state.versions = catalog.active;
     state.activeVersions = catalog.active;
     state.activePrimeOptions = catalog.catalog?.parameters?.prime_options ?? [];
@@ -1208,7 +1246,7 @@ async function load() {
 async function open(id) {
   const row = await api('quote', undefined, { id });
   state.quote = row.id; state.revision = row.current_revision;
-  state.title = row.title; state.archived = row.archived;
+  state.title=row.title;state.quoteStage=quoteStage(row);state.saveNumber=saveNumber(row);
   state.draft = row.snapshot.input; state.versions = row.snapshot.catalog_versions;
   const stored = await api('catalog', undefined, { versions: JSON.stringify(state.versions) });
   state.catalog = stored.catalog;
@@ -1293,6 +1331,7 @@ root.addEventListener('input', event => {
     if(query)scope?.querySelectorAll('.chiffrage-subdetail').forEach(detail=>{detail.open=[...detail.querySelectorAll('.chiffrage-module-entry')].some(node=>!node.hidden);});
     return;
   }
+  if(state.quoteStage===2)return;
   const path = event.target.dataset.field;
   if (!path || !state.draft) return;
   if (event.target.hasAttribute('data-proposed-days')) event.target.classList.toggle('is-adjusted', event.target.value !== '' && Number(event.target.value) !== Number(event.target.dataset.proposedDays));
@@ -1317,6 +1356,8 @@ root.addEventListener('input', event => {
 });
 
 root.addEventListener('change', event => {
+  if(event.target.matches('[data-editor-stage]')){if(state.dirty&&state.quoteStage!==2){event.target.value=state.quoteStage;notice(()=>localLabel('Enregistre tes modifications avant de changer de colonne.','Änderungen vor dem Spaltenwechsel speichern.'),true);return;}void moveBoardQuote(state.quote,Number(event.target.value),null);return;}
+  if(state.quoteStage===2)return;
   if (event.target.dataset.compare) {
     const id=event.target.dataset.compare;
     state.comparison=event.target.checked ? [...state.comparison,id].slice(0,3) :
@@ -1346,9 +1387,6 @@ root.addEventListener('change', event => {
     if (enabled) for (const code of energyCodes) addModuleService(`innosolv/Versorger/${code}`);
     retainRemoved(state.draft,previousModules,previousServices); state.dirty=true;
     renderEditor(); return;
-  }
-  if (event.target.dataset.field === 'showArchived') {
-    state.showArchived = event.target.checked; renderList(); return;
   }
   if (event.target.dataset.product) { changeProduct(event.target.dataset.product, event.target.checked); return; }
   if (event.target.dataset.erp) { chooseErp(event.target.dataset.erp); return; }
@@ -1430,7 +1468,7 @@ function renderSharedLinks(rows,id,currentRevision=null,ready=true) {
   const needsPublication=!links.length || currentRevision && !links.some(row=>row.revision===Number(currentRevision));
   return `<section class="chiffrage-share-panel"><div class="chiffrage-share-panel-heading"><h3>${localLabel('Partage client','Kundenfreigabe')}</h3></div>
   ${links.length?render(links[0]):`<p>${localLabel('Aucun lien publié.','Noch kein Link veröffentlicht.')}</p>`}
-  ${!needsPublication&&ready&&state.mode==='editor'&&id===state.quote?`<button type="button" class="chiffrage-button" data-action="publishNewRevision" data-id="${escape(id)}">${localLabel('Créer une nouvelle publication','Neue Veröffentlichung erstellen')}</button>`:''}
+  ${!needsPublication&&ready&&state.mode==='editor'&&id===state.quote&&state.quoteStage!==2?`<button type="button" class="chiffrage-button" data-action="publishNewRevision" data-id="${escape(id)}">${localLabel('Créer une nouvelle publication','Neue Veröffentlichung erstellen')}</button>`:''}
   ${needsPublication?`<button type="button" class="chiffrage-button" data-action="shareOffer" data-id="${escape(id)}" ${ready?'':'disabled'}>${ready?localLabel('Publier la version enregistrée','Gespeicherte Version veröffentlichen'):localLabel('Finaliser avant publication','Vor Veröffentlichung fertigstellen')}</button>`:''}
   ${links.length>1?`<details class="chiffrage-share-history"><summary>${localLabel('Historique','Verlauf')} (${links.length-1})</summary>${links.slice(1).map(render).join('')}</details>`:''}
   <div class="chiffrage-share-notes"><p>${localLabel('Sans expiration · ouvertures non uniques, aperçus compris.','Ohne Ablaufdatum · Aufrufe einschließlich eigener Vorschauen, nicht eindeutig.')}</p></div></section>`;
@@ -1442,7 +1480,7 @@ async function loadSharedLinks(id,container) {
     const rows=await api('sharedOffers',undefined,{id});
     if(!container.isConnected)return;
     const historyOpen=container.querySelector('.chiffrage-share-history')?.open;
-    container.innerHTML=renderSharedLinks(rows,id,card?card.dataset.currentRevision:state.revision,card?card.dataset.shareReady==='true':!state.dirty&&!state.archived&&!currentCompletion().length&&!offerOptionReview(state.draft,state.catalog).issues.length);
+    container.innerHTML=renderSharedLinks(rows,id,card?card.dataset.currentRevision:state.revision,card?card.dataset.shareReady==='true':!state.dirty&&!currentCompletion().length&&!offerOptionReview(state.draft,state.catalog).issues.length);
     if(historyOpen && container.querySelector('.chiffrage-share-history'))container.querySelector('.chiffrage-share-history').open=true;
   }catch(error){if(container.isConnected)container.innerHTML=`<p role="alert">${escape(errorMessage(error))}</p><button class="chiffrage-button" data-action="refreshShares" data-id="${escape(id)}">${localLabel('Réessayer','Erneut versuchen')}</button>`;}
   finally{container.removeAttribute('aria-busy');}
@@ -1514,20 +1552,15 @@ root.addEventListener('click', async event => {
   }
   const button = event.target.closest('[data-action]');
   if (!button) return;
-  const action = button.dataset.action;
+  const action=button.dataset.action;
+  if(state.quoteStage===2&&['save','restore','upgrade','showcaseAdd','showcaseRemove','showcaseUp','addPrimeOption','addReferenceLine','addPrime','addPartner','removeExtra','addHosting','removeHosting'].includes(action)){notice(()=>localLabel('Replace ce dossier dans une autre colonne pour le modifier.','Zum Bearbeiten in eine andere Spalte verschieben.'),true);return;}
 
-  if(action==='unarchiveQuote'){
-    const id=button.dataset.id??state.quote;
-    button.disabled=true;
-    try{await api('unarchive',{id});if(id===state.quote)state.archived=false;state.quotes=await api('list',undefined,{archived:'all'});if(state.mode==='editor')renderEditor();else renderList();notice(()=>localLabel('Chiffrage désarchivé.','Kalkulation wiederhergestellt.'));}
-    catch(error){notice(()=>errorMessage(error),true);}finally{if(button.isConnected)button.disabled=false;}return;
-  }
   if(action==='publishNewRevision'){
-    if(state.mode!=='editor'||button.dataset.id!==state.quote||state.dirty||state.archived||currentCompletion().length){notice(()=>localLabel('Enregistre et complète le chiffrage avant publication.','Kalkulation vor Veröffentlichung speichern und ergänzen.'),true);return;}
+    if(state.mode!=='editor'||button.dataset.id!==state.quote||state.dirty||state.quoteStage===2||currentCompletion().length){notice(()=>localLabel('Enregistre et complète le chiffrage avant publication.','Kalkulation vor Veröffentlichung speichern und ergänzen.'),true);return;}
     button.disabled=true;
     let savedRevision=false;
     try{
-      const saved=await api('save',{id:state.quote,expected_revision:state.revision,title:state.title,archived:false,catalog_versions:state.versions,input:state.draft,allow_incomplete:false});
+      const saved=await api('save',{id:state.quote,expected_revision:state.revision,title:state.title,catalog_versions:state.versions,input:state.draft,allow_incomplete:false});
       state.revision=saved.revision;savedRevision=true;
       await api('publishOffer',{id:state.quote});
       renderEditor();await loadSharedLinks(state.quote,sharingPanel());
@@ -1749,11 +1782,11 @@ root.addEventListener('click', async event => {
     if (action === 'open') { await open(button.dataset.id); return; }
     if (action === 'delete') {
       await api('delete', { id: state.quote, expected_revision: state.revision });
-      state.quotes = await api('list', undefined, { archived: 'all' });
+      state.quotes = await api('list');
       renderList(); notice(() => t('chiffrage.workspace.b17073f7da'));
       return;
     }
-    if (action === 'save' || action === 'duplicate' || action === 'archive') {
+    if (action === 'save' || action === 'duplicate') {
       if(['save','duplicate'].includes(action) && currentCompletion().some(item=>item.kind==='module'||item.kind==='portal')){focusCompletion();notice(()=>localLabel('Précise les jours des modules retenus (0 est accepté) et les utilisateurs du portail avant d’enregistrer.','Tage der gewählten Module (0 ist erlaubt) und Portalbenutzer vor dem Speichern ergänzen.'),true);return;}
       // Other incomplete prices can remain a draft; unknown selected-module days cannot.
       let incomplete = false;
@@ -1763,18 +1796,16 @@ root.addEventListener('click', async event => {
       const saved = await api('save', { id: duplicate ? undefined : state.quote ?? undefined,
         expected_revision: duplicate ? null : state.revision,
         title: state.title + (duplicate ? ` — ${t('chiffrage.ui.copySuffix')}` : ''),
-        archived: action === 'archive', catalog_versions: state.versions,
+        manual_save:action==='save',catalog_versions: state.versions,
         input: state.draft, allow_incomplete: true });
       state.quote = saved.id; state.revision = saved.revision; state.dirty=false;
-      state.archived = action === 'archive';
+      state.quoteStage=saved.workflow_stage??0;state.saveNumber=saved.save_number??0;
       history.replaceState(history.state,'',quoteAddress(state.quote));
       let listError = false;
-      try { state.quotes = await api('list', undefined, { archived: 'all' }); }
+      try { state.quotes = await api('list'); }
       catch { listError = true; }
-      if (action === 'archive') renderList();
-      else { if (duplicate) state.title += ` — ${t('chiffrage.ui.copySuffix')}`;
-        renderEditor(); notice(() => state.dirty ? t('chiffrage.completion.unsaved') : t(listError ? 'chiffrage.savedListUnavailable' :
-          incomplete ? 'chiffrage.savedIncomplete' : 'chiffrage.saved')); }
+      { if (duplicate) state.title += ` — ${t('chiffrage.ui.copySuffix')}`;
+        renderEditor();notice(()=>state.dirty?t('chiffrage.completion.unsaved'):listError?t('chiffrage.savedListUnavailable'):incomplete?localLabel('Enregistré. Des points restent à compléter ; les montants sont provisoires.','Gespeichert. Einige Angaben fehlen noch; die Beträge sind vorläufig.'):t('chiffrage.saved')); }
       return;
     }
     if (action === 'revisions') {
@@ -1790,10 +1821,10 @@ root.addEventListener('click', async event => {
         revision: button.dataset.revision });
       const saved = await api('save', { id: state.quote,
         expected_revision: state.revision, title: state.title,
-        archived: false, catalog_versions: old.snapshot.catalog_versions,
+        catalog_versions: old.snapshot.catalog_versions,
         input: old.snapshot.input, allow_incomplete: true });
       state.draft = old.snapshot.input; state.versions = old.snapshot.catalog_versions;
-      state.revision = saved.revision; state.archived = false;
+      state.revision=saved.revision;state.quoteStage=saved.workflow_stage??0;state.saveNumber=saved.save_number??state.saveNumber;
       const catalog = await api('catalog', undefined,
         { versions: JSON.stringify(state.versions) });
       state.catalog = catalog.catalog; renderEditor(); notice(() => t('chiffrage.saved'));
@@ -1818,6 +1849,7 @@ root.addEventListener('click', async event => {
       return;
     }
   } catch (error) {
+    if(error.code==='quoteFinalized'){state.quoteStage=2;renderEditor();}
     notice(() => errorMessage(error), true);
     if (error.status === 401 && state.draft && !root.querySelector('#chiffrageReconnect')) {
       root.querySelector('.chiffrage-status').insertAdjacentHTML('afterend',
@@ -1863,3 +1895,7 @@ subscribePreferences(name => {
   else if (state.loaded) renderLogin();
 });
 if (new URLSearchParams(location.search).get('view') === 'chiffrage') load();
+
+root.addEventListener('toggle',event=>{if(event.target.matches?.('.chiffrage-rename')&&event.target.open){if(state.quoteStage===2){event.target.open=false;return;}const input=event.target.querySelector('input');input.dataset.before=input.value;input.focus();input.select();}},true);
+root.addEventListener('keydown',event=>{const detail=event.target.closest?.('.chiffrage-rename');if(!detail||!event.target.matches('input')||!['Enter','Escape'].includes(event.key))return;event.preventDefault();if(event.key==='Escape'){event.target.value=event.target.dataset.before??event.target.defaultValue;setValue('title',event.target.value);}detail.open=false;detail.querySelector('summary').focus();});
+window.addEventListener('focus',()=>{if(state.authenticated&&state.mode==='list')void refreshBoard().catch(()=>{});});

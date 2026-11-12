@@ -17,7 +17,7 @@ test('incomplete drafts save their inputs without invented totals and cannot be 
       path.endsWith('/chiffrage_catalog_versions')?[{id,vendor:'synthetic'}]:
       path.endsWith('/chiffrages')?[{id,current_revision:1}]:
       path.endsWith('/chiffrage_revisions')?[{result:stored.p_result}]:null;
-    if(path.endsWith('/rpc/chiffrage_write')){
+    if(path.endsWith('/rpc/chiffrage_write_v2')){
       stored=JSON.parse(options.body);
       return new Response(JSON.stringify({id,revision:1}));
     }

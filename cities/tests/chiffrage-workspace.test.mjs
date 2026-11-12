@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from '../app/chiffrage/workspace-ui.js';
 
-test('seller identity escapes editable names, keeps revision and offers explicit rename without a second logo',()=>{
-  const html=workspaceIdentity({name:'Ballaigues <test>',canton:'VD',bfs:5744,population:"1'196",inhabitants:'habitants',title:'Variante "test"',revision:13,identity:'<span>coat</span>',map:'',reference:'Locale',tariffs:'2026',label:fr=>fr});
+test('seller identity escapes editable names, shows the internal save number and inline rename without a second logo',()=>{
+  const html=workspaceIdentity({name:'Ballaigues <test>',canton:'VD',bfs:5744,population:"1'196",inhabitants:'habitants',title:'Variante "test"',revision:13,saveNumber:37,identity:'<span>coat</span>',map:'',reference:'Locale',tariffs:'2026',label:fr=>fr});
   assert.match(html,/Ballaigues &lt;test&gt;/);
-  assert.match(html,/R13/);
-  assert.match(html,/data-field="title" value="Variante &quot;test&quot;"/);
+  assert.match(html,/#37/);assert.doesNotMatch(html,/R13/);
+  assert.match(html,/data-field="title" maxlength="180" value="Variante &quot;test&quot;"/);
   assert.match(html,/data-disclosure-key="rename"/);
   assert.doesNotMatch(html,/prime-logo|Votre projet|style=|<script/);
 });

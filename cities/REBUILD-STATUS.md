@@ -1,5 +1,22 @@
 # État de reprise — Prime Communes 2.0
 
+> **Kanban partagé · 12.11.2026 — publication autorisée.** Trois colonnes
+> globales renommables (Brouillon / Client / Finale), ordre partagé, glisser à
+> poignée avec ombre et position immédiate ; sélection de destination pour
+> tactile et clavier. Polling visible 20 s sans interruption d'un déplacement
+> ou d'un renommage ; conflits concurrents rechargés sans écrasement.
+> Archivage retiré du parcours ; anciennes lignes archivées visibles en
+> Brouillon, données et révisions conservées. Troisième colonne en lecture
+> seule, garde SQL y compris anciens clients, déverrouillage par déplacement.
+> Rubans internes bleu/vert seulement en colonnes 2/3 ; titre éditable au clic.
+> Compteur # distinct, initialisé à 0 et incrémenté uniquement par un nouvel
+> enregistrement manuel de l'éditeur. Publication/restauration/déplacement ne
+> l'incrémentent pas. Accès interne existant conservé, aucun compte ajouté.
+> Migration 20261112142426 appliquée, tests SQL transactionnels annulés après
+> vérification du verrou, des compteurs, de l'ordre et des conflits. 248 tests
+> et build réussis. Recette dédiée synthétique disponible dans tests/fixtures.
+
+
 > **Correctif ouverture · 12.11.2026.** Les lectures serveur réussissaient mais
 > le rendu de l'éditeur échouait : le retrait de Synthèse avait supprimé
 > `lineLabel`, toujours appelée par `lineDetail`, rendu même dans un onglet

@@ -75,6 +75,7 @@ async function db(path, { method = 'GET', payload, query = {}, single = false,
   }, body: payload == null ? undefined : JSON.stringify(payload) });
   if (!response.ok) {
     const detail = await response.text();
+    if(detail.includes('Quote finalized')){const error=new Error('Quote finalized');error.status=423;error.code='quoteFinalized';throw error;}
     if (response.status === 409 || detail.includes('Revision conflict')) {
       const error = new Error('Revision conflict'); error.status = 409; throw error;
     }
@@ -158,11 +159,11 @@ async function writeQuote(payload) {
   }
   if(input.client_options?.length)result.offer_options_ready=offerOptionReview(input,catalog).issues.length===0;
   const id = payload.id ?? randomUUID();
-  const saved = await db('rpc/chiffrage_write', { method: 'POST', payload: {
+  const saved = await db('rpc/chiffrage_write_v2', { method: 'POST', payload: {
     p_id: id, p_expected_revision: payload.expected_revision ?? null,
     p_bfs_id: input.bfs_id, p_commune_name: input.name, p_canton: input.canton,
     p_population: input.dimensions.population, p_title: payload.title,
-    p_archived: Boolean(payload.archived), p_catalog_versions: payload.catalog_versions,
+    p_manual_save: payload.manual_save===true, p_catalog_versions: payload.catalog_versions,
     p_input: input, p_result: result
   } });
   return { ...saved, result };
@@ -200,7 +201,7 @@ async function clientOfferPdf(request) {
 async function publishClientOffer(payload) {
   if (!uuidPattern.test(payload?.id ?? '')) return fail('Invalid quote id', 400);
   const quote = await savedQuote(payload.id);
-  if (!quote?.snapshot || quote.archived) return fail('Quote not found', 404);
+  if (!quote?.snapshot) return fail('Quote not found', 404);
   // Resolve labels against the versions pinned to this saved revision.
   // The private catalog never leaves this function: only the allowlisted
   // display names are included in the customer snapshot.
@@ -294,19 +295,24 @@ export default async function handler(request) {
     if (action === 'moduleCatalog' && request.method === 'GET') return json(await managedCatalog());
     if (action === 'saveModuleCatalog' && request.method === 'POST') return await saveManagedCatalog(await body(request));
     if (action === 'list' && request.method === 'GET')
-      return json(await db('chiffrages', { query: { select: '*',
-        ...(url.searchParams.get('archived') === 'all' ? {} : { archived: 'eq.false' }),
-        order: 'updated_at.desc', limit: '100' } }));
-    if (action === 'quote' && request.method === 'GET') {
-      const quote = await savedQuote(url.searchParams.get('id') ?? '',
-        url.searchParams.get('revision'));
-      return quote ? json(quote) : fail('Quote not found', 404);
+      return json(await db('chiffrages',{query:{select:'*',order:'workflow_stage,workflow_order,created_at',limit:'500'}}));
+    if(action==='board' && request.method==='GET'){
+      const [[board],quotes]=await Promise.all([db('chiffrage_board',{query:{select:'version,column_titles'}}),db('chiffrages',{query:{select:'*',order:'workflow_stage,workflow_order,created_at',limit:'500'}})]);
+      return json({...board,quotes});
     }
-    if(action==='unarchive' && request.method==='POST'){
-      const payload=await body(request);
-      if(!uuidPattern.test(payload.id??''))return fail('Invalid quote id',400);
-      const rows=await db('chiffrages',{method:'PATCH',returning:true,query:{id:`eq.${payload.id}`,select:'id,archived,current_revision'},payload:{archived:false,updated_at:new Date().toISOString()}});
-      return rows.length?json(rows[0]):fail('Quote not found',404);
+    if(action==='moveQuote' && request.method==='POST'){
+      const p=await body(request);
+      if(!uuidPattern.test(p.id??'')||!Number.isInteger(p.stage)||p.stage<0||p.stage>2||!Number.isSafeInteger(p.expected_version)||p.before_id!=null&&!uuidPattern.test(p.before_id))return fail('Invalid board move',400);
+      return json(await db('rpc/chiffrage_board_update',{method:'POST',payload:{p_expected_version:p.expected_version,p_quote_id:p.id,p_stage:p.stage,p_before_id:p.before_id??null}}));
+    }
+    if(action==='renameColumn' && request.method==='POST'){
+      const p=await body(request);
+      if(!Number.isInteger(p.column)||p.column<0||p.column>2||typeof p.title!=='string'||!p.title.trim()||p.title.trim().length>60||!Number.isSafeInteger(p.expected_version))return fail('Invalid column title',400);
+      return json(await db('rpc/chiffrage_board_update',{method:'POST',payload:{p_expected_version:p.expected_version,p_column:p.column,p_title:p.title.trim()}}));
+    }
+    if (action === 'quote' && request.method === 'GET') {
+      const quote = await savedQuote(url.searchParams.get('id') ?? '',url.searchParams.get('revision'));
+      return quote ? json(quote) : fail('Quote not found',404);
     }
     if (action === 'revisions' && request.method === 'GET') {
       const id = url.searchParams.get('id') ?? '';
@@ -348,6 +354,7 @@ export default async function handler(request) {
     }
     return fail('Unknown operation', 404);
   } catch (error) {
+    if(error.code==='quoteFinalized')return json({error:'Quote finalized',code:'quoteFinalized'},423);
     const detail = calculationError(error);
     if (detail) return json({ error: 'Calculation requires attention', ...detail }, 422);
     return fail(error.status === 409 ? 'Revision conflict' : 'Operation failed',

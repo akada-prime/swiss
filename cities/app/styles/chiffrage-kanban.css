@@ -1,0 +1,50 @@
+/* Shared internal board. Native scrolling; pointer transforms exist only while dragging. */
+.chiffrage-kanban{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;gap:16px;margin-top:24px;min-width:0}
+.chiffrage-kanban-column{min-width:0;border:1px solid var(--skin-border-soft);border-radius:14px;background:var(--skin-tint);padding:12px}
+.chiffrage-kanban-column>header{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:0 0 12px;min-height:56px}
+.chiffrage-kanban-column form{flex:1;min-width:0}
+.chiffrage-column-title{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;border:0;padding:0;background:transparent;color:var(--skin-text);text-align:left;cursor:pointer}
+.chiffrage-column-title h3{margin:0;font-size:18px;font-weight:600;overflow-wrap:anywhere}
+.chiffrage-column-title svg{flex:none;opacity:.6}
+.chiffrage-column-title:hover svg{opacity:1}
+.chiffrage-kanban-column [data-column-title]{width:100%;min-width:0;min-height:44px;font-size:16px}
+.chiffrage-kanban-column [hidden]{display:none}
+.chiffrage-column-count{font-size:14px;color:var(--skin-muted);font-variant-numeric:tabular-nums}
+.chiffrage-kanban-column>header>small{width:100%;color:var(--skin-muted);font-size:14px}
+.chiffrage-kanban-cards{display:flex;flex-direction:column;gap:12px;min-height:160px}
+.chiffrage-column-empty{margin:auto;padding:24px 12px;text-align:center;font-size:14px;color:var(--skin-muted)}
+.chiffrage-kanban .chiffrage-list-item{position:relative;isolation:isolate}
+.chiffrage-card-open{display:block;width:100%;min-width:0;text-align:left;color:var(--skin-text);background:transparent;border:0;padding:18px 16px 16px;cursor:pointer}
+.chiffrage-card-open:hover{background:var(--skin-hover)}
+.chiffrage-card-open .chiffrage-saved-heading{padding-right:12px;align-items:flex-start}
+.chiffrage-card-open .chiffrage-saved-heading strong{font-size:17px;line-height:1.4;font-weight:600}
+.chiffrage-card-open>small{display:block;margin-top:12px;color:var(--skin-muted);font-size:14px;line-height:1.5}
+.chiffrage-card-open .chiffrage-saved-parts{margin-top:0;gap:12px}
+.chiffrage-card-open .chiffrage-saved-parts b{font-size:clamp(16px,1.5vw,23px);line-height:1.4;white-space:nowrap}
+.chiffrage-card-open .chiffrage-saved-tco{flex-direction:row;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:16px;font-size:14px}
+.chiffrage-card-open .chiffrage-saved-tco b{font-size:16px;letter-spacing:0}
+.chiffrage-save-number{font-size:14px;color:var(--skin-muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.chiffrage-card-workflow{display:flex;gap:8px;padding:0 16px 12px;align-items:center}
+.chiffrage-card-workflow>label{flex:1;min-width:0}
+.chiffrage-card-workflow select{width:100%;min-width:0;min-height:44px;font-size:14px}
+[data-drag-handle]{touch-action:none;user-select:none;min-width:44px;min-height:44px;font-size:26px;line-height:1;border:1px solid var(--skin-border-soft);border-radius:8px;background:transparent;color:var(--skin-muted);cursor:grab}
+[data-drag-handle]:active{cursor:grabbing}
+.chiffrage-card-ribbon{position:absolute;z-index:1;top:20px;right:-38px;transform:rotate(40deg);width:150px;text-align:center;padding:4px 14px;background:#2169b0;color:#fff;font-size:14px;line-height:1.4;font-weight:600;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chiffrage-card-ribbon[data-ribbon-stage="2"]{background:#24744d}
+.chiffrage-list-item:has(.chiffrage-card-ribbon) .chiffrage-saved-heading{padding-right:50px}
+.chiffrage-list-item.is-dragging{display:none}
+.chiffrage-card-placeholder{flex:none;border:2px dashed var(--skin-accent);border-radius:12px;background:var(--skin-accent-soft);min-height:100px}
+.chiffrage-drag-ghost{position:fixed;z-index:10000;top:0;left:0;pointer-events:none;box-sizing:border-box;opacity:.94;box-shadow:0 16px 40px #0006;border-radius:12px;background:var(--quote-surface);will-change:transform;contain:layout paint}
+.chiffrage-drag-ghost .chiffrage-card-workflow,.chiffrage-drag-ghost details{pointer-events:none}
+.chiffrage-editor-workflow{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:12px 20px;border-bottom:1px solid var(--skin-border-soft)}
+.chiffrage-editor-workflow>label{display:flex;flex-direction:row;align-items:center;gap:12px;color:var(--skin-secondary);font-size:14px}
+.chiffrage-editor-workflow select{min-height:44px;width:auto;max-width:220px;font-size:16px}
+.chiffrage-editor-workflow p{margin:0;color:var(--skin-muted);font-size:14px}
+.chiffrage-editor-revision{font-size:14px;color:#c2ccd7;border:0;background:none}
+@media(max-width:1000px){
+ .chiffrage-kanban{display:flex;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-inline:contain;gap:12px;padding-bottom:12px}
+ .chiffrage-kanban-column{flex:0 0 min(86vw,360px);scroll-snap-align:start;box-sizing:border-box}
+ .chiffrage-kanban.is-dragging{scroll-snap-type:none}
+ .chiffrage-card-open .chiffrage-saved-parts b{font-size:20px}
+}
+
