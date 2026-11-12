@@ -1,5 +1,11 @@
 # État de reprise — Prime Communes 2.0
 
+> **Geste commercial · complément du 12.11.2026.** Remonté immédiatement après
+> les données de base dans Projet ; brut neutre, remise sur fond bordeaux et
+> net bleu. Mise à jour du résumé latéral conservée ; aucun calcul modifié.
+> Accueil Kanban : retrait des marges et alignements propres au chiffrage ;
+> même cadre et même introduction que les autres vues. Éditeur compact conservé.
+
 > **Cohérence du chiffrage · 12.11.2026 — publication autorisée.** Logiciels
 > regroupés en innosolv / Abacus / Portail Abacus / Prime ; facturation éditeur
 > indiquée dans sa ligne, budget annuel Logiciels / LCM / Hébergement. Deux
