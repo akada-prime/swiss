@@ -1,5 +1,18 @@
 # État de reprise — Prime Communes 2.0
 
+> **Remise et navigation · 12.11.2026 — publication autorisée.** Trois onglets
+> Projet / Modules / Offre ; Comparer et Tarifs et marges dans Dossier. Le
+> Kanban est le seul endroit pour changer l’avancement ; le verrou final reste.
+> Remise d’investissement en CHF HT, zéro par défaut : jours réels et annuel
+> inchangés, brut / remise / net explicites, total sur cinq ans net. Validation
+> au centime et plafond au brut côté moteur et serveur, y compris brouillons.
+> Projection client, comparaison, PDF et Excel reprennent la remise distincte.
+> Aucune remise appliquée aux dossiers existants ; publications figées conservées.
+> Icône cadenas SVG en remplacement du carré de lecture seule. 252 tests et
+> build réussis, PDF extrait et XLSX relu indépendamment sur cas synthétique.
+> Recette visuelle multi-format et Safari physique encore ouverte.
+
+
 > **Kanban partagé · 12.11.2026 — publication autorisée.** Trois colonnes
 > globales renommables (Brouillon / Client / Finale), ordre partagé, glisser à
 > poignée avec ombre et position immédiate ; sélection de destination pour

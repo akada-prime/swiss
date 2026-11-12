@@ -1,6 +1,7 @@
 // Only stable, non-sensitive error categories cross the API boundary.
 export function calculationError(error) {
   const message = error?.message ?? '';
+  if(message==='Invalid investment discount')return {code:'investmentDiscountInvalid'};
   if (message === 'Portal users required') return {code:'portalUsersRequired'};
   if (message === 'PCE standalone price required') return { code: 'pceStandalonePrice' };
   if (message === 'Hosting reference scope changed') return { code: 'hostingScopeChanged' };

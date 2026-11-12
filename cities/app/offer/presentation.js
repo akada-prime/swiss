@@ -90,12 +90,19 @@ export function offerServices(az, lcm, {asset, label, prices, money}) {
   return `<div class="prime-offer-service-grid">${az ? `<section class="prime-offer-service">${offerHosting(true,{asset,label})}</section>` : ''}${lcm ? `<section class="prime-offer-service"><h4>${label('Accompagnement LCM','LCM-Begleitung')}</h4>${offerLcm(lcm,label,{prices,money})}</section>` : ''}</div>`;
 }
 
+export function offerInvestmentAdjustment(rows,{label,money}) {
+  const discount=-(rows??[]).filter(row=>row.key==='discount').reduce((sum,row)=>sum+(row.investment??0),0);
+  if(discount<=0)return '';
+  const gross=rows.filter(row=>row.key!=='discount').reduce((sum,row)=>sum+(row.investment??0),0);
+  return `<section class="prime-offer-investment-adjustment"><h3>${label('Votre investissement','Ihre Investition')}</h3><dl><div><dt>${label('Investissement avant remise','Investition vor Rabatt')}</dt><dd>${e(money(gross))}</dd></div><div><dt>${label('Remise commerciale sur l’investissement','Investitionsrabatt')}</dt><dd>− ${e(money(discount))}</dd></div><div><dt>${label('Investissement net HT','Nettoinvestition exkl. MWST')}</dt><dd>${e(money(Math.round((gross-discount)*100)/100))}</dd></div></dl></section>`;
+}
+
 export function offerBreakdown(rows, { label, money, legacy = false }) {
   const section = (heading, keys) => {
     const entries = rows.filter(row=>keys.includes(row.key));
     return entries.length ? `<section class="prime-offer-price-section"><h3>${heading}</h3><div class="prime-offer-price-list">${entries.map(row=>`<div class="prime-offer-price-row"><h4>${e(row.label)}</h4><div class="prime-offer-price-values"><div><small>${label('Investissement','Investition')}</small><strong>${e(money(row.investment))}</strong></div><div><small>${label('Annuel dès N+1','Jährlich ab N+1')}</small><strong>${e(money(row.annual))}</strong></div></div></div>`).join('')}</div></section>` : '';
   };
-  if(legacy)return section(label('Répartition du prix','Preisaufteilung'),['solutions','partners','hosting']);
+  if(legacy)return section(label('Répartition du prix','Preisaufteilung'),['solutions','partners','hosting'])+offerInvestmentAdjustment(rows,{label,money});
   const services = rows.filter(row=>['implementation','migration','management','training','otherServices'].includes(row.key) &&
     (Math.abs(row.investment ?? 0)>.005 || Math.abs(row.annual ?? 0)>.005));
   const travel = row=>/^(?:Déplacements|Reisen|Reisekosten)\b/i.test(row.label || '');
@@ -111,7 +118,7 @@ export function offerBreakdown(rows, { label, money, legacy = false }) {
   const accompaniment = ['migration','training','management','otherServices'].flatMap(key=>services.filter(row=>row.key===key&&!travel(row)));
   const implementation = services.length ? `<section class="prime-offer-price-section"><h3>${label('Mise en oeuvre de votre projet','Umsetzung Ihres Projekts')}</h3><div class="prime-offer-implementation${hasAnnual?' has-annual':''}"><div class="prime-offer-service-columns"><span></span><span>${label('Investissement · CHF HT','Investition · CHF exkl. MWST')}</span>${hasAnnual?`<span>${label('Annuel · CHF HT','Jährlich · CHF exkl. MWST')}</span>`:''}</div>${group(label('Paramétrage et intégration','Konfiguration und Integration'),services.filter(row=>row.key==='implementation'))}${group(label('Accompagnement au déploiement','Begleitung der Einführung'),accompaniment)}${group('',services.filter(travel),false)}<div class="prime-offer-service-total"><strong>${label('Total mise en oeuvre','Total Umsetzung')}</strong>${values(total(services))}</div></div></section>` : '';
   return implementation + section(label('Logiciels et maintenance','Software und Wartung'),['licenses']) +
-    section(label('Technique, service et support','Technik, Dienstleistungen und Support'),['database','primePartners','lcm','hosting']);
+    section(label('Technique, service et support','Technik, Dienstleistungen und Support'),['database','primePartners','lcm','hosting'])+offerInvestmentAdjustment(rows,{label,money});
 }
 
 // Optional ideas are independent from included-module disclosures.

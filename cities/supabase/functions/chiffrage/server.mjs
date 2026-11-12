@@ -146,7 +146,7 @@ async function writeQuote(payload) {
   try { result = calculateQuote(input, catalog); }
   catch (error) {
     const issue = calculationError(error);
-    if (!payload.allow_incomplete || !issue) throw error;
+    if (!payload.allow_incomplete || !issue || issue.code==='investmentDiscountInvalid')throw error;
     result = { status: 'incomplete', issues: [issue] };
   }
   if(result.summary?.missing_service_days?.length)throw new Error('Service days required');

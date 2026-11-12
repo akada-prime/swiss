@@ -36,10 +36,8 @@
 .chiffrage-card-placeholder{flex:none;border:2px dashed var(--skin-accent);border-radius:12px;background:var(--skin-accent-soft);min-height:100px}
 .chiffrage-drag-ghost{position:fixed;z-index:10000;top:0;left:0;pointer-events:none;box-sizing:border-box;opacity:.94;box-shadow:0 16px 40px #0006;border-radius:12px;background:var(--quote-surface);will-change:transform;contain:layout paint}
 .chiffrage-drag-ghost .chiffrage-card-workflow,.chiffrage-drag-ghost details{pointer-events:none}
-.chiffrage-editor-workflow{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:12px 20px;border-bottom:1px solid var(--skin-border-soft)}
-.chiffrage-editor-workflow>label{display:flex;flex-direction:row;align-items:center;gap:12px;color:var(--skin-secondary);font-size:14px}
-.chiffrage-editor-workflow select{min-height:44px;width:auto;max-width:220px;font-size:16px}
-.chiffrage-editor-workflow p{margin:0;color:var(--skin-muted);font-size:14px}
+.chiffrage-readonly-notice{margin:0;padding:10px 20px;border-bottom:1px solid var(--skin-border-soft);font-size:14px;color:var(--skin-muted)}
+.chiffrage-kanban-column>header>small{display:flex;align-items:center;gap:6px}
 .chiffrage-editor-revision{font-size:14px;color:#c2ccd7;border:0;background:none}
 @media(max-width:1000px){
  .chiffrage-kanban{display:flex;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-inline:contain;gap:12px;padding-bottom:12px}

@@ -175,7 +175,7 @@ test('internal quote and customer projection share the same price taxonomy',()=>
   assert.match(client,/offerScope/);
   assert.match(client,/offerBreakdown/);
   assert.match(client,/\[1,2\]\.includes\(offer.version\)/);
-  assert.equal(offerPriceGroups.length,10);
+  assert.equal(offerPriceGroups.length,11);
   assert.ok(publicPriceBreakdown([{family:'lcm',annual_pv:8000,investment_pv:0}])
     .some(row=>row.key==='lcm'&&row.annual===8000));
 });

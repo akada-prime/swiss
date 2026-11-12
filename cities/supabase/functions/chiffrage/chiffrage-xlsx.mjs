@@ -136,7 +136,11 @@ export function exportQuoteXlsx(quote, { internal = false } = {}) {
   ];
   // Client export is an allowlist. Hidden worksheets or full JSON snapshots
   // would still expose purchase prices when the client opens the workbook.
-  const clientResume = resume.slice(0, 19);
+  const clientResume=resume.slice(0,19);
+  if(summary.investment_discount>0){
+    const adjustment=[['Investissement avant remise',summary.investment_gross],['Remise commerciale sur l’investissement',-summary.investment_discount],['Investissement net HT',summary.investment]];
+    resume.push(...adjustment);clientResume.push(...adjustment);
+  }
   clientResume.push(['Composante', 'Investissement HT', 'Annuel HT']);
   for (const [family, [investment, annual]] of totals) clientResume.push([family, investment, annual]);
   const clientDetail = [['Composante', 'Module', 'Identifiant', 'Prestataire', 'Jours', 'Investissement HT', 'Annuel HT'],

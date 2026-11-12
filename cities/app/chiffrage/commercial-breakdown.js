@@ -10,10 +10,12 @@ export const offerPriceGroups = Object.freeze([
   ['database','Bases de données et technique','Datenbanken und Technik'],
   ['primePartners','Prime et partenaires','Prime und Partner'],
   ['lcm','LCM (mises à jour annualisées)','LCM (annualisierte Aktualisierungen)'],
-  ['hosting','Hébergement','Hosting']
+  ['hosting','Hébergement','Hosting'],
+  ['discount','Remise commerciale sur l’investissement','Investitionsrabatt']
 ]);
 
 export function commercialPriceGroup(line) {
+  if(line.family==='investment_discount')return 'discount';
   if (line.category === 'hosting') return 'hosting';
   if (line.family === 'lcm') return 'lcm';
   if (line.software || ['innosolv', 'pce', 'abacus'].includes(line.family)) return 'licenses';

@@ -86,7 +86,7 @@ test('the early bootstrap applies skin and html lang before styles and the main 
   assert.match(modules, /prime-communes-data-1\.5\.js\?v=20261107-jura-r1/);
   assert.match(modules, /chiffrage\/view\.js\?v=[\w-]+/);
   assert.match(await read('app/chiffrage/view.js'),
-    /\.\/calculate\.js\?v=20261112-workspace-review-r1/);
+    /\.\/calculate\.js\?v=20261112-investment-discount-r1/);
   assert.match(html, /id="settingsTrigger"[^>]*aria-haspopup="dialog"/);
   assert.match(html, /id="settingsPanel"[^>]*role="dialog"[^>]*hidden/);
   assert.equal((html.match(/name="skin"/g) || []).length, 4);

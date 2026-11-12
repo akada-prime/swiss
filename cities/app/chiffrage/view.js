@@ -1,10 +1,10 @@
-import {bindKanban,boardHtml,boardRibbon,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261112-kanban-r1';
+import {bindKanban,boardHtml,boardRibbon,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261112-investment-discount-r1';
 import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-kanban-r1';
 import { portalUsers, suggestedPortalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
 import { bindCommunePicker } from './commune-picker.js?v=20261112-kanban-r1';
 import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261112-kanban-r1';
-import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261112-workspace-review-r1';
-import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261112-workspace-review-r1';
+import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261112-investment-discount-r1';
+import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261112-investment-discount-r1';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
 import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261112-workspace-review-r1';
 import { includedForParent, optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
@@ -12,19 +12,19 @@ import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js?v=20261112-workspace-review-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261112-workspace-review-r1';
+import { offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261112-investment-discount-r1';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
-import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261112-workspace-review-r1';
+import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261112-investment-discount-r1';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261112-workspace-review-r1';
-import { calculationError } from './errors.js?v=20261112-workspace-review-r1';
+import { calculationError } from './errors.js?v=20261112-investment-discount-r1';
 import bundledCoats from './coats.js?v=20261028-business-r11';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261112-workspace-review-r1';
-import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-workspace-review-r1';
-import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-workspace-review-r1';
+import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-investment-discount-r1';
+import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-investment-discount-r1';
 
-import { previewModule, moduleRollup, optionPreview } from './business-presentation.js?v=20261112-workspace-review-r1';
+import { previewModule, moduleRollup, optionPreview } from './business-presentation.js?v=20261112-investment-discount-r1';
 
 const root = document.getElementById('chiffrageRoot');
 bindOfferScope(root);
@@ -39,8 +39,7 @@ const state = { authenticated: false, loaded: false, catalog: null, versions: {}
   board:{version:1,column_titles:defaultColumns},quoteStage:0,saveNumber:0,mode:'list', message: '', error: false, loading: null,
   pendingCommune: null, internal: false, dirty: false,
   editorTab: 'composer', session: sessionStorage.getItem(sessionKey), comparison: [], map: null, mobileSummaryOpen: false };
-const money = value => value == null ? '—' : `${number(Math.round(value), {
-  minimumFractionDigits: 0, maximumFractionDigits: 0 })} CHF`;
+const money=value=>{if(value==null)return '—';const cents=Math.round(value*100)/100;return `${number(cents,{minimumFractionDigits:Number.isInteger(cents)?0:2,maximumFractionDigits:2})} CHF`;};
 const field = (key, value, label, { min = 0, step = 1 } = {}) =>
   `<label>${label}<input data-field="${key}" type="number" min="${min}" step="${step}" value="${escape(value ?? '')}"></label>`;
 const textField = (key, value, label) =>
@@ -66,6 +65,7 @@ const assetPrefix = document.querySelector('script[type="module"][src*="/assets/
 const assetUrl = path => new URL(assetPrefix + path, new URL(document.documentElement.dataset.chiffrageAssets || './', document.baseURI)).href;
 const tariffLabel = catalog => [...new Set((catalog?.items??[]).map(item=>item.catalog_version).filter(Boolean))].slice(0,3).join(' · ') || '—';
 const errorMessage = error => {
+  if(error.code==='investmentDiscountInvalid'||error.message==='Invalid investment discount')return localLabel('La remise doit être comprise entre 0 et l’investissement brut, au centime près.','Der Rabatt muss zwischen 0 und der Bruttoinvestition liegen, auf Rappen genau.');
   if(error.code==='quoteFinalized')return localLabel('Chiffrage en lecture seule. Replace-le dans une autre colonne pour le modifier.','Schreibgeschützte Kalkulation. Zum Bearbeiten in eine andere Spalte verschieben.');
   if (error.code==='portalUsersRequired' || error.message==='Portal users required') return localLabel('Précise le nombre d’utilisateurs du portail.','Anzahl der Portalbenutzer ergänzen.');
   if (error.status === 401) return t('chiffrage.sessionExpired');
@@ -108,6 +108,7 @@ function currentCompletion() {
   try { return completionItems(state.draft,calculateQuote(state.draft,state.catalog)); }
   catch (error) {
     const detail=calculationError(error);
+    if(detail?.code==='investmentDiscountInvalid')return [{kind:'discount',code:'discount',tab:'composer',field:'investmentDiscount'}];
     if(detail?.code==='portalUsersRequired')return [{kind:'portal',code:'portal',tab:'composer',field:'dimensions.portalUsers'}];
     if (detail?.code==='pceStandalonePrice') return [{kind:'technical',code:'pce',tab:'composer',field:state.draft.pce.finances && state.draft.pce.financePvOverride==null?'pce.financePvOverride':'pce.salaryPvOverride'}];
     if (detail?.code==='populationInvalid') return [{kind:'population',code:'population',tab:'composer',field:'dimensions.licensedPopulation'}];
@@ -116,6 +117,7 @@ function currentCompletion() {
   }
 }
 function completionLabel(item) {
+  if(item.kind==='discount')return localLabel('Remise d’investissement à corriger','Investitionsrabatt korrigieren');
   if(item.kind==='portal')return localLabel('Utilisateurs du portail à préciser','Portalbenutzer ergänzen');
   if (item.kind==='technical') return t(item.code==='sql'?'chiffrage.completion.sql':item.code==='pce'?'chiffrage.completion.pce':'chiffrage.completion.database');
   if (item.kind==='hosting') return t(item.code==='investment_pv'?'chiffrage.completion.hostingInvestment':item.code==='annual_pv'?'chiffrage.completion.hostingAnnual':'chiffrage.completion.hosting');
@@ -732,6 +734,17 @@ function projectVariables() {
   return `<section class="chiffrage-section chiffrage-project-parameters"><h2>${localLabel('Paramètres de chiffrage','Kalkulationsparameter')}</h2><div class="chiffrage-grid chiffrage-volumes">${field('commercial.dayRate',dayRate(),localLabel('Prix par jour · CHF','Preis pro Tag · CHF'))}${state.draft.projectManagement?field('projectManagement.percent',state.draft.projectManagement.percent,localLabel('Gestion de projet · %','Projektleitung · %'),{step:.5}):''}${travel?field('travel.rate',travel.rate,localLabel('Déplacement · CHF','Reise · CHF'))+field('travel.percent',travel.percent,localLabel('Présence sur place · % des jours','Vor Ort · % der Tage'),{step:.5}):''}</div>${travel?`<label class="chiffrage-choice"><input type="checkbox" data-field="travel.waived" ${travel.waived?'checked':''}>${t('chiffrage.travelWaived')}</label><p class="chiffrage-helper">${t('chiffrage.travelBasis')}</p>`:''}</section>`;
 }
 
+function discountSummary(){
+  try{
+    const gross=calculateQuote({...state.draft,investmentDiscount:0},state.catalog).summary.investment;
+    const discount=state.draft.investmentDiscount??0,valid=Number.isFinite(discount)&&discount>=0&&discount<=gross;
+    return `<div><dt>${localLabel('Investissement brut HT','Bruttoinvestition exkl. MWST')}</dt><dd>${money(gross)}</dd></div><div><dt>${localLabel('Remise commerciale','Rabatt')}</dt><dd>− ${money(discount)}</dd></div><div><dt>${localLabel('Investissement net HT','Nettoinvestition exkl. MWST')}</dt><dd>${money(valid?Math.round((gross-discount)*100)/100:null)}</dd></div>`;
+  }catch{return '';}
+}
+function discountSection(){
+ return `<section class="chiffrage-section chiffrage-investment-discount"><h2>${localLabel('Geste commercial','Preisnachlass')}</h2><p class="chiffrage-helper">${localLabel('Les jours et prestations restent visibles à leur valeur réelle. La remise porte uniquement sur l’investissement ; les coûts annuels sont conservés.','Tage und Leistungen bleiben zum tatsächlichen Wert sichtbar. Der Rabatt gilt nur für die Investition; die Jahreskosten bleiben unverändert.')}</p><div class="chiffrage-grid chiffrage-volumes">${field('investmentDiscount',state.draft.investmentDiscount??0,localLabel('Remise d’investissement · CHF HT','Investitionsrabatt · CHF exkl. MWST'),{step:.01})}</div><dl data-discount-summary aria-live="polite">${discountSummary()}</dl></section>`;
+}
+
 function composerSection() {
   const products = state.draft.products;
   let sqlPrice=null, sqlUsers=null;
@@ -757,7 +770,7 @@ function composerSection() {
     <button class="chiffrage-button quiet" data-editor-tab="modules">${t('chiffrage.workspace.97360022c6')} · ${state.draft.modules.length} →</button></section>
     ${projectVariables()}${technicalSection()}<div class="chiffrage-contracts">${hostingSection()}${lcmSection()}</div>
     <section class="chiffrage-section chiffrage-reference"><div><h3>${t('chiffrage.workspace.f108b8e09c')}</h3><p class="chiffrage-helper">${state.draft.reference ? escape(displayReference(state.draft.reference)) : t('chiffrage.workspace.521d2d1b07')}</p></div>${profiles.length ? `<label>${t('chiffrage.workspace.ce3d081be7')}<select data-reference><option value="">${t('chiffrage.workspace.85e0b7d0df')}</option>${profiles.map(profile => `<option value="${escape(profile.id)}">${escape(displayReference(profile))}</option>`).join('')}</select></label>` : `<p class="chiffrage-warning">${t('chiffrage.workspace.8513a89a5d')}</p>`}</section>
-    ${implementationPanel()}${serviceSection()}${extraSection('project')}</div>`;
+    ${implementationPanel()}${serviceSection()}${extraSection('project')}${discountSection()}</div>`;
 }
 
 let priceFeedbackTimer;
@@ -883,7 +896,7 @@ function workspaceNavigation() {
 
 function workspaceActions() {
   const primaryActions = state.quote ? `<button class="chiffrage-button" data-action="manageShares">${localLabel('Partager','Teilen')}</button><button class="chiffrage-button" data-action="export">${t('chiffrage.export')}</button>` : '';
-  return `<footer class="chiffrage-editor-footer"><div class="chiffrage-editor-save-state"><span class="chiffrage-save-indicator" data-dirty="${state.dirty}"></span><p class="chiffrage-status${state.error?' error':''}" role="status">${escape(state.error?state.message:state.dirty?localLabel('Modifié','Geändert'):state.message||localLabel(state.quote?'Enregistré':'Non enregistré',state.quote?'Gespeichert':'Nicht gespeichert'))}</p></div><div class="chiffrage-actions"><button type="button" class="chiffrage-button primary" data-action="save" ${state.quoteStage===2?'disabled':''}>${localLabel('Enregistrer','Speichern')}</button><div class="chiffrage-desktop-actions">${primaryActions}</div><details class="chiffrage-workspace-menu chiffrage-action-menu" data-workspace-menu><summary>${localLabel('Dossier','Dossier')}</summary><div class="chiffrage-menu-panel"><button class="chiffrage-button" data-action="openReference">${localLabel('Référentiel des règles','Regelreferenz')}</button>${state.quote?`<div class="chiffrage-mobile-actions">${primaryActions}</div><button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button><button class="chiffrage-button" data-action="copyLink">${localLabel('Copier l’adresse interne','Interne Adresse kopieren')}</button><button class="chiffrage-button" data-action="revisions">${localLabel('Historique des versions','Versionsverlauf')}</button><button class="chiffrage-button chiffrage-danger" data-action="delete">${t('chiffrage.workspace.66e03d8bb9')}</button>`:''}<button class="chiffrage-button" data-action="${state.internal?'clientMode':'internalMode'}">${localLabel(state.internal?'Revenir au projet':'Tarifs et marges',state.internal?'Zum Projekt':'Tarife und Margen')}</button><button class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></details></div></footer>`;
+  return `<footer class="chiffrage-editor-footer"><div class="chiffrage-editor-save-state"><span class="chiffrage-save-indicator" data-dirty="${state.dirty}"></span><p class="chiffrage-status${state.error?' error':''}" role="status">${escape(state.error?state.message:state.dirty?localLabel('Modifié','Geändert'):state.message||localLabel(state.quote?'Enregistré':'Non enregistré',state.quote?'Gespeichert':'Nicht gespeichert'))}</p></div><div class="chiffrage-actions"><button type="button" class="chiffrage-button primary" data-action="save" ${state.quoteStage===2?'disabled':''}>${localLabel('Enregistrer','Speichern')}</button><div class="chiffrage-desktop-actions">${primaryActions}</div><details class="chiffrage-workspace-menu chiffrage-action-menu" data-workspace-menu><summary>${localLabel('Dossier','Dossier')}</summary><div class="chiffrage-menu-panel"><button class="chiffrage-button" data-action="openReference">${localLabel('Référentiel des règles','Regelreferenz')}</button>${state.quote?`<div class="chiffrage-mobile-actions">${primaryActions}</div><button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button><button class="chiffrage-button" data-action="copyLink">${localLabel('Copier l’adresse interne','Interne Adresse kopieren')}</button><button class="chiffrage-button" data-action="revisions">${localLabel('Historique des versions','Versionsverlauf')}</button><button class="chiffrage-button chiffrage-danger" data-action="delete">${t('chiffrage.workspace.66e03d8bb9')}</button>`:''}<button class="chiffrage-button" data-editor-tab="compare">${localLabel('Comparer les variantes','Varianten vergleichen')}</button><button class="chiffrage-button" data-action="${state.internal?'clientMode':'internalMode'}">${localLabel(state.internal?'Revenir au projet':'Tarifs et marges',state.internal?'Zum Projekt':'Tarife und Margen')}</button><button class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></details></div></footer>`;
 }
 
 function offerSection() {
@@ -910,6 +923,7 @@ function variantName(row) {
   return `${t('chiffrage.ui.variant')} ${same.findIndex(item => item.id === row.id) + 1} · ${row.title}`;
 }
 function comparisonLabel(row) {
+  if(row.key==='investmentDiscount')return localLabel('Remise d’investissement','Investitionsrabatt');
   if (['modules', 'services'].includes(row.group) && row.label) {
     const item = row.label;
     const name = document.documentElement.lang === 'de' ? item.label_de || item.label_fr || item.label || t('chiffrage.ui.unavailableModule') :
@@ -924,6 +938,7 @@ function comparisonLabel(row) {
   return t(`chiffrage.ui.${row.key}`);
 }
 function comparisonValue(value, row) {
+  if(row.key==='investmentDiscount')return money(value);
   if (value == null) return `<span class="chiffrage-compare-muted">${t('chiffrage.ui.unspecified')}</span>`;
   if (row.kind === 'module') return `${t(value.selected ? 'chiffrage.yes' : 'chiffrage.no')}${value.selected ? `<span class="chiffrage-compare-subvalue">${money(value.investment)} · ${money(value.annual)} / ${t('chiffrage.ui.perYear')}</span>` : ''}`;
   if (row.kind === 'boolean') return t(value ? 'chiffrage.yes' : 'chiffrage.no');
@@ -1020,17 +1035,17 @@ function renderEditor({resetScroll=false}={}) {
   state.mode = 'editor';
   state.editorTab=({prestations:'composer',analysis:'offer'})[state.editorTab]??state.editorTab;
   state.internal=state.editorTab==='rates';
-  const tabs = [['composer',localLabel('Projet','Projekt')],['modules',localLabel('Modules','Module')],['offer',localLabel('Offre','Angebot')],['compare',localLabel('Comparer','Vergleichen')],['rates',localLabel('Tarifs','Tarife')]];
+  const tabs = [['composer',localLabel('Projet','Projekt')],['modules',localLabel('Modules','Module')],['offer',localLabel('Offre','Angebot')]];
   const legacy=state.quote && (Object.entries(state.activeVersions).some(([key,id])=>state.versions[key]!==id));
   boardController?.destroy();
   const financialPanel=summary();
-  const workflow=state.quote?`<div class="chiffrage-editor-workflow"><label>${localLabel('Avancement','Fortschritt')}<select data-editor-stage>${state.board.column_titles.map((title,index)=>`<option value="${index}" ${index===state.quoteStage?'selected':''}>${escape(title)}</option>`).join('')}</select></label>${state.quoteStage===2?`<p role="status">${localLabel('Lecture seule · replace le dossier dans une autre colonne pour le modifier.','Schreibgeschützt · zum Bearbeiten in eine andere Spalte verschieben.')}</p>`:''}</div>`:'';
+  const workflow=state.quoteStage===2?`<p class="chiffrage-readonly-notice" role="status">${localLabel('Lecture seule · pour modifier ce dossier, déplace sa carte dans le Kanban.','Schreibgeschützt · zum Bearbeiten die Karte im Kanban verschieben.')}</p>`:'';
   root.innerHTML = `<div class="chiffrage-editor">${workspaceNavigation()}${workspaceActions()}<div class="chiffrage-workspace"><div id="chiffrageContext">${workspaceHero()}</div><div id="chiffrageMobileSummary">${mobileSummary()}</div>${workflow}${workspaceTabs(tabs,state.editorTab,t('chiffrage.workspace.dd4e272518'))}<div data-completion-container>${completionPanel()}</div>${legacy?`<details class="chiffrage-standard-notice" data-disclosure-key="legacy"><summary>${localLabel('Ancien standard · tarifs d’origine conservés','Älterer Standard · ursprüngliche Tarife erhalten')}</summary><p>${localLabel('Cette variante conserve ses tarifs. Tu peux créer une variante avec les références actuelles et tes valeurs saisies.','Diese Variante behält ihre Tarife. Eine neue Variante kann die aktuellen Referenzen mit deinen Eingaben verwenden.')}</p><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></details>`:''}<div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}">
     <div class="chiffrage-fields"><div class="chiffrage-tab-panel" id="chiffrage-panel-composer" tabindex="-1" data-tab-panel="composer" ${state.editorTab==='composer'?'':'hidden'}>${composerSection()}</div>
     <div class="chiffrage-tab-panel" id="chiffrage-panel-modules" tabindex="-1" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}</div>
     <div class="chiffrage-tab-panel" id="chiffrage-panel-offer" tabindex="-1" data-tab-panel="offer" ${state.editorTab==='offer'?'':'hidden'}><div class="chiffrage-offer-jump"><a href="#chiffrageOffer">${localLabel('Aperçu de l’offre','Angebotsvorschau')}</a><a href="#chiffrageOptionEditor">${localLabel('Préparer les options','Optionen vorbereiten')} · ${state.draft.client_options?.length??0}</a></div><div id="chiffrageOptionEditor">${offerOptionsEditor(state.draft,state.catalog,localLabel,money)}</div><div id="chiffrageOffer">${offerSection()}</div><details class="chiffrage-section"><summary>${localLabel('Détail du calcul','Berechnungsdetails')}</summary><div id="chiffrageDetail">${lineDetail()}</div></details></div>
-    <div class="chiffrage-tab-panel" id="chiffrage-panel-compare" tabindex="-1" data-tab-panel="compare" ${state.editorTab==='compare'?'':'hidden'}>${comparisonSection()}</div>
-    ${state.internal ? `<div class="chiffrage-tab-panel" id="chiffrage-panel-rates" tabindex="-1" data-tab-panel="rates" ${state.editorTab==='rates'?'':'hidden'}><div class="chiffrage-workspace-tools">${catalogButton()}</div>${internalMargins()}${rateInventory()}${state.quote ? `<div class="chiffrage-section"><button class="chiffrage-button" data-action="exportInternal">${t('chiffrage.exportInternal')}</button></div>` : ''}</div>`:''}
+    <div class="chiffrage-tab-panel" id="chiffrage-panel-compare" tabindex="-1" data-tab-panel="compare" ${state.editorTab==='compare'?'':'hidden'}><div class="chiffrage-secondary-heading"><button class="chiffrage-inline" data-editor-tab="composer">← ${localLabel('Revenir au projet','Zum Projekt')}</button><h2>${localLabel('Comparer les variantes','Varianten vergleichen')}</h2></div>${comparisonSection()}</div>
+    ${state.internal ? `<div class="chiffrage-tab-panel" id="chiffrage-panel-rates" tabindex="-1" data-tab-panel="rates" ${state.editorTab==='rates'?'':'hidden'}><div class="chiffrage-secondary-heading"><button class="chiffrage-inline" data-editor-tab="composer">← ${localLabel('Revenir au projet','Zum Projekt')}</button><h2>${localLabel('Tarifs et marges','Tarife und Margen')}</h2><p>${localLabel('Ajustements propres à ce chiffrage ; ses références tarifaires restent versionnées.','Anpassungen für diese Kalkulation; ihre Tarifreferenzen bleiben versioniert.')}</p></div><div class="chiffrage-workspace-tools">${catalogButton()}</div>${internalMargins()}${rateInventory()}${state.quote ? `<div class="chiffrage-section"><button class="chiffrage-button" data-action="exportInternal">${t('chiffrage.exportInternal')}</button></div>` : ''}</div>`:''}
     </div><div id="chiffrageSummary">${financialPanel}</div></div></div></div>`;
   if(state.quoteStage===2){root.querySelectorAll('.chiffrage-fields input,.chiffrage-fields select,.chiffrage-fields textarea,.chiffrage-fields button:not([data-scope-toggle])').forEach(node=>node.disabled=true);root.querySelectorAll('.chiffrage-rename input').forEach(node=>node.disabled=true);}
   for (const node of root.querySelectorAll('details[data-disclosure-key]')) if(disclosureState.has(node.dataset.disclosureKey))node.open=disclosureState.get(node.dataset.disclosureKey);
@@ -1040,6 +1055,7 @@ function renderEditor({resetScroll=false}={}) {
   void loadCoat(state.draft);
 }
 function refreshFinancials() {
+  const discountNode=root.querySelector('[data-discount-summary]');if(discountNode)discountNode.innerHTML=discountSummary();
   const incompleteItems=currentCompletion();
   const checklist=root.querySelector('[data-completion-container]');
   if(checklist){const open=checklist.querySelector('details')?.open;checklist.innerHTML=completionPanel(incompleteItems);if(open&&checklist.querySelector('details'))checklist.querySelector('details').open=true;}
@@ -1086,6 +1102,7 @@ function refreshFinancials() {
 }
 
 function setValue(path, raw, isCheckbox = false) {
+  if(path==='investmentDiscount'){state.draft.investmentDiscount=raw===''?0:Number(raw);state.dirty=true;return;}
   if (path === 'title') { state.title = raw; state.dirty=true; const title=root.querySelector('.chiffrage-rename>summary>span');if(title)title.textContent=raw; return; }
   state.dirty = true;
   const parts = path.split('.');
@@ -1356,7 +1373,6 @@ root.addEventListener('input', event => {
 });
 
 root.addEventListener('change', event => {
-  if(event.target.matches('[data-editor-stage]')){if(state.dirty&&state.quoteStage!==2){event.target.value=state.quoteStage;notice(()=>localLabel('Enregistre tes modifications avant de changer de colonne.','Änderungen vor dem Spaltenwechsel speichern.'),true);return;}void moveBoardQuote(state.quote,Number(event.target.value),null);return;}
   if(state.quoteStage===2)return;
   if (event.target.dataset.compare) {
     const id=event.target.dataset.compare;
@@ -1787,6 +1803,7 @@ root.addEventListener('click', async event => {
       return;
     }
     if (action === 'save' || action === 'duplicate') {
+      if(currentCompletion().some(item=>item.kind==='discount')){focusCompletion();notice(()=>localLabel('Corrige la remise avant d’enregistrer.','Rabatt vor dem Speichern korrigieren.'),true);return;}
       if(['save','duplicate'].includes(action) && currentCompletion().some(item=>item.kind==='module'||item.kind==='portal')){focusCompletion();notice(()=>localLabel('Précise les jours des modules retenus (0 est accepté) et les utilisateurs du portail avant d’enregistrer.','Tage der gewählten Module (0 ist erlaubt) und Portalbenutzer vor dem Speichern ergänzen.'),true);return;}
       // Other incomplete prices can remain a draft; unknown selected-module days cannot.
       let incomplete = false;

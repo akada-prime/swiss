@@ -131,6 +131,7 @@ export function comparisonRows(variants) {
     ['pce', ['finances', 'salaires']]]) for (const key of keys)
     add('dimensions', `${section}.${key}`, variants.map(row => row.input[section]?.[key] ?? null),
       section === 'pce' ? 'boolean' : 'value');
+  add('commercial','investmentDiscount',variants.map(row=>row.result?.summary?.investment_discount??row.input.investmentDiscount??0));
   const services = [...new Set(variants.flatMap(row => (row.result?.lines ?? [])
     .filter(line => ['prestations_module', 'prestations'].includes(line.family))
     .map(line => `${line.family}/${line.item_code}`)))];
