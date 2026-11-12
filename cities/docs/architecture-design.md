@@ -392,8 +392,8 @@ La navigation générale est possédée par styles/navigation.css ; les ancienne
 grilles permanentes mobiles ont été retirées de foundation/responsive.
 core/navigation.js ne gère que le dévoilement mobile, la fermeture à la sélection,
 au clic extérieur et avec Échap. Le routeur existant garde les sept vues et les
-liens profonds. L’avancement demeure exclusivement au Kanban ; son cadenas est
-une indication de carte, sans ligne supplémentaire dans l’en-tête de colonne.
+liens profonds. L’avancement demeure exclusivement au Kanban ; le ruban Finale
+suffit à identifier la carte. La ligne Lecture seule a été retirée des cartes.
 
 La fixture coherence-preview utilise le vrai éditeur avec une API entièrement
 synthétique ; aucun identifiant réel ni requête Supabase n’y est incorporé.

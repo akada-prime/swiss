@@ -37,7 +37,6 @@
 .chiffrage-drag-ghost{position:fixed;z-index:10000;top:0;left:0;pointer-events:none;box-sizing:border-box;opacity:.94;box-shadow:0 16px 40px #0006;border-radius:12px;background:var(--quote-surface);will-change:transform;contain:layout paint}
 .chiffrage-drag-ghost .chiffrage-card-workflow,.chiffrage-drag-ghost details{pointer-events:none}
 .chiffrage-readonly-notice{margin:0;padding:10px 20px;border-bottom:1px solid var(--skin-border-soft);font-size:14px;color:var(--skin-muted)}
-.chiffrage-card-readonly{display:flex;align-items:center;gap:6px;padding:0 16px 12px;font-size:14px;color:var(--skin-muted);}.chiffrage-card-readonly svg{flex:none}
 .chiffrage-editor-revision{font-size:14px;color:#c2ccd7;border:0;background:none}
 @media(max-width:1000px){
  .chiffrage-kanban{display:flex;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-inline:contain;gap:12px;padding-bottom:12px}
