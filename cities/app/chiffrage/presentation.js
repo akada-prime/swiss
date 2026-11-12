@@ -1,6 +1,6 @@
 // Presentation contracts only. Never mutate inputs or recalculate saved snapshots.
 import { hostingIncluded } from './configuration.js';
-import { moduleId } from './standards.js?v=20261112-workspace-review-r1';
+import { moduleId } from './standards.js?v=20261112-coherence-r1';
 
 export const productNames = { innosolv: 'innosolvcity', abacus: 'Abacus', pce: 'ProConcept' };
 export function implementationSummary(result, products = []) {

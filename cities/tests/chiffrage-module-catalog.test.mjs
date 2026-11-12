@@ -77,9 +77,9 @@ test('compact implementation retains subtotals, offered travel, one header and n
  const rows=[['implementation','Mise en œuvre · innosolvcity',28160],['implementation','Mise en œuvre',1760],['implementation','Mise en œuvre · ProConcept',17600],['migration','Reprise de données',26400],['training','Formation et aide au démarrage',17600],['management','Gestion de projet',8800],['otherServices','Déplacements',1750],['otherServices','Déplacements offerts',-1750]].map(([key,label,investment])=>({key,label,investment,annual:0}));
  const config={label:f=>f,money:n=>n+' CHF HT'}, html=offerBreakdown(rows,config);
  assert.match(html,/47520/);assert.match(html,/52800/);assert.match(html,/100320/);
- assert.match(html,/>Prime<\/span>/);assert.match(html,/Déplacements \(estimés\)/);
- assert.doesNotMatch(html,/Annuel ·/);assert.equal((html.match(/Investissement ·/g)||[]).length,1);
- assert.match(offerBreakdown([...rows,{key:'otherServices',label:'Suivi',investment:0,annual:100}],config),/Annuel ·/);
+ assert.match(html,/>Prime<\/h4>/);assert.match(html,/Déplacements \(estimés\)/);
+ assert.doesNotMatch(html,/Annuel dès N\+1/g);assert.equal((html.match(/<span>Investissement<\/span>/g)||[]).length,1);
+ assert.match(offerBreakdown([...rows,{key:'otherServices',label:'Suivi',investment:0,annual:100}],config),/Annuel dès N\+1/g);
  const figures=offerFigures({investment:1,annual:2,tco5y:9},{...config,municipal:true,annualBreakdown:{solutions:2,lcm:0,hosting:0}});
  assert.match(figures,/<\/div><div class="prime-offer-recurring-budget">/);
  assert.doesNotMatch(figures,/<details class="prime-offer-annual-disclosure" open/);

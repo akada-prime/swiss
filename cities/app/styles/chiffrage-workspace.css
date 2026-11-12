@@ -62,10 +62,10 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 #chiffrageSummary { position:sticky;top:calc(var(--quote-tabs-height) + 16px);padding:24px 24px 24px 0; }
 #chiffrageMobileSummary { display:none; }
 .chiffrage-mobile-summary { border:0;background:var(--quote-summary);color:var(--skin-text); }
-.chiffrage-mobile-summary>summary { display:block;list-style:none;padding:16px 24px 12px;cursor:pointer; }
+.chiffrage-mobile-summary>summary { display:block;list-style:none;padding:24px;cursor:pointer; }
 .chiffrage-mobile-summary>summary::-webkit-details-marker { display:none; }
 .chiffrage-mobile-summary-heading { display:none; }
-.chiffrage-mobile-summary-figures { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto;gap:4px 16px; }
+.chiffrage-mobile-summary-figures { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto;gap:8px 16px; }
 .chiffrage-mobile-summary-figures>span { min-width:0;display:grid;grid-template-rows:subgrid;grid-row:span 2; }
 .chiffrage-mobile-summary-figures small { display:block;color:var(--skin-secondary);font-size:14px;line-height:1.4; }
 .chiffrage-mobile-summary-figures strong { display:block;margin-top:0;font-size:30px;line-height:1.15;font-weight:650;letter-spacing:-.04em;color:var(--quote-number);font-variant-numeric:tabular-nums;overflow-wrap:anywhere; }
@@ -211,7 +211,7 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
  .chiffrage-editor-revision { position:absolute;top:16px;right:16px; }
  .chiffrage-editor-place h2 { padding-right:40px; }
  .chiffrage-editor-reference summary { min-height:32px; }
- .chiffrage-mobile-summary>summary { padding:12px 16px 8px; }
+ .chiffrage-mobile-summary>summary { padding:20px 16px; }
  .chiffrage-mobile-summary-figures { gap:12px; }
  .chiffrage-mobile-summary-figures small { font-size:14px; }
  .chiffrage-mobile-summary-figures strong { font-size:28px; }
@@ -254,3 +254,5 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 .chiffrage-secondary-heading{padding:20px 24px;border-bottom:1px solid var(--skin-border-soft)}
 .chiffrage-secondary-heading h2{font-size:22px;margin:12px 0}
 .chiffrage-secondary-heading p{font-size:14px;color:var(--skin-muted)}
+
+.chiffrage-service-exception{grid-column:1/-1;color:var(--skin-muted);font-size:14px;}

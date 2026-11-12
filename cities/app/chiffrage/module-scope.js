@@ -1,4 +1,5 @@
-import { selectedModuleSection, presentationOrder } from './module-classification.js?v=20261112-workspace-review-r1';
+import {partnerBrand} from './commercial-breakdown.js?v=20261112-coherence-r1';
+import { selectedModuleSection, presentationOrder } from './module-classification.js?v=20261112-coherence-r1';
 // Customer-safe module names and included functions only; never raw catalog records.
 import { includedForParent, optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
 const products = {innosolv:'innosolvcity',pce:'ProConcept',abacus:'Abacus'};
@@ -46,10 +47,16 @@ export function customerModuleScope(input, catalog, { internal = false } = {}) {
   const output=Object.entries(products).filter(([vendor])=>groups.has(vendor))
     .map(([vendor,product])=>({product,items:[...groups.get(vendor).values()]}))
     .filter(x=>x.items.length);
-  for(const [key,product] of [['primeLines','Prime'],['partners','Partenaires']]) {
-    const items=(input?.[key]??[]).filter(row=>row.category!=='hosting' && optionApplies(row,input)).map(row=>({fr:short(row.label,120),de:short(row.label,120),included:includedForParent(input,catalog,`prime/Options/${row.item_code}`)})).filter(Boolean);
-    if(items.length)output.push({product,items:[...new Map(items.filter(row=>row.fr).map(row=>[row.fr,row])).values()]});
+  const extras=new Map();
+  for(const [key,fallback] of [['primeLines','Prime'],['partners','Partenaires']])for(const row of input?.[key]??[]){
+    if(row.category==='hosting'||!optionApplies(row,input))continue;
+    const product=partnerBrand(row)||fallback;
+    const item={fr:short(row.label,120),de:short(row.label,120),included:includedForParent(input,catalog,`prime/Options/${row.item_code}`)};
+    if(!item.fr)continue;
+    if(!extras.has(product))extras.set(product,new Map());
+    extras.get(product).set(item.fr,item);
   }
+  for(const [product,items] of extras)output.push({product,items:[...items.values()]});
   return output;
 }
 

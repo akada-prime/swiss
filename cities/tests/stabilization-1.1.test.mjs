@@ -226,7 +226,7 @@ test('Systèmes keeps Intégrateur and Métier visible while extended details st
 test('Natel header keeps all views and commune refresh reachable', async () => {
   const css = await read('app/styles/responsive.css');
   const rebuild = await read('app/styles/responsive.css');
-  assert.match(rebuild, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(await read('app/styles/navigation.css'), /\.view-tabs\[data-open=true\]/);
   assert.match(rebuild, /\[hidden\] \{ display: none !important; \}/);
   assert.match(css, /content:attr\(data-mobile-label\)/);
   assert.match(rebuild, /min-width: 116px/);

@@ -1,5 +1,26 @@
 # État de reprise — Prime Communes 2.0
 
+> **Cohérence du chiffrage · 12.11.2026 — publication autorisée.** Logiciels
+> regroupés en innosolv / Abacus / Portail Abacus / Prime ; facturation éditeur
+> indiquée dans sa ligne, budget annuel Logiciels / LCM / Hébergement. Deux
+> colonnes indépendantes de périmètre, Prime immédiatement sous innosolv.
+> Un seul propriétaire des colonnes de prix, mêmes unités CHF, affichage sans
+> décimales (calculs conservés), y compris PDF et format numérique Excel.
+> Jours fractionnaires conservés dans Excel. Titres, résumé et hébergement
+> espacés ; détail et choix d’options sans double dérouleur ; SQL une seule fois.
+> GP modifiable sur sa ligne ; modifier les jours recalcule la prestation, sans
+> ancien montant particulier caché. Zéros importés des options non retenues
+> traités comme inconnus ; vrais zéros saisis conservés. Options innosolv dans
+> l’ordre métier du catalogue, retenues aussi. Base nommée Standard Prime,
+> aucune prétendue duplication de Tolochenaz. Cadenas dans les cartes finales.
+> Logos originaux Doc.Series et eAdmin, positif/négatif, sélection selon thème ;
+> noms de fournisseurs reconnus sans fuite des champs internes.
+> Navigation générale : quatre vues prod, deux bêta, Roadmap ; deux séparations
+> discrètes, menu compact sur Natel. 257 tests et build réussis, exports PDF et XLSX relus indépendamment. Recette synthétique aux six formats
+> pour l’offre interne : aucun débordement ; contrôle client multi-format et
+> thèmes partiel. Instabilité du navigateur sur le menu, Safari réel ouvert.
+
+
 > **Remise et navigation · 12.11.2026 — publication autorisée.** Trois onglets
 > Projet / Modules / Offre ; Comparer et Tarifs et marges dans Dossier. Le
 > Kanban est le seul endroit pour changer l’avancement ; le verrou final reste.

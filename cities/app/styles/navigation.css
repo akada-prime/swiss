@@ -1,0 +1,27 @@
+/* Primary navigation: production, beta and roadmap; compact menu on Natel. */
+.topbar{height:86px;padding:0 max(28px,calc((100vw - 1500px)/2));display:flex;align-items:center;position:relative;z-index:2;border-bottom:1px solid var(--skin-border);background:var(--skin-header);backdrop-filter:blur(18px);gap:20px;overflow:visible;}
+.brand{width:138px;height:auto;object-fit:contain;display:block;}
+.view-tabs{display:flex;align-items:center;gap:4px;margin:0;padding:0;border:0;border-radius:0;background:transparent;min-width:0;}
+.view-tab{min-height:44px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:var(--skin-secondary);font-size:14px;font-weight:650;cursor:pointer;position:relative;}
+.view-tab:hover{color:var(--skin-text);background:var(--skin-hover);}
+.view-tab.nav-group-start{margin-left:20px;}
+.view-tab.nav-group-start::before{content:'';position:absolute;left:-12px;top:12px;bottom:12px;width:1px;background:var(--skin-border-soft);}
+.mobile-navigation-toggle{display:none;}
+.topbar.navigation-open{z-index:80;}
+@media(max-width:1150px){.topbar{gap:12px;padding-inline:18px;}.brand{width:112px;}.view-tab{padding-inline:8px;}.view-tab.nav-group-start{margin-left:12px;}.view-tab.nav-group-start::before{left:-8px;}}
+@media(max-width:1100px){
+ .topbar{height:76px;min-height:76px;padding:8px 16px;display:flex;gap:12px;}
+ .brand{width:104px;}
+ .mobile-navigation-toggle{display:flex;align-items:center;gap:8px;margin-left:auto;min-height:44px;padding:8px 12px;border:1px solid var(--skin-border-soft);border-radius:8px;background:var(--skin-control);color:var(--skin-text);font:inherit;font-size:14px;cursor:pointer;}
+ .topbar .header-actions{margin-left:0;gap:8px;}
+ .topbar .header-actions .sync-state{display:flex;justify-content:center;min-width:32px;width:32px;height:44px;padding:0;border:0;background:transparent;position:static;transform:none;}.topbar .header-actions .sync-state b{display:none;}
+ .view-tabs{display:none;position:absolute;top:calc(100% - 1px);left:12px;right:12px;max-height:calc(100dvh - 100px);overflow:auto;padding:12px;border:1px solid var(--skin-border-soft);border-radius:12px;background:var(--skin-header);box-shadow:0 16px 32px #0003;}
+ .view-tabs[data-open=true]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;}
+ .view-tab{min-height:44px;text-align:left;padding:8px 12px;white-space:normal;}
+ .view-tab.nav-group-start{margin:0;padding-top:20px;}
+ .view-tab[data-view=stories]{padding-top:20px;}
+ .view-tab.nav-group-start::before{left:0;right:0;top:6px;bottom:auto;height:1px;width:calc(200% + 4px);}
+ .view-tab[data-view=roadmap]{grid-column:1/-1;}
+ .view-tab[data-view=roadmap]::before{width:100%;}
+ .topbar .feature-beta-badge{right:8px;top:6px;}
+}

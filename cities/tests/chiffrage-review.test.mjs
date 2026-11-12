@@ -31,7 +31,7 @@ test('Abacus pack expands its included functions; article codes are internal onl
 test('Abacus services stay in implementation and budget amounts reconcile',()=>{
  const lines=[{family:'prestations',item_code:'abacus-prime',investment_pv:200,annual_pv:0},{family:'prestations_module',item_code:'abacus/ERP/demo',investment_pv:300,annual_pv:0}];
  const rows=publicCostDetails(lines);assert.equal(rows.length,1);assert.equal(rows[0].label_fr,'Abacus');assert.equal(rows[0].investment,500);
- const b=annualOfferBudget({annual:1000},{hosting:300},[{annual:100}]);assert.equal(b.softwareAndSupport+b.hosting+b.publisher,b.total);
+ const b=annualOfferBudget({annual:1000},{hosting:300},[{annual:100}]);assert.equal(b.softwareAndSupport+b.hosting+b.lcm,b.total);
 });
 
 test('public scope does not count a bundled component twice when separately selected',()=>{

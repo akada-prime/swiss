@@ -1,4 +1,4 @@
-import { workspaceEscape as escape } from './workspace-ui.js?v=20261112-kanban-r1';
+import { workspaceEscape as escape } from './workspace-ui.js?v=20261112-coherence-r1';
 // Native dialog owns keyboard trapping and Escape. Content stays in the editor's event scope.
 export function openWorkspaceDialog(root, title, content = '', opener = document.activeElement) {
   root.querySelector('.chiffrage-dialog')?.close();

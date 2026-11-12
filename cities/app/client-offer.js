@@ -1,16 +1,16 @@
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 import { bindOfferScope } from './offer/interactions.js';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from './offer/presentation.js?v=20261112-investment-discount-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from './offer/presentation.js?v=20261112-coherence-r1';
 import verifiedCoats from './chiffrage/coats.js?v=20261028-business-r11';
-import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261112-investment-discount-r1';
+import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261112-coherence-r1';
 
 const root = document.getElementById('offerClientRoot');
 bindOfferScope(root);
 const endpoint = 'https://ozdvmllgxduzquiujcbg.supabase.co/functions/v1/chiffrage?action=clientOffer';
 const enc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({
   '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch]);
-const fmt=value=>{const cents=Math.round(Number(value)*100)/100;return cents.toLocaleString('fr-CH',{minimumFractionDigits:Number.isInteger(cents)?0:2,maximumFractionDigits:2}).replace(/[\u00a0\u202f]/g,"'");};
+const fmt=value=>new Intl.NumberFormat(fr?'fr-CH':'de-CH',{maximumFractionDigits:0}).format(Math.round(value??0)).replace(/[\u00a0\u202f’]/g,"'");
 const money = value => `${fmt(value)} CHF HT`;
 const cantonNames = { JU:'Jura', VD:'Vaud', GE:'Genève', FR:'Fribourg',
   NE:'Neuchâtel', BE:'Berne', VS:'Valais', ZH:'Zurich', BL:'Bâle-Campagne' };
@@ -68,7 +68,7 @@ function renderOffer(o, map) {
   const legacyNames={solutions:label('Solutions Prime','Prime-Lösungen'),
     partners:label('Partenaires','Partner'),hosting:label('Hébergement','Hosting')};
   const detailed=Array.isArray(o.cost_details)?o.cost_details.map(row=>({...row,label:label(row.label_fr,row.label_de)})):null;
-  const priceDetail = offerBreakdown(detailed ?? rows.map(row=>({...row,label:names.get(row.key)||legacyNames[row.key]||row.key})),{label,money,legacy:!current});
+  const priceDetail = offerBreakdown(detailed ?? rows.map(row=>({...row,label:names.get(row.key)||legacyNames[row.key]||row.key})),{label,money,legacy:!current,publisherRows:o.publisher_billing??[]});
   const scope = current && Array.isArray(o.scope) ? offerScope(o.scope.map(group=>({
     product:group.product, items:group.items.map(entry=>({label:label(entry.fr,entry.de),section:label(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:label(child.fr,child.de),theme:label(child.theme_fr??'',child.theme_de??child.theme_fr??'')}))}))
   })), { asset, label }) : `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
@@ -86,8 +86,8 @@ function renderOffer(o, map) {
   root.innerHTML = `<div class="client-offer-toolbar">${pdfButton()}<span data-pdf-status role="status"></span></div><article class="chiffrage-offer client-offer">
     ${offerBanner(hero,offerFigures(o.amounts,{label,money,municipal:true,annualBreakdown:o.annual_breakdown,annualBudget:annualOfferBudget(o.amounts,o.annual_breakdown,o.publisher_billing)}))}
     <div class="chiffrage-offer-body prime-offer-commercial">
-      <section class="client-offer-scope"><h3>${label('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
-        ${scope}${offerPublisherBilling(o.publisher_billing,{label,money})}${offerServices(o.hosting_provider==='az',o.lcm,{asset,label,prices:o.lcm_prices,money})}
+      <section class="client-offer-scope"><h3>${label('Logiciels retenus','Ausgewählte Software')}</h3>
+        ${scope}${offerServices(o.hosting_provider==='az',o.lcm,{asset,label,prices:o.lcm_prices,money})}
       </section>
       ${offerOptions(o.optional_options,{label,money})}
       <section class="client-offer-breakdown"><h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>

@@ -54,7 +54,7 @@ export function publicCostDetails(lines) {
     const key=(['prime','partenaires'].includes(line.family)&&line.category==='license')?'licenses':commercialPriceGroup(line);
     const base=offerPriceGroups.find(row=>row[0]===key);
     let fr=base[1],de=base[2];
-    if (key==='licenses') fr=de=names[line.family]||fr;
+    if (key==='licenses') fr=de=line.billing_mode==='publisher_direct'?'Portail Abacus':partnerBrand(line)||names[line.family]||fr;
     else if (key==='implementation') {
       const vendor=line.family==='prestations_module' ? String(line.item_code??'').split('/')[0] :
         String(line.item_code??'').startsWith('pce-')?'pce':String(line.item_code??'').startsWith('abacus-')?'abacus':null;
@@ -91,5 +91,12 @@ export function publisherBillingRows(lines = []) {
 export function annualOfferBudget(amounts, components, directRows = []) {
   const direct=(directRows??[]).reduce((sum,row)=>sum+(row.annual??0),0);
   const hosting=components?.hosting??0;
-  return {softwareAndSupport:(amounts.annual??0)-hosting-direct,hosting,publisher:direct,total:amounts.annual};
+  const lcm=components?.lcm??0;
+  return {softwareAndSupport:(amounts.annual??0)-hosting-lcm,lcm,hosting,publisher:direct,total:amounts.annual};
+}
+
+// Only these known display brands may select a logo; never use a free-form asset path.
+export function partnerBrand(row){
+ const text=typeof row==='string'?row:[row?.label,row?.label_fr,row?.supplier,row?.item_code].filter(Boolean).join(' ');
+ return /\bdoc[.\s_-]*series\b/i.test(text)?'Doc.Series':/\be[.\s_-]*admin\b/i.test(text)?'eAdmin':null;
 }

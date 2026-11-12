@@ -15,7 +15,7 @@ test('selected groups follow Prime standard then meters then options; each uses 
  const items=[210,129,502,26,1,138,501,22,100,533].map(inno),before=structuredClone(items);
  const groups=classifiedModules(items);
  assert.deepEqual(groups.map(g=>g.key),['standard','meters','chosen']);
- assert.deepEqual(groups.flatMap(g=>g.items.map(i=>i.item_code)),['1','22','26','100','129','501','502','533','138','210']);
+ assert.deepEqual(groups.flatMap(g=>g.items.map(i=>i.item_code)),['1','22','26','100','129','501','502','533','210','138']);
  assert.deepEqual(items,before);
  const options=classifiedModules([10,30,122,124,34,35,33,29,209,25].map(inno),{selected:false});
  assert.deepEqual(options[0].items.map(i=>i.item_code),['30','122','124','34','35','33','29','209','25','10']);
