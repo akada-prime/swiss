@@ -1,5 +1,9 @@
 # État de reprise — Prime Communes 2.0
 
+> **Dernier retour :** ligne Lecture seule et cadenas retirés des cartes. Le
+> ruban Finale identifie déjà l’état ; le verrouillage fonctionnel est conservé.
+> Copier l’adresse interne retiré du menu Dossier et du gestionnaire d’actions.
+
 > **Geste commercial · complément du 12.11.2026.** Remonté immédiatement après
 > les données de base dans Projet ; brut neutre, remise sur fond bordeaux et
 > net bleu. Mise à jour du résumé latéral conservée ; aucun calcul modifié.
@@ -18,7 +22,7 @@
 > ancien montant particulier caché. Zéros importés des options non retenues
 > traités comme inconnus ; vrais zéros saisis conservés. Options innosolv dans
 > l’ordre métier du catalogue, retenues aussi. Base nommée Standard Prime,
-> aucune prétendue duplication de Tolochenaz. Cadenas dans les cartes finales.
+> aucune prétendue duplication de Tolochenaz. Mention Lecture seule retirée des cartes finales.
 > Logos originaux Doc.Series et eAdmin, positif/négatif, sélection selon thème ;
 > noms de fournisseurs reconnus sans fuite des champs internes.
 > Navigation générale : quatre vues prod, deux bêta, Roadmap ; deux séparations
