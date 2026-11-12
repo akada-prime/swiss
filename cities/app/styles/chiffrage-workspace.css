@@ -247,12 +247,18 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 }
 @media (prefers-reduced-motion:reduce) { .chiffrage-editor * { scroll-behavior:auto;transition:none; } }
 
+.chiffrage-investment-discount{--commercial-net:#93caff;--commercial-discount:#70263e;}
 .chiffrage-investment-discount dl{display:grid;gap:12px;max-width:620px;margin:20px 0 0}
-.chiffrage-investment-discount dl>div{display:flex;justify-content:space-between;gap:16px;font-size:15px}
-.chiffrage-investment-discount dd{margin:0;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.chiffrage-investment-discount dl>div{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 16px;font-size:15px}
+.chiffrage-investment-discount dd{margin:0 0 0 auto;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 .chiffrage-investment-discount dl>div:last-child{padding-top:12px;border-top:1px solid var(--skin-border-soft);font-weight:650}
 .chiffrage-secondary-heading{padding:20px 24px;border-bottom:1px solid var(--skin-border-soft)}
 .chiffrage-secondary-heading h2{font-size:22px;margin:12px 0}
 .chiffrage-secondary-heading p{font-size:14px;color:var(--skin-muted)}
 
 .chiffrage-service-exception{grid-column:1/-1;color:var(--skin-muted);font-size:14px;}
+
+.chiffrage-investment-discount dl>div:first-child dd{color:var(--skin-text);}
+.chiffrage-investment-discount dl>div:nth-child(2) dd{padding:4px 10px;border-radius:6px;background:var(--commercial-discount);color:#fff;font-weight:650;}
+.chiffrage-investment-discount dl>div:last-child dd{color:var(--commercial-net);font-size:22px;}
+html[data-skin="helvetia"] .chiffrage-investment-discount{--commercial-net:#125d9b;}

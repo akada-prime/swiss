@@ -226,13 +226,10 @@
 .chiffrage-comparison-common{margin-top:24px;border-top:1px solid var(--skin-border);padding-top:18px}
 .chiffrage-comparison-common>summary{font-size:15px;margin-bottom:16px}
 @media(min-width:1200px){
-.workspace:has(#chiffrageView:not([hidden])){width:min(1800px,calc(100% - 56px));padding-top:32px}
 .chiffrage-composer{display:block}
 .chiffrage-contracts{grid-template-columns:repeat(2,minmax(0,1fr))}
 .chiffrage-contracts>.chiffrage-section+.chiffrage-section{border-left:1px solid var(--skin-border-soft)}
 .chiffrage-decision{grid-template-columns:minmax(180px,.9fr) minmax(0,1.4fr);gap:24px}}
-@media(min-width:1700px){
-}
 @media(max-width:1150px){
 
 .chiffrage-decision{grid-template-columns:1fr;gap:10px}
@@ -241,8 +238,6 @@
 .chiffrage-summary{padding:22px}}
 @media(max-width:900px){
 .chiffrage-summary{display:flex}
-.chiffrage-view .chiffrage-intro{align-items:flex-start}
-.chiffrage-view .view-intro-copy{max-width:300px}
 .chiffrage-contracts{grid-template-columns:1fr 1fr}
 .chiffrage-contracts>.chiffrage-section+.chiffrage-section{border-left:1px solid var(--skin-border-soft)}
 .chiffrage-reference{flex-wrap:wrap}
