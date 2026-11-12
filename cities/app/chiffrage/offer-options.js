@@ -1,8 +1,8 @@
 // Optional editor-curated ideas, priced separately on a copy. No real tariffs in this module.
-import { calculateQuote } from './calculate.js?v=20261112-investment-discount-r1';
-import { moduleId,serviceDays } from './standards.js?v=20261112-workspace-review-r1';
+import { calculateQuote } from './calculate.js?v=20261112-coherence-r1';
+import { moduleId,serviceDays } from './standards.js?v=20261112-coherence-r1';
 import { optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
-import { proposedInnosolvOptions } from './module-classification.js?v=20261112-workspace-review-r1';
+import { proposedInnosolvOptions } from './module-classification.js?v=20261112-coherence-r1';
 export const maxOfferOptions=6;
 function shortOfferText(value,max){return String(value??'').trim().slice(0,max);}
 function offerNumber(value){return value==null||value===''?null:Number(value);}

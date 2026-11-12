@@ -45,8 +45,8 @@ test('shared mobile controls keep a readable floor and seven reachable tabs', as
   assert.equal((html.match(/class="view-tab(?: |")/g) || []).length, 7);
   assert.match(css, /--pc-type-min: 12px/);
   assert.match(css, /--pc-control-height: 40px/);
-  assert.match(css, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
-  assert.match(css, /\.view-tab \{[\s\S]*font-size: 12px/);
+  assert.match(await read('app/styles/navigation.css'), /\.view-tabs\[data-open=true\]/);
+  assert.match(await read('app/styles/navigation.css'), /font-size:14px/);
   assert.match(css, /\.kpi-badge,[\s\S]*\.commune-rank \{[\s\S]*font-size: var\(--pc-type-min\)/);
   assert.match(css, /\.filters input,[\s\S]*font-size: 16px/);
 });

@@ -1,3 +1,4 @@
+import {partnerBrand} from '../chiffrage/commercial-breakdown.js?v=20261112-coherence-r1';
 // Pure presentation: no session, transport, catalog, editor or calculation imports.
 // Callers supply display values only. HTML slots are reserved for trusted renderers.
 export const escapeOffer = value => String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -15,14 +16,14 @@ export function offerHero({ asset, name, bfsId, population, heading, inhabitants
 }
 export const offerBanner = (hero, figures = '') => `<div class="prime-offer-banner">${hero}${figures}</div>`;
 export function offerFigures(amounts, { label, money, incomplete = false, caveat = '', municipal = false, annualBreakdown = null, annualBudget = null }) {
-  const budget = annualBudget ?? (annualBreakdown ? {softwareAndSupport:amounts.annual-(annualBreakdown.hosting??0),hosting:annualBreakdown.hosting??0,publisher:0,total:amounts.annual} : null);
+  const budget = annualBudget ?? (annualBreakdown ? {softwareAndSupport:amounts.annual-(annualBreakdown.hosting??0)-(annualBreakdown.lcm??0),lcm:annualBreakdown.lcm??0,hosting:annualBreakdown.hosting??0,publisher:0,total:amounts.annual} : null);
   const annualDetails = municipal && budget ? `<div class="prime-offer-recurring-budget"><dl>${[
-    ['softwareAndSupport','Logiciels et accompagnement','Software und Begleitung'],
-    ['hosting','Hébergement','Hosting'],['publisher','Facturation directe éditeur','Direkte Herstellerrechnung']
-  ].filter(([key])=>key==='softwareAndSupport'||budget[key]!==0).map(([key,fr,de])=>`<div><dt>${label(fr,de)}</dt><dd>${e(money(budget[key]))} <small>/ ${label('an','Jahr')}</small></dd></div>`).join('')}</dl><p><span>${label('Budget annuel total','Jährliches Gesamtbudget')}</span><strong>${e(money(budget.total))}</strong></p></div>` : '';
+    ['softwareAndSupport','Logiciels','Software'],
+    ['lcm','LCM','LCM'],['hosting','Hébergement','Hosting']
+  ].map(([key,fr,de])=>`<div><dt>${label(fr,de)}</dt><dd>${e(money(budget[key]??0))} <small>/ ${label('an','Jahr')}</small></dd></div>`).join('')}</dl><p><span>${label('Budget annuel total','Jährliches Gesamtbudget')}</span><strong>${e(money(budget.total))}</strong></p></div>` : '';
   if (municipal) return `<section class="chiffrage-offer-summary"><div class="prime-offer-communal-figures">
     <div><span>${label("Coût d’investissement",'Investitionskosten')}</span><strong>${e(money(amounts.investment)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Une fois','Einmalig')}</small></div>
-    <div><span>${label(budget?'Logiciels et accompagnement / an':'Budget annuel total',budget?'Software und Begleitung / Jahr':'Jährliches Gesamtbudget')}</span><strong>${e(money(budget?.softwareAndSupport ?? amounts.annual)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Dès la 2e année','Ab dem zweiten Jahr')}</small></div>
+    <div><span>${label(budget?'Logiciels / an':'Budget annuel total',budget?'Software / Jahr':'Jährliches Gesamtbudget')}</span><strong>${e(money(budget?.softwareAndSupport ?? amounts.annual)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Dès la 2e année','Ab dem zweiten Jahr')}</small></div>
     <div><span>${label('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${e(money(amounts.tco5y)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Investissement + 4 annuités','Investition + 4 Jahresbeträge')}</small></div>
     </div>${annualDetails}${caveat}</section>`;
   return `<section class="chiffrage-offer-summary"><div class="chiffrage-offer-figures">
@@ -43,8 +44,14 @@ export function offerMap(map, bfsId, label, fallback = '') {
   const center = [0,1].map(i=>(Math.min(...points.map(p=>p[i]))+Math.max(...points.map(p=>p[i])))/2);
   return `<svg viewBox="${box.join(' ')}" role="img" aria-label="${e(label)}"><g class="chiffrage-map-region">${(map.cantons??[]).map(row=>`<path d="${e(row.d)}"></path>`).join('')}</g><path class="chiffrage-map-selected" d="${e(selected.d)}"></path><circle class="chiffrage-map-point" cx="${center[0]}" cy="${center[1]}" r="7000"></circle></svg>`;
 }
-const logos = { innosolvcity:'innosolvcity.png', ProConcept:'proconcept-wordmark.png', Abacus:'abacus-red-negative.svg', Prime:'prime-logo-negative.svg' };
+const logos = { innosolvcity:'innosolvcity.png', ProConcept:'proconcept-wordmark.png', Abacus:'abacus-red-negative.svg', Prime:'prime-logo-negative.svg', 'Doc.Series':'doc-series-negative.png',eAdmin:'eadmin-negative.png' };
 export function offerScope(groups, { asset, label = fr => fr }) {
+  const branded=new Map();
+  for(const group of groups)for(const item of group.items){
+    const product=['Prime','Partenaires'].includes(group.product)?partnerBrand(typeof item==='string'?item:item.label)||group.product:group.product;
+    if(!branded.has(product))branded.set(product,[]);branded.get(product).push(item);
+  }
+  groups=[...branded].map(([product,items])=>({product,items}));
   groups=groups.map(group=>{
     const sections=new Map(), items=[];
     for(const item of group.items) {
@@ -72,7 +79,10 @@ export function offerScope(groups, { asset, label = fr => fr }) {
   };
   const grouped = groups.some(group=>group.items.some(item=>typeof item==='object' && (item.items?.length || item.included?.length)));
   const controls = grouped ? `<div class="prime-offer-scope-tools"><button type="button" class="prime-offer-scope-toggle" data-scope-toggle data-expand-label="${e(label('Tout déplier','Alle aufklappen'))}" data-collapse-label="${e(label('Tout replier','Alle zuklappen'))}" aria-expanded="false">${label('Tout déplier','Alle aufklappen')}</button></div>` : '';
-  return `<div class="prime-offer-scope">${controls}<div class="prime-offer-module-grid">${groups.map(({ product, items })=>`<section class="prime-offer-module-group"><h4 class="${product==='Abacus'?'brand-abacus':product==='innosolvcity'?'brand-innosolv':''}">${logos[product] ? `<img class="prime-offer-software-logo ${['ProConcept','Abacus','Prime'].includes(product)?'logo-on-dark':''}" src="${e(asset(product==='Prime'?logos[product]:`assets/logos/${logos[product]}`))}" alt="${e(product)}">${product==='Abacus'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/abacus-wordmark.png'))}" alt="Abacus">`:''}${product==='ProConcept'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/proconcept-dark.png'))}" alt="ProConcept">`:''}` : e(product)}</h4><ul>${items.map(itemHtml).join('')}</ul></section>`).join('')}</div></div>`;
+  const columns=groups.filter(group=>group.product!=='Prime').map(group=>[group]);
+  const prime=groups.filter(group=>group.product==='Prime');
+  if(prime.length){if(!columns.length)columns.push([]);const index=Math.max(0,columns.findIndex(column=>column[0]?.product==='innosolvcity'));columns[index].push(...prime);}
+  return `<div class="prime-offer-scope">${controls}<div class="prime-offer-module-grid">${columns.map(column=>`<div class="prime-offer-module-column">${column.map(({ product, items })=>`<section class="prime-offer-module-group"><h4 class="${product==='Abacus'?'brand-abacus':product==='innosolvcity'?'brand-innosolv':''}">${logos[product] ? `<img class="prime-offer-software-logo ${['ProConcept','Abacus','Prime','Doc.Series','eAdmin'].includes(product)?'logo-on-dark':''}" src="${e(asset(product==='Prime'?logos[product]:`assets/logos/${logos[product]}`))}" alt="${e(product)}">${product==='Abacus'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/abacus-wordmark.png'))}" alt="Abacus">`:''}${product==='ProConcept'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/proconcept-dark.png'))}" alt="ProConcept">`:''}${['Doc.Series','eAdmin'].includes(product)?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/'+(product==='Doc.Series'?'doc-series-positive.png':'eadmin-positive.png')))}" alt="${e(product)}">`:''}` : e(product)}</h4><ul>${items.map(itemHtml).join('')}</ul></section>`).join('')}</div>`).join('')}</div></div>`;
 }
 export function offerLcm(lcm, label, {prices, money} = {}) {
   if (!lcm) return '';
@@ -97,28 +107,31 @@ export function offerInvestmentAdjustment(rows,{label,money}) {
   return `<section class="prime-offer-investment-adjustment"><h3>${label('Votre investissement','Ihre Investition')}</h3><dl><div><dt>${label('Investissement avant remise','Investition vor Rabatt')}</dt><dd>${e(money(gross))}</dd></div><div><dt>${label('Remise commerciale sur l’investissement','Investitionsrabatt')}</dt><dd>− ${e(money(discount))}</dd></div><div><dt>${label('Investissement net HT','Nettoinvestition exkl. MWST')}</dt><dd>${e(money(Math.round((gross-discount)*100)/100))}</dd></div></dl></section>`;
 }
 
-export function offerBreakdown(rows, { label, money, legacy = false }) {
-  const section = (heading, keys) => {
-    const entries = rows.filter(row=>keys.includes(row.key));
-    return entries.length ? `<section class="prime-offer-price-section"><h3>${heading}</h3><div class="prime-offer-price-list">${entries.map(row=>`<div class="prime-offer-price-row"><h4>${e(row.label)}</h4><div class="prime-offer-price-values"><div><small>${label('Investissement','Investition')}</small><strong>${e(money(row.investment))}</strong></div><div><small>${label('Annuel dès N+1','Jährlich ab N+1')}</small><strong>${e(money(row.annual))}</strong></div></div></div>`).join('')}</div></section>` : '';
+export function offerBreakdown(rows, { label, money, legacy = false, publisherRows = [] }) {
+  // Reconcile older frozen projections without editing their stored prices.
+  const entries=rows.map(row=>({...row,label:row.key==='implementation'?String(row.label||'').replace(/^(?:Mise en (?:œ|oe)uvre|Implementierung)\s*·\s*/i,'').replace(/^(?:Mise en (?:œ|oe)uvre|Implementierung)$/i,'Prime'):/^(?:Déplacements|Reisen|Reisekosten)$/.test(row.label||'')?label('Déplacements (estimés)','Reisekosten (geschätzt)'):row.label}));
+  const direct=publisherRows.reduce((sum,row)=>sum+(row.annual??0),0);
+  if(direct && !entries.some(row=>row.key==='licenses'&&/portail|portal/i.test(row.label||''))){
+    const abacus=entries.find(row=>row.key==='licenses'&&/^Abacus$/i.test(row.label||''));
+    if(abacus && abacus.annual>=direct){abacus.annual-=direct;entries.push({key:'licenses',label:'Portail Abacus',investment:0,annual:direct});}
+  }
+  const investLabel=label('Investissement','Investition'),annualLabel=label('Annuel dès N+1','Jährlich ab N+1');
+  const values=(row,annual)=>`<span class="prime-offer-amount" data-caption="${e(investLabel)}">${e(money(row.investment??0))}</span>${annual?`<span class="prime-offer-amount" data-caption="${e(annualLabel)}">${e(money(row.annual??0))}</span>`:''}`;
+  const table=(body,{annual=false}={})=>`<div class="prime-offer-price-table${annual?' has-annual':''}"><div class="prime-offer-table-columns"><span></span><span>${investLabel}</span>${annual?`<span>${annualLabel}</span>`:''}</div>${body}</div>`;
+  const row=(entry,annual)=>{
+    const portal=entry.key==='licenses'&&/portail|portal/i.test(entry.label||'');
+    return `<div class="prime-offer-table-row"><h4>${e(entry.label)}${portal?`<small>${label('Facturé directement par l’éditeur','Direkt vom Hersteller verrechnet')}</small>`:''}</h4>${values(entry,annual)}</div>`;
   };
-  if(legacy)return section(label('Répartition du prix','Preisaufteilung'),['solutions','partners','hosting'])+offerInvestmentAdjustment(rows,{label,money});
-  const services = rows.filter(row=>['implementation','migration','management','training','otherServices'].includes(row.key) &&
-    (Math.abs(row.investment ?? 0)>.005 || Math.abs(row.annual ?? 0)>.005));
-  const travel = row=>/^(?:Déplacements|Reisen|Reisekosten)\b/i.test(row.label || '');
-  const hasAnnual = services.some(row=>Math.abs(row.annual ?? 0)>.005);
-  const values = row=>`<span>${e(money(row.investment ?? 0).replace(/ CHF(?: HT)?$/, ''))}</span>${hasAnnual ? `<span>${e(money(row.annual ?? 0).replace(/ CHF(?: HT)?$/, ''))}</span>` : ''}`;
-  const title = row=>{
-    if(row.key==='implementation')return String(row.label || '').replace(/^(?:Mise en (?:œ|oe)uvre|Implementierung)\s*·\s*/i,'').replace(/^(?:Mise en (?:œ|oe)uvre|Implementierung)$/i,'Prime');
-    if(/^(?:Déplacements|Reisen|Reisekosten)$/i.test(row.label || ''))return label('Déplacements (estimés)','Reisekosten (geschätzt)');
-    return row.label;
-  };
-  const total = entries=>({investment:entries.reduce((sum,row)=>sum+(row.investment ?? 0),0),annual:entries.reduce((sum,row)=>sum+(row.annual ?? 0),0)});
-  const group = (heading, entries, subtotal=true)=>entries.length ? `<div class="prime-offer-service-subgroup">${heading ? `<div class="prime-offer-service-heading"><h4>${heading}</h4>${subtotal?values(total(entries)):''}</div>` : ''}${entries.map(row=>`<div class="prime-offer-service-line"><span>${e(title(row))}</span>${values(row)}</div>`).join('')}</div>` : '';
-  const accompaniment = ['migration','training','management','otherServices'].flatMap(key=>services.filter(row=>row.key===key&&!travel(row)));
-  const implementation = services.length ? `<section class="prime-offer-price-section"><h3>${label('Mise en oeuvre de votre projet','Umsetzung Ihres Projekts')}</h3><div class="prime-offer-implementation${hasAnnual?' has-annual':''}"><div class="prime-offer-service-columns"><span></span><span>${label('Investissement · CHF HT','Investition · CHF exkl. MWST')}</span>${hasAnnual?`<span>${label('Annuel · CHF HT','Jährlich · CHF exkl. MWST')}</span>`:''}</div>${group(label('Paramétrage et intégration','Konfiguration und Integration'),services.filter(row=>row.key==='implementation'))}${group(label('Accompagnement au déploiement','Begleitung der Einführung'),accompaniment)}${group('',services.filter(travel),false)}<div class="prime-offer-service-total"><strong>${label('Total mise en oeuvre','Total Umsetzung')}</strong>${values(total(services))}</div></div></section>` : '';
-  return implementation + section(label('Logiciels et maintenance','Software und Wartung'),['licenses']) +
-    section(label('Technique, service et support','Technik, Dienstleistungen und Support'),['database','primePartners','lcm','hosting'])+offerInvestmentAdjustment(rows,{label,money});
+  const section=(heading,keys)=>{const chosen=entries.filter(row=>keys.includes(row.key));if(!chosen.length)return '';const annual=chosen.some(row=>Math.abs(row.annual??0)>.005);return `<section class="prime-offer-price-section"><h3>${heading}</h3>${table(chosen.map(entry=>row(entry,annual)).join(''),{annual})}</section>`;};
+  if(legacy)return section(label('Répartition du prix','Preisaufteilung'),['solutions','partners','hosting'])+offerInvestmentAdjustment(entries,{label,money});
+  const services=entries.filter(row=>['implementation','migration','management','training','otherServices'].includes(row.key)&&(Math.abs(row.investment??0)>.005||Math.abs(row.annual??0)>.005));
+  const total=selected=>({investment:selected.reduce((sum,row)=>sum+(row.investment??0),0),annual:selected.reduce((sum,row)=>sum+(row.annual??0),0)});
+  const annual=services.some(row=>Math.abs(row.annual??0)>.005);
+  const group=(heading,selected)=>selected.length?`<div class="prime-offer-table-group">${heading?`<div class="prime-offer-table-row is-subtotal"><h4>${heading}</h4>${values(total(selected),annual)}</div>`:''}${selected.map(entry=>row(entry,annual)).join('')}</div>`:'';
+  const implementation=services.length?`<section class="prime-offer-price-section"><h3>${label('Mise en oeuvre de votre projet','Umsetzung Ihres Projekts')}</h3>${table(group(label('Paramétrage et intégration','Konfiguration und Integration'),services.filter(row=>row.key==='implementation'))+group(label('Accompagnement au déploiement','Begleitung der Einführung'),services.filter(row=>row.key!=='implementation'))+`<div class="prime-offer-table-row is-total"><h4>${label('Total mise en oeuvre','Total Umsetzung')}</h4>${values(total(services),annual)}</div>`,{annual})}</section>`:'';
+  const order=['innosolvcity','Abacus','Portail Abacus','Prime'];
+  entries.sort((a,b)=>{const rank=row=>{const n=order.indexOf(row.label);return n<0?99:n;};return rank(a)-rank(b);});
+  return implementation+section(label('Logiciels et maintenance','Software und Wartung'),['licenses'])+section(label('Technique','Technik'),['database','primePartners'])+section(label('Accompagnement LCM','LCM-Begleitung'),['lcm'])+section(label('Hébergement','Hosting'),['hosting'])+offerInvestmentAdjustment(entries,{label,money});
 }
 
 // Optional ideas are independent from included-module disclosures.

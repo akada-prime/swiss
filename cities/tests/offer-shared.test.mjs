@@ -38,14 +38,14 @@ test('map tolerates missing geometry and escapes supplied paths',()=>{
 
 test('annual budget separates hosting from the software headline and keeps the total visible',()=>{
  const amounts={investment:1000,annual:900,tco5y:4600};
- const html=offerFigures(amounts,{label,money,municipal:true,annualBreakdown:{solutions:500,lcm:100,hosting:300},annualBudget:{softwareAndSupport:550,hosting:300,publisher:50,total:900}});
- assert.match(html,/Logiciels et accompagnement \/ an/);assert.match(html,/Budget annuel total/);
- assert.match(html,/Facturation directe éditeur/);assert.match(html,/550/);assert.match(html,/900/);
+ const html=offerFigures(amounts,{label,money,municipal:true,annualBreakdown:{solutions:500,lcm:100,hosting:300},annualBudget:{softwareAndSupport:500,lcm:100,hosting:300,publisher:50,total:900}});
+ assert.match(html,/Logiciels \/ an/);assert.match(html,/Budget annuel total/);
+ assert.doesNotMatch(html,/Facturation directe éditeur/);assert.match(html,/500/);assert.match(html,/LCM/);assert.match(html,/900/);
  assert.doesNotMatch(html,/NaN|Infinity/);
  const zero=offerFigures({...amounts,annual:0},{label,money,municipal:true,annualBreakdown:{solutions:0,lcm:0,hosting:0}});
  assert.doesNotMatch(zero,/NaN|Infinity/);
  const de=offerFigures(amounts,{label:(fr,de)=>de,money,municipal:true,annualBreakdown:{solutions:500,lcm:100,hosting:300}});
- assert.match(de,/Software und Begleitung/);assert.match(de,/Gesamtbudget/);
+ assert.match(de,/Software/);assert.match(de,/Gesamtbudget/);
 });
 
 test('public module dependency graph cannot load editor, calculations or private storage',()=>{

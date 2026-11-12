@@ -181,18 +181,32 @@ align-items:start;}
 .chiffrage-offer-tariffs>summary::before { top:calc(.75em + 10px - 5px); }
 
 /* Shared compact implementation and included-module presentation. */
-.prime-offer-implementation {border:1px solid var(--offer-border);border-radius:var(--offer-radius);background:var(--offer-panel);overflow:hidden;}
-.prime-offer-service-columns,.prime-offer-service-heading,.prime-offer-service-line,.prime-offer-service-total {display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,.4fr);gap:16px;align-items:baseline;padding:var(--offer-space-2) var(--offer-card-padding);}
-.prime-offer-implementation.has-annual :is(.prime-offer-service-columns,.prime-offer-service-heading,.prime-offer-service-line,.prime-offer-service-total) {grid-template-columns:minmax(0,1fr) repeat(2,minmax(90px,.35fr));}
-.prime-offer-service-columns {font-size:14px;color:var(--offer-muted);padding-top:var(--offer-space-4);}
-.prime-offer-service-columns>span:not(:first-child),.prime-offer-service-heading>span,.prime-offer-service-line>span:not(:first-child),.prime-offer-service-total>span {text-align:right;font-variant-numeric:tabular-nums;}
-.prime-offer-service-subgroup {padding:var(--offer-space-2) 0 var(--offer-space-3);}
-.prime-offer-service-subgroup+.prime-offer-service-subgroup {border-top:1px solid var(--offer-border);}
-.prime-offer-service-heading {font-weight:700;padding-top:var(--offer-space-3);padding-bottom:var(--offer-space-2);}
-.prime-offer-service-heading h4 {margin:0;font-size:inherit;color:var(--offer-text);}
-.prime-offer-service-line {font-size:14px;color:var(--offer-text);}
-.prime-offer-service-line>span:first-child {padding-left:16px;}
-.prime-offer-service-total {border-top:1px solid var(--offer-border);font-weight:700;padding-top:var(--offer-space-4);padding-bottom:var(--offer-space-4);}
+.prime-offer-price-table{--offer-price-column:clamp(120px,12vw,160px);border:1px solid var(--offer-border);border-radius:var(--offer-radius);background:var(--offer-panel);overflow:hidden;}
+.prime-offer-table-columns,.prime-offer-table-row{display:grid;grid-template-columns:minmax(0,1fr) var(--offer-price-column);gap:12px 24px;align-items:baseline;padding:12px var(--offer-card-padding);}
+.prime-offer-price-table.has-annual :is(.prime-offer-table-columns,.prime-offer-table-row){grid-template-columns:minmax(0,1fr) repeat(2,var(--offer-price-column));}
+.prime-offer-table-columns{font-size:14px;color:var(--offer-muted);padding-block:16px 12px;}
+.prime-offer-table-columns>span:not(:first-child),.prime-offer-amount{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.prime-offer-table-row h4{margin:0;font-size:14px;line-height:1.5;font-weight:400;color:var(--offer-text);min-width:0;}
+.prime-offer-table-row h4 small{display:block;margin-top:4px;font-size:14px;color:var(--offer-muted);}
+.prime-offer-table-row.is-subtotal h4,.prime-offer-table-row.is-total h4{font-weight:700;font-size:16px;}
+.prime-offer-table-row.is-subtotal,.prime-offer-table-row.is-total{font-weight:700;}
+.prime-offer-table-group{padding-block:8px;}
+.prime-offer-table-group+.prime-offer-table-group,.prime-offer-table-row.is-total{border-top:1px solid var(--offer-border);}
+.prime-offer-table-row.is-total{padding-block:20px;}
+.prime-offer-table-row:not(.is-subtotal):not(.is-total) h4{padding-left:12px;}
+.prime-offer-module-column{display:flex;flex-direction:column;gap:var(--offer-card-gap);min-width:0;}
+.chiffrage-offer-body>section{display:grid;gap:var(--offer-space-6);align-content:start;min-width:0;}
+.chiffrage-offer-body>section>h3{margin:0;}
+
+@media(max-width:600px){
+ .prime-offer-table-columns{display:none;}
+ .prime-offer-table-row,.prime-offer-price-table.has-annual .prime-offer-table-row{grid-template-columns:repeat(2,minmax(0,1fr));padding:16px;gap:12px;}
+ .prime-offer-table-row>h4{grid-column:1/-1;}
+ .prime-offer-table-row:not(.is-subtotal):not(.is-total) h4{padding-left:0;}
+ .prime-offer-amount{font-size:14px;text-align:left;}
+ .prime-offer-amount::before{content:attr(data-caption);display:block;font-weight:400;color:var(--offer-muted);white-space:normal;margin-bottom:4px;font-size:14px;}
+ .prime-offer-table-row:not(:first-child){border-top:1px solid var(--offer-border);}
+}
 .prime-offer-module-group li.prime-offer-scope-parent {list-style:none;}
 .prime-offer-scope-parent+.prime-offer-scope-parent {margin-top:0;}
 .prime-offer-scope-section .prime-offer-scope-heading {margin:0;font-size:inherit;line-height:inherit;font-weight:650;color:var(--offer-text);cursor:pointer;display:block;position:relative;list-style:none;}
@@ -203,7 +217,7 @@ align-items:start;}
 .prime-offer-scope-toggle {font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border:1px solid var(--offer-border);border-radius:8px;background:transparent;color:var(--offer-text);cursor:pointer;}
 .prime-offer-scope-section .prime-offer-scope-subheading {margin:var(--offer-space-3) 0 var(--offer-space-2);font-size:inherit;line-height:inherit;font-weight:600;color:var(--offer-text);}
 .prime-offer-scope-section .prime-offer-scope-modules {margin:0;padding-left:0;list-style-type:disc;}
-.prime-offer-recurring-budget{margin-top:24px;padding-top:20px;border-top:1px solid var(--offer-border)}
+.prime-offer-recurring-budget{margin-top:32px;padding-top:24px;border-top:1px solid var(--offer-border)}
 .prime-offer-recurring-budget dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
 .prime-offer-recurring-budget dt{font-size:14px;color:var(--offer-muted);line-height:1.5}
 .prime-offer-recurring-budget dd{margin:8px 0 0;font-size:18px;font-weight:650;font-variant-numeric:tabular-nums}
@@ -582,7 +596,7 @@ align-items:start;}
   font-size: 14px;
   line-height: 1.55
 }
-.chiffrage-offer-body>section:last-child { display:block; min-width:0; }
+
 .chiffrage-offer-body>section:last-child>h3 { margin:0; }
 .prime-offer-price-section {
   margin: 0;
@@ -614,45 +628,7 @@ align-items:start;}
   border-color: var(--offer-border);
   border-radius: var(--offer-radius)
 }
-.prime-offer-price-row {
-  display: grid;
-  grid-template-columns: minmax(0,1.1fr) minmax(0,1fr);
-  align-items: center;
-  gap: var(--offer-card-gap);
-  padding: var(--offer-space-4) var(--offer-card-padding);
-  background: var(--offer-panel)
-}
-.prime-offer-price-row h4 {
-  color: var(--offer-text);
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.45;
-  font-weight: 650
-}
-.prime-offer-price-values {
-  display: grid;
-  grid-template-columns: repeat(2,minmax(0,1fr));
-  gap: var(--offer-card-gap)
-}
-.prime-offer-price-values>div {
-  text-align: right;
-  min-width: 0
-}
-.prime-offer-price-values small {
-  display: block;
-  color: var(--offer-muted);
-  margin-bottom: var(--offer-space-1);
-  font-size: 14px
-}
-.prime-offer-price-values strong {
-  display: block;
-  color: var(--offer-text);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  font-size: clamp(14px,1.65vw,18px);
-  white-space: normal;
-  overflow-wrap: anywhere
-}
+
 .prime-offer-software-logo {
   display: block;
   max-width: min(180px,100%);

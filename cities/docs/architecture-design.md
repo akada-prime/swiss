@@ -371,3 +371,35 @@ Projet / Modules / Offre constituent la navigation principale. Comparaison
 et ajustements tarifaires du dossier restent disponibles dans Dossier. Le
 Kanban est l’unique contrôle de l’avancement ; l’éditeur final affiche seulement
 une indication de lecture seule. Aucun nouveau référentiel tarifaire global.
+
+
+### Cohérence des présentations et navigation — 12 novembre 2026
+
+Les montants bruts conservés en mémoire, base et exports numériques gardent
+leur précision. L’interface et le PDF présentent des francs entiers ; les
+cellules monétaires Excel utilisent le format numérique #,##0. Les quantités,
+pourcentages et demi-journées ne sont pas assimilés à des coûts.
+
+publicCostDetails distingue le Portail Abacus dans les logiciels. Pour les
+anciennes publications figées, le rendu peut isoler ce sous-total de la ligne
+Abacus en s’appuyant sur publisher_billing, sans changer le total enregistré.
+Le budget annuel additionne Logiciels (facturation éditeur comprise), LCM et
+Hébergement. La mention de facturation directe accompagne la ligne du logiciel.
+Les nouvelles grilles de prix utilisent la même taille de colonnes ; sur Natel
+les libellés Investissement et Annuel accompagnent chacun leur propre montant.
+
+La navigation générale est possédée par styles/navigation.css ; les anciennes
+grilles permanentes mobiles ont été retirées de foundation/responsive.
+core/navigation.js ne gère que le dévoilement mobile, la fermeture à la sélection,
+au clic extérieur et avec Échap. Le routeur existant garde les sept vues et les
+liens profonds. L’avancement demeure exclusivement au Kanban ; son cadenas est
+une indication de carte, sans ligne supplémentaire dans l’en-tête de colonne.
+
+La fixture coherence-preview utilise le vrai éditeur avec une API entièrement
+synthétique ; aucun identifiant réel ni requête Supabase n’y est incorporé.
+
+Les logos Doc.Series/eAdmin originaux sont conservés dans public/assets/logos.
+partnerBrand est une liste de reconnaissance fermée ; elle n’accepte jamais
+un chemin fourni par l’utilisateur. Le périmètre peut exposer un nom de marque
+connu pour une ligne partenaire, sans sérialiser son fournisseur libre. Les
+variantes positif/négatif suivent les mêmes classes de thème que les éditeurs.

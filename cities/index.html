@@ -28,7 +28,7 @@
       document.documentElement.lang = preference('prime-communes-language', ['fr', 'de'], 'fr');
     })();
   </script>
-  <link rel="stylesheet" href="app/styles/main.css?v=20261112-investment-discount-r1">
+  <link rel="stylesheet" href="app/styles/main.css?v=20261112-coherence-r1">
 <style>
 html[data-initial-view]:not([data-initial-view="communes"]) #communesView{display:none!important}
 html[data-initial-view="map"] #mapView,
@@ -51,14 +51,15 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
   <header class="topbar">
     <a href="./" aria-label="Retour à l’accueil Prime Communes"><img src="public/prime-communes-helvetia.webp" class="brand" alt="Prime Communes"></a>
-    <nav class="view-tabs" aria-label="Navigation principale">
+    <button type="button" class="mobile-navigation-toggle" aria-expanded="false" aria-controls="primaryNavigation">Menu <span aria-hidden="true">▾</span></button>
+    <nav class="view-tabs" id="primaryNavigation" aria-label="Navigation principale">
       <button class="view-tab active" data-view="communes"><!--i18n:page.006-->Communes</button>
       <button class="view-tab" data-view="map"><!--i18n:page.007-->Carte</button>
       <button class="view-tab" data-view="stats"><!--i18n:page.008-->Stats</button>
-      <button class="view-tab beta-nav-tab" data-view="news">Radar!<span class="feature-beta-badge"><!--i18n:page.009-->BÊTA</span></button>
-      <button class="view-tab beta-nav-tab" data-view="stories"><!--i18n:page.010-->Histoires<span class="feature-beta-badge"><!--i18n:page.009-->BÊTA</span></button>
-      <button class="view-tab" data-view="roadmap"><!--i18n:page.011-->Roadmap</button>
       <button class="view-tab" data-view="chiffrage"><!--i18n:chiffrage.nav-->Chiffrage</button>
+      <button class="view-tab beta-nav-tab nav-group-start" data-view="news">Radar!<span class="feature-beta-badge"><!--i18n:page.009-->BÊTA</span></button>
+      <button class="view-tab beta-nav-tab" data-view="stories"><!--i18n:page.010-->Histoires<span class="feature-beta-badge"><!--i18n:page.009-->BÊTA</span></button>
+      <button class="view-tab nav-group-start" data-view="roadmap"><!--i18n:page.011-->Roadmap</button>
     </nav>
     <div class="header-actions"><button class="sync-state" id="syncReload" title="Recharger depuis Supabase" hidden><span></span><b id="syncText" aria-live="polite"><!--i18n:page.012-->Connexion à la base…</b></button>
     <button class="settings-trigger" id="settingsTrigger" type="button" aria-haspopup="dialog" aria-controls="settingsPanel" aria-expanded="false" aria-label="Paramètres"><span aria-hidden="true">⚙</span><span><!--i18n:page.001-->Paramètres</span></button></div>
@@ -357,6 +358,6 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
 <div id="drawerRoot"></div>
 <div id="portraitRoot"></div>
 <button class="back-to-top" id="backToTop" type="button" aria-label="Retour en haut" title="Retour en haut"><span aria-hidden="true">↑</span></button>
-<script type="module" src="app/main.js?v=20261112-investment-discount-r1"></script>
+<script type="module" src="app/main.js?v=20261112-coherence-r1"></script>
 </body>
 </html>

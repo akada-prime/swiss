@@ -2,7 +2,7 @@
 import { PDFDocument,StandardFonts,rgb } from 'pdf-lib';
 import { pdfLogo } from './pdf-logo.mjs';
 const clean=value=>String(value??'').replace(/[\u2018\u2019]/g,"'").replace(/[\u2010-\u2015]/g,'-').replace(/[\u00a0\u202f]/g,' ').replace(/[^\x20-\x7e\xa0-\xffŒœŸ€•]/g,' ').trim();
-const fmt=value=>{const cents=Math.round((value??0)*100)/100;return new Intl.NumberFormat('de-CH',{minimumFractionDigits:Number.isInteger(cents)?0:2,maximumFractionDigits:2}).format(cents).replace(/’/g,"'");};
+const fmt=value=>new Intl.NumberFormat('de-CH',{maximumFractionDigits:0}).format(Math.round(value??0)).replace(/’/g,"'");
 export const pdfFilename=o=>`Prime_${clean(o.commune).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9-]/g,'_')}_${o.canton}_${o.public_version||'v1.0'}_R${o.revision}.pdf`;
 export async function exportClientPdf(o) {
   const doc=await PDFDocument.create(),font=await doc.embedFont(StandardFonts.Helvetica),bold=await doc.embedFont(StandardFonts.HelveticaBold),logo=await doc.embedPng(pdfLogo);
@@ -22,15 +22,18 @@ export async function exportClientPdf(o) {
   const figures=[['Investissement',o.amounts.investment,22],['Annuel dès N+1',o.amounts.annual,22],['Total sur 5 ans',o.amounts.tco5y,16]];
   figures.forEach(([name,value,size],i)=>{const x=M+i*(CW/3+3);t(name,x,y,9,false,muted);t(fmt(value),x,y+19,size,true,navy);t('CHF HT',x,y+46,9,false,muted);});y+=78;
   paragraph('Investissement initial + quatre annuités. Montants en CHF HT.',{size:9,color:muted});rule();
-  if(o.publisher_billing?.length){heading("Facturation directe par l'éditeur");paragraph("Abonnements inclus dans le budget annuel, facturés directement par l'éditeur et séparément de Prime.");for(const row of o.publisher_billing)paragraph(`${row.label}${Number.isInteger(row.users)?' - '+row.users+' utilisateurs':''} : ${fmt(row.annual)} CHF HT / an`,{b:true});}
+
   heading('Solutions et modules retenus');
   for(const group of o.scope??[]){heading(group.product,2);let section='';for(const entry of group.items??[]){if(entry.section_fr&&section!==entry.section_fr){section=entry.section_fr;paragraph(section,{b:true,size:10,color:muted});}paragraph(entry.fr+(entry.included?.length?' - modules inclus':''),{b:true});for(const child of entry.included??[])paragraph('- '+child.fr,{indent:14,size:10,gap:2});}}
   if(o.lcm)paragraph(`Accompagnement LCM : ${o.lcm}`,{b:true});if(o.hosting)paragraph(`Hébergement${o.hosting_provider==='az'?' : AZ Informatique':''}`,{b:true});
   need(140);heading('Ce que comprend votre offre');
   const names={implementation:'Mise en oeuvre',migration:'Reprise de données',management:'Gestion de projet',training:'Formation et aide au démarrage',otherServices:'Prestations complémentaires',licenses:'Logiciels et maintenance',database:'Bases de données et technique',primePartners:'Prime et partenaires',lcm:'LCM',hosting:'Hébergement'};
   tableHeader();
-  const detailRows=o.cost_details??o.breakdown??[],discountRows=detailRows.filter(row=>row.key==='discount');
-  for(const row of detailRows.filter(row=>row.key!=='discount'))moneyRow(row.label_fr||names[row.key]||row.key,row.investment,row.annual);
+  const detailRows=(o.cost_details??o.breakdown??[]).map(row=>({...row}));
+  const publisher=(o.publisher_billing??[]).reduce((sum,row)=>sum+(row.annual??0),0);
+  if(publisher&&!detailRows.some(row=>/portail|portal/i.test(row.label_fr||''))){const abacus=detailRows.find(row=>row.key==='licenses'&&row.label_fr==='Abacus');if(abacus&&abacus.annual>=publisher){abacus.annual-=publisher;detailRows.push({key:'licenses',label_fr:'Portail Abacus',investment:0,annual:publisher});}}
+  const discountRows=detailRows.filter(row=>row.key==='discount');
+  for(const row of detailRows.filter(row=>row.key!=='discount'))moneyRow((row.label_fr||names[row.key]||row.key)+(/portail|portal/i.test(row.label_fr||'')?' - facturé par l’éditeur':''),row.investment,row.annual);
   if(discountRows.length){
     const discount=-discountRows.reduce((sum,row)=>sum+row.investment,0);
     moneyRow('Investissement avant remise',o.amounts.investment+discount,null);

@@ -45,7 +45,7 @@ test('mobile header, footer evolution and return-to-top stay usable before rebui
   assert.match(globals, /\.back-to-top\.is-visible\{/);
   assert.match(bridge, /window\.scrollY > threshold/);
   assert.match(bridge, /window\.scrollTo\(\{ top: 0, behavior:/);
-  assert.match(mobile, /grid-template-columns:1\.15fr \.7fr \.7fr \.85fr \.95fr \.95fr 1fr/);
+  assert.match(await read('app/styles/navigation.css'), /\.view-tabs\[data-open=true\]/);
   assert.doesNotMatch(layer, /@import/);
   assert.match(styles, /responsive\.css/);
   assert.match(styles, /components\.css/);
@@ -65,7 +65,7 @@ test('all seven view headers share one responsive typography contract', async ()
   assert.match(globals, /\.workspace\{padding-top:50px\}/);
   assert.match(globals, /@media\(max-width:680px\)[\s\S]*\.workspace\{padding-top:26px\}/);
   assert.match(await read('app/styles/components.css'), /\.feature-beta-badge\{/);
-  assert.match(globals, /@media\(max-width:680px\)[\s\S]*\.view-tabs\{[^}]*overflow-x:auto/);
+  assert.match(await read('app/styles/navigation.css'), /max-height:calc\(100dvh - 100px\)/);
 });
 
 test('2.0.3 interprets every signal without blurring fact, deduction and Prime reading', async () => {

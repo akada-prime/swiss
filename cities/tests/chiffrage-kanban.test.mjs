@@ -2,14 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {Linter} from 'eslint';
-import {boardGroups,boardHtml,boardRibbon,quoteLocked,saveNumber,defaultColumns} from '../app/chiffrage/kanban.js';
+import {boardGroups,boardHtml,boardRibbon,boardReadOnly,quoteLocked,saveNumber,defaultColumns} from '../app/chiffrage/kanban.js';
 import {workspaceIdentity} from '../app/chiffrage/workspace-ui.js';
 import handler,{signSession} from '../supabase/functions/chiffrage/server.mjs';
 test('one global board retains all dossiers and locks the third position regardless of its name',()=>{
  const rows=[{id:'c',workflow_stage:2,workflow_order:1,archived:true},{id:'b',workflow_stage:1,workflow_order:2},{id:'a',workflow_stage:1,workflow_order:1},{id:'d'}];
  assert.deepEqual(boardGroups(rows).map(group=>group.map(row=>row.id)),[['d'],['a','b'],['c']]);
  assert.equal(quoteLocked(rows[0]),true);assert.equal(quoteLocked(rows[1]),false);
- const html=boardHtml(rows,['Début','Proposé','Validé'],row=>row.id);assert.equal((html.match(/data-stage=/g)||[]).length,3);assert.match(html,/Validé/);assert.match(html,/Lecture seule/);
+ const html=boardHtml(rows,['Début','Proposé','Validé'],row=>row.id);assert.equal((html.match(/data-stage=/g)||[]).length,3);assert.match(html,/Validé/);assert.doesNotMatch(html,/Lecture seule/);assert.match(boardReadOnly(2),/Lecture seule/);assert.equal(boardReadOnly(1),'');
  assert.equal(boardRibbon(0,'Brouillon'),'');assert.match(boardRibbon(1,'Client'),/data-ribbon-stage="1"/);assert.match(boardRibbon(2,'<script>'),/&lt;script&gt;/);
 });
 test('the internal manual-save marker is separate from the publication revision',()=>{

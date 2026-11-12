@@ -11,18 +11,18 @@ const col = index => {
     number = Math.floor(number / 26); }
   return result;
 };
-const cell = (value, row, index) => {
+const cell = (value, row, index, moneyColumns=[]) => {
   if (value == null) return '';
   const ref = `${col(index)}${row}`;
   if (typeof value === 'number' && Number.isFinite(value))
-    return `<c r="${ref}"><v>${value}</v></c>`;
+    return `<c r="${ref}"${moneyColumns.includes(index)?' s="1"':''}><v>${value}</v></c>`;
   return `<c r="${ref}" t="inlineStr"><is><t>${xml(value)}</t></is></c>`;
 };
-const sheet = rows => `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+const sheet = (rows,moneyColumns=[]) => `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
   `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">` +
   `<sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetData>` +
   rows.map((values, index) => `<row r="${index + 1}">` +
-    values.map((value, column) => cell(value, index + 1, column)).join('') + '</row>')
+    values.map((value, column) => cell(value, index + 1, column,moneyColumns)).join('') + '</row>')
     .join('') + '</sheetData></worksheet>';
 
 const crcTable = Array.from({ length: 256 }, (_, index) => {
@@ -156,12 +156,13 @@ export function exportQuoteXlsx(quote, { internal = false } = {}) {
     ['GP · assiette en jours Prime hors GP', gp.explanation.basis_days],
     ['GP · arrondi en jours', gp.explanation.round_days]);
   const files = {
-    '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>${[1,2,3].map(n => `<Override PartName="/xl/worksheets/sheet${n}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}</Types>`,
+    '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>${[1,2,3].map(n => `<Override PartName="/xl/worksheets/sheet${n}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}</Types>`,
     '_rels/.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
     'xl/workbook.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Résumé" sheetId="1" r:id="rId1"/><sheet name="Détail" sheetId="2" r:id="rId2"/><sheet name="Hypothèses et sources" sheetId="3" r:id="rId3"/></sheets></workbook>`,
-    'xl/_rels/workbook.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${[1,2,3].map(n => `<Relationship Id="rId${n}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${n}.xml"/>`).join('')}</Relationships>`,
-    'xl/worksheets/sheet1.xml': sheet(internal ? resume : clientResume),
-    'xl/worksheets/sheet2.xml': sheet(internal ? detail : clientDetail),
+    'xl/_rels/workbook.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>${[1,2,3].map(n => `<Relationship Id="rId${n}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${n}.xml"/>`).join('')}</Relationships>`,
+    'xl/styles.xml':'<?xml version="1.0" encoding="UTF-8"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="3" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>',
+    'xl/worksheets/sheet1.xml': sheet(internal ? resume : clientResume,[1,2,3,4,5]),
+    'xl/worksheets/sheet2.xml': sheet(internal ? detail : clientDetail,internal?[10,12,13,14,15,16,18,19,20]:[5,6]),
     'xl/worksheets/sheet3.xml': sheet(internal ? assumptions : clientAssumptions)
   };
   return zip(files);

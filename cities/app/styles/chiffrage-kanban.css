@@ -10,7 +10,7 @@
 .chiffrage-kanban-column [data-column-title]{width:100%;min-width:0;min-height:44px;font-size:16px}
 .chiffrage-kanban-column [hidden]{display:none}
 .chiffrage-column-count{font-size:14px;color:var(--skin-muted);font-variant-numeric:tabular-nums}
-.chiffrage-kanban-column>header>small{width:100%;color:var(--skin-muted);font-size:14px}
+
 .chiffrage-kanban-cards{display:flex;flex-direction:column;gap:12px;min-height:160px}
 .chiffrage-column-empty{margin:auto;padding:24px 12px;text-align:center;font-size:14px;color:var(--skin-muted)}
 .chiffrage-kanban .chiffrage-list-item{position:relative;isolation:isolate}
@@ -37,7 +37,7 @@
 .chiffrage-drag-ghost{position:fixed;z-index:10000;top:0;left:0;pointer-events:none;box-sizing:border-box;opacity:.94;box-shadow:0 16px 40px #0006;border-radius:12px;background:var(--quote-surface);will-change:transform;contain:layout paint}
 .chiffrage-drag-ghost .chiffrage-card-workflow,.chiffrage-drag-ghost details{pointer-events:none}
 .chiffrage-readonly-notice{margin:0;padding:10px 20px;border-bottom:1px solid var(--skin-border-soft);font-size:14px;color:var(--skin-muted)}
-.chiffrage-kanban-column>header>small{display:flex;align-items:center;gap:6px}
+.chiffrage-card-readonly{display:flex;align-items:center;gap:6px;padding:0 16px 12px;font-size:14px;color:var(--skin-muted);}.chiffrage-card-readonly svg{flex:none}
 .chiffrage-editor-revision{font-size:14px;color:#c2ccd7;border:0;background:none}
 @media(max-width:1000px){
  .chiffrage-kanban{display:flex;overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-inline:contain;gap:12px;padding-bottom:12px}

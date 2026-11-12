@@ -35,10 +35,10 @@ test('editor and market filters use the same skin-driven editable field surfaces
   assert.doesNotMatch(skin, /--pc-field-bg:var\(--skin-control\)/);
 });
 
-test('mobile navigation uses three comfortable columns and a full-width seventh view', () => {
+test('mobile navigation keeps seven views behind a compact disclosure', () => {
   assert.equal((html.match(/class="view-tab(?: |")/g) || []).length, 7);
-  assert.match(responsive, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
-  assert.match(responsive, /\.view-tab\[data-view="chiffrage"\]\{grid-column:1\/-1\}/);
+  assert.match(readFileSync(new URL('../app/styles/navigation.css',import.meta.url),'utf8'), /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(html, /mobile-navigation-toggle/);
 });
 
 test('design contract does not introduce any new important declaration', () => {

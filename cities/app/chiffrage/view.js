@@ -1,30 +1,30 @@
-import {bindKanban,boardHtml,boardRibbon,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261112-investment-discount-r1';
-import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-kanban-r1';
+import {bindKanban,boardHtml,boardRibbon,boardReadOnly,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261112-coherence-r1';
+import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-coherence-r1';
 import { portalUsers, suggestedPortalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
-import { bindCommunePicker } from './commune-picker.js?v=20261112-kanban-r1';
-import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261112-kanban-r1';
-import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261112-investment-discount-r1';
-import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261112-investment-discount-r1';
+import { bindCommunePicker } from './commune-picker.js?v=20261112-coherence-r1';
+import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261112-coherence-r1';
+import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261112-coherence-r1';
+import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261112-coherence-r1';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
-import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261112-workspace-review-r1';
+import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261112-coherence-r1';
 import { includedForParent, optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
 import { bindOfferScope } from '../offer/interactions.js';
-import { customerModuleScope } from './module-scope.js?v=20261112-workspace-review-r1';
+import { customerModuleScope } from './module-scope.js?v=20261112-coherence-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261112-investment-discount-r1';
+import { offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261112-coherence-r1';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
-import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261112-investment-discount-r1';
+import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261112-coherence-r1';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
-import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261112-workspace-review-r1';
+import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261112-coherence-r1';
 import { calculationError } from './errors.js?v=20261112-investment-discount-r1';
 import bundledCoats from './coats.js?v=20261028-business-r11';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261112-workspace-review-r1';
-import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-investment-discount-r1';
-import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-investment-discount-r1';
+import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-coherence-r1';
+import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-coherence-r1';
 
-import { previewModule, moduleRollup, optionPreview } from './business-presentation.js?v=20261112-investment-discount-r1';
+import { previewModule, moduleRollup, optionPreview } from './business-presentation.js?v=20261112-coherence-r1';
 
 const root = document.getElementById('chiffrageRoot');
 bindOfferScope(root);
@@ -39,7 +39,7 @@ const state = { authenticated: false, loaded: false, catalog: null, versions: {}
   board:{version:1,column_titles:defaultColumns},quoteStage:0,saveNumber:0,mode:'list', message: '', error: false, loading: null,
   pendingCommune: null, internal: false, dirty: false,
   editorTab: 'composer', session: sessionStorage.getItem(sessionKey), comparison: [], map: null, mobileSummaryOpen: false };
-const money=value=>{if(value==null)return '—';const cents=Math.round(value*100)/100;return `${number(cents,{minimumFractionDigits:Number.isInteger(cents)?0:2,maximumFractionDigits:2})} CHF`;};
+const money=value=>value==null?'—':`${number(Math.round(value),{minimumFractionDigits:0,maximumFractionDigits:0})} CHF`;
 const field = (key, value, label, { min = 0, step = 1 } = {}) =>
   `<label>${label}<input data-field="${key}" type="number" min="${min}" step="${step}" value="${escape(value ?? '')}"></label>`;
 const textField = (key, value, label) =>
@@ -244,7 +244,7 @@ function renderList() {
     ${state.catalog ? '' : `<p class="chiffrage-warning">${t('chiffrage.noCatalog')}</p>`}
     ${boardHtml(rows,state.board.column_titles,(row,stage)=>`<article class="chiffrage-list-item" data-quote-card="${escape(row.id)}" data-share-ready="pending" data-current-revision="${row.current_revision}">
     ${boardRibbon(stage,state.board.column_titles[stage])}<button type="button" class="chiffrage-card-open" data-action="open" data-id="${escape(row.id)}"><span class="chiffrage-saved-heading"><span data-list-canton>${listCanton(communes().find(item=>Number(item.id)===Number(row.bfs_id))?.canton)}</span><strong>${escape(row.title)}</strong></span><small>${escape(row.commune_name)} · OFS ${row.bfs_id} · <span class="chiffrage-save-number" title="${localLabel('Enregistrements manuels','Manuelle Speicherungen')}">#${saveNumber(row)}</span></small><span class="chiffrage-saved-figures" data-list-figures aria-live="polite">${t('chiffrage.ui.savedLoading')}</span></button>
-    <div class="chiffrage-card-workflow"><button type="button" data-drag-handle aria-label="${localLabel('Déplacer le chiffrage','Kalkulation verschieben')}" title="${localLabel('Glisser pour déplacer','Zum Verschieben ziehen')}">⠿</button><label><span class="chiffrage-visually-hidden">${localLabel('Déplacer vers','Verschieben nach')}</span><select data-move-quote="${escape(row.id)}" aria-label="${localLabel('Déplacer vers','Verschieben nach')}">${state.board.column_titles.map((title,index)=>`<option value="${index}" ${stage===index?'selected':''}>${escape(title)}</option>`).join('')}</select></label></div>
+    ${boardReadOnly(stage,localLabel)}<div class="chiffrage-card-workflow"><button type="button" data-drag-handle aria-label="${localLabel('Déplacer le chiffrage','Kalkulation verschieben')}" title="${localLabel('Glisser pour déplacer','Zum Verschieben ziehen')}">⠿</button><label><span class="chiffrage-visually-hidden">${localLabel('Déplacer vers','Verschieben nach')}</span><select data-move-quote="${escape(row.id)}" aria-label="${localLabel('Déplacer vers','Verschieben nach')}">${state.board.column_titles.map((title,index)=>`<option value="${index}" ${stage===index?'selected':''}>${escape(title)}</option>`).join('')}</select></label></div>
     <details class="chiffrage-share-disclosure" data-share-id="${escape(row.id)}"><summary>${localLabel('Lien','Kundenlink')}</summary><div class="chiffrage-share-result" data-share-result aria-live="polite"></div></details></article>`,localLabel)}<div id="chiffrageShareResult" aria-live="polite"></div>`;
   boardController=bindKanban(root,{onMove:moveBoardQuote,onRename:renameBoardColumn,onRefresh:refreshBoard,label:localLabel});
   const byId = new Map(rows.map(row => [String(row.id), row]));
@@ -284,6 +284,7 @@ const moveBoardQuote=(id,stage,before_id)=>{
  if(card&&column){
   const list=column.querySelector('[data-card-list]'),before=[...list.querySelectorAll('[data-quote-card]')].find(node=>node.dataset.quoteCard===before_id);
   list.insertBefore(card,before??list.querySelector('.chiffrage-column-empty'));
+  card.querySelector('.chiffrage-card-readonly')?.remove();if(stage===2)card.querySelector('.chiffrage-card-workflow').insertAdjacentHTML('beforebegin',boardReadOnly(stage,localLabel));
   card.querySelector('.chiffrage-card-ribbon')?.remove();card.insertAdjacentHTML('afterbegin',boardRibbon(stage,state.board.column_titles[stage]));card.querySelector('[data-move-quote]').value=stage;
   root.querySelectorAll('[data-kanban] [data-stage]').forEach(col=>{const count=col.querySelectorAll('[data-quote-card]').length;col.querySelector('.chiffrage-column-count').textContent=count;col.querySelector('.chiffrage-column-empty').hidden=count>0;});
  }
@@ -500,10 +501,10 @@ function serviceSection(compact = false) {
       const current = state.draft.services.find(entry => entry.item_code === id);
       const block=['reprise','projet','formation','demarrage'].includes(id)?'transversal':'complementary';
       if(id==='deplacements' && state.draft.travel) return '';// Parameters are owned by projectVariables.
-      if (id === 'projet' && gp) return `<div class="chiffrage-service-item" data-service-block="${block}"><div class="chiffrage-service-title"><strong>${escape(de ? german : fr)}</strong><small data-gp-explanation>${gpExplanation(gpLine)}</small></div><span>${number(gp.percent)} %</span><output>${money(gpLine?.investment_pv)}</output></div>`;
+      if (id === 'projet' && gp) return `<div class="chiffrage-service-item" data-service-block="${block}"><div class="chiffrage-service-title"><strong>${escape(de ? german : fr)}</strong><small data-gp-explanation>${gpExplanation(gpLine)}</small></div>${field('projectManagement.percent',gp.percent,localLabel('Gestion de projet · %','Projektleitung · %'),{step:.5})}<output data-gp-total>${money(gpLine?.investment_pv)}</output></div>`;
       const days = current ? displayedServiceDays(current,state.catalog) : 0;
       const amount = current?.investment_override ?? (days == null ? null : days * (current?.unit_day_rate ?? dayRate()));
-      return `<div class="chiffrage-service-item" data-service-block="${block}"><div class="chiffrage-service-title"><strong>${escape(de ? german : fr)}</strong><small>${!current ? t('chiffrage.completion.notIncluded') : current.suggested_days == null ? t('chiffrage.workspace.f65d0dc796') : `${t('chiffrage.workspace.f8130bb03a')} : ${number(current.suggested_days)} ${t('chiffrage.workspace.6abe3deea7')}`}</small></div>${field(`service.${id}.days`, days, t('chiffrage.days'), { step: .5 })}<output data-service-total="${escape(id)}">${money(Number.isFinite(amount) ? amount : null)}</output>${!compact ? `<details class="chiffrage-service-adjust"><summary>${localLabel('Ajuster','Anpassen')}</summary>${field(`service.${id}.override`, current?.investment_override, t('chiffrage.investment'), {min:-1000000})}</details>` : ''}</div>`;
+      return `<div class="chiffrage-service-item" data-service-block="${block}"><div class="chiffrage-service-title"><strong>${escape(de ? german : fr)}</strong><small>${!current ? t('chiffrage.completion.notIncluded') : current.suggested_days == null ? t('chiffrage.workspace.f65d0dc796') : `${t('chiffrage.workspace.f8130bb03a')} : ${number(current.suggested_days)} ${t('chiffrage.workspace.6abe3deea7')}`}</small></div>${field(`service.${id}.days`, days, t('chiffrage.days'), { step: .5 })}<output data-service-total="${escape(id)}">${money(Number.isFinite(amount) ? amount : null)}</output>${current?.investment_override!=null?`<small class="chiffrage-service-exception" data-service-exception="${escape(id)}">${localLabel('Montant particulier conservé','Abweichender Betrag beibehalten')} · ${money(current.investment_override)} <button type="button" class="chiffrage-inline" data-action="clearServiceOverride" data-service="${escape(id)}">${localLabel('Recalculer avec les jours','Nach Tagen berechnen')}</button></small>`:''}</div>`;
     }).join('').replace('<div class="chiffrage-service-item" data-service-block="complementary">',`<h3 class="chiffrage-service-group-heading">${localLabel('Prestations complémentaires','Zusätzliche Leistungen')}</h3><div class="chiffrage-service-item" data-service-block="complementary">`)}</div>
     ${!gp ? `<p class="chiffrage-warning">${t('chiffrage.workspace.15b2f96e28')}</p>` : ''}
 </section>`;
@@ -542,7 +543,7 @@ function technicalSection() {
       <div class="chiffrage-grid">${field('sql.users', state.draft.sql.users ?? suggestion,
         t('chiffrage.sqlUsers'))}
       ${field('sql.cores', state.draft.sql.cores ?? state.catalog.parameters.sql.default_cores, t('chiffrage.sqlCores'))}
-      ${field('sql.override', sqlPrice, t('chiffrage.sqlInvestmentPv'))}
+      ${field('sql.override', sqlPrice, localLabel('SQL · investissement CHF HT','SQL · Investition CHF exkl. MWST'))}
       ${state.internal ? field('sql.purchasePa', state.draft.sql.purchasePa, t('chiffrage.sqlInvestmentPa')) : ''}
       ${field('sql.annualPv', state.draft.sql.annualPv, t('chiffrage.sqlAnnualPv'))}
       ${state.internal ? field('sql.annualPa', state.draft.sql.annualPa, t('chiffrage.sqlAnnualPa')) : ''}</div>` : ''}
@@ -642,7 +643,7 @@ function hostingSection(scope = 'composer') {
       ${[true,false].map(value => `<label class="chiffrage-choice"><input type="radio" name="chiffrage-hosting-${scope}" data-hosting="${value}" ${included === value ? 'checked' : ''}>${t(value ? 'chiffrage.yes' : 'chiffrage.no')}</label>`).join('')}
     </fieldset><p class="chiffrage-helper">${t(included ? 'chiffrage.hostingIncluded' : 'chiffrage.hostingExcluded')}</p>
     ${included && scopeChanged ? `<p class="chiffrage-warning">${t('chiffrage.hostingScopeChanged')}</p><button class="chiffrage-button" data-action="confirmHosting">${t('chiffrage.confirmHosting')}</button>` : ''}
-    ${included ? `<div class="chiffrage-hosting-preview"><span>${localLabel('Hébergement retenu','Gewähltes Hosting')}</span><strong>${localLabel('Investissement','Investition')} ${money(amounts?.investment)}</strong><strong>${localLabel('Annuel dès N+1','Jährlich ab Jahr 2')} ${money(amounts?.annual)}</strong></div><details class="chiffrage-subdetail" ${complete ? '' : 'open'}><summary>${t('chiffrage.hostingAmounts')}</summary>
+    ${included ? `<dl class="chiffrage-hosting-preview"><div><dt>${localLabel('Investissement','Investition')}</dt><dd>${money(amounts?.investment)}</dd></div><div><dt>${localLabel('Annuel dès N+1','Jährlich ab Jahr 2')}</dt><dd>${money(amounts?.annual)}</dd></div></dl><details class="chiffrage-subdetail" ${complete ? '' : 'open'}><summary>${t('chiffrage.hostingAmounts')}</summary>
     <p class="chiffrage-helper">${t(complete ? 'chiffrage.hostingPrefilled' : 'chiffrage.hostingEstimate')}</p>
     ${!rows.length ? `<div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addHosting">${t('chiffrage.addHosting')}</button></div>` : ''}
     ${rows.map(line => `<div class="chiffrage-line chiffrage-hosting-line"><div class="chiffrage-hosting-row-actions"><button type="button" class="chiffrage-button" data-action="addHosting">${t('chiffrage.addHosting')}</button><button type="button" class="chiffrage-button chiffrage-danger" data-action="removeLine" data-kind="primeLines" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div>
@@ -731,7 +732,7 @@ root.addEventListener('error', event => {
 
 function projectVariables() {
   const travel=state.draft.travel;
-  return `<section class="chiffrage-section chiffrage-project-parameters"><h2>${localLabel('Paramètres de chiffrage','Kalkulationsparameter')}</h2><div class="chiffrage-grid chiffrage-volumes">${field('commercial.dayRate',dayRate(),localLabel('Prix par jour · CHF','Preis pro Tag · CHF'))}${state.draft.projectManagement?field('projectManagement.percent',state.draft.projectManagement.percent,localLabel('Gestion de projet · %','Projektleitung · %'),{step:.5}):''}${travel?field('travel.rate',travel.rate,localLabel('Déplacement · CHF','Reise · CHF'))+field('travel.percent',travel.percent,localLabel('Présence sur place · % des jours','Vor Ort · % der Tage'),{step:.5}):''}</div>${travel?`<label class="chiffrage-choice"><input type="checkbox" data-field="travel.waived" ${travel.waived?'checked':''}>${t('chiffrage.travelWaived')}</label><p class="chiffrage-helper">${t('chiffrage.travelBasis')}</p>`:''}</section>`;
+  return `<section class="chiffrage-section chiffrage-project-parameters"><h2>${localLabel('Paramètres de chiffrage','Kalkulationsparameter')}</h2><div class="chiffrage-grid chiffrage-volumes">${field('commercial.dayRate',dayRate(),localLabel('Prix par jour · CHF','Preis pro Tag · CHF'))}${travel?field('travel.rate',travel.rate,localLabel('Déplacement · CHF','Reise · CHF'))+field('travel.percent',travel.percent,localLabel('Présence sur place · % des jours','Vor Ort · % der Tage'),{step:.5}):''}</div>${travel?`<label class="chiffrage-choice"><input type="checkbox" data-field="travel.waived" ${travel.waived?'checked':''}>${t('chiffrage.travelWaived')}</label><p class="chiffrage-helper">${t('chiffrage.travelBasis')}</p>`:''}</section>`;
 }
 
 function discountSummary(){
@@ -758,7 +759,7 @@ function composerSection() {
   return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><h3>${t('chiffrage.ui.projectDimensions')}</h3>
     <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('sql.users', state.draft.sql.users ?? sqlUsers,t('chiffrage.sqlUsers'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}${products.includes('abacus')?field('dimensions.portalUsers',portalUsers(state.draft.dimensions),localLabel('Utilisateurs du portail Abacus','Benutzer Abacus-Portal')):''}</div>
     ${products.includes('pce') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('oracle.full',state.draft.oracle.full,t('chiffrage.oracleFull'))}${field('oracle.light',state.draft.oracle.light,t('chiffrage.oracleLight'))}</div>` : ''}
-    ${products.includes('innosolv') ? `<div class="chiffrage-grid chiffrage-volumes">${field('sql.override',sqlPrice,t('chiffrage.sqlInvestmentPv'))}</div>` : ''}
+
     ${products.includes('abacus')?`<p class="chiffrage-helper">${localLabel('Portail : moitié des collaborateurs proposée, arrondie au supérieur ; volume modifiable.','Portal: vorgeschlagen ist die halbe Mitarbeiterzahl, aufgerundet; Anzahl anpassbar.')}</p>`:''}
     <p class="chiffrage-helper">${localLabel('Collaborateurs estimés ; utilisateurs SQL et ERP à vérifier avec le client.','Mitarbeitende geschätzt; SQL- und ERP-Nutzer mit der Gemeinde prüfen.')}</p>
     <p class="chiffrage-helper" data-volume-suggestion>${t('chiffrage.volumeSuggested', { count: number(suggestedVolume(state.draft.dimensions.population)) })} <button type="button" class="chiffrage-inline" data-action="suggestVolumes">${t('chiffrage.useSuggestion')}</button></p>
@@ -880,7 +881,9 @@ function financialBuckets(result) {
 }
 
 function displayReference(reference) {
-  return referenceLabel(reference,state.catalog,document.documentElement.lang);
+  if(!reference)return localLabel('Configuration personnalisée','Individuelle Konfiguration');
+  const label=referenceLabel(reference,state.catalog,document.documentElement.lang);
+  return /tolochenaz/i.test(label)?localLabel('Standard Prime','Prime-Standard'):label;
 }
 function workspaceHero() {
   return workspaceIdentity({name:state.draft.name,canton:state.draft.canton,bfs:state.draft.bfs_id,
@@ -903,7 +906,7 @@ function offerSection() {
   let result;
   try { result=calculateQuote(state.draft,state.catalog); }
   catch(error) { return `<section class="chiffrage-section"><p class="chiffrage-warning">${escape(errorMessage(error))}</p></section>`; }
-  const priceDetail = offerBreakdown(publicCostDetails(result.lines).map(row=>({...row,label:localLabel(row.label_fr,row.label_de)})),{label:localLabel,money});
+  const priceDetail = offerBreakdown(publicCostDetails(result.lines).map(row=>({...row,label:localLabel(row.label_fr,row.label_de)})),{label:localLabel,money,publisherRows:publisherBillingRows(result.lines)});
   const themes=customerModuleScope(state.draft,state.catalog,{internal:true});
   const hostingLines=state.draft.primeLines.filter(line=>line.category==='hosting');
   const azHosting=hostingIncluded(state.draft) && (
@@ -912,8 +915,8 @@ function offerSection() {
   const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),reference:entry.reference,section:localLabel(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel});
   const optionalShowcase=offerOptions(offerOptionReview(state.draft,state.catalog).options,{label:localLabel,money});
   const lcm = ({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection;
-  return `<article class="chiffrage-offer"><div class="chiffrage-offer-body${optionalShowcase?' has-offer-options':''}"><section><h3>${localLabel('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
-    ${scope}${offerPublisherBilling(publisherBillingRows(result.lines),{label:localLabel,money})}${offerServices(azHosting,lcm,{asset:assetUrl,label:localLabel,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
+  return `<article class="chiffrage-offer"><div class="chiffrage-offer-body${optionalShowcase?' has-offer-options':''}"><section><h3>${localLabel('Logiciels retenus','Ausgewählte Software')}</h3>
+    ${scope}${offerServices(azHosting,lcm,{asset:assetUrl,label:localLabel,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
     ${azHosting ? '' : `<p>${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p>`}</section>${optionalShowcase}
     <section><h3>${localLabel('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>${priceDetail}<p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
 }
@@ -1043,7 +1046,7 @@ function renderEditor({resetScroll=false}={}) {
   root.innerHTML = `<div class="chiffrage-editor">${workspaceNavigation()}${workspaceActions()}<div class="chiffrage-workspace"><div id="chiffrageContext">${workspaceHero()}</div><div id="chiffrageMobileSummary">${mobileSummary()}</div>${workflow}${workspaceTabs(tabs,state.editorTab,t('chiffrage.workspace.dd4e272518'))}<div data-completion-container>${completionPanel()}</div>${legacy?`<details class="chiffrage-standard-notice" data-disclosure-key="legacy"><summary>${localLabel('Ancien standard · tarifs d’origine conservés','Älterer Standard · ursprüngliche Tarife erhalten')}</summary><p>${localLabel('Cette variante conserve ses tarifs. Tu peux créer une variante avec les références actuelles et tes valeurs saisies.','Diese Variante behält ihre Tarife. Eine neue Variante kann die aktuellen Referenzen mit deinen Eingaben verwenden.')}</p><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></details>`:''}<div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}">
     <div class="chiffrage-fields"><div class="chiffrage-tab-panel" id="chiffrage-panel-composer" tabindex="-1" data-tab-panel="composer" ${state.editorTab==='composer'?'':'hidden'}>${composerSection()}</div>
     <div class="chiffrage-tab-panel" id="chiffrage-panel-modules" tabindex="-1" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}</div>
-    <div class="chiffrage-tab-panel" id="chiffrage-panel-offer" tabindex="-1" data-tab-panel="offer" ${state.editorTab==='offer'?'':'hidden'}><div class="chiffrage-offer-jump"><a href="#chiffrageOffer">${localLabel('Aperçu de l’offre','Angebotsvorschau')}</a><a href="#chiffrageOptionEditor">${localLabel('Préparer les options','Optionen vorbereiten')} · ${state.draft.client_options?.length??0}</a></div><div id="chiffrageOptionEditor">${offerOptionsEditor(state.draft,state.catalog,localLabel,money)}</div><div id="chiffrageOffer">${offerSection()}</div><details class="chiffrage-section"><summary>${localLabel('Détail du calcul','Berechnungsdetails')}</summary><div id="chiffrageDetail">${lineDetail()}</div></details></div>
+    <div class="chiffrage-tab-panel" id="chiffrage-panel-offer" tabindex="-1" data-tab-panel="offer" ${state.editorTab==='offer'?'':'hidden'}><div class="chiffrage-offer-jump"><a href="#chiffrageOffer">${localLabel('Aperçu de l’offre','Angebotsvorschau')}</a><a href="#chiffrageOptionEditor">${localLabel('Préparer les options','Optionen vorbereiten')} · ${state.draft.client_options?.length??0}</a></div><div id="chiffrageOptionEditor">${offerOptionsEditor(state.draft,state.catalog,localLabel,money)}</div><div id="chiffrageOffer">${offerSection()}</div><div id="chiffrageDetail">${lineDetail()}</div></div>
     <div class="chiffrage-tab-panel" id="chiffrage-panel-compare" tabindex="-1" data-tab-panel="compare" ${state.editorTab==='compare'?'':'hidden'}><div class="chiffrage-secondary-heading"><button class="chiffrage-inline" data-editor-tab="composer">← ${localLabel('Revenir au projet','Zum Projekt')}</button><h2>${localLabel('Comparer les variantes','Varianten vergleichen')}</h2></div>${comparisonSection()}</div>
     ${state.internal ? `<div class="chiffrage-tab-panel" id="chiffrage-panel-rates" tabindex="-1" data-tab-panel="rates" ${state.editorTab==='rates'?'':'hidden'}><div class="chiffrage-secondary-heading"><button class="chiffrage-inline" data-editor-tab="composer">← ${localLabel('Revenir au projet','Zum Projekt')}</button><h2>${localLabel('Tarifs et marges','Tarife und Margen')}</h2><p>${localLabel('Ajustements propres à ce chiffrage ; ses références tarifaires restent versionnées.','Anpassungen für diese Kalkulation; ihre Tarifreferenzen bleiben versioniert.')}</p></div><div class="chiffrage-workspace-tools">${catalogButton()}</div>${internalMargins()}${rateInventory()}${state.quote ? `<div class="chiffrage-section"><button class="chiffrage-button" data-action="exportInternal">${t('chiffrage.exportInternal')}</button></div>` : ''}</div>`:''}
     </div><div id="chiffrageSummary">${financialPanel}</div></div></div></div>`;
@@ -1094,8 +1097,10 @@ function refreshFinancials() {
     });
   }
   root.querySelectorAll('[data-gp-explanation]').forEach(node=>node.textContent=gpExplanation(gpLine));
+  root.querySelectorAll('[data-gp-total]').forEach(node=>node.textContent=money(gpLine?.investment_pv));
   root.querySelectorAll('[data-service-total]').forEach(node=>{
     const row=state.draft.services.find(line=>line.item_code===node.dataset.serviceTotal);
+    if(row?.investment_override==null)[...root.querySelectorAll('[data-service-exception]')].find(item=>item.dataset.serviceException===node.dataset.serviceTotal)?.remove();
     const days=displayedServiceDays(row,state.catalog);
     node.textContent=money(row?.investment_override ?? (days == null ? null : days*(row?.unit_day_rate??dayRate())));
   });
@@ -1116,6 +1121,7 @@ function setValue(path, raw, isCheckbox = false) {
       level: 'standard' }; list.push(row); }
     const prop = parts.at(-1) === 'override' ? 'investment_override' : parts.at(-1);
     row[prop] = prop === 'level' ? raw : raw === '' ? null : Number(raw);
+    if(!module && prop==='days')delete row.investment_override;
     return;
   }
   if (parts[0] === 'primeLines' || parts[0] === 'partners') {
@@ -1569,6 +1575,7 @@ root.addEventListener('click', async event => {
   const button = event.target.closest('[data-action]');
   if (!button) return;
   const action=button.dataset.action;
+  if(action==='clearServiceOverride'){if(state.quoteStage===2)return;const row=state.draft.services.find(line=>line.item_code===button.dataset.service);if(row){delete row.investment_override;state.dirty=true;renderEditor();}return;}
   if(state.quoteStage===2&&['save','restore','upgrade','showcaseAdd','showcaseRemove','showcaseUp','addPrimeOption','addReferenceLine','addPrime','addPartner','removeExtra','addHosting','removeHosting'].includes(action)){notice(()=>localLabel('Replace ce dossier dans une autre colonne pour le modifier.','Zum Bearbeiten in eine andere Spalte verschieben.'),true);return;}
 
   if(action==='publishNewRevision'){

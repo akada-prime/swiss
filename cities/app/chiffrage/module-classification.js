@@ -55,7 +55,7 @@ export function availableModuleSection(item) {
 export function presentationOrder(item) {
   const code=moduleCode(item), group=selectedModuleSection(item);
   const order=group.key==='standard'?innosolvStandard:group.key==='meters'?innosolvMeters:gemeindeOrder;
-  const index=group.key==='chosen'?Number(code):order.indexOf(code);
+  const index=order.indexOf(code);
   return group.order*1000+(!Number.isFinite(index)||index<0?999:index);
 }
 // Reusable grouping for both selected rows and the two unselected option lists.

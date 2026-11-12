@@ -6,7 +6,7 @@ export function workspaceIdentity({name,canton,bfs,population,inhabitants,title,
   return `<header class="chiffrage-editor-identity"><div class="chiffrage-editor-map" data-territory>${map}</div>
     <div class="chiffrage-editor-place"><div data-identity>${identity}</div><div><h2>${e(name)} <span>${e(canton)}</span></h2><p>OFS ${e(bfs)} · ${e(population)} ${e(inhabitants)}</p></div><span class="chiffrage-editor-revision">${title?`#${e(saveNumber)}`:label('Nouveau','Neu')}</span></div>
     <div class="chiffrage-editor-reference"><details class="chiffrage-rename" data-disclosure-key="rename"><summary aria-label="${label('Renommer','Umbenennen')} ${e(title)}" ${locked?'aria-disabled="true"':''}><span>${e(title)}</span>${locked?'':'<small aria-hidden="true">✎</small>'}</summary><label>${label('Nom de la variante','Name der Variante')}<input data-field="title" maxlength="180" value="${e(title)}"></label></details>
-    <details class="chiffrage-reference-detail" data-disclosure-key="workspace-reference"><summary>${label('Base','Grundlage')} · ${e(reference)}</summary><p>${label('Références tarifaires','Tarifreferenzen')} · ${e(tariffs)}</p></details></div></header>`;
+    <details class="chiffrage-reference-detail" data-disclosure-key="workspace-reference"><summary>${e(reference)}</summary><p>${label('Références tarifaires','Tarifreferenzen')} · ${e(tariffs)}</p></details></div></header>`;
 }
 
 export function workspaceTabs(tabs,active,label) {
