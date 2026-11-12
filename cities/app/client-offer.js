@@ -1,17 +1,16 @@
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 import { bindOfferScope } from './offer/interactions.js';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from './offer/presentation.js?v=20261112-workspace-review-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from './offer/presentation.js?v=20261112-investment-discount-r1';
 import verifiedCoats from './chiffrage/coats.js?v=20261028-business-r11';
-import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261112-workspace-review-r1';
+import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261112-investment-discount-r1';
 
 const root = document.getElementById('offerClientRoot');
 bindOfferScope(root);
 const endpoint = 'https://ozdvmllgxduzquiujcbg.supabase.co/functions/v1/chiffrage?action=clientOffer';
 const enc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({
   '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch]);
-const fmt = value => Number(Math.round(value)).toLocaleString('fr-CH', {
-  maximumFractionDigits: 0 }).replace(/[\u00a0\u202f]/g, "'");
+const fmt=value=>{const cents=Math.round(Number(value)*100)/100;return cents.toLocaleString('fr-CH',{minimumFractionDigits:Number.isInteger(cents)?0:2,maximumFractionDigits:2}).replace(/[\u00a0\u202f]/g,"'");};
 const money = value => `${fmt(value)} CHF HT`;
 const cantonNames = { JU:'Jura', VD:'Vaud', GE:'Genève', FR:'Fribourg',
   NE:'Neuchâtel', BE:'Berne', VS:'Valais', ZH:'Zurich', BL:'Bâle-Campagne' };

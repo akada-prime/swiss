@@ -351,3 +351,23 @@ et fonctions SQL, mais ne filtre plus la liste et n'est plus une action.
 la même transaction seulement pour `manual_save=true` provenant du bouton
 Enregistrer. L'historique R et les publications client restent indépendants.
 Aucune métadonnée Kanban ou de compteur n'entre dans la projection publique.
+
+
+### Remise commerciale sur l’investissement
+
+`input.investmentDiscount` est un montant CHF HT positif au centime, absent
+équivaut à zéro. Le moteur conserve toutes les prestations et jours bruts ;
+une ligne `investment_discount` négative porte uniquement la concession PV.
+Le résumé contient `investment_gross`, `investment_discount`, `investment`
+net ; TCO et revenu cinq ans suivent le net, coûts et récurrence restent
+inchangés. Une valeur négative, non numérique, sous-centime ou supérieure au
+brut est refusée. Le serveur refuse aussi cette erreur avec allow_incomplete.
+Les offres publiques ne reçoivent que la ligne de ventilation et les sommes
+nettes autorisées ; aucun brouillon interne supplémentaire. Les publications
+existantes restent figées. PDF, Excel, aperçu et vue client rendent le brut,
+la remise et le net sans retrancher des jours au périmètre.
+
+Projet / Modules / Offre constituent la navigation principale. Comparaison
+et ajustements tarifaires du dossier restent disponibles dans Dossier. Le
+Kanban est l’unique contrôle de l’avancement ; l’éditeur final affiche seulement
+une indication de lecture seule. Aucun nouveau référentiel tarifaire global.

@@ -215,6 +215,9 @@ export function calculateLcm(population, rule, overrides = {}) {
 }
 
 export function calculateQuote(input, catalog) {
+  const discount=input.investmentDiscount??0;
+  if(typeof discount!=='number'||!Number.isFinite(discount)||discount<0||Math.abs(discount*100-Math.round(discount*100))>1e-6)
+    throw new Error('Invalid investment discount');
   const mandate = (input.primeLines ?? []).find(line => line.item_code === 'prime-mandats-finance');
   const integrated = (input.primeLines ?? []).find(line => line.item_code === 'prime-mandats-integres');
   if (integrated && (!mandate || Number(integrated.quantity ?? 1) > Number(mandate.quantity ?? 1)))
@@ -419,7 +422,11 @@ export function calculateQuote(input, catalog) {
       explanation: { source: selectedPrice.source?.method ?? null } });
   }
   const sum = (key, subset = lines) => subset.reduce((total, line) => total + (line[key] ?? 0), 0);
-  const investment = sum('investment_pv');
+  const grossInvestment=sum('investment_pv');
+  if(discount>0&&discount>grossInvestment+1e-8)
+    throw new Error('Invalid investment discount');
+  if(discount>0)lines.push({family:'investment_discount',item_code:'investment-discount',label:'Remise commerciale sur l’investissement',software:false,investment_pv:-discount,investment_pa:0,annual_pv:0,annual_pa:0});
+  const investment=discount>0?Math.round((grossInvestment-discount)*100)/100:grossInvestment;
   const annual = sum('annual_pv');
   const knownInvestmentCost = sum('investment_pa');
   const knownAnnualCost = sum('annual_pa');
@@ -442,7 +449,7 @@ export function calculateQuote(input, catalog) {
       ...(missingTechnical.length ? [{ code: 'technicalPriceRequired', items: missingTechnical }] : []),
       ...(missingHosting ? [{ code: 'hostingPricesRequired' }] : []),
       ...(missingPrimeValues.length ? [{ code: 'primeOptionValuesRequired', items: missingPrimeValues }] : [])] } : {}),
-    lines, summary: { investment, annual,
+    lines, summary: { investment, annual, investment_gross:grossInvestment,investment_discount:discount,
       ...(input.reference ? { missing_service_days: missingServiceDays } : {}),
     missing_technical: missingTechnical,
     missing_hosting: missingHosting,

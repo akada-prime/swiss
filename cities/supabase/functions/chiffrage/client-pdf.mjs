@@ -2,7 +2,7 @@
 import { PDFDocument,StandardFonts,rgb } from 'pdf-lib';
 import { pdfLogo } from './pdf-logo.mjs';
 const clean=value=>String(value??'').replace(/[\u2018\u2019]/g,"'").replace(/[\u2010-\u2015]/g,'-').replace(/[\u00a0\u202f]/g,' ').replace(/[^\x20-\x7e\xa0-\xffŒœŸ€•]/g,' ').trim();
-const fmt=value=>new Intl.NumberFormat('de-CH',{maximumFractionDigits:0}).format(value??0).replace(/’/g,"'");
+const fmt=value=>{const cents=Math.round((value??0)*100)/100;return new Intl.NumberFormat('de-CH',{minimumFractionDigits:Number.isInteger(cents)?0:2,maximumFractionDigits:2}).format(cents).replace(/’/g,"'");};
 export const pdfFilename=o=>`Prime_${clean(o.commune).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9-]/g,'_')}_${o.canton}_${o.public_version||'v1.0'}_R${o.revision}.pdf`;
 export async function exportClientPdf(o) {
   const doc=await PDFDocument.create(),font=await doc.embedFont(StandardFonts.Helvetica),bold=await doc.embedFont(StandardFonts.HelveticaBold),logo=await doc.embedPng(pdfLogo);
@@ -29,8 +29,14 @@ export async function exportClientPdf(o) {
   need(140);heading('Ce que comprend votre offre');
   const names={implementation:'Mise en oeuvre',migration:'Reprise de données',management:'Gestion de projet',training:'Formation et aide au démarrage',otherServices:'Prestations complémentaires',licenses:'Logiciels et maintenance',database:'Bases de données et technique',primePartners:'Prime et partenaires',lcm:'LCM',hosting:'Hébergement'};
   tableHeader();
-  for(const row of o.cost_details??o.breakdown??[]){moneyRow(row.label_fr||names[row.key]||row.key,row.investment,row.annual);}
-  moneyRow('Total',o.amounts.investment,o.amounts.annual,{total:true});y+=12;
+  const detailRows=o.cost_details??o.breakdown??[],discountRows=detailRows.filter(row=>row.key==='discount');
+  for(const row of detailRows.filter(row=>row.key!=='discount'))moneyRow(row.label_fr||names[row.key]||row.key,row.investment,row.annual);
+  if(discountRows.length){
+    const discount=-discountRows.reduce((sum,row)=>sum+row.investment,0);
+    moneyRow('Investissement avant remise',o.amounts.investment+discount,null);
+    moneyRow('Remise commerciale sur l’investissement',-discount,null);
+  }
+  moneyRow(discountRows.length?'Total net HT':'Total',o.amounts.investment,o.amounts.annual,{total:true});y+=12;
   if(o.optional_options?.length){heading('Pour aller plus loin - options non comprises');paragraph('Les suppléments suivants sont hors des totaux ci-dessus. Chaque option est chiffrée séparément.',{color:muted});for(const option of o.optional_options){need(85);paragraph(option.label_fr,{b:true,size:12,color:orange});paragraph(option.benefit_fr);paragraph(`Supplément initial : ${fmt(option.investment)} CHF HT - annuel dès N+1 : ${fmt(option.annual)} CHF HT`,{b:true,size:10});if(option.description_fr)paragraph(option.description_fr,{size:9,color:muted});y+=8;}}
   for(const [i,p] of doc.getPages().entries()){p.drawLine({start:{x:M,y:41},end:{x:W-M,y:41},color:line,thickness:.5});p.drawText('Prime Technologies SA - Proposition financière',{x:M,y:26,size:8,font,color:muted});p.drawText(`${i+1} / ${doc.getPageCount()}`,{x:W-M-30,y:26,size:8,font,color:muted});}
   doc.setTitle(`Proposition ${o.commune} ${o.canton} - ${o.public_version||'v1.0'} R${o.revision}`);doc.setAuthor('Prime Technologies SA');

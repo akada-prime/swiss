@@ -246,3 +246,11 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
  .chiffrage-editor:has(input:focus,textarea:focus,select:focus) { padding-bottom:0; }
 }
 @media (prefers-reduced-motion:reduce) { .chiffrage-editor * { scroll-behavior:auto;transition:none; } }
+
+.chiffrage-investment-discount dl{display:grid;gap:12px;max-width:620px;margin:20px 0 0}
+.chiffrage-investment-discount dl>div{display:flex;justify-content:space-between;gap:16px;font-size:15px}
+.chiffrage-investment-discount dd{margin:0;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.chiffrage-investment-discount dl>div:last-child{padding-top:12px;border-top:1px solid var(--skin-border-soft);font-weight:650}
+.chiffrage-secondary-heading{padding:20px 24px;border-bottom:1px solid var(--skin-border-soft)}
+.chiffrage-secondary-heading h2{font-size:22px;margin:12px 0}
+.chiffrage-secondary-heading p{font-size:14px;color:var(--skin-muted)}
