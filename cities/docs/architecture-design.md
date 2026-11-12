@@ -326,3 +326,28 @@ Les publications restent figées. Créer une nouvelle publication d'une révisio
 publiée enregistre une nouvelle révision puis publie celle-ci ; un échec de
 publication laisse la nouvelle révision récupérable, sans supprimer les liens.
 Le site et la fonction doivent être déployés ensemble pour les nouvelles actions.
+
+
+### Kanban interne partagé · 12 novembre 2026
+
+`kanban.js` possède les trois groupes et l'interaction à pointeur, sans
+bibliothèque UI. La poignée capture le pointeur et déplace une ombre par
+transform pendant le geste ; un emplacement matérialise la destination.
+Le déplacement de la carte réelle précède l'attente réseau. Le sélecteur
+natif offre la même action au tactile et au clavier. En échec réseau/conflit,
+le tableau est relu ; aucune réussite silencieuse n'est affichée. Les rafraîchissements
+ne remplacent pas le DOM pendant un geste ou un renommage.
+
+`chiffrage_board` possède les trois titres et une version globale. Le RPC
+`chiffrage_board_update`, réservé au serveur, sérialise déplacements/renommages
+avec contrôle de version. `workflow_stage` est la position fonctionnelle 0–2,
+indépendante du texte du titre. Le troisième emplacement verrouille le dossier
+via un trigger ; le sortir de cet emplacement n'altère ni prix ni révision.
+L'ancien champ archived est conservé pour compatibilité des anciennes révisions
+et fonctions SQL, mais ne filtre plus la liste et n'est plus une action.
+
+`save_number` commence à zéro lors de l'introduction de cette fonction. Le RPC
+`chiffrage_write_v2` conserve le moteur de révisions et ajoute le compteur dans
+la même transaction seulement pour `manual_save=true` provenant du bouton
+Enregistrer. L'historique R et les publications client restent indépendants.
+Aucune métadonnée Kanban ou de compteur n'entre dans la projection publique.

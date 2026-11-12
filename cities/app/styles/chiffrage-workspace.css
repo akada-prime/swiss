@@ -32,8 +32,12 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 .chiffrage-rename { min-width:0;max-width:100%; }
 .chiffrage-rename>summary { display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px;color:#fff; }
 .chiffrage-rename>summary>span { overflow-wrap:anywhere;font-weight:600;font-size:15px; }
-.chiffrage-rename>summary small { color:#bcdfff;font-size:14px;text-decoration:none;padding:5px 10px;border:1px solid #bcdfff66;border-radius:7px;background:#ffffff0d; }
-.chiffrage-rename>label { margin-top:8px;min-width:min(300px,100%); }
+.chiffrage-rename>summary small { color:#bcdfff;font-size:18px;line-height:1;padding:0;border:0;background:none; }
+.chiffrage-rename>label { margin-top:0;min-width:min(300px,100%); }
+.chiffrage-rename[open]>summary{display:none}
+.chiffrage-rename>summary{min-height:44px;cursor:pointer}
+.chiffrage-rename>summary[aria-disabled=true]{cursor:default}
+.chiffrage-rename>label>input{font-size:16px;min-height:44px}
 .chiffrage-editor .chiffrage-rename>label { color:#cad9ee; }
 .chiffrage-reference-detail { color:#cad9ee; }
 .chiffrage-reference-detail p { max-width:560px;overflow-wrap:anywhere;line-height:1.5;margin:8px 0 0; }
