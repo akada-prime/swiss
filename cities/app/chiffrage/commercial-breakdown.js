@@ -20,6 +20,7 @@ export function commercialPriceGroup(line) {
   if (line.family === 'technique') return 'database';
   if (['prime','partenaires'].includes(line.family)) return 'primePartners';
   if (line.family === 'prestations_module') return 'implementation';
+  if(line.family==='prestations' && /^(?:abacus|pce|innosolv)-/.test(String(line.item_code??'')))return 'implementation';
   if (line.family === 'prestations') {
     const code = String(line.item_code ?? '').toLowerCase();
     if (code === 'reprise') return 'migration';
@@ -82,4 +83,11 @@ export function publisherBillingRows(lines = []) {
     annual: line.annual_pv,
     ...(line.explanation?.kind === 'monthly_per_user' ? { users: line.explanation.quantity } : {})
   }));
+}
+
+// Same total budget, explicit billing responsibilities; no double counting.
+export function annualOfferBudget(amounts, components, directRows = []) {
+  const direct=(directRows??[]).reduce((sum,row)=>sum+(row.annual??0),0);
+  const hosting=components?.hosting??0;
+  return {softwareAndSupport:(amounts.annual??0)-hosting-direct,hosting,publisher:direct,total:amounts.annual};
 }

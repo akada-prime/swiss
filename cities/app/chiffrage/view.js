@@ -1,27 +1,29 @@
+import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-workspace-review-r1';
+import { portalUsers, suggestedPortalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
 import { bindCommunePicker } from './commune-picker.js';
 import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261106-workspace-r2';
-import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261106-prime-options-r1';
-import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261106-workspace-r1';
+import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261112-workspace-review-r1';
+import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261112-workspace-review-r1';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
-import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261104-roadmap-beta-r1';
-import { includedForParent, optionApplies } from './module-catalog.js';
+import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261112-workspace-review-r1';
+import { includedForParent, optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
 import { bindOfferScope } from '../offer/interactions.js';
-import { customerModuleScope } from './module-scope.js?v=20261111-subscriptions-r1';
+import { customerModuleScope } from './module-scope.js?v=20261112-workspace-review-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261111-subscriptions-r1';
+import { offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261112-workspace-review-r1';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
-import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261111-subscriptions-r1';
+import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261112-workspace-review-r1';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
-import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261111-subscriptions-r1';
-import { calculationError } from './errors.js';
+import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261112-workspace-review-r1';
+import { calculationError } from './errors.js?v=20261112-workspace-review-r1';
 import bundledCoats from './coats.js?v=20261028-business-r11';
-import { completionItems, displayedServiceDays } from './completion.js?v=20261025-prime-beta-r1';
-import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261028-business-r11';
-import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261111-subscriptions-r1';
+import { completionItems, displayedServiceDays } from './completion.js?v=20261112-workspace-review-r1';
+import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-workspace-review-r1';
+import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-workspace-review-r1';
 
-import { previewModule, moduleRollup, optionPreview } from './business-presentation.js';
+import { previewModule, moduleRollup, optionPreview } from './business-presentation.js?v=20261112-workspace-review-r1';
 
 const root = document.getElementById('chiffrageRoot');
 bindOfferScope(root);
@@ -63,6 +65,7 @@ const assetPrefix = document.querySelector('script[type="module"][src*="/assets/
 const assetUrl = path => new URL(assetPrefix + path, new URL(document.documentElement.dataset.chiffrageAssets || './', document.baseURI)).href;
 const tariffLabel = catalog => [...new Set((catalog?.items??[]).map(item=>item.catalog_version).filter(Boolean))].slice(0,3).join(' · ') || '—';
 const errorMessage = error => {
+  if (error.code==='portalUsersRequired' || error.message==='Portal users required') return localLabel('Précise le nombre d’utilisateurs du portail.','Anzahl der Portalbenutzer ergänzen.');
   if (error.status === 401) return t('chiffrage.sessionExpired');
   if (error.status === 409) return t('chiffrage.revisionConflict');
   const detail = error.code ? error : calculationError(error);
@@ -103,13 +106,15 @@ function currentCompletion() {
   try { return completionItems(state.draft,calculateQuote(state.draft,state.catalog)); }
   catch (error) {
     const detail=calculationError(error);
-    if (detail?.code==='pceStandalonePrice') return [{kind:'technical',code:'pce',tab:'prestations',field:state.draft.pce.finances && state.draft.pce.financePvOverride==null?'pce.financePvOverride':'pce.salaryPvOverride'}];
+    if(detail?.code==='portalUsersRequired')return [{kind:'portal',code:'portal',tab:'composer',field:'dimensions.portalUsers'}];
+    if (detail?.code==='pceStandalonePrice') return [{kind:'technical',code:'pce',tab:'composer',field:state.draft.pce.finances && state.draft.pce.financePvOverride==null?'pce.financePvOverride':'pce.salaryPvOverride'}];
     if (detail?.code==='populationInvalid') return [{kind:'population',code:'population',tab:'composer',field:'dimensions.licensedPopulation'}];
     if (detail?.code==='hostingScopeChanged') return [{kind:'hosting',code:'hosting',tab:'composer',field:null}];
     return [{kind:'error',code:errorMessage(error),tab:'modules',field:null}];
   }
 }
 function completionLabel(item) {
+  if(item.kind==='portal')return localLabel('Utilisateurs du portail à préciser','Portalbenutzer ergänzen');
   if (item.kind==='technical') return t(item.code==='sql'?'chiffrage.completion.sql':item.code==='pce'?'chiffrage.completion.pce':'chiffrage.completion.database');
   if (item.kind==='hosting') return t(item.code==='investment_pv'?'chiffrage.completion.hostingInvestment':item.code==='annual_pv'?'chiffrage.completion.hostingAnnual':'chiffrage.completion.hosting');
   if (item.kind==='population') return t('chiffrage.populationInvalid');
@@ -181,7 +186,7 @@ function readListSnapshot(row, node) {
       const ready=Boolean(figures && !figures.incomplete && saved.snapshot?.result?.offer_options_ready!==false && !row.archived);
       if(card)card.dataset.shareReady=String(ready);
       const publish=card?.querySelector('[data-action="shareOffer"]');
-      if(publish){publish.disabled=!ready;publish.textContent=ready?localLabel('Publier cette révision','Diese Version veröffentlichen'):localLabel('Finaliser avant publication','Vor Veröffentlichung fertigstellen');}
+      if(publish){publish.disabled=!ready;publish.textContent=ready?localLabel('Publier la version enregistrée','Gespeicherte Version veröffentlichen'):localLabel('Finaliser avant publication','Vor Veröffentlichung fertigstellen');}
     } catch {
       listSnapshots.delete(key);
       if (node.isConnected) {
@@ -355,6 +360,23 @@ function rateInventory() {
     ${publisherOverridesSection()}</section>`;
 }
 
+function moduleEntry(item, selected, calculated) {
+    const id = `${item.vendor}/${item.product}/${item.item_code}`;
+    const current = state.draft.moduleServices.find(line => line.item_code === id);
+    const selectedIndex = state.draft.modules.findIndex(row => `${row.vendor}/${row.product}/${row.item_code}` === id);
+    const selectedModule = state.draft.modules[selectedIndex];
+    const days = current && Object.hasOwn(current,'days') ? current.days : presetDays(id);
+    const financial = calculated?.lines.find(line => `${line.family}/${line.product}/${line.item_code}` === id) ?? previewModule(state.draft,state.catalog,item);
+    const required = id === 'innosolv/Gemeinde/1' || id === 'abacus/ERP/10503.1' || isEnergyModule(item) && state.draft.energy;
+    return `<div class="chiffrage-module-entry" data-module-row="${escape(id)}"><label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''} ${selected.has(id) && required ? 'disabled' : ''}>
+      <span class="chiffrage-module-name">${escape(document.documentElement.lang === 'de' ? item.label_de || item.label_fr || t('chiffrage.ui.unavailableModule') : item.label_fr || item.label_de || t('chiffrage.ui.unavailableModule'))}<small>${escape(item.item_code)} · ${required ? t('chiffrage.workspace.3cef74c61d') : item.default_selected ? t('chiffrage.workspace.ef354927f1') : t('chiffrage.workspace.14eb14ece5')}</small></span></label>
+      <span class="chiffrage-module-price"><span data-module-price="${escape(id)}">${money(financial?.annual_pv)}</span><small>${t('chiffrage.ui.annualShort')}</small></span>
+      ${selected.has(id) ? `<div class="chiffrage-module-service">
+        <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" data-missing-days="${days == null}" data-proposed-days="${escape(presetDays(id) ?? '')}" class="${current?.days != null && current.days !== presetDays(id) ? 'is-adjusted' : ''}" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j.</span></label><small data-day-status ${days==null?'':'hidden'}>${localLabel('À préciser','Offen')}</small>
+      </div>` : `<span class="chiffrage-option-days">${days==null?localLabel('À préciser','Noch offen'):number(days)+' j.'}<small>${days==null?'':money(days*dayRate())}</small></span>`}
+      ${selected.has(id)?includedFunctions(id):''}${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
+  }
+
 function productSection() {
   const selected = new Set(state.draft.modules.map(item => `${item.vendor}/${item.product}/${item.item_code}`));
   const modules = availableModules().sort((a, b) => moduleOrder(a) - moduleOrder(b));
@@ -366,23 +388,7 @@ function productSection() {
   }
   let calculated;
   try { calculated = calculateQuote(state.draft, state.catalog); } catch { /* Unknown amounts stay explicit. */ }
-  const entry = item => {
-    const id = `${item.vendor}/${item.product}/${item.item_code}`;
-    const current = state.draft.moduleServices.find(line => line.item_code === id);
-    const selectedIndex = state.draft.modules.findIndex(row => `${row.vendor}/${row.product}/${row.item_code}` === id);
-    const selectedModule = state.draft.modules[selectedIndex];
-    const days = current?.days ?? presetDays(id);
-    const financial = calculated?.lines.find(line => `${line.family}/${line.product}/${line.item_code}` === id) ?? previewModule(state.draft,state.catalog,item);
-    const required = id === 'innosolv/Gemeinde/1' || id === 'abacus/ERP/10503.1' || isEnergyModule(item) && state.draft.energy;
-    return `<div class="chiffrage-module-entry"><label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''} ${selected.has(id) && required ? 'disabled' : ''}>
-      <span class="chiffrage-module-name">${escape(document.documentElement.lang === 'de' ? item.label_de || item.label_fr || t('chiffrage.ui.unavailableModule') : item.label_fr || item.label_de || t('chiffrage.ui.unavailableModule'))}<small>${required ? t('chiffrage.workspace.3cef74c61d') : item.default_selected ? t('chiffrage.workspace.ef354927f1') : t('chiffrage.workspace.14eb14ece5')}</small></span></label>
-      <span class="chiffrage-module-price"><span data-module-price="${escape(id)}">${money(financial?.annual_pv)}</span><small>${t('chiffrage.ui.annualShort')}</small></span>
-      ${selected.has(id) ? `<div class="chiffrage-module-service">
-        <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" data-missing-days="${days == null}" data-proposed-days="${escape(presetDays(id) ?? '')}" class="${current?.days != null && current.days !== presetDays(id) ? 'is-adjusted' : ''}" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j</span></label>
-        ${referenceProfiles(state.catalog).find(row=>row.id===state.draft.reference?.id)?.module_group_labels?.[id] ? `<small>${t('chiffrage.groupedServices')}</small>` : ''}
-      </div>` : `<span class="chiffrage-option-days">${days==null?localLabel('À préciser','Noch offen'):number(days)+' j'}<small>${days==null?'':money(days*dayRate())}</small></span>`}
-      ${selected.has(id)?includedFunctions(id):''}${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
-  };
+  const entry = item => moduleEntry(item, selected, calculated);
   return `<section class="chiffrage-section chiffrage-catalog"><p class="chiffrage-kicker">${localLabel('Périmètre logiciel','Softwareumfang')}</p><h2>${localLabel('Modules','Module')}</h2>
     <p class="chiffrage-helper">${localLabel('Les modules retenus en premier. Ouvre les options pour compléter le périmètre.','Gewählte Module zuerst. Weitere Optionen bei Bedarf öffnen.')}</p>
       <div class="chiffrage-module-groups">${[...groups].map(([group, entries]) => {
@@ -394,14 +400,14 @@ function productSection() {
           ...section,items:other.filter(item=>availableModuleSection(item).key===section.key)
         })).filter(section=>section.items.length) : [{key:'all',fr:'Options disponibles',de:'Verfügbare Optionen',items:other}];
         const optionsHtml=available.map(section=>`<details class="chiffrage-subdetail" data-disclosure-key="options-${escape(group)}-${section.key}"><summary>${escape(localLabel(section.fr,section.de))} · ${section.items.length}</summary><div class="chiffrage-module-list">${renderGroups(section.items,false)}</div></details>`).join('');
-        return `<details class="chiffrage-module-set" data-disclosure-key="modules-${escape(group)}"><summary><span>${escape(brand)}</span><small>${included.length} ${t('chiffrage.workspace.f8352fa70a')}</small>${`<span data-rollup-vendor="${escape(group)}">${rollupMarkup(moduleRollup(calculated,group))}</span>`}</summary>
+        return `<details class="chiffrage-module-set" data-disclosure-key="modules-${escape(group)}"><summary><span>${escape(brand)}</span><small><span data-selected-count="${escape(group)}">${included.length}</span> ${t('chiffrage.workspace.f8352fa70a')}</small>${`<span data-rollup-vendor="${escape(group)}">${rollupMarkup(moduleRollup(calculated,group))}</span>`}</summary>
           <div class="chiffrage-module-list">${renderGroups(included,true)}</div>
-          ${other.length ? `<input class="chiffrage-module-search" data-module-search="${escape(group)}" type="search" placeholder="${localLabel('Chercher un module','Modul suchen')}" aria-label="${localLabel('Chercher un module','Modul suchen')}">${optionsHtml}` : ''}</details>`;
+          ${other.length ? `<section class="chiffrage-available-modules"><h3>${localLabel('Ajouter des modules','Module hinzufügen')}</h3><input class="chiffrage-module-search" data-module-search="${escape(group)}" type="search" placeholder="${localLabel('Chercher un module','Modul suchen')}" aria-label="${localLabel('Chercher un module','Modul suchen')}">${optionsHtml}</section>` : ''}</details>`;
       }).join('')}${pceModuleSection(calculated)}</div></section>`;
 }
 
 function rollupMarkup(row) {
-  return `<span class="chiffrage-rollup"><span>${number(row.days)} j</span><span>${money(row.investment)} <small>${localLabel('invest.','Invest.')}</small></span><span>${money(row.annual)} <small>/ ${localLabel('an','Jahr')}</small></span>${row.incomplete?`<small>${localLabel('à compléter','ergänzen')}</small>`:''}</span>`;
+  return `<span class="chiffrage-rollup"><span>${number(row.days)} j.</span><span>${money(row.investment)} <small>${localLabel('invest.','Invest.')}</small></span><span>${money(row.annual)} <small>/ ${localLabel('an','Jahr')}</small></span>${row.incomplete?`<small>${localLabel('à compléter','ergänzen')}</small>`:''}</span>`;
 }
 function includedFunctions(parent) {
   const children=includedForParent(state.draft,state.catalog,parent);
@@ -450,19 +456,19 @@ function serviceSection(compact = false) {
   try { gpLine = calculateQuote(state.draft, state.catalog).lines.find(row => row.explanation?.kind === 'project_management'); } catch { /* The summary explains missing prices. */ }
   const additional = state.draft.services.filter(entry=>!serviceTypes.some(([id])=>id===entry.item_code) && serviceApplies(entry,state.draft));
   const types = compact ? serviceTypes.filter(([id]) => ['reprise','formation','demarrage','projet'].includes(id)) : [...serviceTypes,...additional.filter(row=>! /^(pce|abacus|innosolv)-/.test(row.item_code)).map(row=>[row.item_code,row.label,row.label_de??row.label])];
-  return `${!compact?implementationPanel():''}<section class="chiffrage-section chiffrage-services"><div class="chiffrage-section-heading"><div><h2>${localLabel('Prestations Prime','Prime-Leistungen')}</h2></div>${compact ? `<button class="chiffrage-button quiet" data-editor-tab="prestations">${t('chiffrage.workspace.73d84590a4')} →</button>` : ''}</div>
+  return `<section class="chiffrage-section chiffrage-services"><div class="chiffrage-section-heading"><div><h2>${localLabel('Prestations Prime','Prime-Leistungen')}</h2></div>${compact ? `<button class="chiffrage-button quiet" data-editor-tab="composer">${t('chiffrage.workspace.73d84590a4')} →</button>` : ''}</div>
     <p class="chiffrage-helper">${t('chiffrage.workspace.dbe3e236ca')}</p>
     <div class="chiffrage-service-grid"><h3 class="chiffrage-service-group-heading">${localLabel('GP, reprise, formation et aide au démarrage','Projektleitung, Datenübernahme, Schulung und Starthilfe')}</h3>${types.map(([id, fr, german]) => {
       const current = state.draft.services.find(entry => entry.item_code === id);
       const block=['reprise','projet','formation','demarrage'].includes(id)?'transversal':'complementary';
-      if(id==='deplacements' && state.draft.travel) return `<div class="chiffrage-service-item" data-service-block="${block}"><strong>${escape(de?german:fr)}</strong>${field('travel.rate',state.draft.travel.rate,t('chiffrage.travelUnit'))}${field('travel.percent',state.draft.travel.percent,t('chiffrage.travelPercent'),{step:.5})}<label class="chiffrage-choice"><input type="checkbox" data-field="travel.waived" ${state.draft.travel.waived?'checked':''}>${t('chiffrage.travelWaived')}</label><small>${t('chiffrage.travelBasis')}</small></div>`;
-      if (id === 'projet' && gp) return `<div class="chiffrage-service-item" data-service-block="${block}"><div class="chiffrage-service-title"><strong>${escape(de ? german : fr)}</strong><small data-gp-explanation>${gpExplanation(gpLine)}</small></div>${field('projectManagement.percent', gp.percent, '%', {step:.5})}<output>${money(gpLine?.investment_pv)}</output></div>`;
+      if(id==='deplacements' && state.draft.travel) return '';// Parameters are owned by projectVariables.
+      if (id === 'projet' && gp) return `<div class="chiffrage-service-item" data-service-block="${block}"><div class="chiffrage-service-title"><strong>${escape(de ? german : fr)}</strong><small data-gp-explanation>${gpExplanation(gpLine)}</small></div><span>${number(gp.percent)} %</span><output>${money(gpLine?.investment_pv)}</output></div>`;
       const days = current ? displayedServiceDays(current,state.catalog) : 0;
       const amount = current?.investment_override ?? (days == null ? null : days * (current?.unit_day_rate ?? dayRate()));
       return `<div class="chiffrage-service-item" data-service-block="${block}"><div class="chiffrage-service-title"><strong>${escape(de ? german : fr)}</strong><small>${!current ? t('chiffrage.completion.notIncluded') : current.suggested_days == null ? t('chiffrage.workspace.f65d0dc796') : `${t('chiffrage.workspace.f8130bb03a')} : ${number(current.suggested_days)} ${t('chiffrage.workspace.6abe3deea7')}`}</small></div>${field(`service.${id}.days`, days, t('chiffrage.days'), { step: .5 })}<output data-service-total="${escape(id)}">${money(Number.isFinite(amount) ? amount : null)}</output>${!compact ? `<details class="chiffrage-service-adjust"><summary>${localLabel('Ajuster','Anpassen')}</summary>${field(`service.${id}.override`, current?.investment_override, t('chiffrage.investment'), {min:-1000000})}</details>` : ''}</div>`;
     }).join('').replace('<div class="chiffrage-service-item" data-service-block="complementary">',`<h3 class="chiffrage-service-group-heading">${localLabel('Prestations complémentaires','Zusätzliche Leistungen')}</h3><div class="chiffrage-service-item" data-service-block="complementary">`)}</div>
     ${!gp ? `<p class="chiffrage-warning">${t('chiffrage.workspace.15b2f96e28')}</p>` : ''}
-    ${!compact ? `<div class="chiffrage-grid">${field('commercial.dayRate', dayRate(), t('chiffrage.workspace.6f34dc40d6'))}</div>` : ''}</section>`;
+</section>`;
 }
 function gpExplanation(line) {
   if (!line) return t('chiffrage.workspace.e44ddaea99');
@@ -577,7 +583,7 @@ function extraSection(scope = 'modules') {
       ${options.map((line,index)=>{
         const prepared=line.source==='catalog'?{...line,family:'prime',category:'license',quantity:1,unit_day_rate:dayRate(),investment_fixed_pv:line.investment_fixed_pv??0,annual_pv:line.annual_rule?.per_capita==null?(line.annual_pv??null):0}:line;
         const preview=optionPreview(state.draft,state.catalog,prepared,kind);
-        return `<div class="chiffrage-option-preview"><span>${escape(line.label)}</span><span>${(preview?.selected_days??line.days)==null?localLabel('À préciser','Noch offen'):number((preview?.selected_days??line.days)*(line.quantity??1))+' j'}</span><strong>${preview?money(preview.investment_pv):localLabel('À préciser','Noch offen')}</strong><span>${preview?money(preview.annual_pv):localLabel('À préciser','Noch offen')} / ${t('chiffrage.ui.perYear')}</span><button type="button" class="chiffrage-button quiet" data-action="${line.source==='catalog'?'addPrimeOption':'addReferenceLine'}" data-code="${escape(line.item_code??'')}" data-kind="${kind}" data-index="${index}">${localLabel('Ajouter','Hinzufügen')}</button></div>`;
+        return `<div class="chiffrage-option-preview"><span>${escape(line.label)}</span><span>${(preview?.selected_days??line.days)==null?localLabel('À préciser','Noch offen'):number((preview?.selected_days??line.days)*(line.quantity??1))+' j.'}</span><strong>${preview?money(preview.investment_pv):localLabel('À préciser','Noch offen')}</strong><span>${preview?money(preview.annual_pv):localLabel('À préciser','Noch offen')} / ${t('chiffrage.ui.perYear')}</span><button type="button" class="chiffrage-button quiet" data-action="${line.source==='catalog'?'addPrimeOption':'addReferenceLine'}" data-code="${escape(line.item_code??'')}" data-kind="${kind}" data-index="${index}">${localLabel('Ajouter','Hinzufügen')}</button></div>`;
       }).join('')||`<p class="chiffrage-helper">${localLabel('Aucune autre option disponible.','Keine weitere Option verfügbar.')}</p>`}</details>
 
       <button type="button" class="chiffrage-button quiet" data-action="${kind==='partners'?'addPartner':'addPrime'}">${localLabel('Ajouter une ligne libre','Freie Zeile hinzufügen')}</button></details>`;
@@ -685,6 +691,11 @@ root.addEventListener('error', event => {
   updateTerritory();
 }, true);
 
+function projectVariables() {
+  const travel=state.draft.travel;
+  return `<section class="chiffrage-section chiffrage-project-parameters"><h2>${localLabel('Paramètres de chiffrage','Kalkulationsparameter')}</h2><div class="chiffrage-grid chiffrage-volumes">${field('commercial.dayRate',dayRate(),localLabel('Prix par jour · CHF','Preis pro Tag · CHF'))}${state.draft.projectManagement?field('projectManagement.percent',state.draft.projectManagement.percent,localLabel('Gestion de projet · %','Projektleitung · %'),{step:.5}):''}${travel?field('travel.rate',travel.rate,localLabel('Déplacement · CHF','Reise · CHF'))+field('travel.percent',travel.percent,localLabel('Présence sur place · % des jours','Vor Ort · % der Tage'),{step:.5}):''}</div>${travel?`<label class="chiffrage-choice"><input type="checkbox" data-field="travel.waived" ${travel.waived?'checked':''}>${t('chiffrage.travelWaived')}</label><p class="chiffrage-helper">${t('chiffrage.travelBasis')}</p>`:''}</section>`;
+}
+
 function composerSection() {
   const products = state.draft.products;
   let sqlPrice=null, sqlUsers=null;
@@ -696,9 +707,10 @@ function composerSection() {
   const choices = (name, values, selected, attr, disabled=false) => `<div class="chiffrage-choice-group">${values.map(([value,label]) => `<label class="chiffrage-choice"><input type="radio" name="chiffrage-${name}" ${attr}="${value}" ${String(selected) === String(value) ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span>${label}</span></label>`).join('')}</div>`;
   const profiles = referenceProfiles(state.catalog);
   return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><h3>${t('chiffrage.ui.projectDimensions')}</h3>
-    <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('sql.users', state.draft.sql.users ?? sqlUsers,t('chiffrage.sqlUsers'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}</div>
+    <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('sql.users', state.draft.sql.users ?? sqlUsers,t('chiffrage.sqlUsers'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}${products.includes('abacus')?field('dimensions.portalUsers',portalUsers(state.draft.dimensions),localLabel('Utilisateurs du portail Abacus','Benutzer Abacus-Portal')):''}</div>
     ${products.includes('pce') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('oracle.full',state.draft.oracle.full,t('chiffrage.oracleFull'))}${field('oracle.light',state.draft.oracle.light,t('chiffrage.oracleLight'))}</div>` : ''}
-    ${products.includes('innosolv') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('sql.override',sqlPrice,t('chiffrage.sqlInvestmentPv'))}</div>` : ''}
+    ${products.includes('innosolv') ? `<div class="chiffrage-grid chiffrage-volumes">${field('sql.override',sqlPrice,t('chiffrage.sqlInvestmentPv'))}</div>` : ''}
+    ${products.includes('abacus')?`<p class="chiffrage-helper">${localLabel('Portail : moitié des collaborateurs proposée, arrondie au supérieur ; volume modifiable.','Portal: vorgeschlagen ist die halbe Mitarbeiterzahl, aufgerundet; Anzahl anpassbar.')}</p>`:''}
     <p class="chiffrage-helper">${localLabel('Collaborateurs estimés ; utilisateurs SQL et ERP à vérifier avec le client.','Mitarbeitende geschätzt; SQL- und ERP-Nutzer mit der Gemeinde prüfen.')}</p>
     <p class="chiffrage-helper" data-volume-suggestion>${t('chiffrage.volumeSuggested', { count: number(suggestedVolume(state.draft.dimensions.population)) })} <button type="button" class="chiffrage-inline" data-action="suggestVolumes">${t('chiffrage.useSuggestion')}</button></p>
     </section>
@@ -707,9 +719,9 @@ function composerSection() {
     <div class="chiffrage-decision"><div><h3>ERP</h3><p class="chiffrage-helper">${t('chiffrage.workspace.0c12310977')}</p></div>${choices('erp',[['pce','ProConcept'],['abacus','Abacus'],['both',t('chiffrage.workspace.90db01b4a5')],['none',t('chiffrage.workspace.b2ed82f1bf')]],erp,'data-erp')}</div>
     <div class="chiffrage-decision"><div><h3>${t('chiffrage.energyQuestion')}</h3><p class="chiffrage-helper">${t('chiffrage.energyLicenses')}</p></div>${choices('energy',[[true,t('chiffrage.yes')],[false,t('chiffrage.no')]],state.draft.energy ?? state.draft.modules.some(isEnergyModule),'data-energy',!products.includes('innosolv'))}</div>
     <button class="chiffrage-button quiet" data-editor-tab="modules">${t('chiffrage.workspace.97360022c6')} · ${state.draft.modules.length} →</button></section>
-    ${implementationPanel()}<div class="chiffrage-contracts">${hostingSection()}${lcmSection()}</div>
+    ${projectVariables()}${technicalSection()}<div class="chiffrage-contracts">${hostingSection()}${lcmSection()}</div>
     <section class="chiffrage-section chiffrage-reference"><div><h3>${t('chiffrage.workspace.f108b8e09c')}</h3><p class="chiffrage-helper">${state.draft.reference ? escape(displayReference(state.draft.reference)) : t('chiffrage.workspace.521d2d1b07')}</p></div>${profiles.length ? `<label>${t('chiffrage.workspace.ce3d081be7')}<select data-reference><option value="">${t('chiffrage.workspace.85e0b7d0df')}</option>${profiles.map(profile => `<option value="${escape(profile.id)}">${escape(displayReference(profile))}</option>`).join('')}</select></label>` : `<p class="chiffrage-warning">${t('chiffrage.workspace.8513a89a5d')}</p>`}</section>
-    ${serviceSection(true)}</div>`;
+    ${implementationPanel()}${serviceSection()}${extraSection('project')}</div>`;
 }
 
 let priceFeedbackTimer;
@@ -733,7 +745,7 @@ function recordPriceChange(summary) {
 function summary() {
   let result;
   try { result = calculateQuote(state.draft, state.catalog); }
-  catch (error) { return `<aside class="chiffrage-summary"><p class="chiffrage-kicker">${t('chiffrage.workspace.947be926eb')}</p><h2>${t('chiffrage.workspace.9b7132a4e5')}</h2><p class="chiffrage-warning">${escape(errorMessage(error))}</p><p class="chiffrage-helper">LCM · ${lcmPrices()}</p><button class="chiffrage-button" data-editor-tab="composer">${t('chiffrage.hosting')} / LCM →</button><button class="chiffrage-button" data-editor-tab="modules">${t('chiffrage.workspace.f492367598')} →</button><button class="chiffrage-button" data-editor-tab="prestations">${t('chiffrage.workspace.0438aab9f9')} →</button></aside><div class="chiffrage-mobile-total"><button data-editor-tab="analysis">${t('chiffrage.workspace.57d80505fd')} →</button></div>`; }
+  catch (error) { return `<aside class="chiffrage-summary"><p class="chiffrage-kicker">${t('chiffrage.workspace.947be926eb')}</p><h2>${t('chiffrage.workspace.9b7132a4e5')}</h2><p class="chiffrage-warning">${escape(errorMessage(error))}</p><p class="chiffrage-helper">LCM · ${lcmPrices()}</p><button class="chiffrage-button" data-editor-tab="composer">${t('chiffrage.hosting')} / LCM →</button><button class="chiffrage-button" data-editor-tab="modules">${t('chiffrage.workspace.f492367598')} →</button><button class="chiffrage-button" data-editor-tab="composer">${t('chiffrage.workspace.0438aab9f9')} →</button></aside><div class="chiffrage-mobile-total"><button data-editor-tab="offer">${t('chiffrage.workspace.57d80505fd')} →</button></div>`; }
   const s = result.summary;
   recordPriceChange(s);
   const buckets = financialBuckets(result);
@@ -743,10 +755,10 @@ function summary() {
     <dl class="chiffrage-totals"><div><dt>${incomplete ? localLabel('Investissement calculé à ce stade','Bisher berechnete Investition') : t('chiffrage.investment')} <small>CHF · ${t('chiffrage.ui.exTax')}</small></dt><dd>${money(s.investment).replace(' CHF','')}</dd></div><div><dt>${t('chiffrage.annual')} <small>CHF · ${t('chiffrage.ui.exTax')} · ${t('chiffrage.workspace.fe85c43980')}</small></dt><dd>${money(s.annual).replace(' CHF','')}</dd></div></dl>
     <p class="chiffrage-price-feedback" data-price-feedback role="status">${escape(state.priceFeedback || '')}</p>
     ${incomplete ? `<p class="chiffrage-warning">${s.missing_service_days?.length ? t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length}) : ''} ${s.missing_technical?.length ? localLabel('Prix SQL à préciser : investissement non final.','SQL-Preis ergänzen: Investition noch nicht endgültig.') : ''} ${s.missing_hosting?localLabel('Montants d’hébergement à préciser.','Hostingbeträge ergänzen.'):''} ${s.missing_prime_values?.length?localLabel('Options Prime : prix annuel ou jours à préciser.','Prime-Optionen: Jahrespreis oder Tage ergänzen.'):''}</p><button class="chiffrage-button" data-action="completeQuote">${localLabel('Compléter le chiffrage','Kalkulation ergänzen')} →</button>` : ''}
-    <div class="chiffrage-cost-lines">${buckets.map(([label, filter])=>`<div><span>${escape(label)}</span><span>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.investment_pv??0),0))}<small>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.annual_pv??0),0))} / ${t('chiffrage.workspace.de73eac0c3')}</small></span></div>`).join('')}</div>
+    <details class="chiffrage-summary-details"><summary>${localLabel('Répartition','Aufteilung')}</summary><div class="chiffrage-cost-lines">${buckets.map(([label, filter])=>`<div><span>${escape(label)}</span><span>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.investment_pv??0),0))}<small>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.annual_pv??0),0))} / ${t('chiffrage.workspace.de73eac0c3')}</small></span></div>`).join('')}</div></details>
     <div class="chiffrage-five-year"><span>${incomplete?localLabel('5 ans · calculé à ce stade','5 Jahre · bisher berechnet'):t('chiffrage.workspace.b1aaf814f0')}</span><strong>${money(s.tco5y)}</strong></div>
     <p class="chiffrage-helper">${t('chiffrage.workspace.a855306547')}</p>
-    <button class="chiffrage-button" data-editor-tab="analysis">${t('chiffrage.workspace.a602bde342')} →</button>
+    <button class="chiffrage-button" data-editor-tab="offer">${t('chiffrage.workspace.a602bde342')} →</button>
     <div class="chiffrage-summary-foot">${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')}</div></aside>
     <div class="chiffrage-mobile-total"><button data-editor-tab="offer"><span>${incomplete?localLabel('Investissement en cours','Investition im Aufbau'):t('chiffrage.investment')}<strong>${money(s.investment)}</strong></span><span>${t('chiffrage.annual')}<strong>${money(s.annual)}</strong></span><b>↗</b></button><p class="chiffrage-price-feedback" data-price-feedback role="status">${escape(state.priceFeedback || '')}</p></div>`;
 }
@@ -795,7 +807,7 @@ function mobileSummary() {
       <div class="chiffrage-five-year"><span>${incomplete ? localLabel('5 ans · provisoire','5 Jahre · vorläufig') : t('chiffrage.workspace.b1aaf814f0')}</span>
         <strong>${money(s.tco5y)}</strong></div>
       <p class="chiffrage-helper">${t('chiffrage.workspace.a855306547')}</p>
-      <button class="chiffrage-button" data-editor-tab="analysis">${t('chiffrage.workspace.a602bde342')} →</button>
+      <button class="chiffrage-button" data-editor-tab="offer">${t('chiffrage.workspace.a602bde342')} →</button>
       <div class="chiffrage-summary-foot">${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')}</div>
     </div>
   </details>`;
@@ -830,12 +842,12 @@ function workspaceHero() {
 
 function workspaceNavigation() {
   const views=[['communes','Communes','Gemeinden'],['map','Carte','Karte'],['stats','Stats','Statistik'],['news','Radar!','Radar!'],['stories','Histoires','Geschichten'],['roadmap','Roadmap','Roadmap']];
-  return `<div class="chiffrage-editor-toolbar"><button type="button" class="chiffrage-inline" data-action="list">← ${localLabel('Chiffrages','Kalkulationen')}</button><span>${localLabel('Espace de travail','Arbeitsbereich')} ${state.internal?`· ${localLabel('Mode avancé','Erweiterter Modus')}`:''}</span><details class="chiffrage-workspace-menu" data-workspace-menu><summary>${localLabel('Navigation','Navigation')}</summary><div class="chiffrage-menu-panel">${views.map(([id,fr,de])=>`<button type="button" class="chiffrage-button" data-workspace-view="${id}">${localLabel(fr,de)}</button>`).join('')}<button type="button" class="chiffrage-button" data-workspace-settings>${localLabel('Paramètres','Einstellungen')}</button><button type="button" class="chiffrage-button" data-action="openReference">${localLabel('Référentiel des règles','Regelreferenz')}</button><button type="button" class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></details></div>`;
+  return `<div class="chiffrage-editor-toolbar"><button type="button" class="chiffrage-inline" data-action="list">← ${localLabel('Chiffrages','Kalkulationen')}</button><span>${localLabel('Espace de travail','Arbeitsbereich')} ${state.internal?`· ${localLabel('Tarifs','Tarife')}`:''}</span><details class="chiffrage-workspace-menu" data-workspace-menu><summary>${localLabel('Navigation','Navigation')}</summary><div class="chiffrage-menu-panel">${views.map(([id,fr,de])=>`<button type="button" class="chiffrage-button" data-workspace-view="${id}">${localLabel(fr,de)}</button>`).join('')}<button type="button" class="chiffrage-button" data-workspace-settings>${localLabel('Paramètres','Einstellungen')}</button><button type="button" class="chiffrage-button" data-action="openReference">${localLabel('Référentiel des règles','Regelreferenz')}</button><button type="button" class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></details></div>`;
 }
 
-function workspaceActions(shareReady) {
-  const primaryActions = state.quote ? `<button class="chiffrage-button" data-action="${shareReady?'shareOffer':'prepareShare'}" ${state.archived?'disabled':''}>${shareReady?localLabel('Partager l’offre client','Kundenangebot teilen')+' ↗':state.archived?localLabel('Chiffrage archivé','Archivierte Kalkulation'):offerOptionReview(state.draft,state.catalog).issues.length?localLabel('Compléter les options','Optionen ergänzen'):currentCompletion().length?t('chiffrage.completion.beforeShare'):t('chiffrage.completion.saveBeforeShare')}</button><button class="chiffrage-button" data-action="manageShares">${localLabel('Gérer les liens','Links verwalten')}</button><button class="chiffrage-button" data-action="export">${t('chiffrage.export')}</button>` : '';
-  return `<footer class="chiffrage-editor-footer"><div class="chiffrage-editor-save-state"><span class="chiffrage-save-indicator" data-dirty="${state.dirty}"></span><p class="chiffrage-status${state.error?' error':''}" role="status">${escape(state.error?state.message:state.dirty?localLabel('Modifié','Geändert'):state.message||localLabel(state.quote?'Enregistré':'Non enregistré',state.quote?'Gespeichert':'Nicht gespeichert'))}</p></div><div class="chiffrage-actions"><button type="button" class="chiffrage-button primary" data-action="save">${localLabel('Enregistrer','Speichern')}</button><div class="chiffrage-desktop-actions">${primaryActions}</div><details class="chiffrage-workspace-menu chiffrage-action-menu" data-workspace-menu><summary>${localLabel('Actions','Aktionen')}</summary><div class="chiffrage-menu-panel"><button class="chiffrage-button" data-action="openReference">${localLabel('Référentiel des règles','Regelreferenz')}</button>${state.quote?`<div class="chiffrage-mobile-actions">${primaryActions}</div><button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button><button class="chiffrage-button" data-action="copyLink">${t('chiffrage.resumeDesktop')}</button><button class="chiffrage-button" data-action="revisions">${t('chiffrage.revisions')}</button><button class="chiffrage-button" data-action="archive">${t('chiffrage.archive')}</button><button class="chiffrage-button chiffrage-danger" data-action="delete">${t('chiffrage.workspace.66e03d8bb9')}</button>`:''}<button class="chiffrage-button" data-action="${state.internal?'clientMode':'internalMode'}">${localLabel(state.internal?'Quitter le mode avancé':'Mode avancé',state.internal?'Erweiterten Modus verlassen':'Erweiterter Modus')}</button><button class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></details></div></footer>`;
+function workspaceActions() {
+  const primaryActions = state.quote ? `<button class="chiffrage-button" data-action="manageShares">${localLabel('Partager','Teilen')}</button><button class="chiffrage-button" data-action="export">${t('chiffrage.export')}</button>` : '';
+  return `<footer class="chiffrage-editor-footer"><div class="chiffrage-editor-save-state"><span class="chiffrage-save-indicator" data-dirty="${state.dirty}"></span><p class="chiffrage-status${state.error?' error':''}" role="status">${escape(state.error?state.message:state.dirty?localLabel('Modifié','Geändert'):state.message||localLabel(state.quote?'Enregistré':'Non enregistré',state.quote?'Gespeichert':'Nicht gespeichert'))}</p></div><div class="chiffrage-actions"><button type="button" class="chiffrage-button primary" data-action="save">${localLabel('Enregistrer','Speichern')}</button><div class="chiffrage-desktop-actions">${primaryActions}</div><details class="chiffrage-workspace-menu chiffrage-action-menu" data-workspace-menu><summary>${localLabel('Dossier','Dossier')}</summary><div class="chiffrage-menu-panel"><button class="chiffrage-button" data-action="openReference">${localLabel('Référentiel des règles','Regelreferenz')}</button>${state.quote?`<div class="chiffrage-mobile-actions">${primaryActions}</div><button class="chiffrage-button" data-action="duplicate">${t('chiffrage.duplicate')}</button><button class="chiffrage-button" data-action="copyLink">${localLabel('Copier l’adresse interne','Interne Adresse kopieren')}</button><button class="chiffrage-button" data-action="revisions">${localLabel('Historique des versions','Versionsverlauf')}</button><button class="chiffrage-button" data-action="${state.archived?'unarchiveQuote':'archive'}">${localLabel(state.archived?'Désarchiver':'Archiver',state.archived?'Wiederherstellen':'Archivieren')}</button><button class="chiffrage-button chiffrage-danger" data-action="delete">${t('chiffrage.workspace.66e03d8bb9')}</button>`:''}<button class="chiffrage-button" data-action="${state.internal?'clientMode':'internalMode'}">${localLabel(state.internal?'Revenir au projet':'Tarifs et marges',state.internal?'Zum Projekt':'Tarife und Margen')}</button><button class="chiffrage-button quiet" data-action="logout">${t('chiffrage.logout')}</button></div></details></div></footer>`;
 }
 
 function offerSection() {
@@ -843,12 +855,12 @@ function offerSection() {
   try { result=calculateQuote(state.draft,state.catalog); }
   catch(error) { return `<section class="chiffrage-section"><p class="chiffrage-warning">${escape(errorMessage(error))}</p></section>`; }
   const priceDetail = offerBreakdown(publicCostDetails(result.lines).map(row=>({...row,label:localLabel(row.label_fr,row.label_de)})),{label:localLabel,money});
-  const themes=customerModuleScope(state.draft,state.catalog);
+  const themes=customerModuleScope(state.draft,state.catalog,{internal:true});
   const hostingLines=state.draft.primeLines.filter(line=>line.category==='hosting');
   const azHosting=hostingIncluded(state.draft) && (
     hostingLines.some(line=>line.item_code==='hosting-reference') ||
     /\bAZ(?: Informatique)?\b/i.test([state.draft.context?.hosting,...hostingLines.map(line=>line.label)].join(' ')));
-  const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),section:localLabel(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel});
+  const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),reference:entry.reference,section:localLabel(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel});
   const optionalShowcase=offerOptions(offerOptionReview(state.draft,state.catalog).options,{label:localLabel,money});
   const lcm = ({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection;
   return `<article class="chiffrage-offer"><div class="chiffrage-offer-body${optionalShowcase?' has-offer-options':''}"><section><h3>${localLabel('Les solutions et modules retenus (périmètre)','Ausgewählte Lösungen und Module (Umfang)')}</h3>
@@ -914,50 +926,6 @@ function comparisonSection() {
     ${chosen.length<2 ? `<p class="chiffrage-helper">${t('chiffrage.ui.chooseSecond')}</p>` : `<h3 class="chiffrage-comparison-heading">${t('chiffrage.ui.differences',{count:different.length})}</h3>${different.length ? table(different) : `<p class="chiffrage-helper">${t('chiffrage.ui.identicalScope')}</p>`}<details class="chiffrage-comparison-common"><summary>${t('chiffrage.ui.commonChoices',{count:common.length})}</summary>${table(common)}</details>`}` : ''}</section>`;
 }
 
-function analysis() {
-  let result;
-  try { result = calculateQuote(state.draft, state.catalog); }
-  catch (error) { return `<p class="chiffrage-warning">${escape(errorMessage(error))}</p>`; }
-  const s = result.summary;
-  const incomplete=result.status==='incomplete';
-  const total = (filter, key) => result.lines.filter(filter)
-    .reduce((sum, line) => sum + (line[key] ?? 0), 0);
-  const buckets = financialBuckets(result);
-  return `${s.missing_service_days?.length ? `<p class="chiffrage-warning">${t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length})}</p>` : ''}<section class="chiffrage-section chiffrage-analysis-result"><h2>${localLabel('Résultat du chiffrage','Kalkulationsergebnis')} <small>CHF ${t('chiffrage.ui.exTax')}</small></h2><dl><div><dt>${incomplete?localLabel('Investissement provisoire','Vorläufige Investition'):t('chiffrage.investment')}</dt><dd>${money(s.investment).replace(' CHF','')}</dd></div><div><dt>${t('chiffrage.annual')}</dt><dd>${money(s.annual).replace(' CHF','')}</dd></div></dl><p>${t('chiffrage.tco')} · ${money(s.tco5y)}</p></section><details class="chiffrage-section" data-disclosure-key="analysis-breakdown"><summary>${localLabel('Répartition financière','Finanzielle Aufteilung')}</summary>
-    <div class="chiffrage-summary-breakdown">
-      <div class="chiffrage-table-scroll"><table class="chiffrage-detail chiffrage-financial-breakdown"><thead><tr>
-        <th>${t('chiffrage.detail')}</th><th>${t('chiffrage.investment')}</th>
-        <th>${t('chiffrage.annual')}</th></tr></thead><tbody>
-        ${buckets.map(([label, filter]) => `<tr><th>${escape(label)}</th>
-          <td><span class="chiffrage-financial-label">${t('chiffrage.investment')}</span>${money(total(filter,'investment_pv'))}</td><td><span class="chiffrage-financial-label">${t('chiffrage.annual')}</span>${money(total(filter,'annual_pv'))}</td></tr>`).join('')}
-        <tr><th>${t('chiffrage.total')}</th><td><span class="chiffrage-financial-label">${t('chiffrage.investment')}</span>${money(s.investment)}</td><td><span class="chiffrage-financial-label">${t('chiffrage.annual')}</span>${money(s.annual)}</td></tr>
-        </tbody></table></div>
-    </div></details>${state.internal ? `<section class="chiffrage-section"><h2>${t('chiffrage.workspace.df7d91fa23')}</h2>
-    <p>${t('chiffrage.tco')} : <strong>${money(s.tco5y)}</strong></p>
-    <p>${t('chiffrage.margin')} · ${t('chiffrage.workspace.735185619f')} : <strong>${money(s.software_margin_5y)}</strong></p>
-    <p class="chiffrage-margin-note">${t('chiffrage.year2')} : ${money(s.software_margin_year2)} · ${t('chiffrage.year3')} : ${money(s.software_margin_year3plus)}</p>
-    <p class="chiffrage-margin-note">LCM Gold : ${money(s.lcm.gold?.effective_value)} · Platinum : ${money(s.lcm.platinium?.effective_value)}</p>
-    ${['gold','platinium'].map(key => s.lcm[key]?.source ? `<small>${key}: ${
-      t('chiffrage.lcmEstimate')} · ${escape(s.lcm[key].source.method)} · ${
-      s.lcm[key].source.sample_size ?? 0} ${t('chiffrage.contracts')}</small>` : '').join('')}
-    ${s.lcm.missing_reference ? `<p class="chiffrage-warning">${t('chiffrage.lcmMissing')}</p>` : ''}
-    ${s.incomplete_costs.length ? `<p class="chiffrage-warning">${t('chiffrage.incomplete')}: ${escape(s.incomplete_costs.join(', '))}</p>` : ''}</section>` : ''}`;
-}
-
-function lineLabel(line) {
-  const key=line.family==='prestations_module' ? line.item_code : `${line.family}/${line.product}/${line.item_code}`;
-  const item=state.catalog.items.find(item=>moduleId(item)===key);
-  const label=document.documentElement.lang === 'de' ? item?.label_de || item?.label_fr : item?.label_fr || item?.label_de;
-  if(label && (line.family==='prestations_module' || line.family==='abacus' || line.family==='innosolv'))
-    return `${line.product==='Versorger' || line.item_code.includes('/Versorger/') ? localLabel('Énergie · ','Energie · ') : ''}${label}`;
-  if(document.documentElement.lang !== 'de') return line.label;
-  if(item?.label_de)return item.label_de;
-  if(line.family==='prestations')return serviceTypes.find(([id])=>id===line.item_code)?.[2] ?? line.label;
-  if(line.family==='pce')return line.item_code==='interface' ? 'ProConcept–innosolv Schnittstelle' :
-    t(line.item_code==='finances'?'chiffrage.finances':'chiffrage.payroll');
-  return line.label;
-}
-
 function lineDetail() {
   let result;
   try { result = calculateQuote(state.draft, state.catalog); }
@@ -983,7 +951,7 @@ function lineDetail() {
       <th>${t('chiffrage.modules')}</th>${state.internal ? '<th>SW-ID / ID</th>' : ''}<th>${t('chiffrage.quantity')}</th><th>${t('chiffrage.investment')}</th>
       <th>${t('chiffrage.annual')} PV</th>${state.internal ? `<th>${t('chiffrage.annual')} PA</th><th>${t('chiffrage.annualMargin')}</th><th>${t('chiffrage.catalog', { version: '' })}</th>` : ''}
     </tr></thead><tbody>${ordered.map(line => `<tr>
-      <td data-label="${t('chiffrage.modules')}">${line.family === 'prestations_module' ? '↳ ' + t('chiffrage.moduleServices') + ' · ' : ''}${escape(lineLabel(line))}${line.supplier ? `<small> · ${escape(line.supplier)}</small>` : ''}</td>${state.internal ? `<td data-label="SW-ID / ID">${escape(line.item_code ?? '—')}</td>` : ''}<td data-label="${t('chiffrage.quantity')}">${line.selected_days == null ? line.quantity ?? '—' : `${number(line.selected_days)} j`}</td>
+      <td data-label="${t('chiffrage.modules')}">${line.family === 'prestations_module' ? '↳ ' + t('chiffrage.moduleServices') + ' · ' : ''}${escape(lineLabel(line))}${line.supplier ? `<small> · ${escape(line.supplier)}</small>` : ''}</td>${state.internal ? `<td data-label="SW-ID / ID">${escape(line.item_code ?? '—')}</td>` : ''}<td data-label="${t('chiffrage.quantity')}">${line.selected_days == null ? line.quantity ?? '—' : `${number(line.selected_days)} j.`}</td>
       <td data-label="${t('chiffrage.investment')}">${money(line.investment_pv)}</td><td data-label="${t('chiffrage.annual')} PV">${money(line.annual_pv)}</td>
       ${state.internal ? `<td data-label="${t('chiffrage.annual')} PA">${money(line.annual_pa)}</td><td data-label="${t('chiffrage.annualMargin')}">${money(line.annual_pa == null ? null : (line.annual_pv ?? 0) - line.annual_pa)}</td>` : ''}
       ${state.internal ? `<td data-label="${t('chiffrage.catalog', { version: '' })}">${escape(line.explanation?.source ?? '—')}${line.explanation?.kind ? ` · ${escape(line.explanation.kind)}` : ''}
@@ -1000,24 +968,18 @@ function renderEditor({resetScroll=false}={}) {
   const disclosureState = new Map([...root.querySelectorAll('details[data-disclosure-key]')].map(node=>[node.dataset.disclosureKey,node.open]));
   const searches = new Map([...root.querySelectorAll('[data-module-search]')].map(node=>[node.dataset.moduleSearch,node.value]));
   state.mode = 'editor';
-  if (state.editorTab === 'rates' && !state.internal) state.editorTab = 'composer';
-  const tabs = [['composer',t('chiffrage.workspace.a9de3a2603')],['modules',localLabel('Modules','Module')],['prestations',localLabel('Prestations','Leistungen')],['offer',localLabel('Offre','Angebot')],['compare',localLabel('Comparer','Vergleichen')],['analysis',t('chiffrage.workspace.ab761b3579')],...(state.internal ? [['rates',localLabel('Tarifs','Tarife')]] : [])];
+  state.editorTab=({prestations:'composer',analysis:'offer'})[state.editorTab]??state.editorTab;
+  state.internal=state.editorTab==='rates';
+  const tabs = [['composer',localLabel('Projet','Projekt')],['modules',localLabel('Modules','Module')],['offer',localLabel('Offre','Angebot')],['compare',localLabel('Comparer','Vergleichen')],['rates',localLabel('Tarifs','Tarife')]];
   const legacy=state.quote && (Object.entries(state.activeVersions).some(([key,id])=>state.versions[key]!==id));
   const financialPanel = summary();
-  let shareReady = false;
-  if (state.quote && !state.archived && !state.dirty) {
-    try { shareReady = calculateQuote(state.draft, state.catalog).status !== 'incomplete' && !offerOptionReview(state.draft,state.catalog).issues.length; }
-    catch { /* The published offer requires a complete, saved calculation. */ }
-  }
-  root.innerHTML = `<div class="chiffrage-editor">${workspaceNavigation()}${workspaceActions(shareReady)}<div class="chiffrage-workspace"><div id="chiffrageContext">${workspaceHero()}</div><div id="chiffrageMobileSummary">${mobileSummary()}</div>${workspaceTabs(tabs,state.editorTab,t('chiffrage.workspace.dd4e272518'))}<div data-completion-container>${completionPanel()}</div>${legacy?`<details class="chiffrage-standard-notice" data-disclosure-key="legacy"><summary>${localLabel('Ancien standard · tarifs d’origine conservés','Älterer Standard · ursprüngliche Tarife erhalten')}</summary><p>${localLabel('Cette variante conserve ses tarifs. Tu peux créer une variante avec les références actuelles et tes valeurs saisies.','Diese Variante behält ihre Tarife. Eine neue Variante kann die aktuellen Referenzen mit deinen Eingaben verwenden.')}</p><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></details>`:''}<div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}">
+  root.innerHTML = `<div class="chiffrage-editor">${workspaceNavigation()}${workspaceActions()}<div class="chiffrage-workspace"><div id="chiffrageContext">${workspaceHero()}</div><div id="chiffrageMobileSummary">${mobileSummary()}</div>${workspaceTabs(tabs,state.editorTab,t('chiffrage.workspace.dd4e272518'))}<div data-completion-container>${completionPanel()}</div>${legacy?`<details class="chiffrage-standard-notice" data-disclosure-key="legacy"><summary>${localLabel('Ancien standard · tarifs d’origine conservés','Älterer Standard · ursprüngliche Tarife erhalten')}</summary><p>${localLabel('Cette variante conserve ses tarifs. Tu peux créer une variante avec les références actuelles et tes valeurs saisies.','Diese Variante behält ihre Tarife. Eine neue Variante kann die aktuellen Referenzen mit deinen Eingaben verwenden.')}</p><button class="chiffrage-button" data-action="upgrade">${localLabel('Créer la variante actuelle','Aktuelle Variante erstellen')} →</button></details>`:''}<div class="chiffrage-layout${state.editorTab==='offer'||state.editorTab==='compare'?' chiffrage-layout-wide':''}">
     <div class="chiffrage-fields"><div class="chiffrage-tab-panel" id="chiffrage-panel-composer" tabindex="-1" data-tab-panel="composer" ${state.editorTab==='composer'?'':'hidden'}>${composerSection()}</div>
-    <div class="chiffrage-tab-panel" id="chiffrage-panel-modules" tabindex="-1" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}${extraSection()}</div>
-    <div class="chiffrage-tab-panel" id="chiffrage-panel-prestations" tabindex="-1" data-tab-panel="prestations" ${state.editorTab==='prestations'?'':'hidden'}>${serviceSection()}${technicalSection()}</div>
-    <div class="chiffrage-tab-panel" id="chiffrage-panel-offer" tabindex="-1" data-tab-panel="offer" ${state.editorTab==='offer'?'':'hidden'}><div class="chiffrage-offer-jump"><a href="#chiffrageOffer">${localLabel('Aperçu de l’offre','Angebotsvorschau')}</a><a href="#chiffrageOptionEditor">${localLabel('Préparer les options','Optionen vorbereiten')} · ${state.draft.client_options?.length??0}</a></div><div id="chiffrageOptionEditor">${offerOptionsEditor(state.draft,state.catalog,localLabel,money)}</div><div id="chiffrageOffer">${offerSection()}</div></div>
+    <div class="chiffrage-tab-panel" id="chiffrage-panel-modules" tabindex="-1" data-tab-panel="modules" ${state.editorTab==='modules'?'':'hidden'}>${productSection()}</div>
+    <div class="chiffrage-tab-panel" id="chiffrage-panel-offer" tabindex="-1" data-tab-panel="offer" ${state.editorTab==='offer'?'':'hidden'}><div class="chiffrage-offer-jump"><a href="#chiffrageOffer">${localLabel('Aperçu de l’offre','Angebotsvorschau')}</a><a href="#chiffrageOptionEditor">${localLabel('Préparer les options','Optionen vorbereiten')} · ${state.draft.client_options?.length??0}</a></div><div id="chiffrageOptionEditor">${offerOptionsEditor(state.draft,state.catalog,localLabel,money)}</div><div id="chiffrageOffer">${offerSection()}</div><details class="chiffrage-section"><summary>${localLabel('Détail du calcul','Berechnungsdetails')}</summary><div id="chiffrageDetail">${lineDetail()}</div></details></div>
     <div class="chiffrage-tab-panel" id="chiffrage-panel-compare" tabindex="-1" data-tab-panel="compare" ${state.editorTab==='compare'?'':'hidden'}>${comparisonSection()}</div>
-    <div class="chiffrage-tab-panel" id="chiffrage-panel-analysis" tabindex="-1" data-tab-panel="analysis" ${state.editorTab==='analysis'?'':'hidden'}><div id="chiffrageAnalysis">${analysis()}</div><div id="chiffrageDetail">${lineDetail()}</div></div>
-    ${state.internal ? `<div class="chiffrage-tab-panel" id="chiffrage-panel-rates" tabindex="-1" data-tab-panel="rates" ${state.editorTab==='rates'?'':'hidden'}><div class="chiffrage-workspace-tools">${catalogButton()}</div>${internalMargins()}${rateInventory()}${technicalSection()}${extraSection('rates')}${hostingSection('internal')}${state.quote ? `<div class="chiffrage-section"><button class="chiffrage-button" data-action="exportInternal">${t('chiffrage.exportInternal')}</button></div>` : ''}</div>`:''}
-    <div id="chiffrageShareResult" tabindex="-1" aria-live="polite"></div><div id="chiffrageHistory" tabindex="-1"></div></div><div id="chiffrageSummary">${financialPanel}</div></div></div></div>`;
+    ${state.internal ? `<div class="chiffrage-tab-panel" id="chiffrage-panel-rates" tabindex="-1" data-tab-panel="rates" ${state.editorTab==='rates'?'':'hidden'}><div class="chiffrage-workspace-tools">${catalogButton()}</div>${internalMargins()}${rateInventory()}${state.quote ? `<div class="chiffrage-section"><button class="chiffrage-button" data-action="exportInternal">${t('chiffrage.exportInternal')}</button></div>` : ''}</div>`:''}
+    </div><div id="chiffrageSummary">${financialPanel}</div></div></div></div>`;
   for (const node of root.querySelectorAll('details[data-disclosure-key]')) if(disclosureState.has(node.dataset.disclosureKey))node.open=disclosureState.get(node.dataset.disclosureKey);
   for(const node of root.querySelectorAll('[data-module-search]'))if(searches.has(node.dataset.moduleSearch)){node.value=searches.get(node.dataset.moduleSearch);node.dispatchEvent(new Event('input',{bubbles:true}));}
   restoreWorkspaceScroll(window,scroll,{opening:resetScroll});
@@ -1028,14 +990,12 @@ function refreshFinancials() {
   const incompleteItems=currentCompletion();
   const checklist=root.querySelector('[data-completion-container]');
   if(checklist){const open=checklist.querySelector('details')?.open;checklist.innerHTML=completionPanel(incompleteItems);if(open&&checklist.querySelector('details'))checklist.querySelector('details').open=true;}
-  root.querySelectorAll('[data-missing-days]').forEach(node=>node.dataset.missingDays=String(incompleteItems.some(item=>item.field===node.dataset.field)));
+  root.querySelectorAll('[data-missing-days]').forEach(node=>{const missing=incompleteItems.some(item=>item.field===node.dataset.field);node.dataset.missingDays=String(missing);node.setAttribute('aria-invalid',String(missing));const status=node.closest('.chiffrage-module-service')?.querySelector('[data-day-status]');if(status)status.hidden=!missing;});
   const sqlMissing=incompleteItems.some(item=>item.kind==='technical'&&item.code==='sql');
   root.querySelectorAll('[data-sql-warning]').forEach(node=>node.hidden=!sqlMissing);
   root.querySelectorAll('.is-completion-target').forEach(node=>{if(!incompleteItems.some(item=>item.field===node.dataset.field))node.classList.remove('is-completion-target');});
   if(state.messageResolver){state.message=state.messageResolver();const status=root.querySelector('.chiffrage-status');if(status)status.textContent=state.message;}
 
-  const shares=root.querySelectorAll('.chiffrage-editor-footer [data-action="prepareShare"],.chiffrage-editor-footer [data-action="shareOffer"]');
-  for(const share of shares){const missing=incompleteItems.length;const optionIssues=offerOptionReview(state.draft,state.catalog).issues.length;const ready=!missing&&!optionIssues&&!state.dirty&&!state.archived;share.dataset.action=ready?'shareOffer':'prepareShare';share.disabled=state.archived;share.textContent=state.archived?localLabel('Chiffrage archivé','Archivierte Kalkulation'):ready?localLabel('Partager l’offre client','Kundenangebot teilen')+' ↗':optionIssues?localLabel('Compléter les options','Optionen ergänzen'):t(missing?'chiffrage.completion.beforeShare':'chiffrage.completion.saveBeforeShare');}
   let currentResult;
   try { currentResult = calculateQuote(state.draft, state.catalog); } catch { /* Display unknown amounts. */ }
   root.querySelectorAll('[data-module-price]').forEach(node => {
@@ -1050,8 +1010,7 @@ function refreshFinancials() {
   const context=root.querySelector('#chiffrageContext');
   if (context && !context.contains(document.activeElement)) {const openKeys=[...context.querySelectorAll('details[open]')].map(node=>node.dataset.disclosureKey);context.innerHTML=workspaceHero();for(const key of openKeys){const node=context.querySelector(`[data-disclosure-key="${key}"]`);if(node)node.open=true;}}
   refreshFinancialSummary();
-  const analysisNode=root.querySelector('#chiffrageAnalysis');
-  if (analysisNode) analysisNode.innerHTML=analysis();
+
   const detail=root.querySelector('#chiffrageDetail');
   if (detail) detail.innerHTML=lineDetail();
   const offer=root.querySelector('#chiffrageOffer');
@@ -1325,6 +1284,7 @@ root.addEventListener('input', event => {
   if (event.target.hasAttribute('data-proposed-days')) event.target.classList.toggle('is-adjusted', event.target.value !== '' && Number(event.target.value) !== Number(event.target.dataset.proposedDays));
   setValue(path, event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     event.target.type === 'checkbox');
+  if(['dimensions.employees','dimensions.population'].includes(path) && !Object.hasOwn(state.draft.dimensions,'portalUsers'))root.querySelectorAll('[data-field="dimensions.portalUsers"]').forEach(node=>node.value=suggestedPortalUsers(state.draft.dimensions.employees));
   if (['pce.finances','pce.salaires'].includes(path)) {renderEditor();return;}
   if (path === 'dimensions.population' || path === 'lcm.gold' || path === 'lcm.platinium') {
     const preview = root.querySelector('.chiffrage-lcm-prices');
@@ -1391,7 +1351,16 @@ root.addEventListener('change', event => {
     retainRemoved(state.draft,previousModules,previousServices); state.dirty=true;
     if (isEnergyModule({ vendor, product, item_code })) state.draft.energy =
       state.draft.modules.some(isEnergyModule);
-    renderEditor();
+    const id=`${vendor}/${product}/${item_code}`, row=event.target.closest('[data-module-row]');
+    const item=state.catalog.items.find(item=>moduleId(item)===id);
+    if(row && item){
+      let result;try{result=calculateQuote(state.draft,state.catalog);}catch{}
+      row.outerHTML=moduleEntry(item,new Set(state.draft.modules.map(moduleId)),result);
+      const current=[...root.querySelectorAll('[data-module-row]')].find(node=>node.dataset.moduleRow===id);
+      current?.querySelector('input[type=checkbox]')?.focus({preventScroll:true});
+      root.querySelectorAll('[data-selected-count]').forEach(node=>node.textContent=state.draft.modules.filter(x=>x.vendor===node.dataset.selectedCount).length);
+    }
+    refreshFinancials();notice(()=>localLabel('Sélection modifiée · à enregistrer.','Auswahl geändert · bitte speichern.'));
   }
   if (event.target.dataset.field?.endsWith('.level')) {
     setValue(event.target.dataset.field, event.target.value);
@@ -1447,7 +1416,8 @@ function renderSharedLinks(rows,id,currentRevision=null,ready=true) {
   const needsPublication=!links.length || currentRevision && !links.some(row=>row.revision===Number(currentRevision));
   return `<section class="chiffrage-share-panel"><div class="chiffrage-share-panel-heading"><h3>${localLabel('Partage client','Kundenfreigabe')}</h3></div>
   ${links.length?render(links[0]):`<p>${localLabel('Aucun lien publié.','Noch kein Link veröffentlicht.')}</p>`}
-  ${needsPublication?`<button type="button" class="chiffrage-button" data-action="shareOffer" data-id="${escape(id)}" ${ready?'':'disabled'}>${ready?localLabel('Publier cette révision','Diese Version veröffentlichen'):localLabel('Finaliser avant publication','Vor Veröffentlichung fertigstellen')}</button>`:''}
+  ${!needsPublication&&ready&&state.mode==='editor'&&id===state.quote?`<button type="button" class="chiffrage-button" data-action="publishNewRevision" data-id="${escape(id)}">${localLabel('Créer une nouvelle publication','Neue Veröffentlichung erstellen')}</button>`:''}
+  ${needsPublication?`<button type="button" class="chiffrage-button" data-action="shareOffer" data-id="${escape(id)}" ${ready?'':'disabled'}>${ready?localLabel('Publier la version enregistrée','Gespeicherte Version veröffentlichen'):localLabel('Finaliser avant publication','Vor Veröffentlichung fertigstellen')}</button>`:''}
   ${links.length>1?`<details class="chiffrage-share-history"><summary>${localLabel('Historique','Verlauf')} (${links.length-1})</summary>${links.slice(1).map(render).join('')}</details>`:''}
   <div class="chiffrage-share-notes"><p>${localLabel('Sans expiration · ouvertures non uniques, aperçus compris.','Ohne Ablaufdatum · Aufrufe einschließlich eigener Vorschauen, nicht eindeutig.')}</p></div></section>`;
 }
@@ -1458,7 +1428,7 @@ async function loadSharedLinks(id,container) {
     const rows=await api('sharedOffers',undefined,{id});
     if(!container.isConnected)return;
     const historyOpen=container.querySelector('.chiffrage-share-history')?.open;
-    container.innerHTML=renderSharedLinks(rows,id,card?.dataset.currentRevision,card?card.dataset.shareReady==='true':!state.dirty&&!state.archived&&!currentCompletion().length&&!offerOptionReview(state.draft,state.catalog).issues.length);
+    container.innerHTML=renderSharedLinks(rows,id,card?card.dataset.currentRevision:state.revision,card?card.dataset.shareReady==='true':!state.dirty&&!state.archived&&!currentCompletion().length&&!offerOptionReview(state.draft,state.catalog).issues.length);
     if(historyOpen && container.querySelector('.chiffrage-share-history'))container.querySelector('.chiffrage-share-history').open=true;
   }catch(error){if(container.isConnected)container.innerHTML=`<p role="alert">${escape(errorMessage(error))}</p><button class="chiffrage-button" data-action="refreshShares" data-id="${escape(id)}">${localLabel('Réessayer','Erneut versuchen')}</button>`;}
   finally{container.removeAttribute('aria-busy');}
@@ -1475,11 +1445,19 @@ function offerShareUrl(token) {
   url.hash = token;
   return url.href;
 }
+function sharingPanel(source = null) {
+  const card=source?.closest('.chiffrage-list-item');
+  if(card)return card.querySelector('[data-share-result]');
+  const existing=root.querySelector('#chiffrageShareResult');
+  if(existing)return existing;
+  const panel=openWorkspaceDialog(root,localLabel('Partager l’offre client','Kundenangebot teilen'),'',source);
+  panel.id='chiffrageShareResult';panel.setAttribute('aria-live','polite');return panel;
+}
 function sharePanel(content, source = null) {
   // The original message was rendered after the entire list, out of sight.
   // Keep confirmations AND errors next to the card the user actually tapped.
   const node = source?.closest('.chiffrage-list-item')?.querySelector('[data-share-result]') ??
-    root.querySelector('#chiffrageShareResult');
+    sharingPanel(source);
   if (node) {
     node.innerHTML = content;
     node.scrollIntoView({block:'nearest',behavior:'smooth'});
@@ -1513,7 +1491,7 @@ root.addEventListener('click', async event => {
   }
   const tab = event.target.closest('[data-editor-tab]');
   if (tab && state.mode === 'editor') {
-    state.editorTab = tab.dataset.editorTab;
+    state.editorTab = ({prestations:'composer',analysis:'offer'})[tab.dataset.editorTab]??tab.dataset.editorTab;
     renderEditor();
     const missing = tab.closest('.chiffrage-summary') ? root.querySelector('[data-tab-panel]:not([hidden]) [data-missing-days="true"]') : null;
     if (missing) { missing.scrollIntoView({ block: 'center', behavior: 'smooth' }); missing.focus({ preventScroll: true }); }
@@ -1524,6 +1502,29 @@ root.addEventListener('click', async event => {
   if (!button) return;
   const action = button.dataset.action;
 
+  if(action==='unarchiveQuote'){
+    const id=button.dataset.id??state.quote;
+    button.disabled=true;
+    try{await api('unarchive',{id});if(id===state.quote)state.archived=false;state.quotes=await api('list',undefined,{archived:'all'});if(state.mode==='editor')renderEditor();else renderList();notice(()=>localLabel('Chiffrage désarchivé.','Kalkulation wiederhergestellt.'));}
+    catch(error){notice(()=>errorMessage(error),true);}finally{if(button.isConnected)button.disabled=false;}return;
+  }
+  if(action==='publishNewRevision'){
+    if(state.mode!=='editor'||button.dataset.id!==state.quote||state.dirty||state.archived||currentCompletion().length){notice(()=>localLabel('Enregistre et complète le chiffrage avant publication.','Kalkulation vor Veröffentlichung speichern und ergänzen.'),true);return;}
+    button.disabled=true;
+    let savedRevision=false;
+    try{
+      const saved=await api('save',{id:state.quote,expected_revision:state.revision,title:state.title,archived:false,catalog_versions:state.versions,input:state.draft,allow_incomplete:false});
+      state.revision=saved.revision;savedRevision=true;
+      await api('publishOffer',{id:state.quote});
+      renderEditor();await loadSharedLinks(state.quote,sharingPanel());
+      notice(()=>localLabel('Nouvelle publication créée. Les anciens liens sont conservés.','Neue Veröffentlichung erstellt. Bisherige Links bleiben erhalten.'));
+    }catch(error){
+      if(savedRevision)renderEditor();
+      const panel=sharingPanel();await loadSharedLinks(state.quote,panel);
+      panel.insertAdjacentHTML('afterbegin',`<p role="alert">${escape(errorMessage(error))}</p>`);
+      notice(()=>errorMessage(error),true);
+    }finally{if(button.isConnected)button.disabled=false;}return;
+  }
   if(action==='showcaseAdd'){
     const candidate=offerOptionCandidates(state.draft,state.catalog).find(row=>row.key===button.dataset.key);
     state.draft.client_options??=[];
@@ -1612,15 +1613,14 @@ root.addEventListener('click', async event => {
   if (action === 'shareOffer' || action === 'manageShares' || action==='refreshShares') {
     const id=button.dataset.id ?? state.quote;
     if(!id)return;
-    const panel=button.closest('.chiffrage-list-item')?.querySelector('[data-share-result]')??root.querySelector('#chiffrageShareResult');
+    const panel=button.closest('.chiffrage-list-item')?.querySelector('[data-share-result]')??sharingPanel(button);
     if(!panel)return;
-    if(action==='manageShares' && panel.hasChildNodes()){panel.replaceChildren();return;}
     if(action==='shareOffer' && state.mode==='editor' && state.dirty){notice(()=>localLabel('Enregistre avant de partager.','Vor dem Teilen speichern.'),true);return;}
     button.disabled=true;
     try {
       if(action==='shareOffer')await api('publishOffer',{id});
       await loadSharedLinks(id,panel);
-      if(state.mode==='editor' && action!=='refreshShares'){panel.focus({preventScroll:true});panel.scrollIntoView({block:'start',behavior:'instant'});}
+      if(state.mode==='editor' && action!=='refreshShares')panel.querySelector('button,a,input')?.focus({preventScroll:true});
     }catch(error){if(panel.isConnected)panel.innerHTML=`<p role="alert">${escape(errorMessage(error))}</p>`;}
     finally{if(button.isConnected)button.disabled=false;}
     return;
@@ -1740,7 +1740,8 @@ root.addEventListener('click', async event => {
       return;
     }
     if (action === 'save' || action === 'duplicate' || action === 'archive') {
-      // Keep an explicitly incomplete draft; never present missing prices as zero.
+      if(['save','duplicate'].includes(action) && currentCompletion().some(item=>item.kind==='module'||item.kind==='portal')){focusCompletion();notice(()=>localLabel('Précise les jours des modules retenus (0 est accepté) et les utilisateurs du portail avant d’enregistrer.','Tage der gewählten Module (0 ist erlaubt) und Portalbenutzer vor dem Speichern ergänzen.'),true);return;}
+      // Other incomplete prices can remain a draft; unknown selected-module days cannot.
       let incomplete = false;
       try { incomplete=calculateQuote(state.draft, state.catalog).status==='incomplete'; }
       catch (error) { if (!calculationError(error)) throw error; incomplete = true; }
@@ -1764,11 +1765,10 @@ root.addEventListener('click', async event => {
     }
     if (action === 'revisions') {
       const revisions = await api('revisions', undefined, { id: state.quote });
-      root.querySelector('#chiffrageHistory').innerHTML = `<div class="chiffrage-panel"><h3>${t('chiffrage.revisions')}</h3>
+      openWorkspaceDialog(root,localLabel('Historique des versions','Versionsverlauf'),`<div class="chiffrage-panel"><h3>${t('chiffrage.revisions')}</h3>
         ${revisions.map(row => `<button class="chiffrage-button" data-action="restore"
           data-revision="${row.revision}" ${row.revision === state.revision ? 'disabled' : ''}>
-          ${t('chiffrage.restore')} · ${row.revision}</button>`).join('')}</div>`;
-      const historyPanel=root.querySelector('#chiffrageHistory');historyPanel.focus({preventScroll:true});historyPanel.scrollIntoView({block:'start',behavior:'instant'});
+          ${t('chiffrage.restore')} · ${row.revision}</button>`).join('')}</div>`,button);
       return;
     }
     if (action === 'restore') {
@@ -1793,13 +1793,14 @@ root.addEventListener('click', async event => {
       if (!response.ok) {
         const result = await response.json().catch(() => ({}));
         const error = new Error(t('chiffrage.error'));
-        Object.assign(error, { status: response.status, code: result.code, item: result.item });
+        Object.assign(error, { status: response.status, code: result.code, item: result.item, message:result.error||error.message });
         throw error;
       }
       const link = document.createElement('a');
       link.href = URL.createObjectURL(await response.blob());
       link.download = `chiffrage-${state.draft.bfs_id}${action === 'exportInternal' ? '-interne' : '-client'}.xlsx`;
-      link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 60000);
+      document.body.append(link);link.click();link.remove();setTimeout(() => URL.revokeObjectURL(link.href), 60000);
+      notice(()=>localLabel('Export Excel prêt.','Excel-Export bereit.'));
       return;
     }
   } catch (error) {

@@ -302,3 +302,27 @@ adaptée au contraste du fond. L'éditeur possède une géométrie de triangle
 Les trois paires texte/fond et indicateur/fond sont testées dans
 `tests/chiffrage-readability.test.mjs`. Ces tests ciblés ne certifient pas
 l'accessibilité complète de l'application.
+
+
+## Chiffrage : organisation après revue du 12 novembre 2026
+
+Le même éditeur sert desktop et Natel avec cinq panneaux : Projet, Modules,
+Offre, Comparer et Tarifs. Projet possède les volumes, paramètres techniques,
+contrats et prestations. Tarifs possède les marges et inventaires de prix.
+Offre possède le périmètre client et le détail du calcul auparavant en Synthèse.
+Les anciens identifiants de panneaux sont redirigés lors de la sélection.
+
+`workspace-dialog.js` possède les dialogues natifs (partage et historique),
+leur fermeture et le retour du focus. La sélection d'un module remplace sa
+ligne seulement ; la liste est regroupée au prochain rendu volontaire.
+`subscriptions.js` possède la suggestion du volume portail et son override.
+Un jour explicitement vide reste `null`, même en présence d'une référence ;
+le serveur et l'éditeur refusent la sauvegarde d'un module retenu sans jours.
+`module-scope.js` sépare références internes et projection publique sans codes.
+`abacus-components.js` ne contient que des libellés, jamais des tarifs.
+`annualOfferBudget` répartit un total inchangé selon le responsable de facture.
+
+Les publications restent figées. Créer une nouvelle publication d'une révision
+publiée enregistre une nouvelle révision puis publie celle-ci ; un échec de
+publication laisse la nouvelle révision récupérable, sans supprimer les liens.
+Le site et la fonction doivent être déployés ensemble pour les nouvelles actions.

@@ -6,7 +6,8 @@ const workbookText=bytes=>{
  let offset=0, result='';
  while(bytes.readUInt32LE(offset)===0x04034b50){
   const size=bytes.readUInt32LE(offset+18),name=bytes.readUInt16LE(offset+26),extra=bytes.readUInt16LE(offset+28),start=offset+30+name+extra;
-  result+=inflateRawSync(bytes.subarray(start,start+size)).toString('utf8');offset=start+size;
+  const method=bytes.readUInt16LE(offset+8);assert.equal(bytes.readUInt16LE(offset+6)&8,0,'No missing data descriptor');
+  result+=(method===0?bytes.subarray(start,start+size):inflateRawSync(bytes.subarray(start,start+size))).toString('utf8');offset=start+size;
  }
  return result;
 };

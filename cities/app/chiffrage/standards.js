@@ -17,6 +17,9 @@ export function referenceProfiles(catalog) {
 export function serviceDays(catalog, id, profileId) {
   const profile = referenceProfiles(catalog).find(row => row.id === profileId);
   const presets = { ...catalog.parameters.service_presets?.standard, ...profile?.module_days };
+  // Imported group coverage is not an approved zero-day estimate for every optional article.
+  const item=catalog.items?.find(row=>moduleId(row)===id);
+  if(presets[id]===0 && profile?.module_group_labels?.[id] && item && !defaultModule(item,catalog,profile.id))return null;
   return presets[id] ?? (id.includes('/Versorger/') ?
     presets[id.replace('/Versorger/', '/Gemeinde/')] :
     id.endsWith('/129VD') ? presets[id.replace('/129VD', '/129')] : null);

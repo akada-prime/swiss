@@ -81,7 +81,7 @@ test('compact implementation retains subtotals, offered travel, one header and n
  assert.doesNotMatch(html,/Annuel ·/);assert.equal((html.match(/Investissement ·/g)||[]).length,1);
  assert.match(offerBreakdown([...rows,{key:'otherServices',label:'Suivi',investment:0,annual:100}],config),/Annuel ·/);
  const figures=offerFigures({investment:1,annual:2,tco5y:9},{...config,municipal:true,annualBreakdown:{solutions:2,lcm:0,hosting:0}});
- assert.match(figures,/<\/div><details class="prime-offer-annual-disclosure">/);
+ assert.match(figures,/<\/div><div class="prime-offer-recurring-budget">/);
  assert.doesNotMatch(figures,/<details class="prime-offer-annual-disclosure" open/);
 });
 test('catalog endpoints reject customer bearer tokens and untrusted origins',async()=>{

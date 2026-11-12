@@ -27,7 +27,7 @@ test('Abacus visa belongs to creditors; transversal functions form one chapter',
  assert.equal(groups[0].items.length,2);assert.equal(groups[2].items.length,3);
  const catalog={items:items.map((item,i)=>({...item,label_fr:['Créanciers','Visa interne','Salaires','AbaReport','Archivage','SAV','Tool-Kit'][i]}))};
  const scope=customerModuleScope({products:['abacus'],modules:items},catalog);
- assert.ok(!JSON.stringify(scope).includes('Visa interne'));
+ assert.ok(JSON.stringify(scope).includes('Visa interne'));
  assert.equal(scope[0].items.filter(i=>i.fr==='Créanciers').length,1);
  assert.ok(!JSON.stringify(scope).includes('10531'));
 });

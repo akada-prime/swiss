@@ -1,8 +1,9 @@
-import { optionApplies } from './module-catalog.js';
+import { portalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
+import { optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
 // Pure calculation domain. Real catalogs and commercial parameters are loaded
 // from the protected server store, never from this public source file.
 import { hostingIncluded } from './configuration.js';
-import { serviceApplies } from './standards.js';
+import { serviceApplies } from './standards.js?v=20261112-workspace-review-r1';
 
 const finite = (value, name) => {
   const number = Number(value);
@@ -54,7 +55,8 @@ export function priceCatalogItem(item, dimensions) {
     const share = finite(rule.users_per_unit, 'user share');
     const monthly = finite(rule.monthly_price, 'monthly price');
     if (count < 0 || share < 0 || monthly < 0) throw new Error('Invalid subscription pricing');
-    const users = Math.ceil(count * share);
+    const users = rule.basis === 'employees' ? portalUsers(dimensions) : Math.ceil(count * share);
+    if (users == null || !Number.isInteger(users) || users < 0) throw new Error('Portal users required');
     return { value: users * monthly * 12, explanation: {
       kind: rule.kind, item_code: item.item_code, basis: rule.basis,
       entered_quantity: count, quantity: users, source: item.source,
@@ -321,7 +323,7 @@ export function calculateQuote(input, catalog) {
     if (quantity < 0 || !Number.isInteger(quantity)) throw new Error('Invalid line quantity');
     const suggestedDays = entry.suggested_days ??
       catalog.parameters.service_presets?.[entry.level]?.[entry.item_code] ?? null;
-    const days = entry.days ?? suggestedDays;
+    const days = Object.hasOwn(entry, 'days') ? entry.days : suggestedDays;
     const serviceValue = days == null ? null : Number(days) * finite(entry.unit_day_rate ?? dayRate, 'service day rate') +
       finite(entry.investment_fixed_pv ?? 0, 'fixed license investment');
     const investment = effective(serviceValue ?? finite(entry.investment_pv ?? 0,

@@ -148,6 +148,8 @@ async function writeQuote(payload) {
     if (!payload.allow_incomplete || !issue) throw error;
     result = { status: 'incomplete', issues: [issue] };
   }
+  if(result.summary?.missing_service_days?.length)throw new Error('Service days required');
+  if(result.issues?.some(issue=>issue.code==='portalUsersRequired'))throw new Error('Portal users required');
   if (result.status === 'incomplete' && !payload.allow_incomplete) {
     const code=result.issues?.[0]?.code;
     throw new Error(code === 'hostingPricesRequired' ? 'Hosting prices required' :
@@ -299,6 +301,12 @@ export default async function handler(request) {
       const quote = await savedQuote(url.searchParams.get('id') ?? '',
         url.searchParams.get('revision'));
       return quote ? json(quote) : fail('Quote not found', 404);
+    }
+    if(action==='unarchive' && request.method==='POST'){
+      const payload=await body(request);
+      if(!uuidPattern.test(payload.id??''))return fail('Invalid quote id',400);
+      const rows=await db('chiffrages',{method:'PATCH',returning:true,query:{id:`eq.${payload.id}`,select:'id,archived,current_revision'},payload:{archived:false,updated_at:new Date().toISOString()}});
+      return rows.length?json(rows[0]):fail('Quote not found',404);
     }
     if (action === 'revisions' && request.method === 'GET') {
       const id = url.searchParams.get('id') ?? '';

@@ -10,3 +10,7 @@ fourni par Alex ; le mot-symbole positif existant est conservé.
 
 Offres : négatif sur fond foncé ; positif pour le corps clair du thème Helvetia.
 Communes : symbole négatif sur fond foncé, positif pour Helvetia.
+
+Offres, revue du 12 novembre 2026 : `abacus-red-negative.svg` conserve les tracés
+du négatif et applique au pictogramme le rouge #de323c du PNG fourni. Le
+lettrage reste blanc. Le logo Prime négatif original blanc/orange est réutilisé.

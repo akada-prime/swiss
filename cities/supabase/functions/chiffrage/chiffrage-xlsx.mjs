@@ -1,4 +1,3 @@
-import { deflateRawSync } from 'node:zlib';
 import { Buffer } from 'node:buffer';
 
 // Standalone XLSX writer for the authenticated function. It never needs a
@@ -36,22 +35,23 @@ function crc32(data) {
   for (const byte of data) crc = crcTable[(crc ^ byte) & 255] ^ (crc >>> 8);
   return (crc ^ -1) >>> 0;
 }
+// ZIP STORED is portable in the edge runtime; UTF-8 names and sizes live in each header.
 function zip(files) {
   const pieces = [], directory = [];
   let offset = 0;
   for (const [name, body] of Object.entries(files)) {
-    const path = Buffer.from(name), source = Buffer.from(body), compressed = deflateRawSync(source);
+    const path = Buffer.from(name), source = Buffer.from(body), compressed = source;
     const checksum = crc32(source);
     const local = Buffer.alloc(30);
     local.writeUInt32LE(0x04034b50, 0); local.writeUInt16LE(20, 4);
-    local.writeUInt16LE(8, 6); local.writeUInt16LE(8, 8);
+    local.writeUInt16LE(0x0800, 6); local.writeUInt16LE(0, 8);
     local.writeUInt32LE(checksum, 14); local.writeUInt32LE(compressed.length, 18);
     local.writeUInt32LE(source.length, 22); local.writeUInt16LE(path.length, 26);
     pieces.push(local, path, compressed);
     const central = Buffer.alloc(46);
     central.writeUInt32LE(0x02014b50, 0); central.writeUInt16LE(20, 4);
-    central.writeUInt16LE(20, 6); central.writeUInt16LE(8, 8);
-    central.writeUInt16LE(8, 10); central.writeUInt32LE(checksum, 16);
+    central.writeUInt16LE(20, 6); central.writeUInt16LE(0x0800, 8);
+    central.writeUInt16LE(0, 10); central.writeUInt32LE(checksum, 16);
     central.writeUInt32LE(compressed.length, 20); central.writeUInt32LE(source.length, 24);
     central.writeUInt16LE(path.length, 28); central.writeUInt32LE(offset, 42);
     directory.push(central, path);
@@ -88,10 +88,10 @@ export function exportQuoteXlsx(quote, { internal = false } = {}) {
     ['Investissement', summary.investment], ['Coût annuel dès N+1', summary.annual],
     ['Total 5 ans HT, LCM retenu inclus', summary.tco5y ?? summary.tco5y_excluding_lcm],
     ['Total 5 ans HT hors LCM', summary.tco5y_excluding_lcm],
-    ['LCM Gold', summary.lcm.gold?.effective_value],
-    ['Option Gold 5 ans', summary.lcm.gold?.five_year_option],
-    ['LCM Platinium', summary.lcm.platinium?.effective_value],
-    ['Option Platinium 5 ans', summary.lcm.platinium?.five_year_option],
+    ['LCM Gold', summary.lcm?.gold?.effective_value],
+    ['Option Gold 5 ans', summary.lcm?.gold?.five_year_option],
+    ['LCM Platinium', summary.lcm?.platinium?.effective_value],
+    ['Option Platinium 5 ans', summary.lcm?.platinium?.five_year_option],
     ['Famille', 'Investissement PV', 'Annuel PV', 'Investissement PA', 'Annuel PA', 'Marge connue année 3+']
   ];
   for (const [family, [invPv, annualPv, invPa, annualPa]] of totals)
@@ -99,7 +99,7 @@ export function exportQuoteXlsx(quote, { internal = false } = {}) {
   resume.push(['Marge logicielle année 2', summary.software_margin_year2],
     ['Marge logicielle année 3+', summary.software_margin_year3plus],
     ['Marge logicielle 5 ans', summary.software_margin_5y],
-    ['Coûts non renseignés', summary.incomplete_costs.join(', ')]);
+    ['Coûts non renseignés', (summary.incomplete_costs??[]).join(', ')]);
   const detail = [[
     'Famille', 'Produit', 'Module', 'Identifiant licence', 'Fournisseur', 'Source', 'Version tarifaire',
     'Dimension', 'Quantité', 'Règle / palier', 'Valeur logiciel', 'Jours',
@@ -128,8 +128,8 @@ export function exportQuoteXlsx(quote, { internal = false } = {}) {
     ['SQL cores', input.sql?.cores],
     ['Oracle Full', input.oracle?.full], ['Oracle Light', input.oracle?.light],
     ['Date de calcul', date], ['OFS', input.bfs_id],
-    ['Source LCM Gold', JSON.stringify(summary.lcm.gold?.source ?? null)],
-    ['Source LCM Platinium', JSON.stringify(summary.lcm.platinium?.source ?? null)],
+    ['Source LCM Gold', JSON.stringify(summary.lcm?.gold?.source ?? null)],
+    ['Source LCM Platinium', JSON.stringify(summary.lcm?.platinium?.source ?? null)],
     ...Object.entries(versions).map(([vendor, id]) => [`Version ${vendor}`, id]),
     ['Révision', quote.snapshot.revision], ['Entrées complètes', JSON.stringify(input)],
     ['Résultats complets', JSON.stringify(result)]

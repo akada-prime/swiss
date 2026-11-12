@@ -36,21 +36,16 @@ test('map tolerates missing geometry and escapes supplied paths',()=>{
  assert.match(result,/cx="20" cy="30"/);
 });
 
-test('annual breakdown labels software clearly and derives whole shares from the saved annual total',()=>{
- const amounts={investment:107780,annual:37028,tco5y:255892};
- const annualBreakdown={solutions:17428,lcm:6400,hosting:13200};
- const html=offerFigures(amounts,{label,money,municipal:true,annualBreakdown});
- const table=html.match(/<table class="prime-offer-annual-breakdown"[\s\S]*?<\/table>/)[0];
- assert.match(table,/Logiciels/);
- assert.doesNotMatch(table,/Solutions/);
- assert.deepEqual([...table.matchAll(/class="prime-offer-annual-share">([^<]+)/g)].map(m=>m[1]),['47 %','17 %','36 %']);
- assert.equal((table.match(/CHF/g)||[]).length,1);
+test('annual budget separates hosting from the software headline and keeps the total visible',()=>{
+ const amounts={investment:1000,annual:900,tco5y:4600};
+ const html=offerFigures(amounts,{label,money,municipal:true,annualBreakdown:{solutions:500,lcm:100,hosting:300},annualBudget:{softwareAndSupport:550,hosting:300,publisher:50,total:900}});
+ assert.match(html,/Logiciels et accompagnement \/ an/);assert.match(html,/Budget annuel total/);
+ assert.match(html,/Facturation directe éditeur/);assert.match(html,/550/);assert.match(html,/900/);
+ assert.doesNotMatch(html,/NaN|Infinity/);
  const zero=offerFigures({...amounts,annual:0},{label,money,municipal:true,annualBreakdown:{solutions:0,lcm:0,hosting:0}});
  assert.doesNotMatch(zero,/NaN|Infinity/);
- assert.equal((zero.match(/class="prime-offer-annual-share">—/g)||[]).length,3);
- const de=offerFigures(amounts,{label:(fr,de)=>de,money,municipal:true,annualBreakdown});
- assert.match(de,/Software/);assert.match(de,/Anteil/);
- assert.doesNotMatch(offerFigures(amounts,{label,money,municipal:true}),/prime-offer-annual-breakdown/);
+ const de=offerFigures(amounts,{label:(fr,de)=>de,money,municipal:true,annualBreakdown:{solutions:500,lcm:100,hosting:300}});
+ assert.match(de,/Software und Begleitung/);assert.match(de,/Gesamtbudget/);
 });
 
 test('public module dependency graph cannot load editor, calculations or private storage',()=>{

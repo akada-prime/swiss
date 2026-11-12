@@ -31,5 +31,5 @@ test('public selling detail conserves totals, names extras and splits annual com
  assert.deepEqual(annualComponents(publicPriceBreakdown(lines)),{solutions:350,lcm:60,hosting:80});
  const html=offerBreakdown(detail.map(row=>({...row,label:row.label_fr})),{label:fr=>fr,money:n=>n+' CHF HT'});
  assert.ok(html.indexOf('Mise en oeuvre de votre projet')<html.indexOf('Logiciels et maintenance'));assert.match(html,/Technique, service et support/);
- const scope=offerScope([{product:'Abacus',items:['Finances']}],{asset:x=>x});assert.match(scope,/abacus-negative.svg/);assert.match(scope,/abacus-wordmark.png/);
+ const scope=offerScope([{product:'Abacus',items:['Finances']}],{asset:x=>x});assert.match(scope,/abacus-red-negative.svg/);assert.match(scope,/abacus-wordmark.png/);
 });
