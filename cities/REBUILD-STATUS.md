@@ -1,6 +1,16 @@
 # État de reprise — Prime Communes 2.0
 
-> **Chiffrage · revue du 12.11.2026 — préparé, non publié.** Projet regroupe
+> **Correctif ouverture · 12.11.2026.** Les lectures serveur réussissaient mais
+> le rendu de l'éditeur échouait : le retrait de Synthèse avait supprimé
+> `lineLabel`, toujours appelée par `lineDetail`, rendu même dans un onglet
+> masqué. Fonction restaurée, aucune modification métier ou donnée. Deux tests
+> ajoutés : résolution des identifiants de l'éditeur et exécution du rendu du
+> détail en FR/DE. 243 tests et build réussis. Versions du chargeur renouvelées.
+> Lot précédent publié via PR120, site et fonction v30 actifs ; la recette
+> visuelle complète reste ouverte.
+
+
+> **Chiffrage · revue du 12.11.2026 — publié, recette visuelle ouverte.** Projet regroupe
 > paramètres et prestations ; Modules, Offre, Comparer et Tarifs restent dédiés.
 > Partage et historique en dialogues natifs ; création explicite d'une nouvelle
 > publication, anciens liens conservés. Sélection d'un module sur place, jours

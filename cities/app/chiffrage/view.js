@@ -926,6 +926,20 @@ function comparisonSection() {
     ${chosen.length<2 ? `<p class="chiffrage-helper">${t('chiffrage.ui.chooseSecond')}</p>` : `<h3 class="chiffrage-comparison-heading">${t('chiffrage.ui.differences',{count:different.length})}</h3>${different.length ? table(different) : `<p class="chiffrage-helper">${t('chiffrage.ui.identicalScope')}</p>`}<details class="chiffrage-comparison-common"><summary>${t('chiffrage.ui.commonChoices',{count:common.length})}</summary>${table(common)}</details>`}` : ''}</section>`;
 }
 
+function lineLabel(line) {
+  const key=line.family==='prestations_module' ? line.item_code : `${line.family}/${line.product}/${line.item_code}`;
+  const item=state.catalog.items.find(item=>moduleId(item)===key);
+  const label=document.documentElement.lang === 'de' ? item?.label_de || item?.label_fr : item?.label_fr || item?.label_de;
+  if(label && (line.family==='prestations_module' || line.family==='abacus' || line.family==='innosolv'))
+    return `${line.product==='Versorger' || line.item_code.includes('/Versorger/') ? localLabel('Énergie · ','Energie · ') : ''}${label}`;
+  if(document.documentElement.lang !== 'de') return line.label;
+  if(item?.label_de)return item.label_de;
+  if(line.family==='prestations')return serviceTypes.find(([id])=>id===line.item_code)?.[2] ?? line.label;
+  if(line.family==='pce')return line.item_code==='interface' ? 'ProConcept–innosolv Schnittstelle' :
+    t(line.item_code==='finances'?'chiffrage.finances':'chiffrage.payroll');
+  return line.label;
+}
+
 function lineDetail() {
   let result;
   try { result = calculateQuote(state.draft, state.catalog); }
