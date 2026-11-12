@@ -14,20 +14,17 @@ export function offerHero({ asset, name, bfsId, population, heading, inhabitants
     <h2>${e(heading)}</h2>${details}</header>`;
 }
 export const offerBanner = (hero, figures = '') => `<div class="prime-offer-banner">${hero}${figures}</div>`;
-export function offerFigures(amounts, { label, money, incomplete = false, caveat = '', municipal = false, annualBreakdown = null }) {
-  const annualDetails = municipal && annualBreakdown ? `<table class="prime-offer-annual-breakdown" aria-label="${e(label('Répartition des coûts annuels','Aufteilung der jährlichen Kosten'))}">
-    <thead><tr><th scope="col" aria-label="${e(label('Poste','Position'))}"></th><th scope="col">${label('CHF HT / an','CHF exkl. MWST / Jahr')}</th><th scope="col">${label('Part','Anteil')}</th></tr></thead>
-    <tbody>${[['solutions','Logiciels','Software'],['lcm','LCM','LCM'],['hosting','Hébergement','Hosting']].map(([key,fr,de]) => {
-      const amount = annualBreakdown[key];
-      const share = Number.isFinite(amounts.annual) && amounts.annual > 0 && Number.isFinite(amount)
-        ? `${Math.round(amount / amounts.annual * 100)} %` : '—';
-      return `<tr><th scope="row">${label(fr,de)}</th><td>${e(money(amount).replace(/ CHF(?: HT)?$/, ''))}</td><td class="prime-offer-annual-share">${share}</td></tr>`;
-    }).join('')}</tbody></table>` : '';
+export function offerFigures(amounts, { label, money, incomplete = false, caveat = '', municipal = false, annualBreakdown = null, annualBudget = null }) {
+  const budget = annualBudget ?? (annualBreakdown ? {softwareAndSupport:amounts.annual-(annualBreakdown.hosting??0),hosting:annualBreakdown.hosting??0,publisher:0,total:amounts.annual} : null);
+  const annualDetails = municipal && budget ? `<div class="prime-offer-recurring-budget"><dl>${[
+    ['softwareAndSupport','Logiciels et accompagnement','Software und Begleitung'],
+    ['hosting','Hébergement','Hosting'],['publisher','Facturation directe éditeur','Direkte Herstellerrechnung']
+  ].filter(([key])=>key==='softwareAndSupport'||budget[key]!==0).map(([key,fr,de])=>`<div><dt>${label(fr,de)}</dt><dd>${e(money(budget[key]))} <small>/ ${label('an','Jahr')}</small></dd></div>`).join('')}</dl><p><span>${label('Budget annuel total','Jährliches Gesamtbudget')}</span><strong>${e(money(budget.total))}</strong></p></div>` : '';
   if (municipal) return `<section class="chiffrage-offer-summary"><div class="prime-offer-communal-figures">
     <div><span>${label("Coût d’investissement",'Investitionskosten')}</span><strong>${e(money(amounts.investment)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Une fois','Einmalig')}</small></div>
-    <div><span>${label('Coûts de fonctionnement (annuels)','Betriebskosten (jährlich)')}</span><strong>${e(money(amounts.annual)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Dès la 2e année','Ab dem zweiten Jahr')}</small></div>
+    <div><span>${label(budget?'Logiciels et accompagnement / an':'Budget annuel total',budget?'Software und Begleitung / Jahr':'Jährliches Gesamtbudget')}</span><strong>${e(money(budget?.softwareAndSupport ?? amounts.annual)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Dès la 2e année','Ab dem zweiten Jahr')}</small></div>
     <div><span>${label('Coût total sur 5 ans','Gesamtkosten über 5 Jahre')}</span><strong>${e(money(amounts.tco5y)).replace(/ CHF HT$/, ' <span class="prime-offer-currency">CHF HT</span>')}</strong><small>${label('Investissement + 4 annuités','Investition + 4 Jahresbeträge')}</small></div>
-    </div>${annualDetails ? `<details class="prime-offer-annual-disclosure"><summary>${label('Répartition des coûts annuels','Aufteilung der jährlichen Kosten')}</summary>${annualDetails}</details>` : ''}${caveat}</section>`;
+    </div>${annualDetails}${caveat}</section>`;
   return `<section class="chiffrage-offer-summary"><div class="chiffrage-offer-figures">
     <div><span>${incomplete ? label('Investissement calculé à ce stade','Bisher berechnete Investition') : label('Investissement initial','Anfangsinvestition')}</span><strong>${e(money(amounts.investment))}</strong><small>${label('HT · une fois','exkl. MWST · einmalig')}</small></div>
     <div><span>${label('Coût annuel récurrent','Wiederkehrende Jahreskosten')}</span><strong>${e(money(amounts.annual))}</strong><small>${label('HT · dès la 2e année','exkl. MWST · ab dem zweiten Jahr')}</small></div>
@@ -46,7 +43,7 @@ export function offerMap(map, bfsId, label, fallback = '') {
   const center = [0,1].map(i=>(Math.min(...points.map(p=>p[i]))+Math.max(...points.map(p=>p[i])))/2);
   return `<svg viewBox="${box.join(' ')}" role="img" aria-label="${e(label)}"><g class="chiffrage-map-region">${(map.cantons??[]).map(row=>`<path d="${e(row.d)}"></path>`).join('')}</g><path class="chiffrage-map-selected" d="${e(selected.d)}"></path><circle class="chiffrage-map-point" cx="${center[0]}" cy="${center[1]}" r="7000"></circle></svg>`;
 }
-const logos = { innosolvcity:'innosolvcity.png', ProConcept:'proconcept-wordmark.png', Abacus:'abacus-negative.svg' };
+const logos = { innosolvcity:'innosolvcity.png', ProConcept:'proconcept-wordmark.png', Abacus:'abacus-red-negative.svg', Prime:'prime-logo-negative.svg' };
 export function offerScope(groups, { asset, label = fr => fr }) {
   groups=groups.map(group=>{
     const sections=new Map(), items=[];
@@ -59,9 +56,9 @@ export function offerScope(groups, { asset, label = fr => fr }) {
   });
   const itemHtml = item => {
     if (typeof item === 'string') return `<li>${e(item)}</li>`;
-    if(Array.isArray(item.items))return `<li class="prime-offer-scope-parent"><details class="prime-offer-scope-section"><summary class="prime-offer-scope-heading">${e(item.label)} <span>· ${item.items.length} ${label('modules','Module')}</span></summary><ul class="prime-offer-scope-modules">${item.items.map(itemHtml).join('')}</ul></details></li>`;
+    if(Array.isArray(item.items))return `<li class="prime-offer-scope-parent"><details class="prime-offer-scope-section"><summary class="prime-offer-scope-heading">${e(item.label)} <span>· ${item.items.reduce((sum,row)=>sum+1+(row.included?.length??0),0)} ${label(item.items.reduce((sum,row)=>sum+1+(row.included?.length??0),0)===1?'module':'modules','Module')}</span></summary><ul class="prime-offer-scope-modules">${item.items.map(itemHtml).join('')}</ul></details></li>`;
     const children = item.included ?? [];
-    if (!children.length) return `<li>${e(item.label)}</li>`;
+    if (!children.length) return `<li>${item.reference?`<span class="prime-offer-reference-code">${e(item.reference)}</span> `:''}${e(item.label)}</li>`;
     // A priced parent stays a module when it also becomes a section heading.
     // All software uses the same visible list, independently of its pricing model.
     const modules = [{label:item.label}, ...children];
@@ -71,11 +68,11 @@ export function offerScope(groups, { asset, label = fr => fr }) {
       if (!themes.has(theme)) themes.set(theme, []);
       themes.get(theme).push(module);
     }
-    return `<li class="prime-offer-scope-parent"><details class="prime-offer-scope-section"><summary class="prime-offer-scope-heading">${e(item.label)} <span>· ${modules.length} ${label('modules inclus','enthaltene Module')}</span></summary>${[...themes].map(([theme,rows])=>`${theme ? `<h6 class="prime-offer-scope-subheading">${e(theme)}</h6>` : ''}<ul class="prime-offer-scope-modules">${rows.map(module=>`<li>${e(module.label)}</li>`).join('')}</ul>`).join('')}</details></li>`;
+    return `<li class="prime-offer-scope-parent"><details class="prime-offer-scope-section"><summary class="prime-offer-scope-heading">${item.reference?`<span class="prime-offer-reference-code">${e(item.reference)}</span> `:''}${e(item.label)} <span>· ${modules.length} ${label('modules inclus','enthaltene Module')}</span></summary>${[...themes].map(([theme,rows])=>`${theme ? `<h6 class="prime-offer-scope-subheading">${e(theme)}</h6>` : ''}<ul class="prime-offer-scope-modules">${rows.map(module=>`<li>${e(module.label)}</li>`).join('')}</ul>`).join('')}</details></li>`;
   };
   const grouped = groups.some(group=>group.items.some(item=>typeof item==='object' && (item.items?.length || item.included?.length)));
   const controls = grouped ? `<div class="prime-offer-scope-tools"><button type="button" class="prime-offer-scope-toggle" data-scope-toggle data-expand-label="${e(label('Tout déplier','Alle aufklappen'))}" data-collapse-label="${e(label('Tout replier','Alle zuklappen'))}" aria-expanded="false">${label('Tout déplier','Alle aufklappen')}</button></div>` : '';
-  return `<div class="prime-offer-scope">${controls}<div class="prime-offer-module-grid">${groups.map(({ product, items })=>`<section class="prime-offer-module-group"><h4 class="${product==='Abacus'?'brand-abacus':product==='innosolvcity'?'brand-innosolv':''}">${logos[product] ? `<img class="prime-offer-software-logo ${['ProConcept','Abacus'].includes(product)?'logo-on-dark':''}" src="${e(asset(`assets/logos/${logos[product]}`))}" alt="${e(product)}">${product==='Abacus'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/abacus-wordmark.png'))}" alt="Abacus">`:''}${product==='ProConcept'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/proconcept-dark.png'))}" alt="ProConcept">`:''}` : e(product)}</h4><ul>${items.map(itemHtml).join('')}</ul></section>`).join('')}</div></div>`;
+  return `<div class="prime-offer-scope">${controls}<div class="prime-offer-module-grid">${groups.map(({ product, items })=>`<section class="prime-offer-module-group"><h4 class="${product==='Abacus'?'brand-abacus':product==='innosolvcity'?'brand-innosolv':''}">${logos[product] ? `<img class="prime-offer-software-logo ${['ProConcept','Abacus','Prime'].includes(product)?'logo-on-dark':''}" src="${e(asset(product==='Prime'?logos[product]:`assets/logos/${logos[product]}`))}" alt="${e(product)}">${product==='Abacus'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/abacus-wordmark.png'))}" alt="Abacus">`:''}${product==='ProConcept'?`<img class="prime-offer-software-logo logo-on-light" src="${e(asset('assets/logos/proconcept-dark.png'))}" alt="ProConcept">`:''}` : e(product)}</h4><ul>${items.map(itemHtml).join('')}</ul></section>`).join('')}</div></div>`;
 }
 export function offerLcm(lcm, label, {prices, money} = {}) {
   if (!lcm) return '';

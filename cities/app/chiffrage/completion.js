@@ -2,7 +2,7 @@
 export function completionItems(input, result) {
   const summary = result?.summary ?? {};
   const items = (summary.missing_technical ?? []).map(code => ({
-    kind:'technical', code, tab:'prestations', field:code === 'sql' ? 'sql.override' : 'oracle.investmentOverride'
+    kind:'technical', code, tab:'composer', field:code === 'sql' ? 'sql.override' : 'oracle.investmentOverride'
   }));
   for (const id of summary.missing_service_days ?? [])
     items.push({kind:'module', code:id, tab:'modules', field:`moduleService.${id}.days`});
@@ -10,7 +10,7 @@ export function completionItems(input, result) {
     if (!(summary.missing_prime_values??[]).includes(line.item_code??line.label)) return;
     for(const key of ['days','annual_pv'])if(line[key]==null && (key!=='annual_pv'||
       (!line.annual_rule&&line.item_code!=='prime-mandats-integres')))
-      items.push({kind:'prime',code:line.item_code??line.label,tab:'modules',field:`primeLines.${index}.${key}`});
+      items.push({kind:'prime',code:line.item_code??line.label,tab:'composer',field:`primeLines.${index}.${key}`});
   });
   if (summary.missing_hosting) {
     let found = false;
@@ -29,6 +29,6 @@ export function completionItems(input, result) {
 export function displayedServiceDays(entry, catalog) {
   // An absent optional service contributes nothing; an unknown retained service stays unknown.
   if (!entry) return 0;
-  return entry.days ?? entry.suggested_days ??
+  return Object.hasOwn(entry, 'days') ? entry.days : entry.suggested_days ??
     catalog?.parameters?.service_presets?.[entry.level]?.[entry.item_code] ?? null;
 }

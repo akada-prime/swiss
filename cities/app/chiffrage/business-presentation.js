@@ -1,5 +1,5 @@
 // Read-only editor projections. Previewing an option never mutates the draft.
-import { calculateQuote, priceCatalogItem, calculatePublisherRent } from './calculate.js';
+import { calculateQuote, priceCatalogItem, calculatePublisherRent } from './calculate.js?v=20261112-workspace-review-r1';
 
 export function previewModule(input, catalog, item) {
   try {

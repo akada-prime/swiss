@@ -35,6 +35,7 @@ export function abacusFamily(item) {
 }
 export function moduleChapter(item) {
   if (item.vendor === 'abacus') {
+    if (abacusFamily(item) === '92101') return section('portal','Portail Abacus','Abacus-Portal',12);
     const family = abacusFamily(item), index = abacus.findIndex(row=>row[0]===family);
     if (index>=0) return section(family,abacus[index][1],abacus[index][2],index);
     if (['10550','10503'].includes(family)) return section('required','Programmes obligatoires','Obligatorische Programme',11);

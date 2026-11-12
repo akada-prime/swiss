@@ -1,4 +1,4 @@
-import {offerOptionCandidates,priceOfferOption,maxOfferOptions} from './offer-options.js?v=20261106-prime-options-r1';
+import {offerOptionCandidates,priceOfferOption,maxOfferOptions} from './offer-options.js?v=20261112-workspace-review-r1';
 function escapeOptionEditor(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 export function optionPriceMessage(candidate,row,l) {
   if((row.days??candidate?.days)==null)return l('Jours à préciser (0 autorisé).','Tage angeben (0 erlaubt).');

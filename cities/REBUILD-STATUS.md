@@ -1,5 +1,21 @@
 # État de reprise — Prime Communes 2.0
 
+> **Chiffrage · revue du 12.11.2026 — préparé, non publié.** Projet regroupe
+> paramètres et prestations ; Modules, Offre, Comparer et Tarifs restent dédiés.
+> Partage et historique en dialogues natifs ; création explicite d'une nouvelle
+> publication, anciens liens conservés. Sélection d'un module sur place, jours
+> absents conservés à null et sauvegarde bloquée ; volume du portail modifiable.
+> Portail Abacus séparé, fonctions des packs développées et références internes.
+> Synthèse intégrée à Offre, Tarifs sans doublons, résumé sans ascenseur interne.
+> Vue client : budget annuel séparant logiciel/accompagnement, hébergement et
+> facturation éditeur ; logos Abacus rouge/blanc et Prime blanc/orange.
+> Export XLSX : en-têtes ZIP corrigés et lecture indépendante openpyxl réussie.
+> 241 tests et build réussis. Recette six largeurs, trois thèmes et Safari/iPhone
+> non effectuée : navigateur natif sans fournisseur AT-SPI et navigateur distant
+> sans accès au serveur local. Lot à relire en PR avant déploiement coordonné du
+> site et de la fonction. Le Vaud v2 désarchivé sur demande, sans changer son R3.
+
+
 > **Décisions métier · 11.11.2026** — Standard privé versionné et nouvelle
 > révision du Vaud : sélection Abacus et jours alignés sur le classeur validé,
 > Chiens à un demi-jour, innoconnect sélectionné à un jour. Welsch ajouté au

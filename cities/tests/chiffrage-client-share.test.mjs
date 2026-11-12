@@ -142,7 +142,7 @@ test('the four distinct accompaniment prices and LCM reconcile exactly without e
   assert.equal(published.amounts.tco5y,305);
 });
 
-test('Abacus exposes only parent module groups, never individual functions',()=>{
+test('Abacus exposes selected function labels without internal article references',()=>{
   const input={products:['abacus','innosolv','pce'],
     modules:[{vendor:'abacus',product:'ERP',item_code:'10510.205'},
       {vendor:'abacus',product:'ERP',item_code:'10510.208'},
@@ -158,13 +158,13 @@ test('Abacus exposes only parent module groups, never individual functions',()=>
     {vendor:'innosolv',product:'Gemeinde',item_code:'100',label_fr:'Habitants',label_de:'Einwohner'}]};
   const result=customerModuleScope(input,catalog);
   const abacus=result.find(x=>x.product==='Abacus');
-  assert.deepEqual(abacus.items.map(x=>x.fr),['Comptabilité financière','Débiteurs']);
+  assert.deepEqual(abacus.items.map(x=>x.fr),['Fonction interne A','Fonction interne B','Fonction interne C']);
   assert.deepEqual(result.find(x=>x.product==='innosolvcity').items.map(x=>x.fr),['Habitants']);
   assert.deepEqual(result.find(x=>x.product==='ProConcept').items.map(x=>x.fr),['Finances','Salaires']);
-  assert.ok(!JSON.stringify(result).includes('Fonction interne'));
+  assert.ok(JSON.stringify(result).includes('Fonction interne'));
   assert.ok(!JSON.stringify(result).includes('10510'));
   const fallback=customerModuleScope(input,{items:catalog.items.filter(x=>x.item_code!=='10510.1')});
-  assert.equal(fallback.find(x=>x.product==='Abacus').items[0].fr,'Autres fonctions Abacus');
+  assert.equal(fallback.find(x=>x.product==='Abacus').items[0].fr,'Fonction interne A');
 });
 
 test('internal quote and customer projection share the same price taxonomy',()=>{
@@ -255,7 +255,7 @@ test('links are manually reversible and the closed panel leaves no duplicate sum
  assert.match(view,/chiffrage-button chiffrage-danger.*data-action="deleteSharedOffer"/);
  assert.match(view,/role="switch" aria-checked=/);
  assert.match(view,/await api\('setOfferActive'/);
- assert.match(view,/panel.replaceChildren\(\)/);
+ assert.match(view,/openWorkspaceDialog\(root,localLabel\('Partager/);
  assert.doesNotMatch(view,/details open class="chiffrage-share-panel"|revokeSharedOffer/);
 });
 

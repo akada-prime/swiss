@@ -136,6 +136,10 @@
 .chiffrage-module-service{min-width:0;display:grid;gap:3px;justify-items:end}
 .chiffrage-view .chiffrage-module-service label{display:flex;flex-direction:row;align-items:center;gap:5px;color:var(--skin-muted);font-size:13px;white-space:nowrap}
 .chiffrage-view .chiffrage-module-service input[type=number]{width:66px;min-height:44px;padding:8px;text-align:right;font-size:16px}
+.chiffrage-available-modules{margin-top:24px;padding-top:24px;border-top:1px solid var(--skin-border)}
+.chiffrage-available-modules>h3{margin:0 0 16px;font-size:17px}
+.chiffrage-available-modules .chiffrage-module-search{margin:0 0 12px}
+.chiffrage-available-modules>.chiffrage-subdetail{border:1px solid var(--skin-border-soft);border-radius:10px;padding:0 12px;margin-top:12px;background:var(--skin-tint)}
 .chiffrage-module-service small{font-size:11px;line-height:1.3;color:var(--skin-muted);text-align:right}
 .chiffrage-visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .chiffrage-module-entry>.chiffrage-warning,.chiffrage-module-entry>.chiffrage-grid{grid-column:1/-1}
@@ -551,7 +555,7 @@
 .chiffrage-saved-tco b{font-size:14px;letter-spacing:0;color:var(--skin-secondary)}
 .chiffrage-list-share-actions{grid-template-columns:1fr 1fr;padding:0 16px 14px}
 .chiffrage-list-share-actions>.chiffrage-button{padding:9px 10px;min-height:40px;font-size:13px}
-#chiffrageShareResult>.chiffrage-share-panel{margin:16px 24px 24px;padding:20px;max-width:960px}
+#chiffrageShareResult>.chiffrage-share-panel{margin:0;padding:0;border:0;background:transparent}
 .chiffrage-share-link-heading{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px}
 .chiffrage-share-link-heading .chiffrage-link-switch{width:auto;min-height:36px;padding:6px 12px;font-size:12px;text-align:center}
 .chiffrage-link-switch[aria-checked="true"]{color:var(--skin-accent-text);border-color:var(--skin-accent)}

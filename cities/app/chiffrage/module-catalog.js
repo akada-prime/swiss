@@ -1,3 +1,4 @@
+import { abacusComponents } from './abacus-components.js?v=20261112-workspace-review-r1';
 // Catalog content is independent of price calculation. Versioned with commercial parameters.
 const clean = (value, limit = 160) => String(value ?? '').trim().slice(0, limit);
 const vendors = new Set(['innosolv','abacus','pce']);
@@ -16,12 +17,20 @@ export function moduleParents(catalog) {
 }
 export function includedForParent(input, catalog, parent) {
   const source = input?.module_contents ?? catalog?.parameters?.module_contents ?? [];
-  return source.filter(row=>row.enabled !== false && row.parent === parent)
+  const authored=source.filter(row=>row.parent===parent);
+  if(authored.length)return authored.filter(row=>row.enabled !== false)
     .sort((a,b)=>(a.order ?? 0)-(b.order ?? 0))
     .map(row=>({fr:clean(row.label_fr,120),de:clean(row.label_de || row.label_fr,120),
-      theme_fr:clean(row.theme_fr,80),theme_de:clean(row.theme_de || row.theme_fr,80)}))
-    .filter(row=>row.fr);
+      theme_fr:clean(row.theme_fr,80),theme_de:clean(row.theme_de || row.theme_fr,80)})).filter(row=>row.fr);
+  const item=catalog?.items?.find(row=>`${row.vendor}/${row.product}/${row.item_code}`===parent);
+  if(item?.vendor!=='abacus')return [];
+  return (item.included_components??[]).filter(code=>code!==item.item_code).flatMap(code=>{
+    const row=catalog.items.find(row=>row.vendor==='abacus'&&row.item_code===code);
+    const labels=abacusComponents[code];
+    return row||labels?[{fr:clean(row?.label_fr||labels?.[0],120),de:clean(row?.label_de||labels?.[1]||row?.label_fr,120),theme_fr:'',theme_de:''}]:[];
+  });
 }
+
 export function optionApplies(option, input) {
   return option.enabled !== false && (!option.requires_product || input?.products?.includes(option.requires_product)) &&
     (!option.requires_pce_option || Boolean(input?.pce?.[option.requires_pce_option]));

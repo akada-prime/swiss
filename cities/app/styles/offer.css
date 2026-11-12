@@ -28,9 +28,9 @@
   --offer-border: var(--skin-border);
   display: grid;
   gap: var(--offer-section-gap);
-  grid-template-columns: minmax(0,.8fr) minmax(0,1.2fr);
+  grid-template-columns:minmax(0,1fr);
   padding: var(--offer-section-gap) var(--offer-gutter);
-}
+align-items:start;}
 .prime-offer-banner {
   --skin-text: #fff;
   position: relative;
@@ -203,6 +203,15 @@
 .prime-offer-scope-toggle {font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border:1px solid var(--offer-border);border-radius:8px;background:transparent;color:var(--offer-text);cursor:pointer;}
 .prime-offer-scope-section .prime-offer-scope-subheading {margin:var(--offer-space-3) 0 var(--offer-space-2);font-size:inherit;line-height:inherit;font-weight:600;color:var(--offer-text);}
 .prime-offer-scope-section .prime-offer-scope-modules {margin:0;padding-left:0;list-style-type:disc;}
+.prime-offer-recurring-budget{margin-top:24px;padding-top:20px;border-top:1px solid var(--offer-border)}
+.prime-offer-recurring-budget dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
+.prime-offer-recurring-budget dt{font-size:14px;color:var(--offer-muted);line-height:1.5}
+.prime-offer-recurring-budget dd{margin:8px 0 0;font-size:18px;font-weight:650;font-variant-numeric:tabular-nums}
+.prime-offer-recurring-budget dd small{font-size:14px;font-weight:400}
+.prime-offer-recurring-budget>p{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:20px 0 0;padding-top:16px;border-top:1px solid var(--offer-border);font-size:16px}
+.prime-offer-recurring-budget strong{font-size:22px;font-variant-numeric:tabular-nums}
+.prime-offer-reference-code{font-size:14px;font-variant-numeric:tabular-nums;color:var(--offer-muted);margin-inline-end:6px}
+@media(max-width:600px){.prime-offer-recurring-budget dl{grid-template-columns:minmax(0,1fr)}.prime-offer-recurring-budget dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:16px}.prime-offer-recurring-budget dd{margin:0;white-space:nowrap}}
 .prime-offer-annual-disclosure {margin-top:var(--offer-space-6);padding-top:var(--offer-space-2);border-top:1px solid #ffffff40;}
 .prime-offer-annual-disclosure summary {cursor:pointer;min-height:44px;display:block;align-content:center;font-size:14px;color:#c3d1e8;}
 
@@ -573,7 +582,7 @@
   font-size: 14px;
   line-height: 1.55
 }
-.chiffrage-offer-body>section:last-child { display:grid; gap:var(--offer-space-6); min-width:0; }
+.chiffrage-offer-body>section:last-child { display:block; min-width:0; }
 .chiffrage-offer-body>section:last-child>h3 { margin:0; }
 .prime-offer-price-section {
   margin: 0;
