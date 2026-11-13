@@ -403,3 +403,14 @@ partnerBrand est une liste de reconnaissance fermée ; elle n’accepte jamais
 un chemin fourni par l’utilisateur. Le périmètre peut exposer un nom de marque
 connu pour une ligne partenaire, sans sérialiser son fournisseur libre. Les
 variantes positif/négatif suivent les mêmes classes de thème que les éditeurs.
+
+
+### 2026-11-13 — Commandes compactes du Kanban
+
+`kanban.js/cardTools` rend une seule rangée poignée / qualification native /
+Liens ; `chiffrage-kanban.css` possède ses colonnes et cibles tactiles de 44 px.
+Le dialogue natif de partage conserve les commandes existantes et le focus.
+Dans la liste, le partage utilise la révision et la disponibilité de la carte
+identifiée par son ID, sans dépendre du brouillon de l'éditeur. Un échec de
+chargement évince sa promesse du cache pour permettre Réessayer. Le polling
+ne reconstruit pas le tableau pendant qu'un dialogue est ouvert.

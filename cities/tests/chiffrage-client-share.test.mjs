@@ -255,7 +255,7 @@ test('links are manually reversible and the closed panel leaves no duplicate sum
  assert.match(view,/chiffrage-button chiffrage-danger.*data-action="deleteSharedOffer"/);
  assert.match(view,/role="switch" aria-checked=/);
  assert.match(view,/await api\('setOfferActive'/);
- assert.match(view,/openWorkspaceDialog\(root,localLabel\('Partager/);
+ assert.match(view,/openWorkspaceDialog\(root,localLabel\('Liens/);
  assert.doesNotMatch(view,/details open class="chiffrage-share-panel"|revokeSharedOffer/);
 });
 

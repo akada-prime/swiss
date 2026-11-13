@@ -1,4 +1,4 @@
-import {bindKanban,boardHtml,boardRibbon,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261112-card-status-r1';
+import {bindKanban,boardHtml,boardRibbon,cardTools,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261113-card-tools-r1';
 import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-coherence-r1';
 import { portalUsers, suggestedPortalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
 import { bindCommunePicker } from './commune-picker.js?v=20261112-coherence-r1';
@@ -244,8 +244,7 @@ function renderList() {
     ${state.catalog ? '' : `<p class="chiffrage-warning">${t('chiffrage.noCatalog')}</p>`}
     ${boardHtml(rows,state.board.column_titles,(row,stage)=>`<article class="chiffrage-list-item" data-quote-card="${escape(row.id)}" data-share-ready="pending" data-current-revision="${row.current_revision}">
     ${boardRibbon(stage,state.board.column_titles[stage])}<button type="button" class="chiffrage-card-open" data-action="open" data-id="${escape(row.id)}"><span class="chiffrage-saved-heading"><span data-list-canton>${listCanton(communes().find(item=>Number(item.id)===Number(row.bfs_id))?.canton)}</span><strong>${escape(row.title)}</strong></span><small>${escape(row.commune_name)} · OFS ${row.bfs_id} · <span class="chiffrage-save-number" title="${localLabel('Enregistrements manuels','Manuelle Speicherungen')}">#${saveNumber(row)}</span></small><span class="chiffrage-saved-figures" data-list-figures aria-live="polite">${t('chiffrage.ui.savedLoading')}</span></button>
-    <div class="chiffrage-card-workflow"><button type="button" data-drag-handle aria-label="${localLabel('Déplacer le chiffrage','Kalkulation verschieben')}" title="${localLabel('Glisser pour déplacer','Zum Verschieben ziehen')}">⠿</button><label><span class="chiffrage-visually-hidden">${localLabel('Déplacer vers','Verschieben nach')}</span><select data-move-quote="${escape(row.id)}" aria-label="${localLabel('Déplacer vers','Verschieben nach')}">${state.board.column_titles.map((title,index)=>`<option value="${index}" ${stage===index?'selected':''}>${escape(title)}</option>`).join('')}</select></label></div>
-    <details class="chiffrage-share-disclosure" data-share-id="${escape(row.id)}"><summary>${localLabel('Lien','Kundenlink')}</summary><div class="chiffrage-share-result" data-share-result aria-live="polite"></div></details></article>`,localLabel)}<div id="chiffrageShareResult" aria-live="polite"></div>`;
+    ${cardTools({id:row.id,stage,columns:state.board.column_titles},localLabel)}</article>`,localLabel)}`;
   boardController=bindKanban(root,{onMove:moveBoardQuote,onRename:renameBoardColumn,onRefresh:refreshBoard,label:localLabel});
   const byId = new Map(rows.map(row => [String(row.id), row]));
   listObserver = new IntersectionObserver(entries => {
@@ -260,8 +259,8 @@ function renderList() {
 let boardController;
 const boardSignature=board=>JSON.stringify([board.version,board.quotes.map(row=>[row.id,row.current_revision,row.save_number,row.title,row.workflow_stage,row.workflow_order])]);
 async function refreshBoard(){
- if(state.mode!=='list')return;
- const board=await api('board');if(state.mode!=='list'||boardController?.busy||board.version<state.board.version)return;
+ if(state.mode!=='list'||root.querySelector('dialog[open]'))return;
+ const board=await api('board');if(state.mode!=='list'||root.querySelector('dialog[open]')||boardController?.busy||board.version<state.board.version)return;
  if(boardSignature(board)!==boardSignature({...state.board,quotes:state.quotes})){state.board=board;state.quotes=board.quotes;renderList();}
 }
 async function updateBoard(action,payload){
@@ -1496,9 +1495,16 @@ function renderSharedLinks(rows,id,currentRevision=null,ready=true) {
   <div class="chiffrage-share-notes"><p>${localLabel('Sans expiration · ouvertures non uniques, aperçus compris.','Ohne Ablaufdatum · Aufrufe einschließlich eigener Vorschauen, nicht eindeutig.')}</p></div></section>`;
 }
 async function loadSharedLinks(id,container) {
-  const card=container.closest('.chiffrage-list-item');
+  const card=container.closest('.chiffrage-list-item')??[...root.querySelectorAll('[data-quote-card]')].find(node=>node.dataset.quoteCard===id);
   container.setAttribute('aria-busy','true');
   try {
+    if(card?.dataset.shareReady==='pending'){
+      const key=`${state.session}/${id}/${card.dataset.currentRevision}`;
+      if(!listSnapshots.has(key))listSnapshots.set(key,api('quote',undefined,{id,revision:card.dataset.currentRevision}));
+      let saved;try{saved=await listSnapshots.get(key);}catch(error){listSnapshots.delete(key);throw error;}
+      const figures=savedQuoteFigures(saved.snapshot);
+      card.dataset.shareReady=String(Boolean(figures&&!figures.incomplete&&saved.snapshot?.result?.offer_options_ready!==false));
+    }
     const rows=await api('sharedOffers',undefined,{id});
     if(!container.isConnected)return;
     const historyOpen=container.querySelector('.chiffrage-share-history')?.open;
@@ -1507,34 +1513,23 @@ async function loadSharedLinks(id,container) {
   }catch(error){if(container.isConnected)container.innerHTML=`<p role="alert">${escape(errorMessage(error))}</p><button class="chiffrage-button" data-action="refreshShares" data-id="${escape(id)}">${localLabel('Réessayer','Erneut versuchen')}</button>`;}
   finally{container.removeAttribute('aria-busy');}
 }
-root.addEventListener('toggle',event=>{
-  const detail=event.target;
-  if(detail.matches?.('details.chiffrage-share-disclosure') && detail.open){
-    const container=detail.querySelector('[data-share-result]');
-    if(!container.hasChildNodes())void loadSharedLinks(detail.dataset.shareId,container);
-  }
-},true);
 function offerShareUrl(token) {
   const url = new URL('offre.html', new URL('./', document.baseURI));
   url.hash = token;
   return url.href;
 }
 function sharingPanel(source = null) {
-  const card=source?.closest('.chiffrage-list-item');
-  if(card)return card.querySelector('[data-share-result]');
   const existing=root.querySelector('#chiffrageShareResult');
   if(existing)return existing;
-  const panel=openWorkspaceDialog(root,localLabel('Partager l’offre client','Kundenangebot teilen'),'',source);
+  const panel=openWorkspaceDialog(root,localLabel('Liens de l’offre client','Links zum Kundenangebot'),'',source);
   panel.id='chiffrageShareResult';panel.setAttribute('aria-live','polite');return panel;
 }
 function sharePanel(content, source = null) {
-  // The original message was rendered after the entire list, out of sight.
-  // Keep confirmations AND errors next to the card the user actually tapped.
-  const node = source?.closest('.chiffrage-list-item')?.querySelector('[data-share-result]') ??
-    sharingPanel(source);
+  // Both cards and editor keep link results inside the same native dialog.
+  const node=sharingPanel(source);
   if (node) {
     node.innerHTML = content;
-    node.scrollIntoView({block:'nearest',behavior:'smooth'});
+    if(!node.closest('dialog'))node.scrollIntoView({block:'nearest',behavior:'smooth'});
   }
   return node;
 }
@@ -1683,7 +1678,7 @@ root.addEventListener('click', async event => {
   if (action === 'shareOffer' || action === 'manageShares' || action==='refreshShares') {
     const id=button.dataset.id ?? state.quote;
     if(!id)return;
-    const panel=button.closest('.chiffrage-list-item')?.querySelector('[data-share-result]')??sharingPanel(button);
+    const panel=sharingPanel(button);
     if(!panel)return;
     if(action==='shareOffer' && state.mode==='editor' && state.dirty){notice(()=>localLabel('Enregistre avant de partager.','Vor dem Teilen speichern.'),true);return;}
     button.disabled=true;

@@ -1,5 +1,16 @@
 # État de reprise — Prime Communes 2.0
 
+> **Kanban compact · 13.11.2026.** Une rangée commune de 56 px remplace les
+> deux étages : poignée, qualification native compacte et bouton Liens.
+> Liens ouvre le dialogue natif existant ; fermeture et retour du focus conservés.
+> Actualisation du tableau suspendue pendant un dialogue ouvert ; révision et
+> disponibilité du partage chargées depuis la carte concernée. Aucun calcul,
+> enregistrement métier ou verrouillage modifié.
+> Validation : 261 tests et build réussis ; contrôles des six formats
+> 360/430/768/1366/1920/2560, dialogue Natel, fermeture et focus,
+> qualification native et glisser-déposer testés sur données synthétiques.
+> Contrôles ciblés FR/DE et thème clair ; Safari physique reste à vérifier.
+
 > **Dernier retour :** ligne Lecture seule et cadenas retirés des cartes. Le
 > ruban Finale identifie déjà l’état ; le verrouillage fonctionnel est conservé.
 > Copier l’adresse interne retiré du menu Dossier et du gestionnaire d’actions.
