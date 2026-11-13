@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {Linter} from 'eslint';
-import {boardGroups,boardHtml,boardRibbon,quoteLocked,saveNumber,defaultColumns} from '../app/chiffrage/kanban.js';
+import {boardGroups,boardHtml,boardRibbon,cardTools,quoteLocked,saveNumber,defaultColumns} from '../app/chiffrage/kanban.js';
 import {workspaceIdentity} from '../app/chiffrage/workspace-ui.js';
 import handler,{signSession} from '../supabase/functions/chiffrage/server.mjs';
 test('one global board retains all dossiers and locks the third position regardless of its name',()=>{
@@ -42,4 +42,12 @@ test('a finalized write produces a stable read-only conflict response',async()=>
  const id='00000000-0000-4000-8000-000000000001';globalThis.Deno={env:{get:key=>({SUPABASE_URL:'https://synthetic.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'synthetic-test-key'})[key]}};
  globalThis.fetch=async()=>new Response(JSON.stringify({message:'Quote finalized'}),{status:400});
  try{const response=await handler(new Request('https://synthetic.supabase.co?action=moveQuote',{method:'POST',headers:{Origin:'https://akada-prime.github.io',Authorization:`Bearer ${signSession()}`,'Content-Type':'application/json'},body:JSON.stringify({id,stage:0,expected_version:1})}));assert.equal(response.status,423);assert.equal((await response.json()).code,'quoteFinalized');}finally{globalThis.Deno=oldDeno;globalThis.fetch=oldFetch;}
+});
+
+test('compact card tools retain drag, qualification and links with safe dossier identity',()=>{
+ const html=cardTools({id:'quote"<x>',stage:1,columns:['Brouillon','Client & conseil','Finale']});
+ assert.equal((html.match(/class="chiffrage-card-workflow"/g)||[]).length,1);
+ assert.match(html,/data-drag-handle/);assert.match(html,/value="1" selected/);
+ assert.match(html,/data-action="manageShares" data-id="quote&quot;&lt;x&gt;"/);
+ assert.match(html,/Client &amp; conseil/);assert.doesNotMatch(html,/<details|Lecture seule/);
 });

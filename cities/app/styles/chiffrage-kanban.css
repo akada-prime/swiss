@@ -24,9 +24,11 @@
 .chiffrage-card-open .chiffrage-saved-tco{flex-direction:row;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:16px;font-size:14px}
 .chiffrage-card-open .chiffrage-saved-tco b{font-size:16px;letter-spacing:0}
 .chiffrage-save-number{font-size:14px;color:var(--skin-muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-.chiffrage-card-workflow{display:flex;gap:8px;padding:0 16px 12px;align-items:center}
-.chiffrage-card-workflow>label{flex:1;min-width:0}
-.chiffrage-card-workflow select{width:100%;min-width:0;min-height:44px;font-size:14px}
+.chiffrage-card-workflow{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:8px;padding:0 16px 12px;align-items:center}
+.chiffrage-card-workflow>.chiffrage-card-qualification{width:fit-content;max-width:100%;min-width:0;margin:0}
+.chiffrage-card-workflow select{width:auto;max-width:100%;min-width:0;height:44px;min-height:44px;padding:8px 28px 8px 12px;border-radius:999px;font-size:14px;text-overflow:ellipsis;cursor:pointer}
+.chiffrage-card-workflow .chiffrage-card-links{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 12px;border-radius:999px;font-size:14px;white-space:nowrap}
+.chiffrage-card-links svg{flex:none}
 [data-drag-handle]{touch-action:none;user-select:none;min-width:44px;min-height:44px;font-size:26px;line-height:1;border:1px solid var(--skin-border-soft);border-radius:8px;background:transparent;color:var(--skin-muted);cursor:grab}
 [data-drag-handle]:active{cursor:grabbing}
 .chiffrage-card-ribbon{position:absolute;z-index:1;top:20px;right:-38px;transform:rotate(40deg);width:150px;text-align:center;padding:4px 14px;background:#2169b0;color:#fff;font-size:14px;line-height:1.4;font-weight:600;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

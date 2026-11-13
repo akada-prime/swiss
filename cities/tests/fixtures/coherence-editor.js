@@ -4,6 +4,10 @@ import {publicOfferFromSaved} from '../../supabase/functions/chiffrage/client-pr
 import {offerFigures,offerScope,offerBreakdown} from '../../app/offer/presentation.js';
 import {annualOfferBudget} from '../../app/chiffrage/commercial-breakdown.js';
 const query=new URLSearchParams(location.search);
+const {setPreference}=await import('../../app/core/preferences.js?v=20261107-jura-r1');
+setPreference('skin',query.get('skin')||'prime-darkweb');
+setPreference('language',query.get('lang')||'fr');
+let columnTitles=['Brouillon','Client','Finale'];
 document.documentElement.dataset.skin=query.get('skin')||'prime-darkweb';
 document.documentElement.lang=query.get('lang')||'fr';
 const item=(vendor,item_code,label_fr)=>({vendor,item_code,label_fr,product:vendor==='innosolv'?'Gemeinde':'ERP',default_selected:true,pricing_rule:{kind:'lookup',basis:'population',below_first:'hold',tiers:[{up_to:10000,value:1000}]}});
@@ -24,7 +28,10 @@ window.fetch=async(url,options={})=>{
   else if(action==='catalog')data={catalog,active:{commercial:'synthetic'}};
   else if(action==='list')data=[saved];
   else if(action==='quote')data=structuredClone(saved);
-  else if(action==='board')data={version:1,column_titles:['Brouillon','Client','Finale'],quotes:[saved]};
+  else if(action==='board')data={version:saved.workflow_version??1,column_titles:columnTitles,quotes:[saved]};
+  else if(action==='moveQuote'){const body=JSON.parse(options.body);saved.workflow_stage=body.stage;saved.workflow_version=(saved.workflow_version??1)+1;data={version:saved.workflow_version,column_titles:columnTitles};}
+  else if(action==='renameColumn'){const body=JSON.parse(options.body);columnTitles[body.column]=body.title;saved.workflow_version=(saved.workflow_version??1)+1;data={version:saved.workflow_version,column_titles:columnTitles};}
+  else if(action==='sharedOffers')data=[{id:'synthetic-link',public_slug:'A'.repeat(43),public_version:'v1.0',revision:1,open_count:0}];
   else if(action==='save'){const body=JSON.parse(options.body);saved.snapshot={...saved.snapshot,input:body.input,result:calculateQuote(body.input,catalog)};saved.current_revision++;saved.save_number++;data={id:saved.id,revision:saved.current_revision,save_number:saved.save_number};}
   else return new Response(JSON.stringify({error:'Fixture action unavailable'}),{status:400});
   return new Response(JSON.stringify(data),{headers:{'Content-Type':'application/json'}});
