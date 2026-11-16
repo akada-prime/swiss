@@ -57,8 +57,8 @@ export function publicOfferFromSaved(quote, catalog) {
     products:[...new Set(sourceProducts.filter(x=>Object.hasOwn(products,x)).map(x=>products[x]))],
     // Modules are customer-safe labels, never raw catalog objects.
     scope:customerModuleScope(snapshot.input,catalog),
-    lcm,hosting:breakdown.some(x=>x.key==='hosting'),hosting_provider:hostingProvider,
-    amounts:{investment:s.investment,annual:s.annual,tco5y:s.investment+4*s.annual},
+    lcm,...(snapshot.input?.hosting?.synergy===true?{hosting_synergy:true}:{}),hosting:breakdown.some(x=>x.key==='hosting'),hosting_provider:hostingProvider,
+    amounts:{investment:s.investment,...(s.investment_discount>0?{investment_gross:s.investment_gross??s.investment,investment_discount:s.investment_discount}:{}),annual:s.annual,tco5y:s.investment+4*s.annual},
     breakdown,buckets,
     cost_details:publicCostDetails(snapshot.result.lines),
     ...(publisherBillingRows(snapshot.result.lines).length ? {publisher_billing:publisherBillingRows(snapshot.result.lines)} : {}),

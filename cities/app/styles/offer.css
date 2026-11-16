@@ -16,7 +16,7 @@
   --offer-row-gap: var(--offer-space-2);
   --offer-card-padding: var(--offer-space-6);
   --offer-card-gap: var(--offer-space-4);
-  --offer-section-gap: var(--offer-space-8);
+  --offer-section-gap: var(--offer-space-6);
   --offer-accent: #f39449;
   --offer-large-size: 44px;
   --offer-mark-opacity: .13;
@@ -185,7 +185,9 @@ align-items:start;}
 .prime-offer-table-columns,.prime-offer-table-row{display:grid;grid-template-columns:minmax(0,1fr) var(--offer-price-column);gap:12px 24px;align-items:baseline;padding:12px var(--offer-card-padding);}
 .prime-offer-price-table.has-annual :is(.prime-offer-table-columns,.prime-offer-table-row){grid-template-columns:minmax(0,1fr) repeat(2,var(--offer-price-column));}
 .prime-offer-table-columns{font-size:14px;color:var(--offer-muted);padding-block:16px 12px;}
-.prime-offer-table-columns>span:not(:first-child),.prime-offer-amount{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.prime-offer-table-columns>span:not(:first-child),.prime-offer-amount{text-align:right;font-variant-numeric:tabular-nums;}
+.prime-offer-table-columns>span{min-width:0;white-space:normal;line-height:1.4}
+.prime-offer-amount{white-space:nowrap;}
 .prime-offer-table-row h4{margin:0;font-size:14px;line-height:1.5;font-weight:400;color:var(--offer-text);min-width:0;}
 .prime-offer-table-row h4 small{display:block;margin-top:4px;font-size:14px;color:var(--offer-muted);}
 .prime-offer-table-row.is-subtotal h4,.prime-offer-table-row.is-total h4{font-weight:700;font-size:16px;}
@@ -198,8 +200,10 @@ align-items:start;}
 .chiffrage-offer-body>section{display:grid;gap:var(--offer-space-6);align-content:start;min-width:0;}
 .chiffrage-offer-body>section>h3{margin:0;}
 
+.prime-offer-table-units{display:none}
 @media(max-width:600px){
  .prime-offer-table-columns{display:none;}
+ .prime-offer-table-units{display:block;margin:0;padding:12px 16px;font-size:14px;color:var(--offer-muted);border-bottom:1px solid var(--offer-border)}
  .prime-offer-table-row,.prime-offer-price-table.has-annual .prime-offer-table-row{grid-template-columns:repeat(2,minmax(0,1fr));padding:16px;gap:12px;}
  .prime-offer-table-row>h4{grid-column:1/-1;}
  .prime-offer-table-row:not(.is-subtotal):not(.is-total) h4{padding-left:0;}
@@ -213,16 +217,18 @@ align-items:start;}
 .prime-offer-scope-section[open]>.prime-offer-scope-heading {margin-bottom:var(--offer-space-2);}
 .prime-offer-scope-heading>span {font-weight:400;color:var(--offer-muted);}
 
-.prime-offer-scope-tools {display:flex;justify-content:flex-end;margin-bottom:var(--offer-title-gap);}
+.prime-offer-scope-tools {display:flex;justify-content:flex-end;margin:0;}
+.prime-offer-scope-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.prime-offer-scope-header h3{margin:0;min-width:0}
 .prime-offer-scope-toggle {font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border:1px solid var(--offer-border);border-radius:8px;background:transparent;color:var(--offer-text);cursor:pointer;}
 .prime-offer-scope-section .prime-offer-scope-subheading {margin:var(--offer-space-3) 0 var(--offer-space-2);font-size:inherit;line-height:inherit;font-weight:600;color:var(--offer-text);}
 .prime-offer-scope-section .prime-offer-scope-modules {margin:0;padding-left:0;list-style-type:disc;}
-.prime-offer-recurring-budget{margin-top:32px;padding-top:24px;border-top:1px solid var(--offer-border)}
+.prime-offer-recurring-budget{margin-top:16px;padding-top:12px;border-top:1px solid var(--offer-border)}
 .prime-offer-recurring-budget dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
-.prime-offer-recurring-budget dt{font-size:14px;color:var(--offer-muted);line-height:1.5}
+.prime-offer-recurring-budget dt{font-size:14px;color:#c3d1e8;line-height:1.5}
 .prime-offer-recurring-budget dd{margin:8px 0 0;font-size:18px;font-weight:650;font-variant-numeric:tabular-nums}
 .prime-offer-recurring-budget dd small{font-size:14px;font-weight:400}
-.prime-offer-recurring-budget>p{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:20px 0 0;padding-top:16px;border-top:1px solid var(--offer-border);font-size:16px}
+.prime-offer-recurring-budget>p{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;width:fit-content;margin:16px 0 0 auto;padding:12px 16px;border:1px solid #ffffff40;border-radius:8px;background:#ffffff0a;font-size:16px}
 .prime-offer-recurring-budget strong{font-size:22px;font-variant-numeric:tabular-nums}
 .prime-offer-reference-code{font-size:14px;font-variant-numeric:tabular-nums;color:var(--offer-muted);margin-inline-end:6px}
 @media(max-width:600px){.prime-offer-recurring-budget dl{grid-template-columns:minmax(0,1fr)}.prime-offer-recurring-budget dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:16px}.prime-offer-recurring-budget dd{margin:0;white-space:nowrap}}
@@ -776,7 +782,10 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .p
 }
 }
 @media (max-width:850px) {
-.prime-offer-communal-figures,.prime-offer-service-grid { grid-template-columns:minmax(0,1fr); }
+.prime-offer-service-grid { grid-template-columns:minmax(0,1fr); }
+.prime-offer-communal-figures{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(6,auto)}
+.prime-offer-communal-figures>div:first-child{grid-column:1/-1}
+.prime-offer-communal-figures>div:not(:first-child) strong{font-size:28px;letter-spacing:-.025em}
 }
 @media (min-width: 601px) {
 .client-offer .prime-offer-signature-kicker::before {
@@ -858,3 +867,14 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .p
 .prime-offer-investment-adjustment dd{margin:0;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
 .prime-offer-investment-adjustment dl>div:last-child{padding-top:16px;border-top:1px solid var(--skin-border);font-weight:700;font-size:20px}
 @media(max-width:430px){.prime-offer-investment-adjustment dl>div{flex-wrap:wrap;gap:4px}.prime-offer-investment-adjustment dd{margin-left:auto}}
+
+/* Gross, rebate and net share one renderer across editor and client summaries. */
+.prime-investment-equation{-webkit-text-fill-color:currentColor;display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:baseline;gap:4px 6px;font-size:14px;line-height:1.5;font-variant-numeric:tabular-nums;letter-spacing:0;color:var(--skin-text)}
+.prime-investment-equation>span{white-space:nowrap}
+.prime-investment-equation>.prime-investment-rebate{padding:2px 5px;border-radius:4px;background:#70263e;color:#fff}
+.prime-investment-equation>strong{font-size:22px;letter-spacing:0;line-height:1.4;color:#93caff;white-space:nowrap}
+.prime-offer-communal-figures>div>.prime-investment-equation{display:flex;justify-content:flex-start;align-self:center;color:#fff}
+.prime-offer-communal-figures .prime-investment-equation>strong{font-size:28px;letter-spacing:0;color:#93caff}
+.chiffrage-mobile-summary-figures .prime-investment-equation{justify-content:flex-start}
+html[data-skin="helvetia"] .chiffrage-summary .prime-investment-equation>strong{color:#125d9b}
+.prime-offer-synergy-note{display:block;margin-top:8px;color:#c3d1e8;font-size:14px}

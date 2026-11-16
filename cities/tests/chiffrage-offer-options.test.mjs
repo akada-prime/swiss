@@ -30,7 +30,7 @@ test("missing values cannot look free and unready options prevent publication",f
   assert.deepEqual(priceOfferOption(input,c,offerOptionCandidates(input,c)[0],{days:0}),{investment:0,annual:12});
   c.parameters.prime_options[0].annual_pv=null;
   assert.equal(priceOfferOption(input,c,offerOptionCandidates(input,c)[0],{days:0}),null);
-  const draft={...structuredClone(input),client_options:[{...selected,benefit_fr:''}]};
+  const draft={...structuredClone(input),client_options:[{...selected,label_fr:''}]};
   assert.equal(offerOptionReview(draft,catalog).issues.length,1);assert.equal(publicOfferFromSaved(quoteFor(draft),catalog),null);
 });
 test("public option projection exposes only editorial texts and selling prices",function(){
@@ -42,7 +42,7 @@ test("public option projection exposes only editorial texts and selling prices",
 });
 test("curated list validation bounds selection and strips unrelated data",function(){
   assert.equal(validateOfferOptions([{...selected,secret:'hidden'}])[0].secret,undefined);
-  assert.throws(()=>validateOfferOptions(Array.from({length:7},(_,i)=>({...selected,key:'prime/Options/x'+i}))));
+  assert.throws(()=>validateOfferOptions(Array.from({length:1001},(_,i)=>({...selected,key:'prime/Options/x'+i}))));
   assert.throws(()=>validateOfferOptions([selected,selected]));assert.throws(()=>validateOfferOptions([{...selected,days:-1}]));
 });
 test("showcase disclosures start closed and are independent of included modules",function(){

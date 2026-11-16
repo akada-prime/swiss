@@ -185,14 +185,18 @@ export function calculateSql(input, rule) {
     explanation: { threshold, base, userPrice, cores, pricePerCore } };
 }
 
-export function calculateOracle(input, rule) {
-  const full = finite(input.full, 'Oracle Full users');
-  const light = finite(input.light, 'Oracle Light users');
-  return { investment: effective(full * finite(rule.full_price, 'Oracle Full price') +
-    light * finite(rule.light_price, 'Oracle Light price'), input.investmentOverride),
-    annual: effective(full * finite(rule.full_maintenance, 'Oracle Full maintenance') +
-      light * finite(rule.light_maintenance, 'Oracle Light maintenance'), input.annualOverride),
-    explanation: { full, light } };
+export function calculateOracle(input, rule = {}) {
+  rule??={};
+  const full=finite(input.full,'Oracle Full users'),light=finite(input.light,'Oracle Light users');
+  if(full<0||light<0||!Number.isInteger(full)||!Number.isInteger(light))throw new Error('Invalid Oracle users');
+  const amount=(fullKey,lightKey,override)=>{
+    const missing=(full>0&&rule[fullKey]==null)||(light>0&&rule[lightKey]==null);
+    const calculated=missing?null:full*(full?finite(rule[fullKey],'Oracle price'):0)+light*(light?finite(rule[lightKey],'Oracle price'):0);
+    const forced=override==null?null:finite(override,'Oracle override');
+    if(forced!=null&&forced<0)throw new Error('Invalid Oracle price');
+    return {calculated_value:calculated,override_value:forced,effective_value:forced??calculated,difference:calculated==null||forced==null?null:forced-calculated};
+  };
+  return {investment:amount('full_price','light_price',input.investmentOverride),annual:amount('full_maintenance','light_maintenance',input.annualOverride),explanation:{full,light}};
 }
 
 export function calculateLcm(population, rule, overrides = {}) {
@@ -215,7 +219,9 @@ export function calculateLcm(population, rule, overrides = {}) {
 }
 
 export function calculateQuote(input, catalog) {
-  const discount=input.investmentDiscount??0;
+  let discount=input.investmentDiscount??0;
+  const target=input.investmentTarget;
+  if(target!=null&&(typeof target!=='number'||!Number.isFinite(target)||target<0||Math.abs(target*100-Math.round(target*100))>1e-6))throw new Error('Invalid investment target');
   if(typeof discount!=='number'||!Number.isFinite(discount)||discount<0||Math.abs(discount*100-Math.round(discount*100))>1e-6)
     throw new Error('Invalid investment discount');
   const mandate = (input.primeLines ?? []).find(line => line.item_code === 'prime-mandats-finance');
@@ -227,7 +233,7 @@ export function calculateQuote(input, catalog) {
   if (hostingIncluded(input) && hosting.some(line => line.reference_products?.some(product =>
     !input.products.includes(product)))) throw new Error('Hosting reference scope changed');
   const missingHosting = input.hosting?.included === true && (!hosting.length || hosting.some(line =>
-    line.investment_pv == null || line.annual_pv == null));
+    line.investment_pv == null || (!input.hosting?.synergy && line.annual_pv == null)));
   const lines = [];
   const choices = new Set(input.products ?? []);
   const commercial = input.commercial ?? {};
@@ -421,8 +427,13 @@ export function calculateQuote(input, catalog) {
       annual_pv: selectedPrice.effective_value, software: false,
       explanation: { source: selectedPrice.source?.method ?? null } });
   }
+  if(hostingIncluded(input)&&input.hosting?.synergy===true){
+    const rows=lines.filter(row=>row.category==='hosting');
+    rows.forEach((row,index)=>{row.annual_pv=index===0?12000:0;row.explanation={...row.explanation,hosting_synergy:true};});
+  }
   const sum = (key, subset = lines) => subset.reduce((total, line) => total + (line[key] ?? 0), 0);
   const grossInvestment=sum('investment_pv');
+  if(target!=null){if(target>grossInvestment+1e-8)throw new Error('Investment target exceeds gross');discount=Math.round((grossInvestment-target)*100)/100;}
   if(discount>0&&discount>grossInvestment+1e-8)
     throw new Error('Invalid investment discount');
   if(discount>0)lines.push({family:'investment_discount',item_code:'investment-discount',label:'Remise commerciale sur l’investissement',software:false,investment_pv:-discount,investment_pa:0,annual_pv:0,annual_pa:0});
@@ -438,7 +449,7 @@ export function calculateQuote(input, catalog) {
   const softwarePv = sum('annual_pv', software);
   const publisherSoftwarePa = sum('annual_pa', software.filter(line =>
     (line.family === 'innosolv' || line.family === 'abacus') && line.billing_mode !== 'publisher_direct'));
-  const missingTechnical = lines.filter(line => line.family === 'technique' && line.investment_pv == null)
+  const missingTechnical = lines.filter(line => line.family === 'technique' && (line.investment_pv == null || line.item_code==='oracle'&&line.annual_pv==null))
     .map(line => line.item_code);
   const missingServiceDays = input.reference ? lines.filter(line =>
     line.family === 'prestations_module' && line.selected_days == null).map(line => line.item_code) : [];

@@ -1,5 +1,5 @@
 // Read-only editor projections. Previewing an option never mutates the draft.
-import { calculateQuote, priceCatalogItem, calculatePublisherRent } from './calculate.js?v=20261112-coherence-r1';
+import { calculateQuote, priceCatalogItem, calculatePublisherRent } from './calculate.js?v=20261116-software-target-r3';
 
 export function previewModule(input, catalog, item) {
   try {
@@ -24,7 +24,7 @@ export function moduleRollup(result, vendor) {
 
 export function optionPreview(input,catalog,line,kind='primeLines') {
   const copy=structuredClone(input);
-  copy.products=[];copy.modules=[];copy.services=[];copy.moduleServices=[];copy.lcm={selection:'none'};copy.hosting={included:false};
+  copy.investmentTarget=null;copy.investmentDiscount=0;copy.products=[];copy.modules=[];copy.services=[];copy.moduleServices=[];copy.lcm={selection:'none'};copy.hosting={included:false};
   const mandate=copy.primeLines?.find(row=>row.item_code==='prime-mandats-finance');
   copy.primeLines=line.item_code==='prime-mandats-integres'&&mandate?[mandate]:[];copy.partners=[];
   line={...line,family:line.family??(kind==='partners'?'partenaires':'prime')};

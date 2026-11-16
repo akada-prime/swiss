@@ -414,3 +414,30 @@ Dans la liste, le partage utilise la révision et la disponibilité de la carte
 identifiée par son ID, sans dépendre du brouillon de l'éditeur. Un échec de
 chargement évince sa promesse du cache pour permettre Réessayer. Le polling
 ne reconstruit pas le tableau pendant qu'un dialogue est ouvert.
+
+
+### 2026-11-16 — Disposition du logiciel et prix cible
+
+`software-selection.js` réalise les transitions atomiques Inclure / Proposer /
+Retirer. Les tableaux de calcul gardent leur format : seuls les éléments inclus
+alimentent le moteur ; les propositions `client_options` sont calculées sur une
+copie sans cible ni remise, pour ne pas absorber leur supplément. Les lignes
+libres Prime/partenaire conservent leur source financière dans le snapshot privé ;
+la projection client ne publie que textes et prix de vente. Le bénéfice éditorial
+est facultatif. Les logiciels sont détaillés dans Modules, le standard reste
+dans Projet ; aucun catalogue ou préréglage partagé n'est réécrit.
+
+`investmentTarget`, lorsqu'il est défini, fixe le net et recalcule la remise au
+changement du périmètre. Une saisie de remise efface la cible. Une cible négative,
+non numérique ou supérieure au brut est refusée, y compris en brouillon.
+`hosting.synergy` remplace l'annuel combiné d'hébergement par 12'000 CHF ; les
+valeurs habituelles restent intactes. Le serveur et le navigateur exécutent le
+même moteur ; les anciennes publications ne sont jamais recalculées.
+
+`offer/presentation.js` possède l'équation brut / remise / net et l'en-tête
+Logiciels / Tout déplier. `offer.css` possède les grilles financières communes,
+les unités en en-tête et la composition Natel ; `chiffrage-workspace.css` possède
+les titres et le formulaire compact. Les quantités Oracle/SQL n'ont qu'un champ
+dans Dimensions ; les prix et exceptions restent dans Technique. Oracle utilise
+null pour un tarif inconnu, et zéro uniquement pour une quantité ou un prix
+explicitement nul. Les résumés et la complétude signalent ces prix inconnus.

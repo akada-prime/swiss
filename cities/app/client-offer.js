@@ -1,7 +1,7 @@
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 import { bindOfferScope } from './offer/interactions.js';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from './offer/presentation.js?v=20261112-coherence-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from './offer/presentation.js?v=20261116-software-target-r3';
 import verifiedCoats from './chiffrage/coats.js?v=20261028-business-r11';
 import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261112-coherence-r1';
 
@@ -84,9 +84,9 @@ function renderOffer(o, map) {
     details:`${commercialSignature()}` });
   currentOffer=o;
   root.innerHTML = `<div class="client-offer-toolbar">${pdfButton()}<span data-pdf-status role="status"></span></div><article class="chiffrage-offer client-offer">
-    ${offerBanner(hero,offerFigures(o.amounts,{label,money,municipal:true,annualBreakdown:o.annual_breakdown,annualBudget:annualOfferBudget(o.amounts,o.annual_breakdown,o.publisher_billing)}))}
+    ${offerBanner(hero,offerFigures(o.amounts,{label,money,municipal:true,annualBreakdown:o.annual_breakdown,synergy:o.hosting_synergy===true,annualBudget:annualOfferBudget(o.amounts,o.annual_breakdown,o.publisher_billing)}))}
     <div class="chiffrage-offer-body prime-offer-commercial">
-      <section class="client-offer-scope"><h3>${label('Logiciels retenus','Ausgewählte Software')}</h3>
+      <section class="client-offer-scope">
         ${scope}${offerServices(o.hosting_provider==='az',o.lcm,{asset,label,prices:o.lcm_prices,money})}
       </section>
       ${offerOptions(o.optional_options,{label,money})}

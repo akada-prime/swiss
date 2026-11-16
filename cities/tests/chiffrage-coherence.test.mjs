@@ -13,7 +13,7 @@ test('portal billing appears once in software and reconciles old frozen Abacus t
  const old=rows.filter(x=>x.label!=='Portail Abacus').map(x=>({...x,annual:x.annual+(x.label==='Abacus'?120:0)}));
  for(const data of [rows,old]){
   const before=JSON.stringify(data),html=offerBreakdown(data,{label,money,publisherRows:[{label:'ESS',annual:120}]});
-  assert.equal((html.match(/<h4>Portail Abacus/g)||[]).length,1);assert.match(html,/Facturé directement/);assert.match(html,/300 CHF/);assert.match(html,/120 CHF/);assert.equal(JSON.stringify(data),before);
+  assert.equal((html.match(/<h4>Portail Abacus/g)||[]).length,1);assert.match(html,/Facturé directement/);assert.match(html,/>300<\/span>/);assert.match(html,/>120<\/span>/);assert.equal(JSON.stringify(data),before);
  }
  const b=annualOfferBudget({annual:1000},{hosting:200,lcm:100},[{annual:120}]);assert.equal(b.softwareAndSupport,700);assert.equal(b.softwareAndSupport+b.lcm+b.hosting,b.total);
 });
