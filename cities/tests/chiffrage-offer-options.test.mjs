@@ -53,11 +53,11 @@ test("showcase disclosures start closed and are independent of included modules"
   assert.match(offerOptions([{...row,label_fr:'<script>alert(1)</script>'}],{label:l,money}),/&lt;script&gt;/);
   const editor=offerOptionsEditor({...input,client_options:[selected]},catalog,l,money);assert.match(editor,/data-showcase-field="benefit_fr"/);assert.match(editor,/data-showcase-search/);
 });
-test("module supplement includes source days and its project-management effect",function(){
+test("module supplement includes source days and excludes project management",function(){
   const c=structuredClone(catalog);c.items=[{vendor:'abacus',product:'ERP',item_code:'test',label_fr:'Test',pricing_rule:{kind:'lookup',basis:'population',below_first:'hold',tiers:[{up_to:5000,value:100}]}}];
   c.parameters.publisher_rent={abacus:{standard:{pa_rate:.1,pv_rate:.2}}};c.parameters.service_presets={standard:{'abacus/ERP/test':2}};
   const draft={...structuredClone(input),products:['abacus'],projectManagement:{basis:'prime_service_days',percent:50,round_days:1}},candidate=offerOptionCandidates(draft,c).find(row=>row.kind==='module');
-  assert.deepEqual(priceOfferOption(draft,c,candidate),{investment:300,annual:20});
+  assert.deepEqual(priceOfferOption(draft,c,candidate),{investment:200,annual:20});
 });
 test('Prime optional annual PV is editable per offer, including explicit zero with zero days',()=>{
  const c=structuredClone(catalog);c.parameters.prime_options[0].annual_pv=null;

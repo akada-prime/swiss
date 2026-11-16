@@ -1,11 +1,11 @@
-import {setSoftwareDisposition} from './software-selection.js?v=20261116-software-target-r4';
+import {setSoftwareDisposition} from './software-selection.js?v=20261116-proposal-polish-r1';
 import {bindKanban,boardHtml,boardRibbon,cardTools,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261113-card-tools-r1';
 import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-coherence-r1';
 import { portalUsers, suggestedPortalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
 import { bindCommunePicker } from './commune-picker.js?v=20261112-coherence-r1';
 import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261112-coherence-r1';
-import {extraOptionId,extraOptionCandidates,offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261116-software-target-r4';
-import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261116-software-target-r4';
+import {extraOptionId,extraOptionCandidates,offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261116-proposal-polish-r1';
+import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261116-proposal-polish-r1';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
 import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261112-coherence-r1';
 import { includedForParent, optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
@@ -13,7 +13,7 @@ import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js?v=20261112-coherence-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261116-software-target-r4';
+import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261116-proposal-polish-r1';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
 import { calculateQuote, calculateLcm, calculateOracle, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261116-software-target-r4';
@@ -415,8 +415,18 @@ function moduleEntry(item, selected, calculated) {
       ${selected.has(id) ? `<div class="chiffrage-module-service">
         <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" data-missing-days="${days == null}" data-proposed-days="${escape(presetDays(id) ?? '')}" class="${current?.days != null && current.days !== presetDays(id) ? 'is-adjusted' : ''}" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j.</span></label><small data-day-status ${days==null?'':'hidden'}>${localLabel('À préciser','Offen')}</small>
       </div>` : `<span class="chiffrage-option-days">${days==null?localLabel('À préciser','Noch offen'):number(days)+' j.'}<small>${days==null?'':money(days*dayRate())}</small></span>`}
-      <button type="button" class="chiffrage-inline chiffrage-propose" data-action="softwareDisposition" data-key="${escape(id)}" data-disposition="${proposed?'off':'propose'}" aria-pressed="${proposed}" ${required?'disabled':''}>${proposed?localLabel('Proposée ✓','Vorgeschlagen ✓'):localLabel('Proposer','Vorschlagen')}</button>${selected.has(id)?includedFunctions(id):''}${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
+      <div class="chiffrage-proposal-actions"><button type="button" class="chiffrage-inline chiffrage-propose" data-action="softwareDisposition" data-key="${escape(id)}" data-disposition="${proposed?'off':'propose'}" aria-pressed="${proposed}" ${required?'disabled':''}>${proposed?localLabel('Proposée ✓','Vorgeschlagen ✓'):localLabel('Proposer','Vorschlagen')}</button>${proposed?`<button type="button" class="chiffrage-inline" data-action="editProposal" data-key="${escape(id)}">${localLabel('Régler','Bearbeiten')}</button>`:''}</div>${selected.has(id)?includedFunctions(id):''}${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
   }
+
+function openProposalSettings(key,opener){
+ const index=(state.draft.client_options??[]).findIndex(row=>row.key===key);if(index<0)return;
+ const holder=document.createElement('div');holder.innerHTML=offerOptionsEditor(state.draft,state.catalog,localLabel,money);
+ const card=holder.querySelector(`[data-showcase-card="${index}"]`);if(!card)return;
+ const panel=openWorkspaceDialog(root,localLabel('Régler la proposition','Vorschlag bearbeiten'),'',opener),dialog=panel.closest('dialog');
+ dialog.classList.add('chiffrage-option-dialog');panel.classList.add('chiffrage-showcase-editor');card.open=true;card.querySelector('[data-action="showcaseUp"]')?.remove();panel.append(card);
+ dialog.addEventListener('close',()=>{if(state.mode!=='editor')return;renderEditor();[...root.querySelectorAll('[data-action="editProposal"]')].find(node=>node.dataset.key===key)?.focus({preventScroll:true});},{once:true});
+ card.querySelector('[data-showcase-field="days"]')?.focus({preventScroll:true});
+}
 
 function productSection() {
   const selected = new Set(state.draft.modules.map(item => `${item.vendor}/${item.product}/${item.item_code}`));
@@ -576,7 +586,7 @@ function extraSection(scope = 'modules') {
     const groupRows=result?.lines.filter(row=>row.family===sourceFamily&&row.category!=='hosting')??[];
     const totals={investment:groupRows.reduce((sum,row)=>sum+(row.investment_pv??0),0),annual:groupRows.reduce((sum,row)=>sum+(row.annual_pv??0),0),days:groupRows.reduce((sum,row)=>sum+(row.selected_days??0)*(row.quantity??1),0),incomplete:!result};
     const candidateFor=line=>extraOptionCandidates(state.draft,state.catalog,{includeSelected:true}).find(row=>extraOptionId(row.source)===extraOptionId(line)&&row.software===(kind==='partners'?'partners':'prime'));
-    const proposeButton=line=>{const candidate=candidateFor(line);if(!candidate)return '';const proposed=(state.draft.client_options??[]).some(row=>row.key===candidate.key);return `<button type="button" class="chiffrage-button quiet" data-action="softwareDisposition" data-key="${escape(candidate.key)}" data-disposition="${proposed?'off':'propose'}" aria-pressed="${proposed}">${proposed?localLabel('Proposée ✓','Vorgeschlagen ✓'):localLabel('Proposer','Vorschlagen')}</button>`;};
+    const proposeButton=line=>{const candidate=candidateFor(line);if(!candidate)return '';const proposed=(state.draft.client_options??[]).some(row=>row.key===candidate.key);return `<span class="chiffrage-proposal-actions"><button type="button" class="chiffrage-button quiet" data-action="softwareDisposition" data-key="${escape(candidate.key)}" data-disposition="${proposed?'off':'propose'}" aria-pressed="${proposed}">${proposed?localLabel('Proposée ✓','Vorgeschlagen ✓'):localLabel('Proposer','Vorschlagen')}</button>${proposed?`<button type="button" class="chiffrage-button quiet" data-action="editProposal" data-key="${escape(candidate.key)}">${localLabel('Régler','Bearbeiten')}</button>`:''}</span>`;};
     const rows = chosen.map(line => {
       const id = `${kind}.${line.index}`;
       const annual = line.annual_rule ? primeOptionAnnual(line) : line.annual_pricing?.chf_per_inhabitant == null ? line.annual_pv :
@@ -1314,21 +1324,23 @@ root.addEventListener('submit', async event => {
 root.addEventListener('input', event => {
 
   if(event.target.hasAttribute('data-showcase-search')){
-    const q=event.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-    root.querySelectorAll('[data-showcase-candidate]').forEach(node=>node.hidden=!node.textContent.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q));return;
+    const q=event.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim(),scope=event.target.closest('[data-showcase-editor]');
+    let matches=0;scope.querySelectorAll('[data-showcase-candidate]').forEach(node=>{const match=q.length>=2&&node.textContent.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().includes(q);node.hidden=!match||matches++>=12;});
+    const status=scope.querySelector('[data-showcase-search-status]');if(status)status.textContent=q.length<2?localLabel('Saisis au moins 2 caractères.','Mindestens 2 Zeichen eingeben.'):matches===0?localLabel('Aucun résultat.','Keine Ergebnisse.'):matches>12?localLabel('12 premiers résultats · précise la recherche.','Erste 12 Ergebnisse · Suche eingrenzen.'):matches+' '+localLabel('résultat(s)','Ergebnis(se)');return;
   }
   if(event.target.dataset.showcaseField&&state.draft){
+    const scope=event.target.closest('.chiffrage-dialog')??root;
     const index=Number(event.target.dataset.showcaseIndex),field=event.target.dataset.showcaseField,row=state.draft.client_options?.[index];
     if(!row||!['days','annual_override','label_fr','label_de','benefit_fr','benefit_de','description_fr','description_de'].includes(field))return;
     row[field]=['days','annual_override'].includes(field)?(event.target.value===''?null:Number(event.target.value)):event.target.value;
     state.dirty=true;
     const candidate=offerOptionCandidates(state.draft,state.catalog).find(item=>item.key===row.key),price=candidate?priceOfferOption(state.draft,state.catalog,candidate,row):null;
-    const node=root.querySelector(`[data-showcase-price="${index}"]`);
+    const node=scope.querySelector(`[data-showcase-price="${index}"]`);
     if(node){node.hidden=!price;node.textContent=price?`${localLabel('Suppléments','Aufpreise')} : ${money(price.investment)} · ${money(price.annual)} / ${localLabel('an','Jahr')}`:'';}
-    const summaryTitle=root.querySelector(`[data-showcase-summary-title="${index}"]`);if(summaryTitle)summaryTitle.textContent=row.label_fr||candidate?.label_fr||row.key;
-    const summaryPrice=root.querySelector(`[data-showcase-summary-price="${index}"]`);if(summaryPrice){summaryPrice.replaceChildren(document.createTextNode(price?money(price.investment):localLabel('Prix à préciser','Preis offen')));if(price){const annual=document.createElement('small');annual.textContent=money(price.annual)+' / '+localLabel('an','Jahr');summaryPrice.append(annual);}}
-    const summaryState=root.querySelector(`[data-showcase-summary-state="${index}"]`);if(summaryState){const complete=Boolean(price&&row.label_fr?.trim());summaryState.dataset.ready=String(complete);summaryState.textContent=complete?localLabel('Prête','Bereit'):localLabel('À compléter','Ergänzen');}
-    const ready=root.querySelector(`[data-showcase-readiness="${index}"]`);
+    const summaryTitle=scope.querySelector(`[data-showcase-summary-title="${index}"]`);if(summaryTitle)summaryTitle.textContent=row.label_fr||candidate?.label_fr||row.key;
+    const summaryPrice=scope.querySelector(`[data-showcase-summary-price="${index}"]`);if(summaryPrice){summaryPrice.replaceChildren(document.createTextNode(price?money(price.investment):localLabel('Prix à préciser','Preis offen')));if(price){const annual=document.createElement('small');annual.textContent=money(price.annual)+' / '+localLabel('an','Jahr');summaryPrice.append(annual);}}
+    const summaryState=scope.querySelector(`[data-showcase-summary-state="${index}"]`);if(summaryState){const complete=Boolean(price&&row.label_fr?.trim());summaryState.dataset.ready=String(complete);summaryState.textContent=complete?localLabel('Prête','Bereit'):localLabel('À compléter','Ergänzen');}
+    const ready=scope.querySelector(`[data-showcase-readiness="${index}"]`);
     if(ready)ready.textContent=optionReadinessMessage(candidate,row,price,localLabel);
     refreshFinancials();notice(()=>t('chiffrage.completion.unsaved'));return;
   }
@@ -1563,7 +1575,8 @@ root.addEventListener('click', async event => {
   const button = event.target.closest('[data-action]');
   if (!button) return;
   const action=button.dataset.action;
-  if(action==='softwareDisposition'){if(state.quoteStage===2)return;try{state.draft=setSoftwareDisposition(state.draft,state.catalog,button.dataset.key,button.dataset.disposition);state.dirty=true;renderEditor();notice(()=>localLabel('Périmètre modifié · à enregistrer.','Umfang geändert · bitte speichern.'));}catch(error){notice(()=>errorMessage(error),true);}return;}
+  if(action==='editProposal'){if(state.quoteStage!==2)openProposalSettings(button.dataset.key,button);return;}
+  if(action==='softwareDisposition'){if(state.quoteStage===2)return;try{const key=button.dataset.key,propose=button.dataset.disposition==='propose';state.draft=setSoftwareDisposition(state.draft,state.catalog,key,button.dataset.disposition);state.dirty=true;renderEditor();if(propose){const source=[...root.querySelectorAll('[data-action="editProposal"]')].find(node=>node.dataset.key===key);openProposalSettings(key,source);}notice(()=>localLabel('Périmètre modifié · à enregistrer.','Umfang geändert · bitte speichern.'));}catch(error){notice(()=>errorMessage(error),true);}return;}
   if(action==='clearServiceOverride'){if(state.quoteStage===2)return;const row=state.draft.services.find(line=>line.item_code===button.dataset.service);if(row){delete row.investment_override;state.dirty=true;renderEditor();}return;}
   if(state.quoteStage===2&&['save','restore','upgrade','showcaseAdd','showcaseRemove','showcaseUp','addPrimeOption','addReferenceLine','addPrime','addPartner','removeExtra','addHosting','removeHosting'].includes(action)){notice(()=>localLabel('Replace ce dossier dans une autre colonne pour le modifier.','Zum Bearbeiten in eine andere Spalte verschieben.'),true);return;}
 
@@ -1589,7 +1602,7 @@ root.addEventListener('click', async event => {
     state.draft.client_options??=[];
     if(!candidate||state.draft.client_options.length>=maxOfferOptions||state.draft.client_options.some(row=>row.key===candidate.key))return;
     state.draft.client_options.push({...(candidate.kind==='partner'||candidate.kind==='prime'?{source_line:candidate.source}:{}),key:candidate.key,label_fr:candidate.label_fr,label_de:candidate.label_de,benefit_fr:'',benefit_de:'',description_fr:'',description_de:'',days:null});
-    state.dirty=true;renderEditor();root.querySelector('[data-showcase-editor]').open=true;const card=root.querySelector(`[data-showcase-card="${state.draft.client_options.length-1}"]`);if(card)card.open=true;return;
+    state.dirty=true;renderEditor();root.querySelector('[data-showcase-editor]').open=true;openProposalSettings(candidate.key,root.querySelector('[data-showcase-editor]>summary'));return;
   }
   if(action==='showcaseRemove'||action==='showcaseUp'){
     const rows=state.draft.client_options??[],index=Number(button.dataset.index);

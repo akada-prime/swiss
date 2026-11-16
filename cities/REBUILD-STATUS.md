@@ -1,5 +1,17 @@
 # État de reprise — Prime Communes 2.0
 
+> **Finitions des 7 retours · 16.11.2026.** Net de nouveau en grand (48 px
+> desktop, 32 px Natel), brut blanc et remise en texte bordeaux sans fond.
+> Espacement unique de 16 px entre les groupes Modules, sans marge ajoutée
+> pour Prime/partenaires. Proposer ouvre les réglages en dialogue ; fermeture
+> revient à Régler sur la ligne, sans saut au bas de page. Fiches et champs
+> existants conservés. Catalogue fermé, recherche dès 2 caractères, 12 résultats
+> maximum et indication pour affiner. Supplément d'investissement client hors
+> GP ; investissement et annuel restent séparés. Fonction serveur v37 active.
+> 270 tests et build réussis ; six largeurs Chrome sans débordement, dialogue
+> Natel, prix modifié en direct, fermeture/focus et recherche sans résultat
+> contrôlés sur données synthétiques. Safari physique et vraie session ouverts.
+
 > **21 retours du 16.11.2026 · publication demandée.** Projet conserve le
 > standard. Modules regroupe innosolv, Abacus, ProConcept, Prime et partenaires ;
 > Inclure / Proposer sont exclusifs, avec suppléments séparés et valeurs
