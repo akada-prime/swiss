@@ -69,7 +69,7 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 .chiffrage-mobile-summary-figures { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto;gap:8px 16px; }
 .chiffrage-mobile-summary-figures>span { min-width:0;display:grid;grid-template-rows:subgrid;grid-row:span 2; }
 .chiffrage-mobile-summary-figures small { display:block;color:var(--skin-secondary);font-size:14px;line-height:1.4; }
-.chiffrage-mobile-summary-figures strong { display:block;margin-top:0;font-size:30px;line-height:1.15;font-weight:650;letter-spacing:-.04em;color:var(--quote-number);font-variant-numeric:tabular-nums;overflow-wrap:anywhere; }
+.chiffrage-mobile-summary-figures :is(strong,.prime-investment-equation) { display:block;margin-top:0;font-size:30px;line-height:1.15;font-weight:650;letter-spacing:-.04em;color:var(--quote-number);font-variant-numeric:tabular-nums;overflow-wrap:anywhere; }
 .chiffrage-mobile-summary-toggle { display:flex;align-items:center;gap:8px;min-height:36px;margin-top:8px;color:var(--skin-secondary);font-size:14px; }
 
 
@@ -216,7 +216,7 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
  .chiffrage-mobile-summary>summary { padding:20px 16px; }
  .chiffrage-mobile-summary-figures { gap:12px; }
  .chiffrage-mobile-summary-figures small { font-size:14px; }
- .chiffrage-mobile-summary-figures strong { font-size:28px; }
+ .chiffrage-mobile-summary-figures :is(strong,.prime-investment-equation) { font-size:28px; }
  .chiffrage-mobile-summary-detail { padding:0 16px 16px; }
  .chiffrage-grid { grid-template-columns:minmax(0,1fr);gap:16px; }
  .chiffrage-view .chiffrage-grid>label:not(.chiffrage-choice) { display:flex;grid-row:auto;gap:8px; }
