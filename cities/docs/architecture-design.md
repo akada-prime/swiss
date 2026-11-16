@@ -456,3 +456,17 @@ d'investissement ; le moteur du devis inclus reste inchangé. Le net est le
 montant principal ; brut et remise composent une ligne secondaire au-dessus.
 Les groupes Modules ont un seul espacement propriétaire, sans marges cumulées.
 Les tokens de formulaire sont partagés entre l'éditeur et le dialogue.
+
+### 2026-11-16 — Options client compactes
+
+`offerOptions` présente tous les prix publics en lignes, avec unités dans un
+unique en-tête ; chaque ligne disposant de texte est un `details` natif. Le
+repliage d'une option est indépendant de celui du périmètre inclus. Aucun
+sélecteur ou calcul côté client n'est ajouté. L'ancien second dérouleur après
+les trois premières options est retiré.
+
+Les trois montants brut/remise/net héritent de la typographie du nombre d'origine,
+sans taille ou graisse renforcée ; le net reprend le dégradé original. Le budget
+annuel occupe la colonne centrale de la grille commune. La note Synergie reste
+conditionnelle, dans le montant Hébergement. Les prix des anciens liens restent
+figés ; seuls leurs composants de présentation communs évoluent.

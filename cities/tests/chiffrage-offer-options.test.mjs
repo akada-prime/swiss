@@ -48,7 +48,7 @@ test("curated list validation bounds selection and strips unrelated data",functi
 test("showcase disclosures start closed and are independent of included modules",function(){
   const row=offerOptionReview({...input,client_options:[selected]},catalog).options[0];
   const html=offerOptions([row,{...row,label_fr:'Deux'},{...row,label_fr:'Trois'},{...row,label_fr:'Quatre'}],{label:l,money});
-  assert.match(html,/Options non comprises dans cette offre/);assert.match(html,/Option non comprise/);assert.match(html,/hors des totaux/);assert.match(html,/Voir les autres possibilités/);
+  assert.match(html,/Options non comprises dans les totaux/);assert.match(html,/Quatre/);assert.match(html,/Investissement · CHF HT/);assert.match(html,/Annuel · CHF HT\/an/);assert.doesNotMatch(html,/N\+1|Voir les autres possibilités|OPTION NON COMPRISE/);
   assert.doesNotMatch(html,/<details[^>]* open|data-scope-toggle|prime-offer-scope-section|<input/);assert.equal(offerOptions([],{label:l,money}),'');
   assert.match(offerOptions([{...row,label_fr:'<script>alert(1)</script>'}],{label:l,money}),/&lt;script&gt;/);
   const editor=offerOptionsEditor({...input,client_options:[selected]},catalog,l,money);assert.match(editor,/data-showcase-field="benefit_fr"/);assert.match(editor,/data-showcase-search/);

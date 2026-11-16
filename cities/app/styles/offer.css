@@ -223,15 +223,15 @@ align-items:start;}
 .prime-offer-scope-toggle {font:inherit;font-size:14px;min-height:44px;padding:6px 12px;border:1px solid var(--offer-border);border-radius:8px;background:transparent;color:var(--offer-text);cursor:pointer;}
 .prime-offer-scope-section .prime-offer-scope-subheading {margin:var(--offer-space-3) 0 var(--offer-space-2);font-size:inherit;line-height:inherit;font-weight:600;color:var(--offer-text);}
 .prime-offer-scope-section .prime-offer-scope-modules {margin:0;padding-left:0;list-style-type:disc;}
-.prime-offer-recurring-budget{margin-top:16px;padding-top:12px;border-top:1px solid var(--offer-border)}
-.prime-offer-recurring-budget dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
+.prime-offer-recurring-budget{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:var(--offer-card-gap);margin-top:16px;padding-top:12px;border-top:1px solid var(--offer-border)}
+.prime-offer-recurring-budget dl{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--offer-card-gap);margin:0}
 .prime-offer-recurring-budget dt{font-size:14px;color:#c3d1e8;line-height:1.5}
 .prime-offer-recurring-budget dd{margin:8px 0 0;font-size:18px;font-weight:650;font-variant-numeric:tabular-nums}
 .prime-offer-recurring-budget dd small{font-size:14px;font-weight:400}
-.prime-offer-recurring-budget>p{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;width:fit-content;margin:16px 0 0 auto;padding:12px 16px;border:1px solid #ffffff40;border-radius:8px;background:#ffffff0a;font-size:16px}
+.prime-offer-recurring-budget>p{grid-column:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0;margin:16px 0 0;padding:12px 16px;border:1px solid #ffffff40;border-radius:8px;background:#ffffff0a;font-size:16px;text-align:center}
 .prime-offer-recurring-budget strong{font-size:22px;font-variant-numeric:tabular-nums}
 .prime-offer-reference-code{font-size:14px;font-variant-numeric:tabular-nums;color:var(--offer-muted);margin-inline-end:6px}
-@media(max-width:600px){.prime-offer-recurring-budget dl{grid-template-columns:minmax(0,1fr)}.prime-offer-recurring-budget dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:16px}.prime-offer-recurring-budget dd{margin:0;white-space:nowrap}}
+@media(max-width:600px){.prime-offer-recurring-budget dl{grid-template-columns:minmax(0,1fr)}.prime-offer-recurring-budget dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:16px}.prime-offer-recurring-budget dd{text-align:right}.prime-offer-recurring-budget dd{margin:0;white-space:nowrap}}
 .prime-offer-annual-disclosure {margin-top:var(--offer-space-6);padding-top:var(--offer-space-2);border-top:1px solid #ffffff40;}
 .prime-offer-annual-disclosure summary {cursor:pointer;min-height:44px;display:block;align-content:center;font-size:14px;color:#c3d1e8;}
 
@@ -707,19 +707,20 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .p
 .prime-offer-options-count{font-size:14px;white-space:nowrap;color:var(--offer-accent)}
 .prime-offer-options-body{padding:0 var(--offer-card-padding) var(--offer-card-padding)}
 .prime-offer-options-body>p{font-size:15px;line-height:1.55;margin:0 0 var(--offer-space-4)}
-.prime-offer-option-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--offer-card-gap)}
-.prime-offer-option{display:flex;flex-direction:column;min-width:0;padding:var(--offer-card-padding);border:1px solid #ff943e40;border-radius:12px;background:#ff943e07}
-.prime-offer-option-badge{font-size:14px;line-height:1.4;font-weight:650;letter-spacing:.035em;text-transform:uppercase;color:var(--offer-accent)}
-.prime-offer-option h4{font-size:21px;line-height:1.25;margin:var(--offer-space-3) 0 var(--offer-space-2);overflow-wrap:anywhere}
-.prime-offer-option>p{font-size:16px;line-height:1.5;margin:0 0 24px}
-.prime-offer-option-prices{margin:auto 0 0;padding-top:var(--offer-space-4);border-top:1px solid #ff943e40;display:grid;gap:var(--offer-card-gap)}
-.prime-offer-option-prices dt{font-size:14px;line-height:1.4}
-.prime-offer-option-prices dd{font-size:20px;font-weight:650;font-variant-numeric:tabular-nums;line-height:1.3;margin:4px 0 0;overflow-wrap:anywhere}
-.prime-offer-option-detail{margin-top:var(--offer-space-4);font-size:15px;line-height:1.5}
-.prime-offer-option-detail>summary,.prime-offer-options-more>summary{cursor:pointer;font-weight:600;color:var(--offer-accent)}
-.prime-offer-option-detail>p{white-space:pre-line}
-.prime-offer-options-more{margin-top:var(--offer-space-4)}
-.prime-offer-options-more>.prime-offer-option-grid{margin-top:var(--offer-space-4)}
+/* One compact row per option; editorial detail opens only when requested. */
+.prime-offer-option-columns,.prime-offer-option-heading{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,180px) minmax(130px,180px);gap:12px 24px;align-items:center;padding:12px 16px 12px 36px}
+.prime-offer-option-columns{font-size:14px;line-height:1.4;color:var(--offer-muted)}
+.prime-offer-option-columns>span:not(:first-child){text-align:right}
+.prime-offer-option-list{border:1px solid var(--offer-border);border-radius:12px;overflow:hidden}
+.prime-offer-option{min-width:0;background:var(--offer-panel)}
+.prime-offer-option+.prime-offer-option{border-top:1px solid var(--offer-border)}
+.prime-offer-option>.prime-offer-option-heading{padding:12px 16px 12px 36px;min-height:56px;font-size:16px;line-height:1.4}
+.prime-offer-option>.prime-offer-option-heading::before{left:16px;top:23px}
+.prime-offer-option-name{min-width:0;overflow-wrap:anywhere;font-weight:600}
+.prime-offer-option-amount{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.prime-offer-option-detail{padding:0 16px 16px 36px;font-size:15px;line-height:1.55;max-width:850px}
+.prime-offer-option-detail>p{margin:8px 0 0;white-space:pre-line}
+
 
 /* Responsive variants: only layout and semantic density change. */
 @media (min-width:851px) {
@@ -854,10 +855,10 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .p
 .chiffrage-offer{--offer-card-padding:var(--offer-space-4);--offer-section-gap:var(--offer-space-8);}.prime-offer-communal-figures{row-gap:var(--offer-space-6);}
 }
 @media (max-width:900px) {
-.prime-offer-option-grid{grid-template-columns:1fr}.prime-offer-option-prices{grid-template-columns:1fr 1fr}.prime-offer-options-disclosure>summary{align-items:flex-start;flex-wrap:wrap}.prime-offer-options-count{margin-left:auto}
+.prime-offer-options-disclosure>summary{align-items:flex-start;flex-wrap:wrap}.prime-offer-options-count{margin-left:auto}
 }
 @media (max-width:430px) {
-.prime-offer-option-prices{grid-template-columns:1fr}.prime-offer-options-disclosure>summary strong{font-size:21px}
+.prime-offer-options-disclosure>summary strong{font-size:21px}
 }
 
 .prime-offer-investment-adjustment{margin-top:24px;padding:24px;border:1px solid var(--skin-border);border-radius:14px;background:var(--skin-tint)}
@@ -868,15 +869,23 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .p
 .prime-offer-investment-adjustment dl>div:last-child{padding-top:16px;border-top:1px solid var(--skin-border);font-weight:700;font-size:20px}
 @media(max-width:430px){.prime-offer-investment-adjustment dl>div{flex-wrap:wrap;gap:4px}.prime-offer-investment-adjustment dd{margin-left:auto}}
 
-/* Net owns the visual hierarchy; gross and rebate are discreet secondary amounts. */
-.prime-investment-equation{--rebate-ink:#ee8ea6;-webkit-text-fill-color:currentColor;display:flex;flex-direction:column;align-items:flex-end;gap:6px;line-height:1.2;font-variant-numeric:tabular-nums;color:var(--skin-text)}
-.prime-investment-adjustments{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px 16px;font-size:15px;font-weight:500;letter-spacing:0}
+/* Three amounts, three lines. The original number typography stays inherited. */
+.prime-investment-equation{--rebate-ink:#b95776;-webkit-text-fill-color:currentColor;display:flex;flex-direction:column;align-items:flex-end;gap:6px;font:inherit;letter-spacing:inherit;line-height:inherit;font-variant-numeric:tabular-nums;color:var(--skin-text)}
+.prime-investment-adjustments{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font:inherit;letter-spacing:inherit}
 .prime-investment-rebate{color:var(--rebate-ink);white-space:nowrap;background:none;padding:0}
-.prime-investment-equation>strong{font-size:clamp(34px,3.5vw,48px);letter-spacing:-.035em;line-height:1.15;color:#93caff;white-space:nowrap}
-.prime-offer-communal-figures>div>.prime-investment-equation{display:flex;align-items:flex-start;align-self:center;color:#fff}
-.prime-offer-communal-figures .prime-investment-equation>strong{font-size:var(--offer-large-size);letter-spacing:-.035em;color:#93caff}
+.prime-investment-equation>strong{font:inherit;letter-spacing:inherit;line-height:inherit;white-space:nowrap;color:var(--skin-text);background:linear-gradient(105deg,var(--investment-gradient-start,var(--skin-text)) 12%,var(--skin-accent) 92%);background-clip:text;-webkit-text-fill-color:transparent}
+.prime-investment-equation .prime-offer-currency{font-size:14px;letter-spacing:0}
+.prime-offer-communal-figures>div>.prime-investment-equation{--investment-gradient-start:#fff;display:flex;align-items:flex-start;align-self:center;color:#fff;font-size:var(--offer-large-size);font-weight:700;letter-spacing:-.055em;line-height:1.12}
+.prime-offer-communal-figures .prime-investment-adjustments{align-items:flex-start}
 .chiffrage-mobile-summary-figures .prime-investment-equation{align-items:flex-start}
-.chiffrage-mobile-summary-figures .prime-investment-equation>strong{font-size:32px}
+.chiffrage-mobile-summary-figures .prime-investment-adjustments{align-items:flex-start}
 html[data-skin="helvetia"] .chiffrage-editor .prime-investment-equation{--rebate-ink:#8c2543}
-html[data-skin="helvetia"] .chiffrage-summary .prime-investment-equation>strong{color:#125d9b}
-.prime-offer-synergy-note{display:block;margin-top:8px;color:#c3d1e8;font-size:14px}
+.prime-offer-recurring-budget dd .prime-offer-synergy-note{display:block;margin-top:6px;white-space:normal;font-size:14px;color:#c3d1e8;line-height:1.5}
+
+@media(max-width:850px){
+ .prime-offer-recurring-budget>p{grid-column:1/-1;justify-self:center;max-width:100%}
+ .prime-offer-option-columns,.prime-offer-option-heading{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:16px}
+ .prime-offer-option-columns>span:first-child{display:none}
+ .prime-offer-option-name{grid-column:1/-1}
+ .prime-offer-option-columns>span:not(:first-child),.prime-offer-option-amount{text-align:left}
+}

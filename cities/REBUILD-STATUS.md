@@ -1,5 +1,19 @@
 # État de reprise — Prime Communes 2.0
 
+> **Finitions client 8–12 et dernier retour · 16.11.2026.** N+1 retiré
+> de la présentation client. Les options sont des lignes compactes (56 px
+> desktop), six visibles sans second « Voir plus » ; bénéfice et description
+> restent dépliables. Unités une seule fois en en-tête. Total annuel encadré
+> dans la colonne centrale sur ordinateur et centré sur Natel. Note conditionnelle
+> « *) Hébergement en synergie » immédiatement sous le montant d'hébergement.
+> Brut blanc, remise bordeaux et net dégradé : trois lignes de même typographie,
+> héritée du chiffre d'origine (interne clamp 32–44 px / graisse 600), sans badge.
+> Un seul séparateur avant Chiffrer l'hébergement dans Projet.
+> 270 tests et build réussis ; six formats client sans débordement, détail GED,
+> FR et DE/Helvetia sur Natel ; données synthétiques uniquement. Pas de changement
+> de moteur, de serveur, de catalogue ou de dossier ; fonction v37 conservée.
+> Safari physique et parcours authentifié réel restent ouverts.
+
 > **Finitions des 7 retours · 16.11.2026.** Net de nouveau en grand (48 px
 > desktop, 32 px Natel), brut blanc et remise en texte bordeaux sans fond.
 > Espacement unique de 16 px entre les groupes Modules, sans marge ajoutée
