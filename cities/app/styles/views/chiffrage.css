@@ -129,7 +129,7 @@
 .chiffrage-module-groups{display:grid;gap:var(--quote-space-6);margin-top:var(--quote-space-6)}
 .chiffrage-module-set{min-width:0}
 .chiffrage-module-set h3{padding-bottom:12px;border-bottom:1px solid var(--skin-border);font-size:14px;color:var(--skin-secondary)}
-.chiffrage-module-entry{display:grid;grid-template-columns:minmax(0,1fr) 130px 86px;gap:12px;padding:7px 0;border-bottom:1px solid var(--skin-border-faint);align-items:center}
+.chiffrage-module-entry{display:grid;grid-template-columns:minmax(0,1fr) 105px 78px auto;gap:12px;padding:7px 0;border-bottom:1px solid var(--skin-border-faint);align-items:center}
 .chiffrage-view .chiffrage-module-entry>label{min-height:44px;display:flex;flex-direction:row;gap:12px;align-items:center;color:var(--skin-text);font-size:14px;line-height:1.4;overflow-wrap:normal}
 .chiffrage-module-name{min-width:0}
 .chiffrage-module-name small{display:inline;margin-left:8px;font-size:12px;color:var(--skin-muted)}
@@ -397,7 +397,7 @@
 .chiffrage-extra-group{margin-top:20px}
 .chiffrage-extra-group h3{margin:0 0 10px;font-size:18px}
 .chiffrage-extra-group>.chiffrage-extra-row{border:1px solid var(--skin-border-soft);border-radius:9px;margin:6px 0}
-.chiffrage-extra-row>summary{--quote-marker-inset:12px;display:grid;grid-template-columns:minmax(130px,1fr) 75px 125px 125px;gap:12px;align-items:center;padding:12px;cursor:pointer}
+.chiffrage-extra-row>summary{--quote-marker-inset:12px;display:grid;grid-template-columns:minmax(130px,1fr) 60px 105px 105px auto;gap:12px;align-items:center;padding:12px;cursor:pointer}
 .chiffrage-extra-row>summary strong,.chiffrage-extra-row>summary span:last-child{font-variant-numeric:tabular-nums;text-align:right}
 .chiffrage-extra-available{margin:8px 0 14px;border:1px solid var(--skin-border-soft);border-radius:9px;padding:10px}
 .chiffrage-extra-available>summary{cursor:pointer}
@@ -454,7 +454,7 @@
 .chiffrage-rollup>span{text-align:right;white-space:nowrap;}
 .chiffrage-rollup small{font-size:inherit;color:var(--skin-muted);}
 .chiffrage-module-set>summary,.chiffrage-extra-group>summary{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-.chiffrage-extra-available>.chiffrage-option-preview{display:grid;grid-template-columns:minmax(160px,1fr) repeat(3,minmax(100px,auto)) auto;gap:16px;align-items:center;padding:12px 0;border-top:1px solid var(--skin-border);}
+.chiffrage-extra-available>.chiffrage-option-preview{display:grid;grid-template-columns:minmax(160px,1fr) repeat(3,minmax(80px,auto)) auto auto;gap:16px;align-items:center;padding:12px 0;border-top:1px solid var(--skin-border);}
 .chiffrage-option-preview>span:not(:first-child),.chiffrage-option-preview>strong{text-align:right;font-variant-numeric:tabular-nums;}
 .chiffrage-option-days{text-align:right;font-variant-numeric:tabular-nums;}
 .chiffrage-option-days small{display:block;}
@@ -587,3 +587,6 @@
 
 /* Shared actions keep the same labelled controls as the rest of Chiffrage. */
 .chiffrage-share-link-heading>.chiffrage-button{width:auto;min-height:44px;padding:8px 10px;font-size:14px;text-align:center}
+
+.chiffrage-module-entry>.chiffrage-propose{min-height:44px;font-size:14px;white-space:nowrap}
+@media(max-width:760px){.chiffrage-module-entry>.chiffrage-propose{grid-column:2;grid-row:3;justify-self:end}.chiffrage-discount-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}

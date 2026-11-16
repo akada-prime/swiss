@@ -78,7 +78,7 @@ test('compact implementation retains subtotals, offered travel, one header and n
  const config={label:f=>f,money:n=>n+' CHF HT'}, html=offerBreakdown(rows,config);
  assert.match(html,/47520/);assert.match(html,/52800/);assert.match(html,/100320/);
  assert.match(html,/>Prime<\/h4>/);assert.match(html,/Déplacements \(estimés\)/);
- assert.doesNotMatch(html,/Annuel dès N\+1/g);assert.equal((html.match(/<span>Investissement<\/span>/g)||[]).length,1);
+ assert.doesNotMatch(html,/Annuel dès N\+1/g);assert.equal((html.match(/<span>Investissement · CHF HT<\/span>/g)||[]).length,1);
  assert.match(offerBreakdown([...rows,{key:'otherServices',label:'Suivi',investment:0,annual:100}],config),/Annuel dès N\+1/g);
  const figures=offerFigures({investment:1,annual:2,tco5y:9},{...config,municipal:true,annualBreakdown:{solutions:2,lcm:0,hosting:0}});
  assert.match(figures,/<\/div><div class="prime-offer-recurring-budget">/);

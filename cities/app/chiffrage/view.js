@@ -1,10 +1,11 @@
+import {setSoftwareDisposition} from './software-selection.js?v=20261116-software-target-r3';
 import {bindKanban,boardHtml,boardRibbon,cardTools,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261113-card-tools-r1';
 import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-coherence-r1';
 import { portalUsers, suggestedPortalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
 import { bindCommunePicker } from './commune-picker.js?v=20261112-coherence-r1';
 import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261112-coherence-r1';
-import {offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261112-coherence-r1';
-import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261112-coherence-r1';
+import {extraOptionId,extraOptionCandidates,offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261116-software-target-r3';
+import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261116-software-target-r3';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
 import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261112-coherence-r1';
 import { includedForParent, optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
@@ -12,19 +13,19 @@ import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js?v=20261112-coherence-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261112-coherence-r1';
+import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261116-software-target-r3';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
-import { calculateQuote, calculateLcm, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261112-coherence-r1';
+import { calculateQuote, calculateLcm, calculateOracle, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261116-software-target-r3';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261112-coherence-r1';
-import { calculationError } from './errors.js?v=20261112-investment-discount-r1';
+import { calculationError } from './errors.js?v=20261116-software-target-r3';
 import bundledCoats from './coats.js?v=20261028-business-r11';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261112-workspace-review-r1';
 import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-coherence-r1';
 import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-coherence-r1';
 
-import { previewModule, moduleRollup, optionPreview } from './business-presentation.js?v=20261112-coherence-r1';
+import { previewModule, moduleRollup } from './business-presentation.js?v=20261116-software-target-r3';
 
 const root = document.getElementById('chiffrageRoot');
 bindOfferScope(root);
@@ -65,6 +66,7 @@ const assetPrefix = document.querySelector('script[type="module"][src*="/assets/
 const assetUrl = path => new URL(assetPrefix + path, new URL(document.documentElement.dataset.chiffrageAssets || './', document.baseURI)).href;
 const tariffLabel = catalog => [...new Set((catalog?.items??[]).map(item=>item.catalog_version).filter(Boolean))].slice(0,3).join(' · ') || '—';
 const errorMessage = error => {
+  if(error.code==='investmentTargetInvalid'||error.message==='Invalid investment target'||error.message==='Investment target exceeds gross')return localLabel('La cible doit être comprise entre 0 et l’investissement brut.','Der Zielpreis muss zwischen 0 und der Bruttoinvestition liegen.');
   if(error.code==='investmentDiscountInvalid'||error.message==='Invalid investment discount')return localLabel('La remise doit être comprise entre 0 et l’investissement brut, au centime près.','Der Rabatt muss zwischen 0 und der Bruttoinvestition liegen, auf Rappen genau.');
   if(error.code==='quoteFinalized')return localLabel('Chiffrage en lecture seule. Replace-le dans une autre colonne pour le modifier.','Schreibgeschützte Kalkulation. Zum Bearbeiten in eine andere Spalte verschieben.');
   if (error.code==='portalUsersRequired' || error.message==='Portal users required') return localLabel('Précise le nombre d’utilisateurs du portail.','Anzahl der Portalbenutzer ergänzen.');
@@ -108,6 +110,7 @@ function currentCompletion() {
   try { return completionItems(state.draft,calculateQuote(state.draft,state.catalog)); }
   catch (error) {
     const detail=calculationError(error);
+    if(detail?.code==='investmentTargetInvalid')return [{kind:'discount',code:'target',tab:'composer',field:'investmentTarget'}];
     if(detail?.code==='investmentDiscountInvalid')return [{kind:'discount',code:'discount',tab:'composer',field:'investmentDiscount'}];
     if(detail?.code==='portalUsersRequired')return [{kind:'portal',code:'portal',tab:'composer',field:'dimensions.portalUsers'}];
     if (detail?.code==='pceStandalonePrice') return [{kind:'technical',code:'pce',tab:'composer',field:state.draft.pce.finances && state.draft.pce.financePvOverride==null?'pce.financePvOverride':'pce.salaryPvOverride'}];
@@ -117,7 +120,7 @@ function currentCompletion() {
   }
 }
 function completionLabel(item) {
-  if(item.kind==='discount')return localLabel('Remise d’investissement à corriger','Investitionsrabatt korrigieren');
+  if(item.kind==='discount')return item.code==='target'?localLabel('Prix cible à corriger','Zielpreis korrigieren'):localLabel('Remise d’investissement à corriger','Investitionsrabatt korrigieren');
   if(item.kind==='portal')return localLabel('Utilisateurs du portail à préciser','Portalbenutzer ergänzen');
   if (item.kind==='technical') return t(item.code==='sql'?'chiffrage.completion.sql':item.code==='pce'?'chiffrage.completion.pce':'chiffrage.completion.database');
   if (item.kind==='hosting') return t(item.code==='investment_pv'?'chiffrage.completion.hostingInvestment':item.code==='annual_pv'?'chiffrage.completion.hostingAnnual':'chiffrage.completion.hosting');
@@ -404,6 +407,7 @@ function moduleEntry(item, selected, calculated) {
     const selectedModule = state.draft.modules[selectedIndex];
     const days = current && Object.hasOwn(current,'days') ? current.days : presetDays(id);
     const financial = calculated?.lines.find(line => `${line.family}/${line.product}/${line.item_code}` === id) ?? previewModule(state.draft,state.catalog,item);
+    const proposed=(state.draft.client_options??[]).some(row=>row.key===id);
     const required = id === 'innosolv/Gemeinde/1' || id === 'abacus/ERP/10503.1' || isEnergyModule(item) && state.draft.energy;
     return `<div class="chiffrage-module-entry" data-module-row="${escape(id)}"><label><input type="checkbox" data-module="${escape(id)}" ${selected.has(id) ? 'checked' : ''} ${selected.has(id) && required ? 'disabled' : ''}>
       <span class="chiffrage-module-name">${escape(document.documentElement.lang === 'de' ? item.label_de || item.label_fr || t('chiffrage.ui.unavailableModule') : item.label_fr || item.label_de || t('chiffrage.ui.unavailableModule'))}<small>${escape(item.item_code)} · ${required ? t('chiffrage.workspace.3cef74c61d') : item.default_selected ? t('chiffrage.workspace.ef354927f1') : t('chiffrage.workspace.14eb14ece5')}</small></span></label>
@@ -411,7 +415,7 @@ function moduleEntry(item, selected, calculated) {
       ${selected.has(id) ? `<div class="chiffrage-module-service">
         <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" data-missing-days="${days == null}" data-proposed-days="${escape(presetDays(id) ?? '')}" class="${current?.days != null && current.days !== presetDays(id) ? 'is-adjusted' : ''}" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j.</span></label><small data-day-status ${days==null?'':'hidden'}>${localLabel('À préciser','Offen')}</small>
       </div>` : `<span class="chiffrage-option-days">${days==null?localLabel('À préciser','Noch offen'):number(days)+' j.'}<small>${days==null?'':money(days*dayRate())}</small></span>`}
-      ${selected.has(id)?includedFunctions(id):''}${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
+      <button type="button" class="chiffrage-inline chiffrage-propose" data-action="softwareDisposition" data-key="${escape(id)}" data-disposition="${proposed?'off':'propose'}" aria-pressed="${proposed}" ${required?'disabled':''}>${proposed?localLabel('Proposée ✓','Vorgeschlagen ✓'):localLabel('Proposer','Vorschlagen')}</button>${selected.has(id)?includedFunctions(id):''}${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
   }
 
 function productSection() {
@@ -436,11 +440,11 @@ function productSection() {
         const available = group==='innosolv' ? [proposedOptions,otherOptions].map(section=>({
           ...section,items:other.filter(item=>availableModuleSection(item).key===section.key)
         })).filter(section=>section.items.length) : [{key:'all',fr:'Options disponibles',de:'Verfügbare Optionen',items:other}];
-        const optionsHtml=available.map(section=>`<details class="chiffrage-subdetail" data-disclosure-key="options-${escape(group)}-${section.key}"><summary>${escape(localLabel(section.fr,section.de))} · ${section.items.length}</summary><div class="chiffrage-module-list">${renderGroups(section.items,false)}</div></details>`).join('');
+        const optionsHtml=available.map(section=>`<details class="chiffrage-subdetail" data-disclosure-key="options-${escape(group)}-${section.key}"><summary>${escape(localLabel(section.key==='proposed'?'Modules recommandés':section.fr,section.de))} · ${section.items.length}</summary><div class="chiffrage-module-list">${renderGroups(section.items,false)}</div></details>`).join('');
         return `<details class="chiffrage-module-set" data-disclosure-key="modules-${escape(group)}"><summary><span>${escape(brand)}</span><small><span data-selected-count="${escape(group)}">${included.length}</span> ${t('chiffrage.workspace.f8352fa70a')}</small>${`<span data-rollup-vendor="${escape(group)}">${rollupMarkup(moduleRollup(calculated,group))}</span>`}</summary>
           <div class="chiffrage-module-list">${renderGroups(included,true)}</div>
           ${other.length ? `<section class="chiffrage-available-modules"><h3>${localLabel('Ajouter des modules','Module hinzufügen')}</h3><input class="chiffrage-module-search" data-module-search="${escape(group)}" type="search" placeholder="${localLabel('Chercher un module','Modul suchen')}" aria-label="${localLabel('Chercher un module','Modul suchen')}">${optionsHtml}</section>` : ''}</details>`;
-      }).join('')}${pceModuleSection(calculated)}</div></section>`;
+      }).join('')}${pceModuleSection(calculated)}${extraSection('modules')}</div></section>`;
 }
 
 function rollupMarkup(row) {
@@ -458,7 +462,7 @@ function pceModuleSection(result) {
     let line=result?.lines.find(row=>row.family==='pce'&&row.item_code===key);
     if(!line&&key!=='interface')try{const copy=structuredClone(state.draft);copy.pce[key]=true;line=calculateQuote(copy,state.catalog).lines.find(row=>row.family==='pce'&&row.item_code===key);}catch{}
     const services=state.draft.services.filter(row=>row.item_code?.startsWith('pce-')&&(row.requires_pce_option?row.requires_pce_option===key:key==='finances'));
-    return `<div class="chiffrage-pce-entry"><label><input type="checkbox" data-field="pce.${key}" ${key==='interface'?'checked disabled':state.draft.pce[key]?'checked':''}>${escape(label)}</label><span>${money(line?.annual_pv)} / ${localLabel('an','Jahr')}</span>${state.draft.pce[key] ? includedFunctions('pce/ERP/'+key) : ''}${services.map(row=>`<div>${escape(row.label||row.item_code)}${field(`service.${row.item_code}.days`,displayedServiceDays(row,state.catalog),t('chiffrage.days'),{step:.5})}</div>`).join('')}</div>`;
+    return `<div class="chiffrage-pce-entry"><label><input type="checkbox" data-field="pce.${key}" ${key==='interface'?'checked disabled':state.draft.pce[key]?'checked':''}>${escape(label)}</label><span>${money(line?.annual_pv)} / ${localLabel('an','Jahr')}</span>${key==='interface'?'':`<button type="button" class="chiffrage-inline" data-action="softwareDisposition" data-key="pce/ERP/${key}" data-disposition="${state.draft.client_options?.some(row=>row.key==='pce/ERP/'+key)?'off':'propose'}">${state.draft.client_options?.some(row=>row.key==='pce/ERP/'+key)?localLabel('Proposée ✓','Vorgeschlagen ✓'):localLabel('Proposer','Vorschlagen')}</button>`}${state.draft.pce[key] ? includedFunctions('pce/ERP/'+key) : ''}${services.map(row=>`<div>${escape(row.label||row.item_code)}${field(`service.${row.item_code}.days`,displayedServiceDays(row,state.catalog),t('chiffrage.days'),{step:.5})}</div>`).join('')}</div>`;
   }).join('')}</div></details>`;
 }
 
@@ -538,9 +542,7 @@ function technicalSection() {
   return `<details class="chiffrage-section"><summary>${t('chiffrage.technical')}</summary>
     ${hasSql ? `<p>${t('chiffrage.sqlSuggested', { count: suggestion ?? '—' })}</p>
       <p class="chiffrage-warning" data-sql-warning ${state.draft.dimensions.population >= state.catalog.parameters.sql.core_from_population && state.catalog.parameters.sql.price_per_core == null && sqlPrice == null ? '' : 'hidden'}>${t('chiffrage.sqlCoreUnconfirmed')}</p>
-      <div class="chiffrage-grid">${field('sql.users', state.draft.sql.users ?? suggestion,
-        t('chiffrage.sqlUsers'))}
-      ${field('sql.cores', state.draft.sql.cores ?? state.catalog.parameters.sql.default_cores, t('chiffrage.sqlCores'))}
+      <div class="chiffrage-grid">${field('sql.cores', state.draft.sql.cores ?? state.catalog.parameters.sql.default_cores, t('chiffrage.sqlCores'))}
       ${field('sql.override', sqlPrice, localLabel('SQL · investissement CHF HT','SQL · Investition CHF exkl. MWST'))}
       ${state.internal ? field('sql.purchasePa', state.draft.sql.purchasePa, t('chiffrage.sqlInvestmentPa')) : ''}
       ${field('sql.annualPv', state.draft.sql.annualPv, t('chiffrage.sqlAnnualPv'))}
@@ -548,10 +550,8 @@ function technicalSection() {
     ${hasOracle ? `<div class="chiffrage-grid">
       ${!state.draft.products.includes('innosolv') ? field('pce.financePvOverride',state.draft.pce.financePvOverride,t('chiffrage.pceFinanceAnnual'))+field('pce.salaryPvOverride',state.draft.pce.salaryPvOverride,t('chiffrage.pceSalaryAnnual')) : ''}
       ${state.catalog.parameters.pce.finance_basis === 'innosolv_plus_options' ? field('pce.interfacePv',state.draft.pce.interfacePv ?? state.catalog.parameters.pce.interface_pv,t('chiffrage.pceInterfacePv')) : ''}
-      ${field('oracle.full', state.draft.oracle.full, t('chiffrage.oracleFull'))}
-      ${field('oracle.light', state.draft.oracle.light, t('chiffrage.oracleLight'))}
-      ${field('oracle.investmentOverride', state.draft.oracle.investmentOverride, t('chiffrage.oracleInvestmentPv'))}
-      ${field('oracle.annualOverride', state.draft.oracle.annualOverride, t('chiffrage.oracleAnnualPv'))}
+      ${oraclePriceFields()}
+
       ${state.internal ? field('oracle.purchasePa', state.draft.oracle.purchasePa, t('chiffrage.oracleInvestmentPa')) : ''}
       ${state.internal ? field('oracle.maintenancePa', state.draft.oracle.maintenancePa, t('chiffrage.oracleAnnualPa')) : ''}
       ${state.internal && state.draft.products.includes('innosolv') ? `<small class="chiffrage-helper">${localLabel('Interface ProConcept–innosolv : PA 0 CHF · maintenance Prime','ProConcept–innosolv-Schnittstelle: EK 0 CHF · Wartung Prime')}</small>` : ''}</div>` : ''}</details>`;
@@ -567,21 +567,7 @@ function primeOptionAnnual(line) {
   return line.annual_override ?? Math.floor((state.draft.dimensions.population*rule.per_capita)/rule.round_to+.5)*rule.round_to;
 }
 function extraSection(scope = 'modules') {
-  const catalogOptions=state.activePrimeOptions;
-  const available = kind => {
-    const key = kind === 'primeLines' ? 'prime_lines' : 'partners';
-    const selected = new Set((state.draft[kind] ?? []).map(line => line.item_code || line.label));
-    const found = new Map();
-    if (kind === 'primeLines') for (const option of catalogOptions) {
-      if (optionApplies(option,state.draft) && !selected.has(option.item_code)) found.set(option.item_code, { ...option, label:localLabel(option.label_fr,option.label_de??option.label_fr), source:'catalog' });
-    }
-    for (const profile of referenceProfiles(state.catalog)) for (const line of profile[key] ?? []) {
-      if (line.category === 'hosting') continue;
-      const id = line.item_code || line.label;
-      if (id && !selected.has(id) && !found.has(id)) found.set(id, { ...line, source:'reference' });
-    }
-    return [...found.values()];
-  };
+  const available=kind=>extraOptionCandidates(state.draft,state.catalog).filter(row=>row.software===(kind==='partners'?'partners':'prime')).map(row=>({...row.source,choice_key:row.key,label:localLabel(row.label_fr,row.label_de)}));
   const section = (kind, label) => {
     const chosen = state.draft[kind].map((line,index)=>({...line,index})).filter(line=>line.category !== 'hosting' && optionApplies(line,state.draft));
     const options = available(kind);
@@ -589,13 +575,15 @@ function extraSection(scope = 'modules') {
     const sourceFamily=kind==='partners'?'partenaires':'prime';
     const groupRows=result?.lines.filter(row=>row.family===sourceFamily&&row.category!=='hosting')??[];
     const totals={investment:groupRows.reduce((sum,row)=>sum+(row.investment_pv??0),0),annual:groupRows.reduce((sum,row)=>sum+(row.annual_pv??0),0),days:groupRows.reduce((sum,row)=>sum+(row.selected_days??0)*(row.quantity??1),0),incomplete:!result};
+    const candidateFor=line=>extraOptionCandidates(state.draft,state.catalog,{includeSelected:true}).find(row=>extraOptionId(row.source)===extraOptionId(line)&&row.software===(kind==='partners'?'partners':'prime'));
+    const proposeButton=line=>{const candidate=candidateFor(line);if(!candidate)return '';const proposed=(state.draft.client_options??[]).some(row=>row.key===candidate.key);return `<button type="button" class="chiffrage-button quiet" data-action="softwareDisposition" data-key="${escape(candidate.key)}" data-disposition="${proposed?'off':'propose'}" aria-pressed="${proposed}">${proposed?localLabel('Proposée ✓','Vorgeschlagen ✓'):localLabel('Proposer','Vorschlagen')}</button>`;};
     const rows = chosen.map(line => {
       const id = `${kind}.${line.index}`;
       const annual = line.annual_rule ? primeOptionAnnual(line) : line.annual_pricing?.chf_per_inhabitant == null ? line.annual_pv :
         Math.ceil(Math.max((state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population) *
           line.annual_pricing.chf_per_inhabitant, line.annual_pricing.minimum ?? 0) /
           (line.annual_pricing.round_to ?? 1)) * (line.annual_pricing.round_to ?? 1);
-      return `<details class="chiffrage-extra-row" data-disclosure-key="extra-${scope}-${kind}-${escape(line.item_code||line.label||line.index)}"><summary><span data-extra-title="${id}">${escape(line.label || t('chiffrage.lineLabel'))}</span><span>${number((line.days ?? 0)*(line.quantity??1))} ${localLabel('jours','Tage')}</span><strong data-extra-summary="${id}">${money(extraInvestment(line))}</strong><span data-extra-annual="${id}">${annual==null?localLabel('À préciser','Noch offen'):money(annual*(line.quantity??1))} / ${t('chiffrage.ui.perYear')}</span></summary><div class="chiffrage-line">
+      return `<details class="chiffrage-extra-row" data-disclosure-key="extra-${scope}-${kind}-${escape(line.item_code||line.label||line.index)}"><summary><span data-extra-title="${id}">${escape(line.label || t('chiffrage.lineLabel'))}</span><span>${number((line.days ?? 0)*(line.quantity??1))} ${localLabel('jours','Tage')}</span><strong data-extra-summary="${id}">${money(extraInvestment(line))}</strong><span data-extra-annual="${id}">${annual==null?localLabel('À préciser','Noch offen'):money(annual*(line.quantity??1))} / ${t('chiffrage.ui.perYear')}</span>${proposeButton(line)}</summary><div class="chiffrage-line">
         ${textField(`${id}.label`,line.label,t('chiffrage.lineLabel'))}
         ${state.internal?textField(`${id}.item_code`,line.item_code,t('chiffrage.internalCode')):''}
         ${kind==='partners'?textField(`${id}.supplier`,line.supplier,t('chiffrage.supplier')):''}
@@ -615,18 +603,17 @@ function extraSection(scope = 'modules') {
         ${textField(`${id}.note`,line.note,t('chiffrage.note'))}
         <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`;
     }).join('');
-    return `<details class="chiffrage-extra-group" data-disclosure-key="extras-${kind}-${scope}"><summary><span>${label}</span><small>${number(chosen.length)} ${localLabel('retenues','gewählt')}</small>${`<span data-rollup-kind="${kind}">${rollupMarkup(totals)}</span>`}</summary>${rows}
-      <details class="chiffrage-extra-available" data-disclosure-key="available-${kind}-${scope}"><summary>${number(options.length)} ${localLabel('options non choisies','nicht gewählte Optionen')}</summary>
+    return `<details class="chiffrage-module-set chiffrage-extra-group" data-disclosure-key="extras-${kind}-${scope}"><summary><span>${label}</span><small>${number(chosen.length)} ${localLabel('retenues','gewählt')}${(state.draft.client_options??[]).some(row=>row.key.startsWith((kind==='partners'?'partners':'prime')+'/'))?` · ${(state.draft.client_options??[]).filter(row=>row.key.startsWith((kind==='partners'?'partners':'prime')+'/')).length} ${localLabel('proposées','vorgeschlagen')}`:''}</small>${`<span data-rollup-kind="${kind}">${rollupMarkup(totals)}</span>`}</summary>${rows}
+      <details class="chiffrage-extra-available" data-disclosure-key="available-${kind}-${scope}"><summary>${localLabel('Autres modules','Weitere Module')} · ${number(options.length)}</summary>
       ${options.map((line,index)=>{
-        const prepared=line.source==='catalog'?{...line,family:'prime',category:'license',quantity:1,unit_day_rate:dayRate(),investment_fixed_pv:line.investment_fixed_pv??0,annual_pv:line.annual_rule?.per_capita==null?(line.annual_pv??null):0}:line;
-        const preview=optionPreview(state.draft,state.catalog,prepared,kind);
-        return `<div class="chiffrage-option-preview"><span>${escape(line.label)}</span><span>${(preview?.selected_days??line.days)==null?localLabel('À préciser','Noch offen'):number((preview?.selected_days??line.days)*(line.quantity??1))+' j.'}</span><strong>${preview?money(preview.investment_pv):localLabel('À préciser','Noch offen')}</strong><span>${preview?money(preview.annual_pv):localLabel('À préciser','Noch offen')} / ${t('chiffrage.ui.perYear')}</span><button type="button" class="chiffrage-button quiet" data-action="${line.source==='catalog'?'addPrimeOption':'addReferenceLine'}" data-code="${escape(line.item_code??'')}" data-kind="${kind}" data-index="${index}">${localLabel('Ajouter','Hinzufügen')}</button></div>`;
+        const candidate=extraOptionCandidates(state.draft,state.catalog).find(row=>row.key===line.choice_key),record=(state.draft.client_options??[]).find(row=>row.key===line.choice_key)??{},price=candidate?priceOfferOption(state.draft,state.catalog,candidate,record):null;
+        const preview=price?{investment_pv:price.investment,annual_pv:price.annual,selected_days:record.days??candidate.days}:null;
+        return `<div class="chiffrage-option-preview"><span>${escape(line.label)}</span><span>${(preview?.selected_days??line.days)==null?localLabel('À préciser','Noch offen'):number((preview?.selected_days??line.days)*(line.quantity??1))+' j.'}</span><strong>${preview?money(preview.investment_pv):localLabel('À préciser','Noch offen')}</strong><span>${preview?money(preview.annual_pv):localLabel('À préciser','Noch offen')} / ${t('chiffrage.ui.perYear')}</span><button type="button" class="chiffrage-button quiet" data-action="softwareDisposition" data-key="${escape(line.choice_key)}" data-disposition="include">${localLabel('Inclure','Aufnehmen')}</button>${proposeButton(line)}</div>`;
       }).join('')||`<p class="chiffrage-helper">${localLabel('Aucune autre option disponible.','Keine weitere Option verfügbar.')}</p>`}</details>
 
       <button type="button" class="chiffrage-button quiet" data-action="${kind==='partners'?'addPartner':'addPrime'}">${localLabel('Ajouter une ligne libre','Freie Zeile hinzufügen')}</button></details>`;
   };
-  return `<div class="chiffrage-section chiffrage-extra-overview"><h2>${localLabel('Options Prime et partenaires','Prime- und Partneroptionen')}</h2>
-    ${section('primeLines','Prime')}${section('partners',localLabel('Partenaires','Partner'))}</div>`;
+  return `${section('primeLines','Prime')}${section('partners',localLabel('Partenaires','Partner'))}`;
 }
 
 function hostingSection(scope = 'composer') {
@@ -634,21 +621,21 @@ function hostingSection(scope = 'composer') {
   const rows = state.draft.primeLines.map((line, index) => ({ ...line, index }))
     .filter(line => line.category === 'hosting');
   const scopeChanged=rows.some(line=>line.reference_products?.some(product=>!state.draft.products.includes(product)));
-  const complete = rows.length > 0 && rows.every(line=>line.investment_pv != null && line.annual_pv != null);
-  const amounts = complete ? {investment:rows.reduce((sum,line)=>sum+Number(line.investment_pv),0),annual:rows.reduce((sum,line)=>sum+Number(line.annual_pv),0)} : null;
+  const complete = rows.length > 0 && rows.every(line=>line.investment_pv != null && (state.draft.hosting?.synergy||line.annual_pv != null));
+  const amounts = complete ? {investment:rows.reduce((sum,line)=>sum+Number(line.investment_pv),0),annual:state.draft.hosting?.synergy?12000:rows.reduce((sum,line)=>sum+Number(line.annual_pv),0)} : null;
   return `<details class="chiffrage-section" open><summary>${t('chiffrage.hosting')}</summary>
     <fieldset class="chiffrage-choice-group"><legend>${t('chiffrage.hostingQuestion')}</legend>
       ${[true,false].map(value => `<label class="chiffrage-choice"><input type="radio" name="chiffrage-hosting-${scope}" data-hosting="${value}" ${included === value ? 'checked' : ''}>${t(value ? 'chiffrage.yes' : 'chiffrage.no')}</label>`).join('')}
     </fieldset><p class="chiffrage-helper">${t(included ? 'chiffrage.hostingIncluded' : 'chiffrage.hostingExcluded')}</p>
     ${included && scopeChanged ? `<p class="chiffrage-warning">${t('chiffrage.hostingScopeChanged')}</p><button class="chiffrage-button" data-action="confirmHosting">${t('chiffrage.confirmHosting')}</button>` : ''}
-    ${included ? `<dl class="chiffrage-hosting-preview"><div><dt>${localLabel('Investissement','Investition')}</dt><dd>${money(amounts?.investment)}</dd></div><div><dt>${localLabel('Annuel dès N+1','Jährlich ab Jahr 2')}</dt><dd>${money(amounts?.annual)}</dd></div></dl><details class="chiffrage-subdetail" ${complete ? '' : 'open'}><summary>${t('chiffrage.hostingAmounts')}</summary>
+    ${included ? `<label class="chiffrage-choice"><input type="checkbox" data-field="hosting.synergy" ${state.draft.hosting?.synergy?'checked':''}>${localLabel("Synergie · 12'000 CHF HT / an","Synergie · 12'000 CHF exkl. MWST / Jahr")}</label><dl class="chiffrage-hosting-preview"><div><dt>${localLabel('Investissement','Investition')}</dt><dd>${money(amounts?.investment)}</dd></div><div><dt>${localLabel('Annuel dès N+1','Jährlich ab Jahr 2')}</dt><dd>${money(amounts?.annual)}</dd></div></dl><details class="chiffrage-subdetail" ${complete ? '' : 'open'}><summary>${t('chiffrage.hostingAmounts')}</summary>
     <p class="chiffrage-helper">${t(complete ? 'chiffrage.hostingPrefilled' : 'chiffrage.hostingEstimate')}</p>
     ${!rows.length ? `<div class="chiffrage-actions"><button type="button" class="chiffrage-button" data-action="addHosting">${t('chiffrage.addHosting')}</button></div>` : ''}
     ${rows.map(line => `<div class="chiffrage-line chiffrage-hosting-line"><div class="chiffrage-hosting-row-actions"><button type="button" class="chiffrage-button" data-action="addHosting">${t('chiffrage.addHosting')}</button><button type="button" class="chiffrage-button chiffrage-danger" data-action="removeLine" data-kind="primeLines" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div>
       ${textField(`primeLines.${line.index}.label`, line.label, t('chiffrage.lineLabel'))}
       ${field(`primeLines.${line.index}.investment_pv`, line.investment_pv, t('chiffrage.investment') + ' PV')}
       ${state.internal ? field(`primeLines.${line.index}.investment_pa`, line.investment_pa, t('chiffrage.investmentPa')) : ''}
-      ${field(`primeLines.${line.index}.annual_pv`, line.annual_pv, t('chiffrage.annual') + ' PV')}
+      ${state.draft.hosting?.synergy?`<p>${localLabel("Synergie : 12'000 CHF HT/an pour l’ensemble. Le tarif habituel est conservé.","Synergie: 12'000 CHF exkl. MWST/Jahr insgesamt. Normalpreis bleibt gespeichert.")}</p>`:field(`primeLines.${line.index}.annual_pv`,line.annual_pv,t('chiffrage.annual')+' · CHF HT')}
       ${state.internal ? field(`primeLines.${line.index}.annual_pa`, line.annual_pa, t('chiffrage.annualPa')) : ''}
     </div>`).join('')}</details>` : ''}</details>`;
 }
@@ -733,15 +720,15 @@ function projectVariables() {
   return `<section class="chiffrage-section chiffrage-project-parameters"><h2>${localLabel('Paramètres de chiffrage','Kalkulationsparameter')}</h2><div class="chiffrage-grid chiffrage-volumes">${field('commercial.dayRate',dayRate(),localLabel('Prix par jour · CHF','Preis pro Tag · CHF'))}${travel?field('travel.rate',travel.rate,localLabel('Déplacement · CHF','Reise · CHF'))+field('travel.percent',travel.percent,localLabel('Présence sur place · % des jours','Vor Ort · % der Tage'),{step:.5}):''}</div>${travel?`<label class="chiffrage-choice"><input type="checkbox" data-field="travel.waived" ${travel.waived?'checked':''}>${t('chiffrage.travelWaived')}</label><p class="chiffrage-helper">${t('chiffrage.travelBasis')}</p>`:''}</section>`;
 }
 
-function discountSummary(){
-  try{
-    const gross=calculateQuote({...state.draft,investmentDiscount:0},state.catalog).summary.investment;
-    const discount=state.draft.investmentDiscount??0,valid=Number.isFinite(discount)&&discount>=0&&discount<=gross;
-    return `<div><dt>${localLabel('Investissement brut HT','Bruttoinvestition exkl. MWST')}</dt><dd>${money(gross)}</dd></div><div><dt>${localLabel('Remise commerciale','Rabatt')}</dt><dd>− ${money(discount)}</dd></div><div><dt>${localLabel('Investissement net HT','Nettoinvestition exkl. MWST')}</dt><dd>${money(valid?Math.round((gross-discount)*100)/100:null)}</dd></div>`;
-  }catch{return '';}
-}
 function discountSection(){
- return `<section class="chiffrage-section chiffrage-investment-discount"><h2>${localLabel('Geste commercial','Preisnachlass')}</h2><p class="chiffrage-helper">${localLabel('Les jours et prestations restent visibles à leur valeur réelle. La remise porte uniquement sur l’investissement ; les coûts annuels sont conservés.','Tage und Leistungen bleiben zum tatsächlichen Wert sichtbar. Der Rabatt gilt nur für die Investition; die Jahreskosten bleiben unverändert.')}</p><div class="chiffrage-grid chiffrage-volumes">${field('investmentDiscount',state.draft.investmentDiscount??0,localLabel('Remise d’investissement · CHF HT','Investitionsrabatt · CHF exkl. MWST'),{step:.01})}</div><dl data-discount-summary aria-live="polite">${discountSummary()}</dl></section>`;
+ let amounts;try{amounts=calculateQuote(state.draft,state.catalog).summary;}catch{}
+ const target=state.draft.investmentTarget;
+ return `<section class="chiffrage-section chiffrage-investment-discount"><h2>${localLabel('Geste commercial','Preisnachlass')} <small>CHF HT</small></h2><div class="chiffrage-discount-controls">${field('investmentTarget',target??amounts?.investment,localLabel('Prix net cible','Netto-Zielpreis'))}${field('investmentDiscount',amounts?.investment_discount??state.draft.investmentDiscount??0,localLabel('Remise','Rabatt'))}</div><p class="chiffrage-helper" data-discount-mode>${target!=null?localLabel('Cible fixe · la remise suit le périmètre.','Festes Ziel · Rabatt folgt dem Umfang.'):localLabel('Remise fixe · le net suit le périmètre.','Fester Rabatt · Netto folgt dem Umfang.')}</p></section>`;
+}
+function oraclePriceFields(){
+ let oracle;try{oracle=calculateOracle(state.draft.oracle,state.catalog.parameters.oracle);}catch{}
+ const row=(key,title,part)=>`<label>${title} · CHF HT<input type="number" min="0" step="1" data-field="oracle.${key}" value="${escape(state.draft.oracle[key]??'')}" placeholder="${escape(part?.calculated_value==null?localLabel('Tarif manquant','Tarif fehlt'):number(Math.round(part.calculated_value)))}"><small data-oracle-price="${key}">${state.draft.oracle[key]!=null?localLabel('Prix forcé','Manueller Preis'):part?.calculated_value==null?localLabel('Tarif manquant : prix à préciser','Tarif fehlt: Preis ergänzen'):localLabel('Calculé : ','Berechnet: ')+money(part.calculated_value)}</small></label>`;
+ return row('investmentOverride',localLabel('Oracle · investissement','Oracle · Investition'),oracle?.investment)+row('annualOverride',localLabel('Oracle · annuel','Oracle · jährlich'),oracle?.annual);
 }
 
 function composerSection() {
@@ -754,7 +741,7 @@ function composerSection() {
   const erp = products.includes('pce') && products.includes('abacus') ? 'both' : products.includes('pce') ? 'pce' : products.includes('abacus') ? 'abacus' : 'none';
   const choices = (name, values, selected, attr, disabled=false) => `<div class="chiffrage-choice-group">${values.map(([value,label]) => `<label class="chiffrage-choice"><input type="radio" name="chiffrage-${name}" ${attr}="${value}" ${String(selected) === String(value) ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span>${label}</span></label>`).join('')}</div>`;
   const profiles = referenceProfiles(state.catalog);
-  return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><h3>${t('chiffrage.ui.projectDimensions')}</h3>
+  return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><h2>${t('chiffrage.ui.projectDimensions')}</h2>
     <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('sql.users', state.draft.sql.users ?? sqlUsers,t('chiffrage.sqlUsers'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}${products.includes('abacus')?field('dimensions.portalUsers',portalUsers(state.draft.dimensions),localLabel('Utilisateurs du portail Abacus','Benutzer Abacus-Portal')):''}</div>
     ${products.includes('pce') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('oracle.full',state.draft.oracle.full,t('chiffrage.oracleFull'))}${field('oracle.light',state.draft.oracle.light,t('chiffrage.oracleLight'))}</div>` : ''}
 
@@ -769,8 +756,8 @@ function composerSection() {
     <div class="chiffrage-decision"><div><h3>${t('chiffrage.energyQuestion')}</h3><p class="chiffrage-helper">${t('chiffrage.energyLicenses')}</p></div>${choices('energy',[[true,t('chiffrage.yes')],[false,t('chiffrage.no')]],state.draft.energy ?? state.draft.modules.some(isEnergyModule),'data-energy',!products.includes('innosolv'))}</div>
     <button class="chiffrage-button quiet" data-editor-tab="modules">${t('chiffrage.workspace.97360022c6')} · ${state.draft.modules.length} →</button></section>
     ${projectVariables()}${technicalSection()}<div class="chiffrage-contracts">${hostingSection()}${lcmSection()}</div>
-    <section class="chiffrage-section chiffrage-reference"><div><h3>${t('chiffrage.workspace.f108b8e09c')}</h3><p class="chiffrage-helper">${state.draft.reference ? escape(displayReference(state.draft.reference)) : t('chiffrage.workspace.521d2d1b07')}</p></div>${profiles.length ? `<label>${t('chiffrage.workspace.ce3d081be7')}<select data-reference><option value="">${t('chiffrage.workspace.85e0b7d0df')}</option>${profiles.map(profile => `<option value="${escape(profile.id)}">${escape(displayReference(profile))}</option>`).join('')}</select></label>` : `<p class="chiffrage-warning">${t('chiffrage.workspace.8513a89a5d')}</p>`}</section>
-    ${implementationPanel()}${serviceSection()}${extraSection('project')}</div>`;
+    <section class="chiffrage-section chiffrage-reference"><div><h2>${t('chiffrage.workspace.f108b8e09c')}</h2><p class="chiffrage-helper">${state.draft.reference ? escape(displayReference(state.draft.reference)) : t('chiffrage.workspace.521d2d1b07')}</p></div>${profiles.length ? `<label>${t('chiffrage.workspace.ce3d081be7')}<select data-reference><option value="">${t('chiffrage.workspace.85e0b7d0df')}</option>${profiles.map(profile => `<option value="${escape(profile.id)}">${escape(displayReference(profile))}</option>`).join('')}</select></label>` : `<p class="chiffrage-warning">${t('chiffrage.workspace.8513a89a5d')}</p>`}</section>
+    ${implementationPanel()}${serviceSection()}</div>`;
 }
 
 let priceFeedbackTimer;
@@ -801,9 +788,9 @@ function summary() {
   const incomplete=result.status==='incomplete';
   return `<aside class="chiffrage-summary"><div class="chiffrage-summary-heading"><p class="chiffrage-kicker">${t('chiffrage.workspace.947be926eb')}</p><span class="chiffrage-live">${t('chiffrage.workspace.3994ec3759')}</span></div>
     <p class="chiffrage-summary-context">${escape(state.draft.name)} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</p>
-    <dl class="chiffrage-totals"><div><dt>${incomplete ? localLabel('Investissement calculé à ce stade','Bisher berechnete Investition') : t('chiffrage.investment')} <small>CHF · ${t('chiffrage.ui.exTax')}</small></dt><dd>${money(s.investment).replace(' CHF','')}</dd></div><div><dt>${t('chiffrage.annual')} <small>CHF · ${t('chiffrage.ui.exTax')} · ${t('chiffrage.workspace.fe85c43980')}</small></dt><dd>${money(s.annual).replace(' CHF','')}</dd></div></dl>
+    <dl class="chiffrage-totals"><div><dt>${incomplete ? localLabel('Investissement calculé à ce stade','Bisher berechnete Investition') : t('chiffrage.investment')} <small>CHF · ${t('chiffrage.ui.exTax')}</small></dt><dd>${investmentEquation(s,{label:localLabel,money})||money(s.investment).replace(' CHF','')}</dd></div><div><dt>${t('chiffrage.annual')} <small>CHF · ${t('chiffrage.ui.exTax')} · ${t('chiffrage.workspace.fe85c43980')}</small></dt><dd>${money(s.annual).replace(' CHF','')}</dd></div></dl>
     <p class="chiffrage-price-feedback" data-price-feedback role="status">${escape(state.priceFeedback || '')}</p>
-    ${incomplete ? `<p class="chiffrage-warning">${s.missing_service_days?.length ? t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length}) : ''} ${s.missing_technical?.length ? localLabel('Prix SQL à préciser : investissement non final.','SQL-Preis ergänzen: Investition noch nicht endgültig.') : ''} ${s.missing_hosting?localLabel('Montants d’hébergement à préciser.','Hostingbeträge ergänzen.'):''} ${s.missing_prime_values?.length?localLabel('Options Prime : prix annuel ou jours à préciser.','Prime-Optionen: Jahrespreis oder Tage ergänzen.'):''}</p><button class="chiffrage-button" data-action="completeQuote">${localLabel('Compléter le chiffrage','Kalkulation ergänzen')} →</button>` : ''}
+    ${incomplete ? `<p class="chiffrage-warning">${s.missing_service_days?.length ? t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length}) : ''} ${s.missing_technical?.length ? localLabel('Prix de base de données à préciser : montant non final.','Datenbankpreis ergänzen: Betrag noch nicht endgültig.') : ''} ${s.missing_hosting?localLabel('Montants d’hébergement à préciser.','Hostingbeträge ergänzen.'):''} ${s.missing_prime_values?.length?localLabel('Options Prime : prix annuel ou jours à préciser.','Prime-Optionen: Jahrespreis oder Tage ergänzen.'):''}</p><button class="chiffrage-button" data-action="completeQuote">${localLabel('Compléter le chiffrage','Kalkulation ergänzen')} →</button>` : ''}
     <details class="chiffrage-summary-details"><summary>${localLabel('Répartition','Aufteilung')}</summary><div class="chiffrage-cost-lines">${buckets.map(([label, filter])=>`<div><span>${escape(label)}</span><span>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.investment_pv??0),0))}<small>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.annual_pv??0),0))} / ${t('chiffrage.workspace.de73eac0c3')}</small></span></div>`).join('')}</div></details>
     <div class="chiffrage-five-year"><span>${incomplete?localLabel('5 ans · calculé à ce stade','5 Jahre · bisher berechnet'):t('chiffrage.workspace.b1aaf814f0')}</span><strong>${money(s.tco5y)}</strong></div>
     <p class="chiffrage-helper">${t('chiffrage.workspace.a855306547')}</p>
@@ -840,9 +827,9 @@ function mobileSummary() {
         <span class="chiffrage-kicker">${t('chiffrage.workspace.947be926eb')} · ${escape(state.draft.name)}</span>
         <span class="chiffrage-live">${t('chiffrage.workspace.3994ec3759')}</span>
       </span>
-      <span class="chiffrage-mobile-summary-figures">${figures.map(([label, amount]) => `<span>
+      <span class="chiffrage-mobile-summary-figures">${figures.map(([label, amount],index) => `<span>
         <small>${label} · CHF ${t('chiffrage.ui.exTax')}</small>
-        <strong>${money(amount).replace(' CHF','')}</strong>
+        ${index===0&&s.investment_discount>0?investmentEquation(s,{label:localLabel,money}):`<strong>${money(amount).replace(' CHF','')}</strong>`}
       </span>`).join('')}</span>
       <span class="chiffrage-price-feedback" data-price-feedback role="status">${escape(state.priceFeedback || '')}</span>
       <span class="chiffrage-mobile-summary-toggle">
@@ -914,8 +901,7 @@ function offerSection() {
   const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),reference:entry.reference,section:localLabel(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel});
   const optionalShowcase=offerOptions(offerOptionReview(state.draft,state.catalog).options,{label:localLabel,money});
   const lcm = ({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection;
-  return `<article class="chiffrage-offer"><div class="chiffrage-offer-body${optionalShowcase?' has-offer-options':''}"><section><h3>${localLabel('Logiciels retenus','Ausgewählte Software')}</h3>
-    ${scope}${offerServices(azHosting,lcm,{asset:assetUrl,label:localLabel,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
+  return `<article class="chiffrage-offer"><div class="chiffrage-offer-body${optionalShowcase?' has-offer-options':''}"><section>${scope}${offerServices(azHosting,lcm,{asset:assetUrl,label:localLabel,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}})}
     ${azHosting ? '' : `<p>${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p>`}</section>${optionalShowcase}
     <section><h3>${localLabel('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>${priceDetail}<p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
 }
@@ -1057,7 +1043,8 @@ function renderEditor({resetScroll=false}={}) {
   void loadCoat(state.draft);
 }
 function refreshFinancials() {
-  const discountNode=root.querySelector('[data-discount-summary]');if(discountNode)discountNode.innerHTML=discountSummary();
+  let discountAmounts;try{discountAmounts=calculateQuote(state.draft,state.catalog).summary;}catch{}
+  if(discountAmounts){for(const key of ['investmentTarget','investmentDiscount']){const node=root.querySelector(`[data-field="${key}"]`);if(node&&node!==document.activeElement)node.value=key==='investmentTarget'?(state.draft.investmentTarget??discountAmounts.investment):discountAmounts.investment_discount;}const mode=root.querySelector('[data-discount-mode]');if(mode)mode.textContent=state.draft.investmentTarget!=null?localLabel('Cible fixe · la remise suit le périmètre.','Festes Ziel · Rabatt folgt dem Umfang.'):localLabel('Remise fixe · le net suit le périmètre.','Fester Rabatt · Netto folgt dem Umfang.');}
   const incompleteItems=currentCompletion();
   const checklist=root.querySelector('[data-completion-container]');
   if(checklist){const open=checklist.querySelector('details')?.open;checklist.innerHTML=completionPanel(incompleteItems);if(open&&checklist.querySelector('details'))checklist.querySelector('details').open=true;}
@@ -1069,6 +1056,7 @@ function refreshFinancials() {
 
   let currentResult;
   try { currentResult = calculateQuote(state.draft, state.catalog); } catch { /* Display unknown amounts. */ }
+  if(state.draft.oracle){try{const prices=calculateOracle(state.draft.oracle,state.catalog.parameters.oracle);for(const [key,part] of [['investmentOverride',prices.investment],['annualOverride',prices.annual]]){const node=root.querySelector(`[data-field="oracle.${key}"]`),hint=root.querySelector(`[data-oracle-price="${key}"]`);if(node)node.placeholder=part.calculated_value==null?localLabel('Tarif manquant','Tarif fehlt'):number(Math.round(part.calculated_value));if(hint)hint.textContent=state.draft.oracle[key]!=null?localLabel('Prix forcé','Manueller Preis'):part.calculated_value==null?localLabel('Tarif manquant : prix à préciser','Tarif fehlt: Preis ergänzen'):localLabel('Calculé : ','Berechnet: ')+money(part.calculated_value);}}catch{}}
   root.querySelectorAll('[data-module-price]').forEach(node => {
     const item=state.catalog.items.find(item=>`${item.vendor}/${item.product}/${item.item_code}`===node.dataset.modulePrice);
     const line = currentResult?.lines.find(line => `${line.family}/${line.product}/${line.item_code}` === node.dataset.modulePrice) ?? (item?previewModule(state.draft,state.catalog,item):null);
@@ -1106,7 +1094,8 @@ function refreshFinancials() {
 }
 
 function setValue(path, raw, isCheckbox = false) {
-  if(path==='investmentDiscount'){state.draft.investmentDiscount=raw===''?0:Number(raw);state.dirty=true;return;}
+  if(path==='investmentTarget'){state.draft.investmentTarget=raw===''?null:Number(raw);state.dirty=true;return;}
+  if(path==='investmentDiscount'){state.draft.investmentTarget=null;state.draft.investmentDiscount=raw===''?0:Number(raw);state.dirty=true;return;}
   if (path === 'title') { state.title = raw; state.dirty=true; const title=root.querySelector('.chiffrage-rename>summary>span');if(title)title.textContent=raw; return; }
   state.dirty = true;
   const parts = path.split('.');
@@ -1338,7 +1327,7 @@ root.addEventListener('input', event => {
     if(node){node.hidden=!price;node.textContent=price?`${localLabel('Suppléments','Aufpreise')} : ${money(price.investment)} · ${money(price.annual)} / ${localLabel('an','Jahr')}`:'';}
     const summaryTitle=root.querySelector(`[data-showcase-summary-title="${index}"]`);if(summaryTitle)summaryTitle.textContent=row.label_fr||candidate?.label_fr||row.key;
     const summaryPrice=root.querySelector(`[data-showcase-summary-price="${index}"]`);if(summaryPrice){summaryPrice.replaceChildren(document.createTextNode(price?money(price.investment):localLabel('Prix à préciser','Preis offen')));if(price){const annual=document.createElement('small');annual.textContent=money(price.annual)+' / '+localLabel('an','Jahr');summaryPrice.append(annual);}}
-    const summaryState=root.querySelector(`[data-showcase-summary-state="${index}"]`);if(summaryState){const complete=Boolean(price&&row.label_fr?.trim()&&row.benefit_fr?.trim());summaryState.dataset.ready=String(complete);summaryState.textContent=complete?localLabel('Prête','Bereit'):localLabel('À compléter','Ergänzen');}
+    const summaryState=root.querySelector(`[data-showcase-summary-state="${index}"]`);if(summaryState){const complete=Boolean(price&&row.label_fr?.trim());summaryState.dataset.ready=String(complete);summaryState.textContent=complete?localLabel('Prête','Bereit'):localLabel('À compléter','Ergänzen');}
     const ready=root.querySelector(`[data-showcase-readiness="${index}"]`);
     if(ready)ready.textContent=optionReadinessMessage(candidate,row,price,localLabel);
     refreshFinancials();notice(()=>t('chiffrage.completion.unsaved'));return;
@@ -1360,7 +1349,8 @@ root.addEventListener('input', event => {
   setValue(path, event.target.type === 'checkbox' ? event.target.checked : event.target.value,
     event.target.type === 'checkbox');
   if(['dimensions.employees','dimensions.population'].includes(path) && !Object.hasOwn(state.draft.dimensions,'portalUsers'))root.querySelectorAll('[data-field="dimensions.portalUsers"]').forEach(node=>node.value=suggestedPortalUsers(state.draft.dimensions.employees));
-  if (['pce.finances','pce.salaires'].includes(path)) {renderEditor();return;}
+  if(path==='hosting.synergy'){renderEditor();return;}
+  if (['pce.finances','pce.salaires'].includes(path)) {if(event.target.checked)state.draft.client_options=(state.draft.client_options??[]).filter(row=>row.key!=='pce/ERP/'+path.split('.')[1]);renderEditor();return;}
   if (path === 'dimensions.population' || path === 'lcm.gold' || path === 'lcm.platinium') {
     const preview = root.querySelector('.chiffrage-lcm-prices');
     if (preview) preview.innerHTML = lcmPrices();
@@ -1417,6 +1407,9 @@ root.addEventListener('change', event => {
     state.draft.modules = state.draft.modules.filter(item =>
       !(item.vendor === vendor && item.product === product && item.item_code === item_code));
     if (event.target.checked) {
+      const proposed=(state.draft.client_options??[]).find(row=>row.key===`${vendor}/${product}/${item_code}`);
+      state.draft.client_options=(state.draft.client_options??[]).filter(row=>row!==proposed);
+      if(proposed?.days!=null){const old=state.draft.moduleServices.find(row=>row.item_code===`${vendor}/${product}/${item_code}`);if(old)old.days=proposed.days;else state.draft.moduleServices.push({family:'prestations_module',item_code:`${vendor}/${product}/${item_code}`,days:proposed.days});}
       state.draft.modules.push({ vendor, product, item_code });
       addModuleService(`${vendor}/${product}/${item_code}`);
     } else state.draft.moduleServices = state.draft.moduleServices.filter(line =>
@@ -1570,6 +1563,7 @@ root.addEventListener('click', async event => {
   const button = event.target.closest('[data-action]');
   if (!button) return;
   const action=button.dataset.action;
+  if(action==='softwareDisposition'){if(state.quoteStage===2)return;try{state.draft=setSoftwareDisposition(state.draft,state.catalog,button.dataset.key,button.dataset.disposition);state.dirty=true;renderEditor();notice(()=>localLabel('Périmètre modifié · à enregistrer.','Umfang geändert · bitte speichern.'));}catch(error){notice(()=>errorMessage(error),true);}return;}
   if(action==='clearServiceOverride'){if(state.quoteStage===2)return;const row=state.draft.services.find(line=>line.item_code===button.dataset.service);if(row){delete row.investment_override;state.dirty=true;renderEditor();}return;}
   if(state.quoteStage===2&&['save','restore','upgrade','showcaseAdd','showcaseRemove','showcaseUp','addPrimeOption','addReferenceLine','addPrime','addPartner','removeExtra','addHosting','removeHosting'].includes(action)){notice(()=>localLabel('Replace ce dossier dans une autre colonne pour le modifier.','Zum Bearbeiten in eine andere Spalte verschieben.'),true);return;}
 
@@ -1594,7 +1588,7 @@ root.addEventListener('click', async event => {
     const candidate=offerOptionCandidates(state.draft,state.catalog).find(row=>row.key===button.dataset.key);
     state.draft.client_options??=[];
     if(!candidate||state.draft.client_options.length>=maxOfferOptions||state.draft.client_options.some(row=>row.key===candidate.key))return;
-    state.draft.client_options.push({key:candidate.key,label_fr:candidate.label_fr,label_de:candidate.label_de,benefit_fr:'',benefit_de:'',description_fr:'',description_de:'',days:null});
+    state.draft.client_options.push({...(candidate.kind==='partner'||candidate.kind==='prime'?{source_line:candidate.source}:{}),key:candidate.key,label_fr:candidate.label_fr,label_de:candidate.label_de,benefit_fr:'',benefit_de:'',description_fr:'',description_de:'',days:null});
     state.dirty=true;renderEditor();root.querySelector('[data-showcase-editor]').open=true;const card=root.querySelector(`[data-showcase-card="${state.draft.client_options.length-1}"]`);if(card)card.open=true;return;
   }
   if(action==='showcaseRemove'||action==='showcaseUp'){
@@ -1606,7 +1600,7 @@ root.addEventListener('click', async event => {
   if(['prepareShare','shareOffer'].includes(action)&&state.draft&&offerOptionReview(state.draft,state.catalog).issues.length){
     state.editorTab='offer';renderEditor();
     const editor=root.querySelector('[data-showcase-editor]');if(editor){editor.open=true;editor.scrollIntoView({block:'start',behavior:'smooth'});}
-    notice(()=>localLabel('Complète le titre, le bénéfice et le prix des options à présenter avant le partage.','Titel, Nutzen und Preise der ausgewählten Optionen vor dem Teilen ergänzen.'),true);return;
+    notice(()=>localLabel('Complète le titre, le bénéfice et le prix des options à présenter avant le partage.','Titel und Preise der ausgewählten Optionen vor dem Teilen ergänzen.'),true);return;
   }
 
   if(action==='openReference') {
@@ -1734,6 +1728,11 @@ root.addEventListener('click', async event => {
     state.dirty=true;
     state.draft.dimensions.meters = state.draft.dimensions.taxes = suggestedVolume(state.draft.dimensions.population);
     renderEditor(); return;
+  }
+  if(action==='addPrimeOption'||action==='addReferenceLine'){
+    const vendor=button.dataset.kind==='partners'?'partners':'prime';
+    const candidate=extraOptionCandidates(state.draft,state.catalog,{includeSelected:true}).find(row=>row.software===vendor&&(row.source.item_code||'')===(button.dataset.code||''));
+    if(candidate){state.draft=setSoftwareDisposition(state.draft,state.catalog,candidate.key,'include');state.dirty=true;renderEditor();return;}
   }
   if (action === 'addReferenceLine') {
     const kind=button.dataset.kind;

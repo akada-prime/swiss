@@ -1,5 +1,22 @@
 # État de reprise — Prime Communes 2.0
 
+> **21 retours du 16.11.2026 · publication demandée.** Projet conserve le
+> standard. Modules regroupe innosolv, Abacus, ProConcept, Prime et partenaires ;
+> Inclure / Proposer sont exclusifs, avec suppléments séparés et valeurs
+> conservées. Les modules ne sont plus limités à une sélection innosolv.
+> Cible nette fixe ou remise fixe ; brut − remise = net dans les résumés interne
+> et client. Cible validée côté serveur et persistée dans le snapshot.
+> Oracle : calcul visible, tarifs manquants distincts de zéro, volumes uniques
+> dans Dimensions. Synergie : 12'000 CHF HT/an au total, investissement et tarif
+> habituel conservés ; astérisque et note client. Titres de cadre harmonisés,
+> geste commercial compact, Tout déplier aligné sur son titre, unités dans les
+> en-têtes, budget annuel regroupé et résumé Natel compact.
+> 269 tests et build réussis ; six formats internes/client, contrôles FR/DE et
+> trois thèmes sur Natel, calculs et sauvegarde synthétiques. Aucun tarif réel
+> ni dossier modifié automatiquement ; publications antérieures figées.
+> Calcul serveur déployé en v36 ; schéma, sessions et accès conservés.
+> Safari physique et parcours authentifié réel restent ouverts.
+
 > **Kanban compact · 13.11.2026.** Une rangée commune de 56 px remplace les
 > deux étages : poignée, qualification native compacte et bouton Liens.
 > Liens ouvre le dialogue natif existant ; fermeture et retour du focus conservés.
