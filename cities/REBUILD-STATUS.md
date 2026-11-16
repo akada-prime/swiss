@@ -11,10 +11,10 @@
 > habituel conservés ; astérisque et note client. Titres de cadre harmonisés,
 > geste commercial compact, Tout déplier aligné sur son titre, unités dans les
 > en-têtes, budget annuel regroupé et résumé Natel compact.
-> 268 tests et build réussis ; six formats internes/client, contrôles FR/DE et
+> 269 tests et build réussis ; six formats internes/client, contrôles FR/DE et
 > trois thèmes sur Natel, calculs et sauvegarde synthétiques. Aucun tarif réel
 > ni dossier modifié automatiquement ; publications antérieures figées.
-> Calcul serveur déployé en v35 ; schéma, sessions et accès conservés.
+> Calcul serveur déployé en v36 ; schéma, sessions et accès conservés.
 > Safari physique et parcours authentifié réel restent ouverts.
 
 > **Kanban compact · 13.11.2026.** Une rangée commune de 56 px remplace les

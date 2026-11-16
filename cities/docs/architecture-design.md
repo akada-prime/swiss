@@ -419,7 +419,8 @@ ne reconstruit pas le tableau pendant qu'un dialogue est ouvert.
 ### 2026-11-16 — Disposition du logiciel et prix cible
 
 `software-selection.js` réalise les transitions atomiques Inclure / Proposer /
-Retirer. Les tableaux de calcul gardent leur format : seuls les éléments inclus
+Retirer. Les exceptions de prix et de prestations des modules retirés restent
+dans `retainedModules`, puis sont restaurées lors de leur réinclusion. Les tableaux de calcul gardent leur format : seuls les éléments inclus
 alimentent le moteur ; les propositions `client_options` sont calculées sur une
 copie sans cible ni remise, pour ne pas absorber leur supplément. Les lignes
 libres Prime/partenaire conservent leur source financière dans le snapshot privé ;

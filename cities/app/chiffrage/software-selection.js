@@ -1,4 +1,4 @@
-import {moduleId,serviceDays} from './standards.js?v=20261112-coherence-r1';
+import {moduleId,serviceDays,retainRemoved} from './standards.js?v=20261112-coherence-r1';
 import {extraOptionId,extraOptionCandidates,cleanOptionLine} from './offer-options.js?v=20261116-software-target-r3';
 // A software has one disposition: included, proposed separately, or absent.
 export function setSoftwareDisposition(input,catalog,key,disposition){
@@ -24,5 +24,7 @@ export function setSoftwareDisposition(input,catalog,key,disposition){
   else if(extra){next[field]??=[];const source=chosenExtra||prior?.source_line||extra.source;next[field].push({...structuredClone(source),family:vendor==='partners'?'partenaires':'prime',category:source.category||'license',label:source.label||extra.label_fr,quantity:source.quantity??1,...(source.days!=null||source.investment_pv==null?{days}:{}),...(prior?.annual_override!=null?{annual_override:prior.annual_override,annual_pv:prior.annual_override,annual_rule:null,annual_pricing:null}:{})});}
   else next.pce={...next.pce,[code]:true};
  }
+ retainRemoved(next,input.modules??[],input.moduleServices??[]);
+ if(disposition==='include'&&item&&prior?.days!=null){const row=next.moduleServices.find(row=>row.item_code===key);if(row)row.days=prior.days;}
  return next;
 }

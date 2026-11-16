@@ -53,11 +53,11 @@ export function priceOfferOption(input,catalog,candidate,record={}) {
     const base={...input,investmentDiscount:0,investmentTarget:null};
     const before=calculateQuote(base,catalog);
     if(before.status==='incomplete')return null;
-    const next=structuredClone(base),days=record.days??candidate.days;
+    const next=structuredClone(base),retained=input.retainedModules?.[candidate.key],days=record.days??retained?.service?.days??candidate.days;
     if(candidate.kind==='module'){
       const item=candidate.source;
-      next.modules=[...(next.modules??[]),{vendor:item.vendor,product:item.product,item_code:item.item_code}];
-      next.moduleServices=[...(next.moduleServices??[]),{family:'prestations_module',item_code:candidate.key,level:'standard',days,suggested_days:days}];
+      next.modules=[...(next.modules??[]),{...retained?.module,vendor:item.vendor,product:item.product,item_code:item.item_code}];
+      next.moduleServices=[...(next.moduleServices??[]),{...retained?.service,family:'prestations_module',item_code:candidate.key,level:'standard',days,suggested_days:days}];
     }else if(['prime','partner'].includes(candidate.kind)){
       const item=candidate.source;
       const override=record.annual_override;

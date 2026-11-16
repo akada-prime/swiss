@@ -50,3 +50,12 @@ test('public summary shares the rebate equation, synergy note and inline disclos
  const scope=offerScope([{product:'Prime',items:[{label:'Module',items:['A']}]}],{...cfg,asset:x=>x});assert.match(scope,/prime-offer-scope-header/);
  const table=offerBreakdown([{key:'implementation',label:'Prime',investment:1500,annual:0}],cfg);assert.match(table,/Investissement · CHF HT/);assert.doesNotMatch(table,/prime-offer-amount[^>]*>1500 CHF/);
 });
+
+test('proposing and reincluding a publisher module preserves manual prices and implementation exceptions',()=>{
+ const item={vendor:'abacus',product:'ERP',item_code:'manual',label_fr:'Module manuel',pricing_rule:{kind:'unverified'}};
+ const c={...catalog,items:[item],parameters:{...catalog.parameters,publisher_rent:{abacus:{standard:{pa_rate:.1,pv_rate:.2}}}}};
+ const input={...base(),products:['abacus'],modules:[{vendor:'abacus',product:'ERP',item_code:'manual',pa_override:30,pv_override:90}],moduleServices:[{family:'prestations_module',item_code:'abacus/ERP/manual',days:4,investment_override:350}]};
+ const proposed=setSoftwareDisposition(input,c,'abacus/ERP/manual','propose'),candidate=offerOptionCandidates(proposed,c).find(x=>x.key==='abacus/ERP/manual');
+ assert.deepEqual(priceOfferOption(proposed,c,candidate,proposed.client_options[0]),{investment:350,annual:90});
+ const restored=setSoftwareDisposition(proposed,c,candidate.key,'include');assert.equal(restored.modules[0].pv_override,90);assert.equal(restored.moduleServices[0].investment_override,350);assert.equal(restored.moduleServices[0].days,4);
+});
