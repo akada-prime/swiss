@@ -126,7 +126,7 @@
 .chiffrage-more .chiffrage-actions{padding-top:12px}
 .chiffrage-internal-banner{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--quote-warning);background:var(--skin-accent-soft);border-radius:10px;padding:12px 18px;margin:16px 0 24px;font-size:14px}
 .chiffrage-warning{padding:12px 14px;border-left:3px solid var(--quote-warning);border-radius:4px;background:var(--skin-tint);color:var(--skin-secondary);font-size:13px;line-height:1.6;margin:10px 0}
-.chiffrage-module-groups{display:grid;gap:var(--quote-space-6);margin-top:var(--quote-space-6)}
+.chiffrage-module-groups{display:grid;gap:16px;margin-top:16px}
 .chiffrage-module-set{min-width:0}
 .chiffrage-module-set h3{padding-bottom:12px;border-bottom:1px solid var(--skin-border);font-size:14px;color:var(--skin-secondary)}
 .chiffrage-module-entry{display:grid;grid-template-columns:minmax(0,1fr) 105px 78px auto;gap:12px;padding:7px 0;border-bottom:1px solid var(--skin-border-faint);align-items:center}
@@ -167,7 +167,6 @@
 .chiffrage-commune h3{font-size:22px;margin:0 0 20px;letter-spacing:-.03em}
 .chiffrage-commune .chiffrage-volumes{grid-template-columns:repeat(3,minmax(0,1fr))}
 .chiffrage-contracts .chiffrage-lcm-values{grid-template-columns:repeat(2,minmax(0,1fr))}
-.chiffrage-module-groups{gap:32px}
 .chiffrage-module-set h3{display:flex;align-items:baseline;justify-content:space-between;padding:13px 16px;margin:0;background:var(--skin-tint);border-radius:8px 8px 0 0;color:var(--skin-text);font-size:18px}
 .chiffrage-module-set h3 small{font-size:12px;color:var(--skin-muted);font-weight:500}
 .chiffrage-module-set>.chiffrage-module-list{padding:0 16px}
@@ -394,7 +393,7 @@
 .chiffrage-implementation-rows dt{max-width:53%}}
 
 /* Prime and partner option overview: numeric inputs and totals remain legible on mobile. */
-.chiffrage-extra-group{margin-top:20px}
+.chiffrage-extra-group{margin-top:0}
 .chiffrage-extra-group h3{margin:0 0 10px;font-size:18px}
 .chiffrage-extra-group>.chiffrage-extra-row{border:1px solid var(--skin-border-soft);border-radius:9px;margin:6px 0}
 .chiffrage-extra-row>summary{--quote-marker-inset:12px;display:grid;grid-template-columns:minmax(130px,1fr) 60px 105px 105px auto;gap:12px;align-items:center;padding:12px;cursor:pointer}
@@ -590,3 +589,5 @@
 
 .chiffrage-module-entry>.chiffrage-propose{min-height:44px;font-size:14px;white-space:nowrap}
 @media(max-width:760px){.chiffrage-module-entry>.chiffrage-propose{grid-column:2;grid-row:3;justify-self:end}.chiffrage-discount-controls{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.chiffrage-proposal-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+@media(max-width:760px){.chiffrage-module-entry>.chiffrage-proposal-actions{grid-column:1/-1;grid-row:3}}

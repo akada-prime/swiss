@@ -442,3 +442,17 @@ les titres et le formulaire compact. Les quantités Oracle/SQL n'ont qu'un champ
 dans Dimensions ; les prix et exceptions restent dans Technique. Oracle utilise
 null pour un tarif inconnu, et zéro uniquement pour une quantité ou un prix
 explicitement nul. Les résumés et la complétude signalent ces prix inconnus.
+
+### 2026-11-16 — Propositions contextuelles et hiérarchie des montants
+
+Le même renderer de fiche sert dans Offre et dans le dialogue ouvert depuis
+Modules. Les événements de saisie ciblent leur dialogue pour éviter les doublons
+cachés de l'onglet Offre ; la fermeture restaure la ligne et son focus. La
+recherche du catalogue est repliée et bornée à 12 résultats, à partir de deux
+caractères. Les fiches déjà proposées restent accessibles sans recherche.
+
+Le supplément d'une proposition exclut les lignes `project_management` du delta
+d'investissement ; le moteur du devis inclus reste inchangé. Le net est le
+montant principal ; brut et remise composent une ligne secondaire au-dessus.
+Les groupes Modules ont un seul espacement propriétaire, sans marges cumulées.
+Les tokens de formulaire sont partagés entre l'éditeur et le dialogue.

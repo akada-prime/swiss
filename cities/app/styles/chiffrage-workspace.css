@@ -1,7 +1,8 @@
 /* Seller workspace owner. Shared controls, list and catalog belong to views/chiffrage.css.
    Spacing: 8 related / 12 cards / 16 headings and fields / 24 panels / 32 chapters.
    Sticky tabs and fixed action bar have separate top/bottom lanes. */
-.chiffrage-editor { display:flex;flex-direction:column; --quote-tabs-height:58px; --quote-related:var(--quote-space-2); --quote-heading-gap:var(--quote-space-4); --quote-field-gap:var(--quote-space-4); --quote-panel-padding:var(--quote-space-6); --quote-card-gap:var(--quote-space-3); padding-bottom:0; }
+.chiffrage-editor { display:flex;flex-direction:column;--quote-tabs-height:58px;padding-bottom:0; }
+:is(.chiffrage-editor,.chiffrage-option-dialog) { --quote-related:var(--quote-space-2); --quote-heading-gap:var(--quote-space-4); --quote-field-gap:var(--quote-space-4); --quote-panel-padding:var(--quote-space-6); --quote-card-gap:var(--quote-space-3); }
 /* The global body overflow-x:hidden creates a non-scrolling sticky ancestor.
    clip contains horizontal paint without introducing a second scroll container. */
 body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overflow-y:visible; }
@@ -146,7 +147,8 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 .chiffrage-showcase-card-body>p { font-size:14px;line-height:1.5; }
 .chiffrage-showcase-picker { margin-top:16px; }
 .chiffrage-showcase-picker>summary { min-height:44px;align-content:center;cursor:pointer; }
-.chiffrage-showcase-candidates { max-height:420px;overflow:auto;margin-top:12px; }
+.chiffrage-showcase-candidates { margin-top:12px; }
+.chiffrage-showcase-candidates>div[hidden]{display:none}
 .chiffrage-showcase-candidates>div { display:flex;gap:12px;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--skin-border-soft); }
 .chiffrage-showcase-candidates>div>span { min-width:0;overflow-wrap:anywhere; }
 .chiffrage-showcase-candidates small,.chiffrage-showcase-candidates strong { display:block;font-size:14px; }
@@ -259,3 +261,7 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 .chiffrage-secondary-heading p{font-size:14px;color:var(--skin-muted)}
 
 .chiffrage-service-exception{grid-column:1/-1;color:var(--skin-muted);font-size:14px;}
+
+.chiffrage-option-dialog .chiffrage-showcase-card{border:0;background:transparent}
+.chiffrage-option-dialog .chiffrage-showcase-card>summary{padding-inline:0}
+.chiffrage-option-dialog .chiffrage-showcase-card-body{padding-inline:0}

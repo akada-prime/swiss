@@ -75,7 +75,8 @@ export function priceOfferOption(input,catalog,candidate,record={}) {
     }else return null;
     const after=calculateQuote(next,catalog);
     if(days==null||after.status==='incomplete')return null;
-    const investment=after.summary.investment-before.summary.investment,annual=['prime','partner'].includes(candidate.kind)&&record.annual_override!=null?record.annual_override:after.summary.annual-before.summary.annual;
+    const withoutGp=result=>result.lines.filter(line=>line.explanation?.kind!=='project_management').reduce((sum,line)=>sum+(line.investment_pv??0),0);
+    const investment=withoutGp(after)-withoutGp(before),annual=['prime','partner'].includes(candidate.kind)&&record.annual_override!=null?record.annual_override:after.summary.annual-before.summary.annual;
     return Number.isFinite(investment)&&Number.isFinite(annual)&&investment>=0&&annual>=0?{investment,annual}:null;
   }catch{return null;}
 }
