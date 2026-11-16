@@ -5,13 +5,13 @@
 > Inclure / Proposer sont exclusifs, avec suppléments séparés et valeurs
 > conservées. Les modules ne sont plus limités à une sélection innosolv.
 > Cible nette fixe ou remise fixe ; brut − remise = net dans les résumés interne
-> et client. Cible validée côté serveur et persistée dans le snapshot.
+> et client, y compris anciens liens dont le détail conserve la remise. Cible validée côté serveur et persistée dans le snapshot.
 > Oracle : calcul visible, tarifs manquants distincts de zéro, volumes uniques
 > dans Dimensions. Synergie : 12'000 CHF HT/an au total, investissement et tarif
 > habituel conservés ; astérisque et note client. Titres de cadre harmonisés,
 > geste commercial compact, Tout déplier aligné sur son titre, unités dans les
 > en-têtes, budget annuel regroupé et résumé Natel compact.
-> 269 tests et build réussis ; six formats internes/client, contrôles FR/DE et
+> 270 tests et build réussis ; six formats internes/client, contrôles FR/DE et
 > trois thèmes sur Natel, calculs et sauvegarde synthétiques. Aucun tarif réel
 > ni dossier modifié automatiquement ; publications antérieures figées.
 > Calcul serveur déployé en v36 ; schéma, sessions et accès conservés.

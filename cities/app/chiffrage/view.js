@@ -1,11 +1,11 @@
-import {setSoftwareDisposition} from './software-selection.js?v=20261116-software-target-r3';
+import {setSoftwareDisposition} from './software-selection.js?v=20261116-software-target-r4';
 import {bindKanban,boardHtml,boardRibbon,cardTools,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261113-card-tools-r1';
 import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-coherence-r1';
 import { portalUsers, suggestedPortalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
 import { bindCommunePicker } from './commune-picker.js?v=20261112-coherence-r1';
 import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261112-coherence-r1';
-import {extraOptionId,extraOptionCandidates,offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261116-software-target-r3';
-import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261116-software-target-r3';
+import {extraOptionId,extraOptionCandidates,offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261116-software-target-r4';
+import {offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261116-software-target-r4';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
 import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261112-coherence-r1';
 import { includedForParent, optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
@@ -13,19 +13,19 @@ import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js?v=20261112-coherence-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261116-software-target-r3';
+import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261116-software-target-r4';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
-import { calculateQuote, calculateLcm, calculateOracle, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261116-software-target-r3';
+import { calculateQuote, calculateLcm, calculateOracle, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261116-software-target-r4';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261112-coherence-r1';
-import { calculationError } from './errors.js?v=20261116-software-target-r3';
+import { calculationError } from './errors.js?v=20261116-software-target-r4';
 import bundledCoats from './coats.js?v=20261028-business-r11';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261112-workspace-review-r1';
 import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-coherence-r1';
 import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-coherence-r1';
 
-import { previewModule, moduleRollup } from './business-presentation.js?v=20261116-software-target-r3';
+import { previewModule, moduleRollup } from './business-presentation.js?v=20261116-software-target-r4';
 
 const root = document.getElementById('chiffrageRoot');
 bindOfferScope(root);

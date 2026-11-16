@@ -4,7 +4,7 @@ import {calculateQuote,calculateOracle} from '../app/chiffrage/calculate.js';
 import {setSoftwareDisposition} from '../app/chiffrage/software-selection.js';
 import {extraOptionId,offerOptionCandidates,offerOptionReview,priceOfferOption,validateOfferOptions} from '../app/chiffrage/offer-options.js';
 import {publicOfferFromSaved} from '../supabase/functions/chiffrage/client-projection.mjs';
-import {offerFigures,investmentEquation,offerScope,offerBreakdown} from '../app/offer/presentation.js';
+import {investmentDisplayAmounts,offerFigures,investmentEquation,offerScope,offerBreakdown} from '../app/offer/presentation.js';
 const base=()=>({products:[],modules:[],dimensions:{population:1000},services:[{family:'prestations',item_code:'reprise',days:15}],primeLines:[],partners:[],moduleServices:[],lcm:{selection:'none'},hosting:{included:false}});
 const catalog={items:[],parameters:{day_rate:100,lcm:[],prime_options:[{item_code:'demo',label_fr:'Service démo',days:2,annual_pv:12}]}};
 const quote=input=>({commune_name:'Démo',title:'Démo',bfs_id:1,canton:'JU',population:1000,snapshot:{revision:1,input,result:calculateQuote(input,catalog)}});
@@ -58,4 +58,10 @@ test('proposing and reincluding a publisher module preserves manual prices and i
  const proposed=setSoftwareDisposition(input,c,'abacus/ERP/manual','propose'),candidate=offerOptionCandidates(proposed,c).find(x=>x.key==='abacus/ERP/manual');
  assert.deepEqual(priceOfferOption(proposed,c,candidate,proposed.client_options[0]),{investment:350,annual:90});
  const restored=setSoftwareDisposition(proposed,c,candidate.key,'include');assert.equal(restored.modules[0].pv_override,90);assert.equal(restored.moduleServices[0].investment_override,350);assert.equal(restored.moduleServices[0].days,4);
+});
+
+test('older frozen client offers derive the discount display from their saved cost details without recalculation',()=>{
+ const amounts={investment:100000,annual:30000,tco5y:220000},details=[{key:'discount',investment:-10000}],original=structuredClone(amounts);
+ assert.deepEqual(investmentDisplayAmounts(amounts,details),{...amounts,investment_gross:110000,investment_discount:10000});assert.deepEqual(amounts,original);
+ const html=offerFigures(amounts,{label:fr=>fr,money:n=>n+' CHF HT',municipal:true,costDetails:details});assert.match(html,/110000.*10000.*100000/);assert.equal(investmentDisplayAmounts(amounts,[]),amounts);
 });

@@ -15,13 +15,19 @@ export function offerHero({ asset, name, bfsId, population, heading, inhabitants
     <h2>${e(heading)}</h2>${details}</header>`;
 }
 export const offerBanner = (hero, figures = '') => `<div class="prime-offer-banner">${hero}${figures}</div>`;
+export function investmentDisplayAmounts(amounts,details=[]){
+ if(amounts.investment_discount!=null)return amounts;
+ const discount=-(details??[]).filter(row=>row.key==='discount').reduce((sum,row)=>sum+(row.investment??0),0);
+ return discount>0?{...amounts,investment_discount:discount,investment_gross:amounts.investment+discount}:amounts;
+}
 export function investmentEquation(amounts,{label,money,currency=false}){
  const discount=amounts.investment_discount??0;
  if(!(discount>0))return '';
  const number=value=>e(money(value).replace(/\s*CHF(?:\s*HT)?$/,''));
  return `<span class="prime-investment-equation" aria-label="${e(label('Investissement brut moins remise égale investissement net','Bruttoinvestition minus Rabatt gleich Nettoinvestition'))}"><span title="${e(label('Brut','Brutto'))}">${number(amounts.investment_gross??amounts.investment+discount)}</span><span aria-hidden="true">−</span><span class="prime-investment-rebate" title="${e(label('Remise','Rabatt'))}">${number(discount)}</span><span aria-hidden="true">=</span><strong title="${e(label('Net','Netto'))}">${number(amounts.investment)}</strong>${currency?`<small class="prime-investment-unit">${label('CHF HT','CHF exkl. MWST')}</small>`:''}</span>`;
 }
-export function offerFigures(amounts, { label, money, incomplete = false, caveat = '', municipal = false, annualBreakdown = null, annualBudget = null, synergy = false }) {
+export function offerFigures(amounts, { label, money, incomplete = false, caveat = '', municipal = false, annualBreakdown = null, annualBudget = null, synergy = false, costDetails = [] }) {
+  amounts=investmentDisplayAmounts(amounts,costDetails);
   const budget = annualBudget ?? (annualBreakdown ? {softwareAndSupport:amounts.annual-(annualBreakdown.hosting??0)-(annualBreakdown.lcm??0),lcm:annualBreakdown.lcm??0,hosting:annualBreakdown.hosting??0,publisher:0,total:amounts.annual} : null);
   const annualDetails = municipal && budget ? `<div class="prime-offer-recurring-budget"><dl>${[
     ['softwareAndSupport','Logiciels','Software'],
