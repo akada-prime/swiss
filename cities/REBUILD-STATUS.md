@@ -1,5 +1,14 @@
 # État de reprise — Prime Communes 2.0
 
+> **En-têtes de cadres compacts · 17.11.2026.** Le titre des cadres du détail
+> de prix occupe la première cellule de leur en-tête, à côté d'Investissement
+> et Annuel. Même grille que les lignes, y compris les cadres à investissement
+> seul. Sur Natel : titre et unité commune dans un en-tête flexible ; légendes
+> Investissement/Annuel conservées auprès des valeurs. Aucun titre caché.
+> 272 tests et build réussis ; six formats client sans débordement, DE sur 360 px.
+> Aucun calcul, montant enregistré, serveur, dossier ou accès modifié.
+> Safari physique et parcours réel authentifié restent ouverts.
+
 > **Reprise et finitions · 17.11.2026.** Espace local remis au niveau de
 > PR132 avant intervention ; les fichiers Radar restent ceux du dépôt distant.
 > Votre investissement utilise les tokens de l'offre, y compris sous thème
