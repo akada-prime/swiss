@@ -24,7 +24,7 @@ export function investmentEquation(amounts,{label,money,currency=false}){
  const discount=amounts.investment_discount??0;
  if(!(discount>0))return '';
  const number=value=>e(money(value).replace(/\s*CHF(?:\s*HT)?$/,''));
- return `<span class="prime-investment-equation" aria-label="${e(label('Investissement brut, remise, investissement net','Bruttoinvestition, Rabatt, Nettoinvestition'))}"><span class="prime-investment-adjustments"><span title="${e(label('Brut','Brutto'))}">${number(amounts.investment_gross??amounts.investment+discount)}</span><span class="prime-investment-rebate" title="${e(label('Remise','Rabatt'))}">− ${number(discount)}</span></span><strong title="${e(label('Net','Netto'))}">${number(amounts.investment)}${currency?` <span class="prime-offer-currency">${label('CHF HT','CHF exkl. MWST')}</span>`:''}</strong></span>`;
+ return `<span class="prime-investment-equation" aria-label="${e(label('Investissement brut, remise, investissement net','Bruttoinvestition, Rabatt, Nettoinvestition'))}"><span class="prime-investment-gross" title="${e(label('Brut','Brutto'))}">${number(amounts.investment_gross??amounts.investment+discount)}</span><span class="prime-investment-rebate" title="${e(label('Remise','Rabatt'))}">− ${number(discount)}</span><strong title="${e(label('Net','Netto'))}">${number(amounts.investment)}</strong>${currency?`<span class="prime-investment-unit prime-offer-currency">${label('CHF HT','CHF exkl. MWST')}</span>`:''}</span>`;
 }
 export function offerFigures(amounts, { label, money, incomplete = false, caveat = '', municipal = false, annualBreakdown = null, annualBudget = null, synergy = false, costDetails = [] }) {
   amounts=investmentDisplayAmounts(amounts,costDetails);

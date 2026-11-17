@@ -69,7 +69,8 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 .chiffrage-mobile-summary-figures { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto;gap:8px 16px; }
 .chiffrage-mobile-summary-figures>span { min-width:0;display:grid;grid-template-rows:subgrid;grid-row:span 2; }
 .chiffrage-mobile-summary-figures small { display:block;color:var(--skin-secondary);font-size:14px;line-height:1.4; }
-.chiffrage-mobile-summary-figures :is(strong,.prime-investment-equation) { display:block;margin-top:0;font-size:30px;line-height:1.15;font-weight:650;letter-spacing:-.04em;color:var(--quote-number);font-variant-numeric:tabular-nums;overflow-wrap:anywhere; }
+.chiffrage-mobile-summary-figures strong { display:block; }
+.chiffrage-mobile-summary-figures :is(strong,.prime-investment-equation) { margin-top:0;font-size:30px;line-height:1.15;font-weight:650;letter-spacing:-.04em;color:var(--quote-number);font-variant-numeric:tabular-nums;overflow-wrap:anywhere; }
 .chiffrage-mobile-summary-toggle { display:flex;align-items:center;gap:8px;min-height:36px;margin-top:8px;color:var(--skin-secondary);font-size:14px; }
 
 
