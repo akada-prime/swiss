@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "radar-state-v1",
-    "generatedAt": "2026-11-16T13:39:58.213Z",
+    "generatedAt": "2026-11-17T14:24:31.232Z",
     "mode": "deterministic-watch",
     "bootstrapDays": null,
     "notice": "Mesures issues du dernier passage mécanique. Une erreur de source n’est jamais comptée comme un silence."
@@ -17,31 +17,31 @@
     "active": 4,
     "error": 0,
     "pending": 0,
-    "unchanged": 1
+    "unchanged": 0
   },
   "detection": {
-    "changes": 3,
-    "newDocuments": 1740,
-    "pendingCandidates": 132,
+    "changes": 1,
+    "newDocuments": 32,
+    "pendingCandidates": 136,
     "bootstrapDays": null,
-    "bootstrapCandidates": 67
+    "bootstrapCandidates": 4
   },
   "analysis": {
     "analyzed": 8,
     "published": 8
   },
   "economy": {
-    "requests": 14,
+    "requests": 4,
     "notModified": 0,
-    "unchanged": 1,
-    "downloaded": 11,
+    "unchanged": 0,
+    "downloaded": 4,
     "aiCalls": 0
   },
   "sourceState": {
     "simap-romandie": {
       "status": "healthy",
-      "lastCheckAt": "2026-11-16T13:39:52.660Z",
-      "lastSuccessAt": "2026-11-16T13:39:52.660Z",
+      "lastCheckAt": "2026-11-17T14:24:31.231Z",
+      "lastSuccessAt": "2026-11-17T14:24:31.231Z",
       "seenIds": [
         "98f97c4149ff1b865f85ed7aa700d9af48131e844712b39fd5c5a9ce5a85f25e",
         "edf276fecedf7cbb0aa7785a79652413ea7e02282fe939b2fccc007ff6769446",
@@ -1323,13 +1323,45 @@
         "5d4ba9fe06c37bbee4873e17c91de25b8786d459228649657cd6bb65bf0dad88",
         "a8eb4983fbec5b7d8aca784386324ca52365792fa6d965d731cd43b09371a1cd",
         "b90c7d5b1e37c6b5597f414dbb71388fe421786ff033027c9e8e2b5196924a74",
-        "4474aada3da236a0c216c04b17c2f943845f928cf8576fd8db10400402831ae8"
+        "4474aada3da236a0c216c04b17c2f943845f928cf8576fd8db10400402831ae8",
+        "7777c76f71a43c091e5c5de253becbb81552deb5533bc8c1750b5e112a3f8175",
+        "17ce453bca0e5fb399a8e2442a7c5cac0c3fd0acbe347bc327a5870bfccc0ac7",
+        "ada913c658142a936b1aa785bd1815a16b16a9a5c519c2b2a5e52e0c002a78d1",
+        "3b23f294248f8efca3af47bb5333e81eb1af155b4d7a860b71a88239abf0f41a",
+        "9518daa6eb256e4b6b1301491471ebc72098417f25d46129b551e1517aba1eda",
+        "1e9d2621f59ddd714bd7783296fedd9dd52b60913bdfea297c1aa6ca49c0f087",
+        "86f0c01c2d806fc5ec8892dfc8d81078e7f54ab22fb418e89fd373722664cc17",
+        "dbb79dc5e037a7ad0abaa9fc6e4e0db9a0c1742498169daff28bc777623773a3",
+        "90e016f7315e67016a6b4573e290805b15b6bbfd955128a60f7512a0ea32d245",
+        "3e46af858e561e9c455e1bcc9f5398b0a99f80d81a780349e1ba4f46a5a9cecd",
+        "d2356f2800de52c2c1096708b4f076cc01e5a7d78a0218ab6333165430bd87de",
+        "7613d5b00c0821b80243838c5bbb4cd770c0878cf6febc20d46383cfdfac317b",
+        "4383930ee6b076d1828bb3d4f85317778176ad0cdc784da36f023b1c8ef22b45",
+        "fbd1c8e4969ac8704800daabaf6d104446b47f8ba830cda4aaa3a0c01b27e75b",
+        "9b1ac0641e50770c112f1efe07267456999b6a23409131ce98f6c8077d7f0d2b",
+        "bce4c6b63ad2269f9c1ab080d8b1594c5ef1c667badb596b6d905b924b9a4f59",
+        "2d5108005f6f558c8f3ba343bd892152579e1a2ba4bb9ed580a201f38bfbb05a",
+        "88973410fdee03fe0c009ea0fa964c6cad6a36f62a19767da70567ae8f5d7f64",
+        "fd170560c92d314e9965d731fe3098289cbfd3c5f2a6dda0bffccac18f01b018",
+        "6c2841c5715df34eb501798ebc00420c8f340f785fe87fc8561e636db2d240d7",
+        "ce08374d151cd487be94b5207d35fc17a1752ef9550811fafa6c8c80ece940cd",
+        "3c7fa5880d16d79cf6fd55f5ac38296403cdca2ad5f087feafd9979bd46e3069",
+        "2a354de6105a839676d316fc35d847992fae8a672dcca3a2a420097a5a3a2496",
+        "2e8873a2cfa0fc60bc9343880b18667772ab5bdde0b862ed3392eb6d9edd780c",
+        "49e6c36a905b30eee2878e8d778c721128e7f7d16fb222f9870b854c9e542b6c",
+        "2f083058be7850a2d698acca13dad45ec32c06c82de0a5384cd4492371965855",
+        "6086936762773d2af2c3654ff84d0dcac47220dda6943a7dc69df2c73d4f65c4",
+        "44e64c28aa4e8e6ae7e30aa61a99109991865091bf6361461699374a567db21c",
+        "d13813f66e3697c1b43c1797ce99313b9aee05ba24ced765a233aa308929ddae",
+        "de75bffed9d34349e4993d14345d685d2e60392165a9b6e3d3f42ca83377f062",
+        "560ad1f4088f378ff52b55522afb196d369192f31a9810341bc71a5a830113a7",
+        "47977c1b907e0e9385a87ff57b8d8fe40552d50ffd9fcedc1167b86da4adf363"
       ],
-      "itemCount": 136,
+      "itemCount": 57,
       "error": null,
       "baselined": true,
       "intervalHours": 24,
-      "nextCheckAt": "2026-11-17T13:39:52.661Z"
+      "nextCheckAt": "2026-11-18T14:24:31.231Z"
     },
     "yverdon-preavis": {
       "status": "healthy",
