@@ -1,5 +1,18 @@
 # État de reprise — Prime Communes 2.0
 
+> **Reprise et finitions · 17.11.2026.** Espace local remis au niveau de
+> PR132 avant intervention ; les fichiers Radar restent ceux du dépôt distant.
+> Votre investissement utilise les tokens de l'offre, y compris sous thème
+> général clair : fond sombre et texte lisible. Marge de titre des groupes
+> Prime/partenaires réservée à l'état ouvert, écart fermé uniforme de 16 px.
+> Un titre unique Périmètre logiciel (modules), texte d'aide conservé.
+> Investissement et annuel internes alignés à 32 px desktop (28 px Natel),
+> trois lignes conservées avec dégradé ; espacement ramené à 2 px.
+> Interface PCE présentée comme FIN/SAL avec 1 module inclus, sans double compte.
+> 271 tests et build réussis ; six largeurs internes et client sans débordement,
+> fond du détail client vérifié sous Helvetia, module Interface ouvert/fermé.
+> Aucun tarif, calcul, dossier, schéma ou serveur modifié. Safari réel reste ouvert.
+
 > **Finitions client 8–12 et dernier retour · 16.11.2026.** N+1 retiré
 > de la présentation client. Les options sont des lignes compactes (56 px
 > desktop), six visibles sans second « Voir plus » ; bénéfice et description

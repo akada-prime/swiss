@@ -122,3 +122,12 @@ test('authenticated catalog editing checks the active version and sends validate
   assert.equal(writes,1);
  }finally{globalThis.Deno=oldDeno;globalThis.fetch=oldFetch;}
 });
+
+test('a standalone PCE interface uses the same disclosure and counts one module',()=>{
+ const html=offerScope([{product:'ProConcept',items:[{reference:'Interface',label:'Interface ProConcept–innosolv'}]}],{asset:x=>x});
+ assert.match(html,/<details class="prime-offer-scope-section">/);
+ assert.match(html,/1 module inclus/);
+ assert.match(html,/<ul class="prime-offer-scope-modules"><li>Interface ProConcept–innosolv<\/li>/);
+ assert.match(html,/data-scope-toggle/);
+ assert.doesNotMatch(html,/open|2 modules inclus/);
+});

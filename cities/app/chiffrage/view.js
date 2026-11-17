@@ -13,7 +13,7 @@ import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js?v=20261112-coherence-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261116-client-compact-r3';
+import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261117-layout-r1';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
 import { calculateQuote, calculateLcm, calculateOracle, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261116-software-target-r4';
@@ -440,7 +440,7 @@ function productSection() {
   let calculated;
   try { calculated = calculateQuote(state.draft, state.catalog); } catch { /* Unknown amounts stay explicit. */ }
   const entry = item => moduleEntry(item, selected, calculated);
-  return `<section class="chiffrage-section chiffrage-catalog"><p class="chiffrage-kicker">${localLabel('Périmètre logiciel','Softwareumfang')}</p><h2>${localLabel('Modules','Module')}</h2>
+  return `<section class="chiffrage-section chiffrage-catalog"><h2>${localLabel('Périmètre logiciel (modules)','Softwareumfang (Module)')}</h2>
     <p class="chiffrage-helper">${localLabel('Les modules retenus en premier. Ouvre les options pour compléter le périmètre.','Gewählte Module zuerst. Weitere Optionen bei Bedarf öffnen.')}</p>
       <div class="chiffrage-module-groups">${[...groups].map(([group, entries]) => {
         const included = entries.filter(item => selected.has(`${item.vendor}/${item.product}/${item.item_code}`));
