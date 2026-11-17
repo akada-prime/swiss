@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { escapeOffer, offerHero, offerBanner, offerFigures, offerScope, offerLcm, offerMap } from '../app/offer/presentation.js';
+import { escapeOffer, offerHero, offerBanner, offerFigures, offerScope, offerLcm, offerMap, offerBreakdown } from '../app/offer/presentation.js';
 const label=(fr,de)=>fr;
 const money=n=>`${Number(n).toLocaleString('fr-CH')} CHF`;
 const asset=p=>`public/${p}`;
@@ -146,4 +146,13 @@ test('public client signature remains compact, accessible and translated',()=>{
  assert.match(css, /\.prime-offer-signature-disclosure\[open\] summary::after/);
  assert.match(css, /min-height: 44px/);
  assert.doesNotMatch(css, /!important/);
+});
+
+test('uniform price frames put their title and units in one shared column header',()=>{
+ const html=offerBreakdown([{key:'hosting',label:'Hébergement',investment:1760,annual:12000}],{label,money});
+ assert.match(html,/<div class="prime-offer-table-columns"><h3>Hébergement<\/h3><span>Investissement · CHF HT<\/span><span>Annuel · CHF HT \/ an<\/span>/);
+ assert.equal((html.match(/<h3>/g)||[]).length,1);
+ assert.match(html,/1&#39;760/);assert.match(html,/12&#39;000/);
+ const investmentOnly=offerBreakdown([{key:'database',label:'SQL',investment:3000,annual:0}],{label,money});
+ assert.match(investmentOnly,/<h3>Technique<\/h3>/);assert.doesNotMatch(investmentOnly,/Annuel · CHF HT/);
 });

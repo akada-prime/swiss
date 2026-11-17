@@ -480,3 +480,11 @@ repliés appartient à leur grille ; la marge sous summary ne concerne que
 l'état ouvert. Interface réutilise le renderer de groupes existant avec un
 module, sans changement du scope métier ni comptage d'un enfant supplémentaire.
 Les chiffres internes investissement/annuel partagent 32 px sur ordinateur.
+
+### 2026-11-17 — Titre intégré aux colonnes de prix
+
+`offerBreakdown` transmet le titre à l'en-tête de son unique table par cadre.
+Il partage les colonnes des montants, avec un h3 dans la première cellule.
+Sur Natel, l'en-tête conserve son h3 et l'unité commune ; les libellés près des
+valeurs restent visibles. Les cadres à une ou deux colonnes financières suivent
+la même règle ; aucun total n'est calculé par la présentation.
