@@ -109,8 +109,8 @@
 .chiffrage-totals div{min-width:0}
 .chiffrage-totals dt{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:14px;color:var(--skin-secondary)}
 .chiffrage-totals dt small{font-size:12px;color:var(--skin-muted)}
-.chiffrage-totals dd{font-size:36px;line-height:1.2;font-weight:600;letter-spacing:-.045em;margin:6px 0 0;overflow-wrap:anywhere}
-.chiffrage-totals div+div dd{font-size:29px;color:var(--quote-number)}
+.chiffrage-totals dd{font-size:32px;line-height:1.2;font-weight:600;letter-spacing:-.045em;margin:6px 0 0;overflow-wrap:anywhere}
+.chiffrage-totals div+div dd{color:var(--quote-number)}
 .chiffrage-cost-lines{display:grid;gap:15px}
 .chiffrage-cost-lines>div{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:13px;color:var(--skin-secondary)}
 .chiffrage-cost-lines>div>span:last-child{text-align:right;color:var(--skin-text);white-space:nowrap}
@@ -159,7 +159,7 @@
 .chiffrage-territory{width:160px;height:94px;flex:none;border-radius:8px;background:var(--skin-control);display:grid;place-items:center;color:var(--skin-accent-text);overflow:hidden}
 .chiffrage-territory svg{width:100%;height:100%;display:block}
 .chiffrage-summary-context{margin:0;color:var(--skin-text);font-size:15px;font-weight:600}
-.chiffrage-summary .chiffrage-totals div:first-child dd{font-size:clamp(32px,2.8vw,44px);color:var(--skin-text);background:linear-gradient(105deg,var(--skin-text) 12%,var(--skin-accent) 92%);background-clip:text;-webkit-text-fill-color:transparent}
+.chiffrage-summary .chiffrage-totals div:first-child dd{color:var(--skin-text);background:linear-gradient(105deg,var(--skin-text) 12%,var(--skin-accent) 92%);background-clip:text;-webkit-text-fill-color:transparent}
 .chiffrage-summary .chiffrage-totals dd,.chiffrage-five-year strong{font-variant-numeric:tabular-nums;text-align:right}
 .chiffrage-summary .chiffrage-totals dt{align-items:start}
 .chiffrage-summary .chiffrage-totals dt small{white-space:nowrap}
@@ -424,7 +424,7 @@
 .chiffrage-module-set>summary::before,.chiffrage-extra-group>summary::before{content:'▸';color:var(--orange);margin-right:3px}
 .chiffrage-module-set[open]>summary::before,.chiffrage-extra-group[open]>summary::before{content:'▾'}
 .chiffrage-module-set>summary small{margin-left:auto;font-size:13px;color:var(--skin-muted);font-weight:500}
-.chiffrage-extra-group>summary{margin-bottom:12px}
+.chiffrage-extra-group[open]>summary{margin-bottom:12px}
 
 /* Keep editor rows inside the mobile viewport and align disclosure headings. */
 .chiffrage-extra-group>summary{justify-content:flex-start}

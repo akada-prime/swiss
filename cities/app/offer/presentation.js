@@ -77,7 +77,7 @@ export function offerScope(groups, { asset, label = fr => fr }) {
     if (typeof item === 'string') return `<li>${e(item)}</li>`;
     if(Array.isArray(item.items))return `<li class="prime-offer-scope-parent"><details class="prime-offer-scope-section"><summary class="prime-offer-scope-heading">${e(item.label)} <span>· ${item.items.reduce((sum,row)=>sum+1+(row.included?.length??0),0)} ${label(item.items.reduce((sum,row)=>sum+1+(row.included?.length??0),0)===1?'module':'modules','Module')}</span></summary><ul class="prime-offer-scope-modules">${item.items.map(itemHtml).join('')}</ul></details></li>`;
     const children = item.included ?? [];
-    if (!children.length) return `<li>${item.reference?`<span class="prime-offer-reference-code">${e(item.reference)}</span> `:''}${e(item.label)}</li>`;
+    if (!children.length && item.reference!=='Interface') return `<li>${item.reference?`<span class="prime-offer-reference-code">${e(item.reference)}</span> `:''}${e(item.label)}</li>`;
     // A priced parent stays a module when it also becomes a section heading.
     // All software uses the same visible list, independently of its pricing model.
     const modules = [{label:item.label}, ...children];
@@ -87,9 +87,9 @@ export function offerScope(groups, { asset, label = fr => fr }) {
       if (!themes.has(theme)) themes.set(theme, []);
       themes.get(theme).push(module);
     }
-    return `<li class="prime-offer-scope-parent"><details class="prime-offer-scope-section"><summary class="prime-offer-scope-heading">${item.reference?`<span class="prime-offer-reference-code">${e(item.reference)}</span> `:''}${e(item.label)} <span>· ${modules.length} ${label('modules inclus','enthaltene Module')}</span></summary>${[...themes].map(([theme,rows])=>`${theme ? `<h6 class="prime-offer-scope-subheading">${e(theme)}</h6>` : ''}<ul class="prime-offer-scope-modules">${rows.map(module=>`<li>${e(module.label)}</li>`).join('')}</ul>`).join('')}</details></li>`;
+    return `<li class="prime-offer-scope-parent"><details class="prime-offer-scope-section"><summary class="prime-offer-scope-heading">${item.reference?`<span class="prime-offer-reference-code">${e(item.reference)}</span> `:''}${e(item.label)} <span>· ${modules.length} ${label(modules.length===1?'module inclus':'modules inclus',modules.length===1?'enthaltenes Modul':'enthaltene Module')}</span></summary>${[...themes].map(([theme,rows])=>`${theme ? `<h6 class="prime-offer-scope-subheading">${e(theme)}</h6>` : ''}<ul class="prime-offer-scope-modules">${rows.map(module=>`<li>${e(module.label)}</li>`).join('')}</ul>`).join('')}</details></li>`;
   };
-  const grouped = groups.some(group=>group.items.some(item=>typeof item==='object' && (item.items?.length || item.included?.length)));
+  const grouped = groups.some(group=>group.items.some(item=>typeof item==='object' && (item.items?.length || item.included?.length || item.reference==='Interface')));
   const controls = grouped ? `<div class="prime-offer-scope-tools"><button type="button" class="prime-offer-scope-toggle" data-scope-toggle data-expand-label="${e(label('Tout déplier','Alle aufklappen'))}" data-collapse-label="${e(label('Tout replier','Alle zuklappen'))}" aria-expanded="false">${label('Tout déplier','Alle aufklappen')}</button></div>` : '';
   const columns=groups.filter(group=>group.product!=='Prime').map(group=>[group]);
   const prime=groups.filter(group=>group.product==='Prime');

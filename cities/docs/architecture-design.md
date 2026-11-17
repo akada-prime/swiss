@@ -470,3 +470,13 @@ sans taille ou graisse renforcée ; le net reprend le dégradé original. Le bud
 annuel occupe la colonne centrale de la grille commune. La note Synergie reste
 conditionnelle, dans le montant Hébergement. Les prix des anciens liens restent
 figés ; seuls leurs composants de présentation communs évoluent.
+
+### 2026-11-17 — Tokens publics et état replié
+
+Le cadre Votre investissement dépend exclusivement des tokens `--offer-*`,
+comme les autres cadres de la présentation commerciale ; il ne reprend plus
+le fond clair global sous un texte blanc de l'offre. L'espacement des groupes
+repliés appartient à leur grille ; la marge sous summary ne concerne que
+l'état ouvert. Interface réutilise le renderer de groupes existant avec un
+module, sans changement du scope métier ni comptage d'un enfant supplémentaire.
+Les chiffres internes investissement/annuel partagent 32 px sur ordinateur.
