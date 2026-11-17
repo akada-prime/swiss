@@ -1,5 +1,20 @@
 # État de reprise — Prime Communes 2.0
 
+> **Résumé 3 + 2 et unités · 17.11.2026.** Trois indicateurs centrés en
+> haut ; détail annuel à gauche et budget annuel à droite, groupe de deux
+> cadres centré sur 820 px maximum. Le détail contient uniquement Logiciels,
+> LCM et Hébergement, sans total répété ; note Synergie dans le libellé si coché.
+> Une fois et Investissement + 4 annuités retirés ; dès la 2e année dans le
+> titre Logiciels/an, TCO5 dans le titre du coût sur cinq ans. Sur Natel,
+> deux cadres empilés sans défilement horizontal. Oracle rejoint la grille
+> des dimensions. CHF HT sans point médian ; total interne cinq ans sans CHF
+> isolé après le chiffre, unité dans son libellé. Champs techniques/prix clarifiés.
+> Options : titre 24 px comme Ce que comprend votre offre ; mention hors totaux
+> dans la première cellule de l'en-tête des prix. 272 tests et build réussis ;
+> six formats client, contrôle DE Natel, alignement Oracle et unités internes
+> sur données synthétiques. Aucun moteur, montant, tarif, dossier ou serveur
+> modifié. Safari physique et vraie session restent ouverts.
+
 > **En-têtes de cadres compacts · 17.11.2026.** Le titre des cadres du détail
 > de prix occupe la première cellule de leur en-tête, à côté d'Investissement
 > et Annuel. Même grille que les lignes, y compris les cadres à investissement

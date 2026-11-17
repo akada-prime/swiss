@@ -488,3 +488,19 @@ Il partage les colonnes des montants, avec un h3 dans la première cellule.
 Sur Natel, l'en-tête conserve son h3 et l'unité commune ; les libellés près des
 valeurs restent visibles. Les cadres à une ou deux colonnes financières suivent
 la même règle ; aucun total n'est calculé par la présentation.
+
+### 2026-11-17 — Résumé centré 3 + 2 et unités communes
+
+Le résumé municipal a trois indicateurs puis deux cadres annuels distincts :
+détail à gauche, total à droite. Le groupe inférieur possède sa largeur et
+son centrage, indépendants de la grille supérieure. Les trois lignes de détail
+ne calculent aucun nouveau total ; l'unique montant mis en évidence vient du
+budget annuel existant. La note Synergie est inline dans le libellé Hébergement.
+Les repères temporels sont dans les titres, les unités des colonnes dans les
+en-têtes ; les grands totaux publics conservent CHF HT auprès du montant.
+
+Oracle utilise la grille des autres dimensions, avec les mêmes data-field.
+Le résumé interne retire l'unité du nombre TCO5 et la conserve dans son libellé.
+`priceLabel` harmonise les libellés des champs de prix techniques sans modifier
+leur valeur. La mention hors totaux des options utilise la première colonne
+de leur en-tête ; leurs unités financières et valeurs restent séparées.
