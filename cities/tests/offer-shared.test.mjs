@@ -42,10 +42,13 @@ test('annual budget separates hosting from the software headline and keeps the t
  assert.match(html,/Logiciels \/ an/);assert.match(html,/Budget annuel total/);
  assert.doesNotMatch(html,/Facturation directe éditeur/);assert.match(html,/500/);assert.match(html,/LCM/);assert.match(html,/900/);
  assert.doesNotMatch(html,/NaN|Infinity/);
- assert.doesNotMatch(html,/Hébergement en synergie/);
+ assert.doesNotMatch(html,/prime-offer-synergy-note/);
  const synergy=offerFigures(amounts,{label,money,municipal:true,synergy:true,annualBudget:{softwareAndSupport:500,lcm:100,hosting:12000,total:12600}});
- assert.match(synergy,/<dd>[^<]*<small>[^<]*<\/small><small class="prime-offer-synergy-note">\*\) Hébergement en synergie<\/small><\/dd>/);
- assert.doesNotMatch(synergy,/forfait annuel|N\+1/);
+ assert.match(synergy,/<dt>Hébergement\* <small class="prime-offer-synergy-note">\(\* en synergie\)<\/small><\/dt>/);
+ assert.doesNotMatch(synergy,/forfait annuel|N\+1|Une fois|Investissement \+ 4 annuités/);
+ assert.equal((synergy.match(/Budget annuel total/g)||[]).length,1);
+ assert.match(synergy,/Détail annuel · CHF HT\/an/);
+ assert.match(synergy,/Coût total sur 5 ans \(TCO5\)/);
  const zero=offerFigures({...amounts,annual:0},{label,money,municipal:true,annualBreakdown:{solutions:0,lcm:0,hosting:0}});
  assert.doesNotMatch(zero,/NaN|Infinity/);
  const de=offerFigures(amounts,{label:(fr,de)=>de,money,municipal:true,annualBreakdown:{solutions:500,lcm:100,hosting:300}});

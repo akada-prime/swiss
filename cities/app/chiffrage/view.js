@@ -13,7 +13,7 @@ import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js?v=20261112-coherence-r1';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261117-table-head-r1';
+import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261117-summary-r2';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
 import { calculateQuote, calculateLcm, calculateOracle, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261116-software-target-r4';
@@ -46,6 +46,7 @@ const field = (key, value, label, { min = 0, step = 1 } = {}) =>
 const textField = (key, value, label) =>
   `<label>${label}<input data-field="${key}" value="${escape(value ?? '')}"></label>`;
 const localLabel = (fr, de) => document.documentElement.lang === 'de' ? de : frenchTypography(fr);
+const priceLabel = key => t(key).replace(/\s*CHF(?:\s*HT)?$/,'').trim()+localLabel(' · CHF HT',' · CHF exkl. MWST');
 const ruleFilters={kind:'rules',query:'',chapter:'',status:''};
 const ruleOpenIds=new Set();
 const updateRuleResults=bindReference(root,()=>state.ruleCatalog,localLabel,ruleFilters,ruleOpenIds);
@@ -415,7 +416,7 @@ function moduleEntry(item, selected, calculated) {
       ${selected.has(id) ? `<div class="chiffrage-module-service">
         <label><span class="chiffrage-visually-hidden">${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}</span><input data-field="moduleService.${escape(id)}.days" data-missing-days="${days == null}" data-proposed-days="${escape(presetDays(id) ?? '')}" class="${current?.days != null && current.days !== presetDays(id) ? 'is-adjusted' : ''}" type="number" min="0" step="0.5" value="${escape(days ?? '')}" aria-label="${t('chiffrage.days')} · ${escape(item.label_fr || item.item_code)}" placeholder="—"><span aria-hidden="true">j.</span></label><small data-day-status ${days==null?'':'hidden'}>${localLabel('À préciser','Offen')}</small>
       </div>` : `<span class="chiffrage-option-days">${days==null?localLabel('À préciser','Noch offen'):number(days)+' j.'}<small>${days==null?'':money(days*dayRate())}</small></span>`}
-      <div class="chiffrage-proposal-actions"><button type="button" class="chiffrage-inline chiffrage-propose" data-action="softwareDisposition" data-key="${escape(id)}" data-disposition="${proposed?'off':'propose'}" aria-pressed="${proposed}" ${required?'disabled':''}>${proposed?localLabel('Proposée ✓','Vorgeschlagen ✓'):localLabel('Proposer','Vorschlagen')}</button>${proposed?`<button type="button" class="chiffrage-inline" data-action="editProposal" data-key="${escape(id)}">${localLabel('Régler','Bearbeiten')}</button>`:''}</div>${selected.has(id)?includedFunctions(id):''}${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, t('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
+      <div class="chiffrage-proposal-actions"><button type="button" class="chiffrage-inline chiffrage-propose" data-action="softwareDisposition" data-key="${escape(id)}" data-disposition="${proposed?'off':'propose'}" aria-pressed="${proposed}" ${required?'disabled':''}>${proposed?localLabel('Proposée ✓','Vorgeschlagen ✓'):localLabel('Proposer','Vorschlagen')}</button>${proposed?`<button type="button" class="chiffrage-inline" data-action="editProposal" data-key="${escape(id)}">${localLabel('Régler','Bearbeiten')}</button>`:''}</div>${selected.has(id)?includedFunctions(id):''}${selected.has(id) && item.pricing_rule?.kind === 'unverified' ? `<details class="chiffrage-module-exception"><summary>${t('chiffrage.ui.priceToConfirm')}</summary><p class="chiffrage-helper">${t('chiffrage.energyPending')}</p><div class="chiffrage-grid">${state.internal ? field(`modules.${selectedIndex}.pa_override`, selectedModule?.pa_override, priceLabel('chiffrage.annualPa')) : ''}${field(`modules.${selectedIndex}.pv_override`, selectedModule?.pv_override, t('chiffrage.annual'))}</div></details>` : ''}</div>`;
   }
 
 function openProposalSettings(key,opener){
@@ -554,16 +555,16 @@ function technicalSection() {
       <p class="chiffrage-warning" data-sql-warning ${state.draft.dimensions.population >= state.catalog.parameters.sql.core_from_population && state.catalog.parameters.sql.price_per_core == null && sqlPrice == null ? '' : 'hidden'}>${t('chiffrage.sqlCoreUnconfirmed')}</p>
       <div class="chiffrage-grid">${field('sql.cores', state.draft.sql.cores ?? state.catalog.parameters.sql.default_cores, t('chiffrage.sqlCores'))}
       ${field('sql.override', sqlPrice, localLabel('SQL · investissement CHF HT','SQL · Investition CHF exkl. MWST'))}
-      ${state.internal ? field('sql.purchasePa', state.draft.sql.purchasePa, t('chiffrage.sqlInvestmentPa')) : ''}
-      ${field('sql.annualPv', state.draft.sql.annualPv, t('chiffrage.sqlAnnualPv'))}
-      ${state.internal ? field('sql.annualPa', state.draft.sql.annualPa, t('chiffrage.sqlAnnualPa')) : ''}</div>` : ''}
+      ${state.internal ? field('sql.purchasePa', state.draft.sql.purchasePa, priceLabel('chiffrage.sqlInvestmentPa')) : ''}
+      ${field('sql.annualPv', state.draft.sql.annualPv, priceLabel('chiffrage.sqlAnnualPv'))}
+      ${state.internal ? field('sql.annualPa', state.draft.sql.annualPa, priceLabel('chiffrage.sqlAnnualPa')) : ''}</div>` : ''}
     ${hasOracle ? `<div class="chiffrage-grid">
-      ${!state.draft.products.includes('innosolv') ? field('pce.financePvOverride',state.draft.pce.financePvOverride,t('chiffrage.pceFinanceAnnual'))+field('pce.salaryPvOverride',state.draft.pce.salaryPvOverride,t('chiffrage.pceSalaryAnnual')) : ''}
-      ${state.catalog.parameters.pce.finance_basis === 'innosolv_plus_options' ? field('pce.interfacePv',state.draft.pce.interfacePv ?? state.catalog.parameters.pce.interface_pv,t('chiffrage.pceInterfacePv')) : ''}
+      ${!state.draft.products.includes('innosolv') ? field('pce.financePvOverride',state.draft.pce.financePvOverride,priceLabel('chiffrage.pceFinanceAnnual'))+field('pce.salaryPvOverride',state.draft.pce.salaryPvOverride,priceLabel('chiffrage.pceSalaryAnnual')) : ''}
+      ${state.catalog.parameters.pce.finance_basis === 'innosolv_plus_options' ? field('pce.interfacePv',state.draft.pce.interfacePv ?? state.catalog.parameters.pce.interface_pv,priceLabel('chiffrage.pceInterfacePv')) : ''}
       ${oraclePriceFields()}
 
-      ${state.internal ? field('oracle.purchasePa', state.draft.oracle.purchasePa, t('chiffrage.oracleInvestmentPa')) : ''}
-      ${state.internal ? field('oracle.maintenancePa', state.draft.oracle.maintenancePa, t('chiffrage.oracleAnnualPa')) : ''}
+      ${state.internal ? field('oracle.purchasePa', state.draft.oracle.purchasePa, priceLabel('chiffrage.oracleInvestmentPa')) : ''}
+      ${state.internal ? field('oracle.maintenancePa', state.draft.oracle.maintenancePa, priceLabel('chiffrage.oracleAnnualPa')) : ''}
       ${state.internal && state.draft.products.includes('innosolv') ? `<small class="chiffrage-helper">${localLabel('Interface ProConcept–innosolv : PA 0 CHF · maintenance Prime','ProConcept–innosolv-Schnittstelle: EK 0 CHF · Wartung Prime')}</small>` : ''}</div>` : ''}</details>`;
 }
 
@@ -601,15 +602,15 @@ function extraSection(scope = 'modules') {
         ${field(`${id}.days`,line.days, t('chiffrage.days'),{step:.5})}
         ${line.unit_day_rate!=null?field(`${id}.unit_day_rate`,line.unit_day_rate,t('chiffrage.serviceDayRate')):''}
         ${field(`${id}.${line.days!=null?'investment_override':'investment_pv'}`,
-          line.days!=null?line.investment_override:line.investment_pv,t('chiffrage.investmentOverride'))}
+          line.days!=null?line.investment_override:line.investment_pv,priceLabel('chiffrage.investmentOverride'))}
         ${kind==='primeLines' && line.category==='license' && !line.annual_rule ? `<div class="chiffrage-prime-pricing">
-          ${field(`${id}.annual_pricing.chf_per_inhabitant`,line.annual_pricing?.chf_per_inhabitant,localLabel('CHF par habitant et par an','CHF pro Einwohner und Jahr'),{step:.01})}
-          ${field(`${id}.annual_pricing.minimum`,line.annual_pricing?.minimum,localLabel('Minimum annuel CHF','Jährliches Minimum CHF'))}
+          ${field(`${id}.annual_pricing.chf_per_inhabitant`,line.annual_pricing?.chf_per_inhabitant,localLabel('CHF HT par habitant et par an','CHF exkl. MWST pro Einwohner und Jahr'),{step:.01})}
+          ${field(`${id}.annual_pricing.minimum`,line.annual_pricing?.minimum,localLabel('Minimum annuel CHF HT','Jährliches Minimum CHF exkl. MWST'))}
           ${field(`${id}.annual_pricing.round_to`,line.annual_pricing?.round_to,localLabel('Arrondi CHF','Rundung CHF'))}
           <small>${localLabel('Base habitants retenus','Massgebende Einwohner')}: ${number(state.draft.dimensions.licensedPopulation??state.draft.dimensions.population)} · ${localLabel('annuel calculé','berechnet jährlich')}: ${money(annual)}</small></div>`:''}
-        ${line.annual_rule ? `<div class="chiffrage-prime-annual"><span>${t('chiffrage.annual')} · ${number(line.annual_rule.per_capita)} CHF / ${localLabel('habitant','Einwohner')}</span><strong>${annual==null?localLabel('À préciser','Noch offen'):money(annual)}</strong>${line.item_code==='prime-mandats-integres'?'':field(`${id}.annual_override`,line.annual_override,localLabel('Montant annuel unitaire personnalisé','Individueller Jahrespreis pro Einheit'))}</div>` : line.annual_pricing?.chf_per_inhabitant != null ? `<div class="chiffrage-prime-annual"><span>${t('chiffrage.annual')} PV</span><strong>${money(annual)}</strong></div>` : field(`${id}.annual_pv`,line.annual_pv,t('chiffrage.annual')+' PV')}
-        ${state.internal?field(`${id}.annual_pa`,line.annual_pa,t('chiffrage.annualPa')):''}
-        ${state.internal?field(`${id}.investment_pa`,line.investment_pa,t('chiffrage.investmentPa')):''}
+        ${line.annual_rule ? `<div class="chiffrage-prime-annual"><span>${t('chiffrage.annual')} · ${number(line.annual_rule.per_capita)} CHF / ${localLabel('habitant','Einwohner')}</span><strong>${annual==null?localLabel('À préciser','Noch offen'):money(annual)}</strong>${line.item_code==='prime-mandats-integres'?'':field(`${id}.annual_override`,line.annual_override,localLabel('Montant annuel unitaire personnalisé','Individueller Jahrespreis pro Einheit'))}</div>` : line.annual_pricing?.chf_per_inhabitant != null ? `<div class="chiffrage-prime-annual"><span>${t('chiffrage.annual')} PV</span><strong>${money(annual)}</strong></div>` : field(`${id}.annual_pv`,line.annual_pv,t('chiffrage.annual')+' PV · CHF HT')}
+        ${state.internal?field(`${id}.annual_pa`,line.annual_pa,priceLabel('chiffrage.annualPa')):''}
+        ${state.internal?field(`${id}.investment_pa`,line.investment_pa,priceLabel('chiffrage.investmentPa')):''}
         ${textField(`${id}.note`,line.note,t('chiffrage.note'))}
         <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`;
     }).join('');
@@ -644,9 +645,9 @@ function hostingSection(scope = 'composer') {
     ${rows.map(line => `<div class="chiffrage-line chiffrage-hosting-line"><div class="chiffrage-hosting-row-actions"><button type="button" class="chiffrage-button" data-action="addHosting">${t('chiffrage.addHosting')}</button><button type="button" class="chiffrage-button chiffrage-danger" data-action="removeLine" data-kind="primeLines" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div>
       ${textField(`primeLines.${line.index}.label`, line.label, t('chiffrage.lineLabel'))}
       ${field(`primeLines.${line.index}.investment_pv`, line.investment_pv, t('chiffrage.investment') + ' PV')}
-      ${state.internal ? field(`primeLines.${line.index}.investment_pa`, line.investment_pa, t('chiffrage.investmentPa')) : ''}
+      ${state.internal ? field(`primeLines.${line.index}.investment_pa`, line.investment_pa, priceLabel('chiffrage.investmentPa')) : ''}
       ${state.draft.hosting?.synergy?`<p>${localLabel("Synergie : 12'000 CHF HT/an pour l’ensemble. Le tarif habituel est conservé.","Synergie: 12'000 CHF exkl. MWST/Jahr insgesamt. Normalpreis bleibt gespeichert.")}</p>`:field(`primeLines.${line.index}.annual_pv`,line.annual_pv,t('chiffrage.annual')+' · CHF HT')}
-      ${state.internal ? field(`primeLines.${line.index}.annual_pa`, line.annual_pa, t('chiffrage.annualPa')) : ''}
+      ${state.internal ? field(`primeLines.${line.index}.annual_pa`, line.annual_pa, priceLabel('chiffrage.annualPa')) : ''}
     </div>`).join('')}</details>` : ''}</details>`;
 }
 
@@ -665,8 +666,8 @@ function lcmSection() {
       ${[['none', t('chiffrage.lcmNone')], ['gold','Gold'], ['platinium','Platinum']].map(([key,label]) =>
         `<option value="${key}" ${(state.draft.lcm.selection ?? 'none') === key ? 'selected' : ''}>${label}</option>`).join('')}
       </select></label></div><div class="chiffrage-grid chiffrage-lcm-values">${field('lcm.gold', prices.gold?.effective_value,
-      'LCM Gold · CHF')}${field('lcm.platinium', prices.platinium?.effective_value,
-        'LCM Platinum · CHF')}</div><p class="chiffrage-helper">${localLabel('Valeurs de la référence, modifiables pour cette variante.','Referenzwerte, für diese Variante anpassbar.')}</p></details>`;
+      localLabel('LCM Gold · CHF HT','LCM Gold · CHF exkl. MWST'))}${field('lcm.platinium', prices.platinium?.effective_value,
+        localLabel('LCM Platinum · CHF HT','LCM Platinum · CHF exkl. MWST'))}</div><p class="chiffrage-helper">${localLabel('Valeurs de la référence, modifiables pour cette variante.','Referenzwerte, für diese Variante anpassbar.')}</p></details>`;
 }
 
 const coats = new Map();
@@ -727,7 +728,7 @@ root.addEventListener('error', event => {
 
 function projectVariables() {
   const travel=state.draft.travel;
-  return `<section class="chiffrage-section chiffrage-project-parameters"><h2>${localLabel('Paramètres de chiffrage','Kalkulationsparameter')}</h2><div class="chiffrage-grid chiffrage-volumes">${field('commercial.dayRate',dayRate(),localLabel('Prix par jour · CHF','Preis pro Tag · CHF'))}${travel?field('travel.rate',travel.rate,localLabel('Déplacement · CHF','Reise · CHF'))+field('travel.percent',travel.percent,localLabel('Présence sur place · % des jours','Vor Ort · % der Tage'),{step:.5}):''}</div>${travel?`<label class="chiffrage-choice"><input type="checkbox" data-field="travel.waived" ${travel.waived?'checked':''}>${t('chiffrage.travelWaived')}</label><p class="chiffrage-helper">${t('chiffrage.travelBasis')}</p>`:''}</section>`;
+  return `<section class="chiffrage-section chiffrage-project-parameters"><h2>${localLabel('Paramètres de chiffrage','Kalkulationsparameter')}</h2><div class="chiffrage-grid chiffrage-volumes">${field('commercial.dayRate',dayRate(),localLabel('Prix par jour · CHF HT','Preis pro Tag · CHF exkl. MWST'))}${travel?field('travel.rate',travel.rate,localLabel('Déplacement · CHF HT','Reise · CHF exkl. MWST'))+field('travel.percent',travel.percent,localLabel('Présence sur place · % des jours','Vor Ort · % der Tage'),{step:.5}):''}</div>${travel?`<label class="chiffrage-choice"><input type="checkbox" data-field="travel.waived" ${travel.waived?'checked':''}>${t('chiffrage.travelWaived')}</label><p class="chiffrage-helper">${t('chiffrage.travelBasis')}</p>`:''}</section>`;
 }
 
 function discountSection(){
@@ -752,8 +753,7 @@ function composerSection() {
   const choices = (name, values, selected, attr, disabled=false) => `<div class="chiffrage-choice-group">${values.map(([value,label]) => `<label class="chiffrage-choice"><input type="radio" name="chiffrage-${name}" ${attr}="${value}" ${String(selected) === String(value) ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span>${label}</span></label>`).join('')}</div>`;
   const profiles = referenceProfiles(state.catalog);
   return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><h2>${t('chiffrage.ui.projectDimensions')}</h2>
-    <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('sql.users', state.draft.sql.users ?? sqlUsers,t('chiffrage.sqlUsers'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}${products.includes('abacus')?field('dimensions.portalUsers',portalUsers(state.draft.dimensions),localLabel('Utilisateurs du portail Abacus','Benutzer Abacus-Portal')):''}</div>
-    ${products.includes('pce') ? `<div class="chiffrage-grid chiffrage-erp-users">${field('oracle.full',state.draft.oracle.full,t('chiffrage.oracleFull'))}${field('oracle.light',state.draft.oracle.light,t('chiffrage.oracleLight'))}</div>` : ''}
+    <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('sql.users', state.draft.sql.users ?? sqlUsers,t('chiffrage.sqlUsers'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}${products.includes('abacus')?field('dimensions.portalUsers',portalUsers(state.draft.dimensions),localLabel('Utilisateurs du portail Abacus','Benutzer Abacus-Portal')):''}${products.includes('pce')?field('oracle.full',state.draft.oracle.full,t('chiffrage.oracleFull'))+field('oracle.light',state.draft.oracle.light,t('chiffrage.oracleLight')):''}</div>
 
     ${products.includes('abacus')?`<p class="chiffrage-helper">${localLabel('Portail : moitié des collaborateurs proposée, arrondie au supérieur ; volume modifiable.','Portal: vorgeschlagen ist die halbe Mitarbeiterzahl, aufgerundet; Anzahl anpassbar.')}</p>`:''}
     <p class="chiffrage-helper">${localLabel('Collaborateurs estimés ; utilisateurs SQL et ERP à vérifier avec le client.','Mitarbeitende geschätzt; SQL- und ERP-Nutzer mit der Gemeinde prüfen.')}</p>
@@ -798,11 +798,11 @@ function summary() {
   const incomplete=result.status==='incomplete';
   return `<aside class="chiffrage-summary"><div class="chiffrage-summary-heading"><p class="chiffrage-kicker">${t('chiffrage.workspace.947be926eb')}</p><span class="chiffrage-live">${t('chiffrage.workspace.3994ec3759')}</span></div>
     <p class="chiffrage-summary-context">${escape(state.draft.name)} · ${number(state.draft.dimensions.population)} ${t('chiffrage.workspace.a46028df66')}</p>
-    <dl class="chiffrage-totals"><div><dt>${incomplete ? localLabel('Investissement calculé à ce stade','Bisher berechnete Investition') : t('chiffrage.investment')} <small>CHF · ${t('chiffrage.ui.exTax')}</small></dt><dd>${investmentEquation(s,{label:localLabel,money})||money(s.investment).replace(' CHF','')}</dd></div><div><dt>${t('chiffrage.annual')} <small>CHF · ${t('chiffrage.ui.exTax')} · ${t('chiffrage.workspace.fe85c43980')}</small></dt><dd>${money(s.annual).replace(' CHF','')}</dd></div></dl>
+    <dl class="chiffrage-totals"><div><dt>${incomplete ? localLabel('Investissement calculé à ce stade','Bisher berechnete Investition') : t('chiffrage.investment')} <small>CHF ${t('chiffrage.ui.exTax')}</small></dt><dd>${investmentEquation(s,{label:localLabel,money})||money(s.investment).replace(' CHF','')}</dd></div><div><dt>${t('chiffrage.annual')} <small>CHF ${t('chiffrage.ui.exTax')} · ${t('chiffrage.workspace.fe85c43980')}</small></dt><dd>${money(s.annual).replace(' CHF','')}</dd></div></dl>
     <p class="chiffrage-price-feedback" data-price-feedback role="status">${escape(state.priceFeedback || '')}</p>
     ${incomplete ? `<p class="chiffrage-warning">${s.missing_service_days?.length ? t('chiffrage.serviceDaysRequired',{count:s.missing_service_days.length}) : ''} ${s.missing_technical?.length ? localLabel('Prix de base de données à préciser : montant non final.','Datenbankpreis ergänzen: Betrag noch nicht endgültig.') : ''} ${s.missing_hosting?localLabel('Montants d’hébergement à préciser.','Hostingbeträge ergänzen.'):''} ${s.missing_prime_values?.length?localLabel('Options Prime : prix annuel ou jours à préciser.','Prime-Optionen: Jahrespreis oder Tage ergänzen.'):''}</p><button class="chiffrage-button" data-action="completeQuote">${localLabel('Compléter le chiffrage','Kalkulation ergänzen')} →</button>` : ''}
     <details class="chiffrage-summary-details"><summary>${localLabel('Répartition','Aufteilung')}</summary><div class="chiffrage-cost-lines">${buckets.map(([label, filter])=>`<div><span>${escape(label)}</span><span>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.investment_pv??0),0))}<small>${money(result.lines.filter(filter).reduce((a,line)=>a+(line.annual_pv??0),0))} / ${t('chiffrage.workspace.de73eac0c3')}</small></span></div>`).join('')}</div></details>
-    <div class="chiffrage-five-year"><span>${incomplete?localLabel('5 ans · calculé à ce stade','5 Jahre · bisher berechnet'):t('chiffrage.workspace.b1aaf814f0')}</span><strong>${money(s.tco5y)}</strong></div>
+    <div class="chiffrage-five-year"><span>${incomplete?localLabel('5 ans · calculé à ce stade','5 Jahre · bisher berechnet'):localLabel('Sur 5 ans','Über 5 Jahre')} (CHF ${t('chiffrage.ui.exTax')})</span><strong>${money(s.tco5y).replace(' CHF','')}</strong></div>
     <p class="chiffrage-helper">${t('chiffrage.workspace.a855306547')}</p>
     <button class="chiffrage-button" data-editor-tab="offer">${t('chiffrage.workspace.a602bde342')} →</button>
     <div class="chiffrage-summary-foot">${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')}</div></aside>
@@ -850,8 +850,8 @@ function mobileSummary() {
     <div class="chiffrage-mobile-summary-detail">
       ${warning}
       <div class="chiffrage-cost-lines">${lines}</div>
-      <div class="chiffrage-five-year"><span>${incomplete ? localLabel('5 ans · provisoire','5 Jahre · vorläufig') : t('chiffrage.workspace.b1aaf814f0')}</span>
-        <strong>${money(s.tco5y)}</strong></div>
+      <div class="chiffrage-five-year"><span>${incomplete ? localLabel('5 ans · provisoire','5 Jahre · vorläufig') : localLabel('Sur 5 ans','Über 5 Jahre')} (CHF ${t('chiffrage.ui.exTax')})</span>
+        <strong>${money(s.tco5y).replace(' CHF','')}</strong></div>
       <p class="chiffrage-helper">${t('chiffrage.workspace.a855306547')}</p>
       <button class="chiffrage-button" data-editor-tab="offer">${t('chiffrage.workspace.a602bde342')} →</button>
       <div class="chiffrage-summary-foot">${state.draft.modules.length} ${t('chiffrage.workspace.6726a0b5f9')}</div>

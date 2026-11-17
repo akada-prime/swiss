@@ -46,7 +46,7 @@ test('a target cannot absorb the price of a proposed option and all catalog modu
 });
 test('public summary shares the rebate equation, synergy note and inline disclosure heading; price units belong to headers',()=>{
  const cfg={label:fr=>fr,money:n=>n+' CHF HT'};const amounts={investment:1000,investment_gross:1500,investment_discount:500,annual:12000,tco5y:49000};
- assert.match(investmentEquation(amounts,cfg),/1500.*500.*1000/);assert.doesNotMatch(investmentEquation(amounts,cfg),/aria-hidden="true">=/);const html=offerFigures(amounts,{...cfg,municipal:true,synergy:true,annualBudget:{hosting:12000,total:12000}});assert.match(html,/Hébergement \*/);assert.match(html,/Hébergement en synergie/);assert.match(html,/prime-investment-equation/);
+ assert.match(investmentEquation(amounts,cfg),/1500.*500.*1000/);assert.doesNotMatch(investmentEquation(amounts,cfg),/aria-hidden="true">=/);const html=offerFigures(amounts,{...cfg,municipal:true,synergy:true,annualBudget:{hosting:12000,total:12000}});assert.match(html,/Hébergement\*/);assert.match(html,/en synergie/);assert.match(html,/prime-investment-equation/);
  const scope=offerScope([{product:'Prime',items:[{label:'Module',items:['A']}]}],{...cfg,asset:x=>x});assert.match(scope,/prime-offer-scope-header/);
  const table=offerBreakdown([{key:'implementation',label:'Prime',investment:1500,annual:0}],cfg);assert.match(table,/Investissement · CHF HT/);assert.doesNotMatch(table,/prime-offer-amount[^>]*>1500 CHF/);
 });
