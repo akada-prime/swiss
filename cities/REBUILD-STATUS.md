@@ -1,5 +1,11 @@
 # État de reprise — Prime Communes 2.0
 
+> **Chiffres alignés · 17.11.2026.** Brut, remise et net partagent une
+> colonne numérique alignée à droite ; CHF HT occupe une cellule distincte
+> à droite du net. Taille et cadre du budget annuel conservés (22 px).
+> Six largeurs sans débordement ; 272 tests et build réussis.
+> Aucun calcul ni montant modifié.
+
 > **Résumé 3 + 2 et unités · 17.11.2026.** Trois indicateurs centrés en
 > haut ; détail annuel à gauche et budget annuel à droite, groupe de deux
 > cadres centré sur 820 px maximum. Le détail contient uniquement Logiciels,
