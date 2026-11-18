@@ -1,5 +1,5 @@
 import {primeBoard} from './prime-board.js?v=20261118-prime-shared-r3';
-import { moduleGroup, groupModuleRows } from './module-groups.js?v=20261118-prime-shared-r3';
+import { moduleGroup, groupModuleRows, primeModuleOrder } from './module-groups.js?v=20261118-prime-shared-r3';
 import {setSoftwareDisposition} from './software-selection.js?v=20261118-prime-shared-r3';
 import {bindKanban,boardHtml,boardRibbon,cardTools,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261113-card-tools-r1';
 import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-coherence-r1';
@@ -590,6 +590,7 @@ function extraSection(scope = 'modules') {
     const groupRows=result?.lines.filter(row=>row.family===sourceFamily&&row.category!=='hosting')??[];
     const totals={investment:groupRows.reduce((sum,row)=>sum+(row.investment_pv??0),0),annual:groupRows.reduce((sum,row)=>sum+(row.annual_pv??0),0),days:groupRows.reduce((sum,row)=>sum+(row.selected_days??0)*(row.quantity??1),0),incomplete:!result};
     const candidateFor=line=>extraOptionCandidates(state.draft,state.catalog,{includeSelected:true}).find(row=>extraOptionId(row.source)===extraOptionId(line)&&row.software===(kind==='partners'?'partners':'prime'));
+    chosen.sort((a,b)=>primeModuleOrder(state.catalog,a.choice_key||candidateFor(a)?.key)-primeModuleOrder(state.catalog,b.choice_key||candidateFor(b)?.key));
     const proposeButton=line=>{const candidate=candidateFor(line);if(!candidate)return '';const proposed=(state.draft.client_options??[]).some(row=>row.key===candidate.key);return `<span class="chiffrage-proposal-actions"><button type="button" class="chiffrage-button quiet" data-action="softwareDisposition" data-key="${escape(candidate.key)}" data-disposition="${proposed?'off':'propose'}" aria-pressed="${proposed}">${proposed?localLabel('Proposée ✓','Vorgeschlagen ✓'):localLabel('Proposer','Vorschlagen')}</button>${proposed?`<button type="button" class="chiffrage-button quiet" data-action="editProposal" data-key="${escape(candidate.key)}">${localLabel('Régler','Bearbeiten')}</button>`:''}</span>`;};
     const renderChosen = line => {
       const id = `${kind}.${line.index}`;

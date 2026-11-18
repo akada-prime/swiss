@@ -13,7 +13,8 @@
 > conservation historique ajoutée. Recette synthétique : déplacement réel des
 > groupes et modules, sauvegarde, promotion, client et six largeurs 360–2560 px.
 > 279 tests et build réussis. Fonction Chiffrage v39 déployée et sources distantes vérifiées.
-> Compteur attendu #706 après fusion ; le total GitHub reste la référence.
+> Ordre commun également appliqué aux lignes déjà incluses dans l’éditeur.
+> Compteur attendu #707 après les deux fusions ; le total GitHub reste la référence.
 
 > **Compteur d'évolution retrouvé · 18.11.2026.** Le compteur historique
 > compte les commits de main touchant cities/ : vérification API de #450 au
