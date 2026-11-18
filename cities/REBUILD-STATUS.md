@@ -1,5 +1,22 @@
 # État de reprise — Prime Communes 2.0
 
+> **Options, groupes Prime et présentation · 18.11.2026.** Les suppléments
+> annuels innosolv utilisent le loyer du module, sans repricing des licences
+> ProConcept déjà incluses. Diagnostic Ballaigues en lecture seule : 189 / 108 /
+> 270 / 108 CHF annuels ; le delta global ajoutait 1'500 CHF à chaque option.
+> Aucun tarif du catalogue ni dossier réel réécrit. Les publications existantes
+> restent figées ; nouvelle publication nécessaire pour leurs nouveaux prix.
+> Sous-titres Prime par dossier dans module_groups, validés côté serveur,
+> conservés lors des transitions et exposés uniquement sous forme de texte dans
+> les modules inclus/options client et PDF. Colonnes de cartes indépendantes,
+> même gap de 16 px dans les deux directions. Net bleu indépendant du Skin,
+> taille responsive selon la colonne ; budget annuel 22 px conservé.
+> Douze options en lignes compactes de 44 px desktop, prix en colonnes.
+> Typographie des modules/prix à 14 px ; trois grands indicateurs à 44 px
+> desktop. #460 était statique ; passage explicite à #461. 274 tests et build
+> réussis ; recette synthétique desktop/Natel et six largeurs sans débordement.
+> Safari physique reste ouvert. Fonction Chiffrage v38 déployée.
+
 > **Chiffres alignés · 17.11.2026.** Brut, remise et net partagent une
 > colonne numérique alignée à droite ; CHF HT occupe une cellule distincte
 > à droite du net. Taille et cadre du budget annuel conservés (22 px).

@@ -1,3 +1,5 @@
+import { extraOptionId } from './offer-options.js?v=20261118-options-r4';
+import { moduleGroup } from './module-groups.js?v=20261118-options-r4';
 import {partnerBrand} from './commercial-breakdown.js?v=20261112-coherence-r1';
 import { selectedModuleSection, presentationOrder } from './module-classification.js?v=20261112-coherence-r1';
 // Customer-safe module names and included functions only; never raw catalog records.
@@ -51,7 +53,8 @@ export function customerModuleScope(input, catalog, { internal = false } = {}) {
   for(const [key,fallback] of [['primeLines','Prime'],['partners','Partenaires']])for(const row of input?.[key]??[]){
     if(row.category==='hosting'||!optionApplies(row,input))continue;
     const product=partnerBrand(row)||fallback;
-    const item={fr:short(row.label,120),de:short(row.label,120),included:includedForParent(input,catalog,`prime/Options/${row.item_code}`)};
+    const section=moduleGroup(input,`${key==='partners'?'partners':'prime'}/Options/${extraOptionId(row)}`);
+    const item={...(section?{section_fr:section,section_de:section}:{}),fr:short(row.label,120),de:short(row.label,120),included:includedForParent(input,catalog,`prime/Options/${row.item_code}`)};
     if(!item.fr)continue;
     if(!extras.has(product))extras.set(product,new Map());
     extras.get(product).set(item.fr,item);
