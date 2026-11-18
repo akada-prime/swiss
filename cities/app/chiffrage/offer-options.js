@@ -1,4 +1,4 @@
-import { moduleGroup } from './module-groups.js?v=20261118-options-r4';
+import { moduleGroup, primeModuleOrder } from './module-groups.js?v=20261118-prime-shared-r3';
 // Optional editor-curated ideas, priced separately on a copy. No real tariffs in this module.
 import { calculateQuote } from './calculate.js?v=20261116-software-target-r3';
 import { moduleId,serviceDays,referenceProfiles } from './standards.js?v=20261112-coherence-r1';
@@ -39,7 +39,7 @@ export function extraOptionCandidates(input,catalog,{includeSelected=false}={}){
   for(const [index,profile] of referenceProfiles(catalog).entries())for(const [kind,field] of [['prime','prime_lines'],['partners','partners']])for(const [i,line] of (profile[field]??[]).entries())add(line,kind,line.item_code||`reference-${index}-${i}`);
   for(const record of input.client_options??[])if(record.source_line&&/^(prime|partners)\//.test(record.key)){const [kind,,id]=record.key.split('/');all.delete(record.key);add(record.source_line,kind,id);}
   for(const [kind,field] of [['prime','primeLines'],['partners','partners']])for(const [i,line] of (input[field]??[]).entries())add(line,kind,extraOptionId(line));
-  return [...all.values()].filter(row=>includeSelected||!(input[row.kind==='partner'?'partners':'primeLines']??[]).some(line=>(line.item_code||line.label)===(row.source.item_code||row.source.label)));
+  return [...all.values()].sort((a,b)=>primeModuleOrder(catalog,a.key)-primeModuleOrder(catalog,b.key)).filter(row=>includeSelected||!(input[row.kind==='partner'?'partners':'primeLines']??[]).some(line=>(line.item_code||line.label)===(row.source.item_code||row.source.label)));
 }
 export function offerOptionCandidates(input,catalog) {
   if(!input||!catalog)return [];
@@ -90,12 +90,12 @@ export function offerOptionReview(input,catalog) {
   try{records=validateOfferOptions(input?.client_options??[]);}catch{return {options:[],issues:['invalid']};}
   if(!records.length)return {options:[],issues:[]};
   const candidates=new Map(offerOptionCandidates(input,catalog).map(row=>[row.key,row])),options=[],issues=[];
-  for(const record of records){
+  for(const record of records.sort((a,b)=>primeModuleOrder(catalog,a.key)-primeModuleOrder(catalog,b.key))){
     const candidate=candidates.get(record.key);
     if(!candidate)continue;
     const price=priceOfferOption(input,catalog,candidate,record);
     if(!record.label_fr||!price){issues.push(record.key);continue;}
-    options.push({...(moduleGroup(input,record.key)?{group_fr:moduleGroup(input,record.key),group_de:moduleGroup(input,record.key)}:{}),label_fr:record.label_fr,label_de:record.label_de||record.label_fr,benefit_fr:record.benefit_fr,benefit_de:record.benefit_de||record.benefit_fr,description_fr:record.description_fr,description_de:record.description_de||record.description_fr,investment:price.investment,annual:price.annual});
+    options.push({...(moduleGroup(input,record.key,catalog)?{group_fr:moduleGroup(input,record.key,catalog),group_de:moduleGroup(input,record.key,catalog)}:{}),label_fr:record.label_fr,label_de:record.label_de||record.label_fr,benefit_fr:record.benefit_fr,benefit_de:record.benefit_de||record.benefit_fr,description_fr:record.description_fr,description_de:record.description_de||record.description_fr,investment:price.investment,annual:price.annual});
   }
   return {options,issues};
 }

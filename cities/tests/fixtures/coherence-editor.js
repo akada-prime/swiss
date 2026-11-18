@@ -35,6 +35,9 @@ window.fetch=async(url,options={})=>{
   const action=u.searchParams.get('action');let data;
   if(action==='status')data={authenticated:true};
   else if(action==='catalog')data={catalog,active:{commercial:'synthetic'}};
+  else if(action==='moduleCatalog')data={version:'synthetic',catalog,parents:[],module_contents:[],prime_options:catalog.parameters.prime_options};
+  else if(action==='saveModuleCatalog'){const body=JSON.parse(options.body);catalog.parameters.prime_options=body.prime_options;catalog.parameters.module_contents=body.module_contents;data={version:'synthetic-2',catalog,parents:[],module_contents:body.module_contents,prime_options:body.prime_options};}
+  else if(action==='savePrimeLayout'){const body=JSON.parse(options.body);catalog.parameters.prime_layout={...body.layout,revision:crypto.randomUUID()};data={version:'synthetic',catalog,parents:[],module_contents:[],prime_options:catalog.parameters.prime_options};}
   else if(action==='list')data=[saved];
   else if(action==='quote')data=structuredClone(saved);
   else if(action==='board')data={version:saved.workflow_version??1,column_titles:columnTitles,quotes:[saved]};

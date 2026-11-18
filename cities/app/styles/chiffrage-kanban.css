@@ -47,3 +47,13 @@
  .chiffrage-card-open .chiffrage-saved-parts b{font-size:20px}
 }
 
+
+/* Shared Prime catalog: cards use the same pointer controller as the quote board. */
+.prime-catalog-board{display:grid;grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:minmax(260px,320px);gap:16px;overflow-x:auto;min-width:0;width:100%;max-width:100%;padding-bottom:16px}
+.prime-catalog-board header{display:flex;flex-wrap:wrap;align-items:center;gap:8px;cursor:grab}
+.prime-catalog-board header label{min-width:0;flex:1 0 100%}
+.prime-catalog-board header input{width:100%;min-width:0;font-size:16px}
+.prime-catalog-module{display:grid;gap:12px;padding:12px;border:1px solid var(--skin-border);border-radius:10px;background:var(--skin-card);font-size:14px}
+.prime-catalog-module>div{display:flex;gap:8px;align-items:center}
+.prime-catalog-module select{min-width:0;max-width:100%;flex:1;font-size:14px;min-height:44px}
+.prime-catalog-module [data-drag-handle]{touch-action:none;min-width:44px;min-height:44px;cursor:grab}

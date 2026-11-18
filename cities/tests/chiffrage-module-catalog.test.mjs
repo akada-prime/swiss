@@ -131,3 +131,22 @@ test('a standalone PCE interface uses the same disclosure and counts one module'
  assert.match(html,/data-scope-toggle/);
  assert.doesNotMatch(html,/open|2 modules inclus/);
 });
+
+test('shared Prime layout saves only catalog metadata and rejects stale concurrent writes',async()=>{
+ const oldDeno=globalThis.Deno,oldFetch=globalThis.fetch;
+ globalThis.Deno={env:{get:name=>({SUPABASE_URL:'https://example.supabase.co',SUPABASE_SERVICE_ROLE_KEY:'synthetic-key'})[name]}};
+ const version='00000000-0000-4000-8000-000000000001';let content=structuredClone(catalog.parameters),writes=0;
+ globalThis.fetch=async(url,init={})=>{
+  const u=new URL(url),path=u.pathname;
+  if(path.endsWith('/chiffrage_parameters')&&init.method==='PATCH'){
+   assert.equal(u.searchParams.get('content->prime_layout->>revision'),'is.null');
+   const next=JSON.parse(init.body).content;
+   const {prime_layout,...rest}=next;assert.deepEqual(rest,catalog.parameters);assert.equal(prime_layout.groups[0].title,'Interfaces');
+   content=next;writes++;return new Response(JSON.stringify([{content}]));
+  }
+  return new Response(JSON.stringify(path.endsWith('/chiffrage_catalog_versions')?[{id:version,vendor:'commercial',active:true}]:path.endsWith('/chiffrage_parameters')?[{catalog_version_id:version,content}]:[]));
+ };
+ const payload={expected_version:version,expected_revision:'',layout:{groups:[{id:'interfaces',title:'Interfaces',modules:['prime/Options/demo']}]}};
+ const request=()=>new Request('https://example.supabase.co/?action=savePrimeLayout',{method:'POST',headers:{Authorization:'Bearer '+signSession(),origin:'https://akada-prime.github.io','content-type':'application/json'},body:JSON.stringify(payload)});
+ try{assert.equal((await handler(request())).status,200);assert.equal((await handler(request())).status,409);assert.equal(writes,1);}finally{globalThis.Deno=oldDeno;globalThis.fetch=oldFetch;}
+});
