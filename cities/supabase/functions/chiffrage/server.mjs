@@ -1,3 +1,4 @@
+import { validateModuleGroups } from '../../../app/chiffrage/module-groups.js';
 import {exportClientPdf,pdfFilename} from './client-pdf.mjs';
 import {validateOfferOptions,offerOptionReview} from '../../../app/chiffrage/offer-options.js';
 import { moduleParents, validateModuleCatalog } from '../../../app/chiffrage/module-catalog.js';
@@ -139,6 +140,7 @@ async function writeQuote(payload) {
     new Set(products).size !== products.length)
     throw new Error('Invalid product selection');
   if(input.client_options!==undefined)input.client_options=validateOfferOptions(input.client_options);
+  if(input.module_groups!==undefined)input.module_groups=validateModuleGroups(input.module_groups);
   const catalog = await loadCatalog(payload.catalog_versions);
   if(input.module_contents == null && catalog.parameters.module_contents?.length)
     input.module_contents = catalog.parameters.module_contents;

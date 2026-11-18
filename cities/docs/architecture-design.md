@@ -504,3 +504,25 @@ Le résumé interne retire l'unité du nombre TCO5 et la conserve dans son libel
 `priceLabel` harmonise les libellés des champs de prix techniques sans modifier
 leur valeur. La mention hors totaux des options utilise la première colonne
 de leur en-tête ; leurs unités financières et valeurs restent séparées.
+
+### 2026-11-18 — Groupes Prime et suppléments isolés
+
+`module-groups.js` possède les sous-titres éditoriaux par dossier ; les clés
+restent les identifiants de disposition logicielle. Le classement ne change
+ni fournisseur, ni montant, ni catalogue partagé. L'éditeur les saisit dans
+Modules ; `module-scope` et `offerOptionReview` n'en publient que le texte.
+Le serveur valide cette carte avant sauvegarde. Les transitions conservent
+les sous-titres, y compris quand une proposition redevient incluse.
+
+Le supplément annuel d'un module utilise sa propre ligne du moteur. Le delta
+global de l'annuel ne convient pas, car une option innosolv peut faire franchir
+un palier aux licences PCE existantes. Les investissements restent des deltas
+hors gestion de projet. Les anciens liens ne sont jamais réécrits par ce correctif.
+
+`offerScope` reçoit les services à disposer sous chaque colonne indépendante.
+Le même token possède les gaps verticaux et horizontaux. Les nombres du résumé
+utilisent la largeur de leur colonne avec des container queries ; aucune mesure
+JavaScript ni position absolue n'est nécessaire. Les composants des propositions
+interne et client utilisent des lignes de prix, et les sous-titres sont repris
+au PDF. Le numéro #461 est un numéro explicite de livraison, pas un compteur
+calculé depuis les commits.

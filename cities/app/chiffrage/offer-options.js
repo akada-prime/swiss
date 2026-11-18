@@ -1,3 +1,4 @@
+import { moduleGroup } from './module-groups.js?v=20261118-options-r4';
 // Optional editor-curated ideas, priced separately on a copy. No real tariffs in this module.
 import { calculateQuote } from './calculate.js?v=20261116-software-target-r3';
 import { moduleId,serviceDays,referenceProfiles } from './standards.js?v=20261112-coherence-r1';
@@ -76,7 +77,11 @@ export function priceOfferOption(input,catalog,candidate,record={}) {
     const after=calculateQuote(next,catalog);
     if(days==null||after.status==='incomplete')return null;
     const withoutGp=result=>result.lines.filter(line=>line.explanation?.kind!=='project_management').reduce((sum,line)=>sum+(line.investment_pv??0),0);
-    const investment=withoutGp(after)-withoutGp(before),annual=['prime','partner'].includes(candidate.kind)&&record.annual_override!=null?record.annual_override:after.summary.annual-before.summary.annual;
+    const investment=withoutGp(after)-withoutGp(before);
+    // A module's annual supplement is its own rent, not a repricing of existing PCE licenses.
+    const annual = candidate.kind==='module' ? after.lines.find(line=>line.family===candidate.source.vendor && line.product===candidate.source.product && line.item_code===candidate.source.item_code)?.annual_pv :
+      candidate.kind==='pce' ? after.lines.find(line=>line.family==='pce' && line.item_code===candidate.key.split('/').at(-1))?.annual_pv :
+      record.annual_override ?? after.summary.annual-before.summary.annual;
     return Number.isFinite(investment)&&Number.isFinite(annual)&&investment>=0&&annual>=0?{investment,annual}:null;
   }catch{return null;}
 }
@@ -90,7 +95,7 @@ export function offerOptionReview(input,catalog) {
     if(!candidate)continue;
     const price=priceOfferOption(input,catalog,candidate,record);
     if(!record.label_fr||!price){issues.push(record.key);continue;}
-    options.push({label_fr:record.label_fr,label_de:record.label_de||record.label_fr,benefit_fr:record.benefit_fr,benefit_de:record.benefit_de||record.benefit_fr,description_fr:record.description_fr,description_de:record.description_de||record.description_fr,investment:price.investment,annual:price.annual});
+    options.push({...(moduleGroup(input,record.key)?{group_fr:moduleGroup(input,record.key),group_de:moduleGroup(input,record.key)}:{}),label_fr:record.label_fr,label_de:record.label_de||record.label_fr,benefit_fr:record.benefit_fr,benefit_de:record.benefit_de||record.benefit_fr,description_fr:record.description_fr,description_de:record.description_de||record.description_fr,investment:price.investment,annual:price.annual});
   }
   return {options,issues};
 }

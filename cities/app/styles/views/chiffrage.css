@@ -129,7 +129,7 @@
 .chiffrage-module-groups{display:grid;gap:16px;margin-top:16px}
 .chiffrage-module-set{min-width:0}
 .chiffrage-module-set h3{padding-bottom:12px;border-bottom:1px solid var(--skin-border);font-size:14px;color:var(--skin-secondary)}
-.chiffrage-module-entry{display:grid;grid-template-columns:minmax(0,1fr) 105px 78px auto;gap:12px;padding:7px 0;border-bottom:1px solid var(--skin-border-faint);align-items:center}
+.chiffrage-module-entry{font-size:14px;display:grid;grid-template-columns:minmax(0,1fr) 105px 78px auto;gap:12px;padding:7px 0;border-bottom:1px solid var(--skin-border-faint);align-items:center}
 .chiffrage-view .chiffrage-module-entry>label{min-height:44px;display:flex;flex-direction:row;gap:12px;align-items:center;color:var(--skin-text);font-size:14px;line-height:1.4;overflow-wrap:normal}
 .chiffrage-module-name{min-width:0}
 .chiffrage-module-name small{display:inline;margin-left:8px;font-size:12px;color:var(--skin-muted)}
@@ -395,7 +395,7 @@
 /* Prime and partner option overview: numeric inputs and totals remain legible on mobile. */
 .chiffrage-extra-group{margin-top:0}
 .chiffrage-extra-group h3{margin:0 0 10px;font-size:18px}
-.chiffrage-extra-group>.chiffrage-extra-row{border:1px solid var(--skin-border-soft);border-radius:9px;margin:6px 0}
+.chiffrage-extra-group .chiffrage-extra-row{border:1px solid var(--skin-border-soft);border-radius:9px;margin:6px 0}
 .chiffrage-extra-row>summary{--quote-marker-inset:12px;display:grid;grid-template-columns:minmax(130px,1fr) 60px 105px 105px auto;gap:12px;align-items:center;padding:12px;cursor:pointer}
 .chiffrage-extra-row>summary strong,.chiffrage-extra-row>summary span:last-child{font-variant-numeric:tabular-nums;text-align:right}
 .chiffrage-extra-available{margin:8px 0 14px;border:1px solid var(--skin-border-soft);border-radius:9px;padding:10px}
@@ -453,17 +453,17 @@
 .chiffrage-rollup>span{text-align:right;white-space:nowrap;}
 .chiffrage-rollup small{font-size:inherit;color:var(--skin-muted);}
 .chiffrage-module-set>summary,.chiffrage-extra-group>summary{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
-.chiffrage-extra-available>.chiffrage-option-preview{display:grid;grid-template-columns:minmax(160px,1fr) repeat(3,minmax(80px,auto)) auto auto;gap:16px;align-items:center;padding:12px 0;border-top:1px solid var(--skin-border);}
+.chiffrage-extra-available .chiffrage-option-preview{display:grid;font-size:14px;grid-template-columns:minmax(160px,1fr) repeat(3,minmax(80px,auto)) auto auto;gap:16px;align-items:center;padding:12px 0;border-top:1px solid var(--skin-border);}
 .chiffrage-option-preview>span:not(:first-child),.chiffrage-option-preview>strong{text-align:right;font-variant-numeric:tabular-nums;}
 .chiffrage-option-days{text-align:right;font-variant-numeric:tabular-nums;}
 .chiffrage-option-days small{display:block;}
-.chiffrage-pce-entry{padding:16px 0;border-top:1px solid var(--skin-border);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;}
+.chiffrage-pce-entry{font-size:14px;padding:16px 0;border-top:1px solid var(--skin-border);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;}
 .chiffrage-service-group-heading{grid-column:1/-1;font-size:16px;margin:18px 0 8px;}
 @media(max-width:700px){
 .chiffrage-rollup{width:100%;margin-left:0;justify-content:space-between;gap:8px}
-.chiffrage-extra-available>.chiffrage-option-preview{grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.chiffrage-extra-available .chiffrage-option-preview{grid-template-columns:minmax(0,1fr) auto;gap:8px}
 .chiffrage-option-preview>span:first-child{grid-column:1/-1}
-.chiffrage-option-preview>button{grid-column:2;grid-row:2/4}}
+.chiffrage-option-preview>button{grid-column:2;grid-row:3}.chiffrage-option-preview>.chiffrage-proposal-actions{grid-column:1/-1;justify-content:flex-end}}
 
 /* Catalog management uses the existing authenticated editor and ordinary controls. */
 .chiffrage-catalog-record{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--skin-border-soft)}

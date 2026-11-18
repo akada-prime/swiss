@@ -125,18 +125,23 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 .chiffrage-showcase-editor>summary { display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;cursor:pointer;font-size:17px; }
 .chiffrage-showcase-editor>summary>span { color:var(--skin-muted);font-size:14px;white-space:nowrap; }
 .chiffrage-showcase-editor>p { color:var(--skin-secondary);font-size:14px;line-height:1.5;max-width:780px; }
-.chiffrage-showcase-selection { display:grid;gap:var(--quote-card-gap);margin-top:var(--quote-heading-gap); }
+.chiffrage-showcase-selection { display:grid;gap:4px;margin-top:var(--quote-heading-gap); }
 .chiffrage-showcase-card { min-width:0;border:1px solid var(--skin-border);border-radius:10px;background:var(--skin-tint); }
-.chiffrage-showcase-card>summary { display:grid;grid-template-columns:24px minmax(0,1fr) auto;align-items:center;gap:12px;min-height:72px;padding:12px 16px;list-style:none;cursor:pointer; }
+.chiffrage-showcase-card>summary { display:grid;grid-template-columns:16px minmax(0,1fr) minmax(160px,220px);align-items:center;gap:8px;min-height:44px;padding:8px 12px;list-style:none;cursor:pointer; }
+.chiffrage-showcase-columns{display:grid;grid-template-columns:minmax(0,1fr) repeat(2,minmax(80px,110px));gap:8px;font-size:14px;color:var(--skin-secondary);padding:8px 12px 8px 36px}
+.chiffrage-showcase-columns>span:not(:first-child){text-align:right}
+.chiffrage-module-classification{margin-bottom:12px}
+.chiffrage-module-classification>label{display:grid;grid-template-columns:minmax(0,1fr) minmax(140px,1fr);gap:12px;align-items:center;margin-block:8px;font-size:14px}
+.chiffrage-module-classification input{min-width:0}
 .chiffrage-showcase-card>summary::-webkit-details-marker { display:none; }
 .chiffrage-showcase-number { font-size:0; }
 
 
 .chiffrage-showcase-name { min-width:0;overflow-wrap:anywhere; }
-.chiffrage-showcase-name strong { display:block;font-size:16px;line-height:1.4; }
-.chiffrage-showcase-name small { display:block;margin-top:4px;color:var(--orange);font-size:14px; }
+.chiffrage-showcase-name strong { display:inline;font-size:14px;line-height:1.4; }
+.chiffrage-showcase-name small { display:inline;margin-inline-start:8px;color:var(--orange);font-size:14px; }
 .chiffrage-showcase-name small[data-ready=true] { color:var(--quote-success); }
-.chiffrage-showcase-summary-price { text-align:right;font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap; }
+.chiffrage-showcase-summary-price { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;text-align:right;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap; }
 .chiffrage-showcase-summary-price small { display:block;font-size:14px;color:var(--skin-secondary);font-weight:400;margin-top:4px; }
 .chiffrage-showcase-card-body { padding:0 16px 16px;border-top:1px solid var(--skin-border-soft); }
 .chiffrage-showcase-card-body>.chiffrage-actions { margin:12px 0;justify-content:flex-end; }
@@ -232,8 +237,10 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
  .chiffrage-editor-footer:has(.error) { flex-wrap:wrap; }
  .chiffrage-editor-footer:has(.error) .chiffrage-editor-save-state { flex-basis:100%; }
  .chiffrage-editor-footer:has(.error)>.chiffrage-actions { width:100%;justify-content:flex-end; }
- .chiffrage-showcase-card>summary { grid-template-columns:16px minmax(0,1fr);gap:8px;padding:12px; }
- .chiffrage-showcase-summary-price { grid-column:2;display:flex;gap:12px;flex-wrap:wrap;text-align:left;font-size:14px; }
+ .chiffrage-showcase-card>summary { grid-template-columns:12px minmax(0,1fr) 124px;gap:6px;padding:8px; }
+ .chiffrage-showcase-summary-price { gap:8px;text-align:right;font-size:14px; }
+ .chiffrage-showcase-columns{grid-template-columns:minmax(0,1fr) repeat(2,58px);gap:8px;padding-inline:26px 8px;font-size:14px}
+ .chiffrage-module-classification>label{grid-template-columns:minmax(0,1fr)}
  .chiffrage-showcase-summary-price small { display:inline;margin:0; }
  .chiffrage-showcase-card-body { padding:0 12px 12px; }
  .chiffrage-showcase-card-body>.chiffrage-actions { justify-content:flex-start;flex-wrap:wrap; }

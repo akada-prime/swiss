@@ -5,10 +5,43 @@ import {offerOptionCandidates,priceOfferOption,offerOptionReview,validateOfferOp
 import {offerOptions} from '../app/offer/presentation.js';
 import {offerOptionsEditor,optionPriceMessage,optionReadinessMessage} from '../app/chiffrage/offer-options-editor.js';
 import {publicOfferFromSaved} from '../supabase/functions/chiffrage/client-projection.mjs';
+import {validateModuleGroups} from '../app/chiffrage/module-groups.js';
+import {setSoftwareDisposition} from '../app/chiffrage/software-selection.js';
 const l=fr=>fr,money=v=>v+' CHF HT';
 const input={"products":[],"modules":[],"dimensions":{"population":1000},"primeLines":[],"partners":[],"services":[],"moduleServices":[],"lcm":{"selection":"none"},"hosting":{"included":false}};
 const catalog={"items":[],"parameters":{"day_rate":100,"prime_options":[{"item_code":"demo","label_fr":"Option exemple","days":2,"annual_pv":12,"enabled":true,"source":"PRIVATE SOURCE","sample_size":99},{"item_code":"salary","label_fr":"Salaires","requires_product":"pce","requires_pce_option":"salaires","days":1,"annual_pv":5}],"lcm":[]}};
 const selected={"key":"prime/Options/demo","label_fr":"Un service utile","benefit_fr":"Moins de doubles saisies.","description_fr":"Description détaillée.","days":null};
+test('publisher option annual rent excludes changes to existing PCE licenses at a rounding boundary',()=>{
+ const c=structuredClone(catalog);
+ c.items=[['base',6000],['option',700]].map(([item_code,value])=>({vendor:'innosolv',product:'Gemeinde',item_code,label_fr:item_code,pricing_rule:{kind:'lookup',basis:'population',below_first:'hold',tiers:[{up_to:5000,value}]}}));
+ c.parameters.publisher_rent={innosolv:{standard:{pa_rate:.2,pv_rate:.2}}};
+ c.parameters.pce={finance_basis:'innosolv_plus_options',finance_base_item_codes:['base'],finance_ratio:.4,finance_adjustment:0,finance_round_to:1000,salary_round_to:500,pv_margin:.2,pv_round_to:1000,interface_pv:0};
+ c.parameters.oracle={};
+ c.parameters.sql={suggestion:{lowerPopulation:0,lowerUsers:1,upperPopulation:10000,upperUsers:10},core_from_population:10000,user_base:0,price_per_user:0,default_cores:2,price_per_core:0};
+ const draft={...structuredClone(input),products:['innosolv','pce'],pce:{finances:true,salaires:true},sql:{users:1},oracle:{full:0,light:0},modules:[{vendor:'innosolv',product:'Gemeinde',item_code:'base'}]};
+ const candidate=offerOptionCandidates(draft,c).find(row=>row.key==='innosolv/Gemeinde/option');
+ const before=structuredClone(draft),priced=priceOfferOption(draft,c,candidate,{days:1});
+ assert.deepEqual(priced,{investment:100,annual:140});
+ const included=setSoftwareDisposition(draft,c,candidate.key,'include');included.moduleServices[0].days=1;
+ assert.ok(calculateQuote(included,c).summary.annual-calculateQuote(draft,c).summary.annual>priced.annual);
+ assert.deepEqual(draft,before);
+});
+test('per-quote Prime subtitles survive proposing, saving validation, reinclusion and public projection',()=>{
+ const groups=validateModuleGroups({'prime/Options/demo':'Options interfaces'});
+ const draft={...structuredClone(input),module_groups:groups,primeLines:[{family:'prime',category:'license',item_code:'demo',label:'Interface GED',days:2,annual_pv:12}]};
+ const proposed=setSoftwareDisposition(draft,catalog,'prime/Options/demo','propose');
+ proposed.client_options=validateOfferOptions(proposed.client_options);
+ const publicOptions=offerOptionReview(proposed,catalog).options;
+ assert.equal(publicOptions[0].group_fr,'Options interfaces');
+ assert.match(offerOptions(publicOptions,{label:l,money}),/prime-offer-option-group[^>]*>Options interfaces/);
+ const restored=setSoftwareDisposition(proposed,catalog,'prime/Options/demo','include');
+ const projection=publicOfferFromSaved(quoteFor(restored),catalog);
+ assert.equal(projection.scope.find(row=>row.product==='Prime').items[0].section_fr,'Options interfaces');
+ assert.equal(projection.amounts.annual,12);
+ assert.throws(()=>validateModuleGroups({'__proto__':'bad','invalid':'bad'}));
+ assert.throws(()=>validateModuleGroups({'prime/Options/demo':'x'.repeat(101)}));
+ assert.deepEqual(validateModuleGroups({'prime/Options/demo':'  '}),{});
+});
 function quoteFor(draft){return {title:'Offre test',commune_name:'Commune test',bfs_id:1,canton:'JU',population:1000,snapshot:{revision:1,input:draft,result:calculateQuote(draft,catalog)}};}
 test("showcase is opt-in and excludes included functions and incompatible options",function(){
   assert.deepEqual(offerOptionReview(input,catalog).options,[]);

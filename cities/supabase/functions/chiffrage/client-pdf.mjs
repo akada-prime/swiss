@@ -40,7 +40,16 @@ export async function exportClientPdf(o) {
     moneyRow('Remise commerciale sur l’investissement',-discount,null);
   }
   moneyRow(discountRows.length?'Total net HT':'Total',o.amounts.investment,o.amounts.annual,{total:true});y+=12;
-  if(o.optional_options?.length){heading('Pour aller plus loin - options non comprises');paragraph('Les suppléments suivants sont hors des totaux ci-dessus. Chaque option est chiffrée séparément.',{color:muted});for(const option of o.optional_options){need(85);paragraph(option.label_fr,{b:true,size:12,color:orange});paragraph(option.benefit_fr);paragraph(`Supplément initial : ${fmt(option.investment)} CHF HT - annuel dès N+1 : ${fmt(option.annual)} CHF HT`,{b:true,size:10});if(option.description_fr)paragraph(option.description_fr,{size:9,color:muted});y+=8;}}
+  if(o.optional_options?.length){
+    heading('Pour aller plus loin - options non comprises');tableHeader();
+    let group='';
+    for(const option of o.optional_options){
+      if(option.group_fr&&option.group_fr!==group){group=option.group_fr;heading(group,2);}
+      moneyRow(option.label_fr,option.investment,option.annual);
+      if(option.benefit_fr)paragraph(option.benefit_fr,{size:9,color:muted});
+      if(option.description_fr)paragraph(option.description_fr,{size:9,color:muted});
+    }
+  }
   for(const [i,p] of doc.getPages().entries()){p.drawLine({start:{x:M,y:41},end:{x:W-M,y:41},color:line,thickness:.5});p.drawText('Prime Technologies SA - Proposition financière',{x:M,y:26,size:8,font,color:muted});p.drawText(`${i+1} / ${doc.getPageCount()}`,{x:W-M-30,y:26,size:8,font,color:muted});}
   doc.setTitle(`Proposition ${o.commune} ${o.canton} - ${o.public_version||'v1.0'} R${o.revision}`);doc.setAuthor('Prime Technologies SA');
   return doc.save();

@@ -38,7 +38,7 @@ test('mobile header, footer evolution and return-to-top stay usable before rebui
   const layer = await read('app/styles/components.css');
   const styles = await read('app/styles/main.css');
 
-  assert.match(html, /Prime Communes · version 2\.5 · #460/);
+  assert.match(html, /Prime Communes · version 2\.5 · #461/);
   assert.doesNotMatch(bridge, /footerVersion\.textContent/);
   assert.match(html, /id="backToTop"/);
   assert.match(globals, /\.back-to-top\{/);
