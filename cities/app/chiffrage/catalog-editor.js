@@ -4,10 +4,10 @@ const brands={innosolv:'innosolvcity',abacus:'Abacus',pce:'ProConcept',prime:'Pr
 export function catalogEditor(data, label, editing = null) {
   const contents=data.module_contents ?? [], options=data.prime_options ?? [];
   const rows=(kind,items)=>items.map((row,index)=>`<div class="chiffrage-catalog-record"><span><strong>${e(row.label_fr)}</strong><small>${kind==='included'?e(data.parents.find(p=>p.key===row.parent)?.label_fr || row.parent):label('Option Prime indépendante','Eigenständige Prime-Option')}${row.enabled===false?' · '+label('Désactivé','Deaktiviert'):''}</small></span><button type="button" class="chiffrage-button quiet" data-action="catalogEdit" data-kind="${kind}" data-index="${index}">${label('Modifier','Bearbeiten')}</button></div>`).join('');
-  const row=editing ? (editing.kind==='included'?contents:options)[editing.index] ?? {} : {};
+  const row=editing ? editing.record ?? (editing.kind==='included'?contents:options)[editing.index] ?? {} : {};
   const input=(name,title,value='',type='text',attrs='')=>`<label>${title}<input name="${name}" type="${type}" value="${e(value ?? '')}" ${attrs}></label>`;
   const included=editing?.kind==='included';
-  const form=editing ? `<form id="chiffrageCatalogForm" class="chiffrage-panel" data-kind="${editing.kind}" data-index="${editing.index ?? ''}">
+  const form=editing ? `<form id="chiffrageCatalogForm" class="chiffrage-panel" data-kind="${editing.kind}" data-source-code="${e(row.item_code)}" data-index="${editing.index ?? ''}">
     <h3>${included?label('Fonction incluse','Enthaltene Funktion'):label('Option Prime indépendante','Eigenständige Prime-Option')}</h3>
     <div class="chiffrage-grid">
       ${input('label_fr',label('Nom français','Französischer Name'),row.label_fr,'text','required maxlength="120"')}
@@ -42,7 +42,7 @@ export function readCatalogRecord(form, previous = {}) {
   const base={...previous,label_fr:value('label_fr'),label_de:value('label_de') || value('label_fr'),enabled:form.elements.namedItem('enabled').checked};
   if(form.dataset.kind==='included')return {...base,id:previous.id || 'included-'+crypto.randomUUID(),
     parent:value('parent'),theme_fr:value('theme_fr'),theme_de:value('theme_de'),order:numeric('order') ?? 0};
-  return {...base,item_code:previous.item_code || 'prime-custom-'+crypto.randomUUID(),
+  return {...base,item_code:previous.item_code || form.dataset.sourceCode || 'prime-custom-'+crypto.randomUUID(),
     requires_product:value('requires_product') || null,requires_pce_option:value('requires_pce_option') || null,
     days:numeric('days'),investment_fixed_pv:numeric('investment_fixed_pv') ?? 0,
     annual_pv:value('annual_mode')==='fixed'?numeric('annual_pv'):0,

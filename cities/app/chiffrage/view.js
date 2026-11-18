@@ -1,18 +1,19 @@
-import { moduleGroup, groupModuleRows } from './module-groups.js?v=20261118-options-r4';
-import {setSoftwareDisposition} from './software-selection.js?v=20261118-options-r4';
+import {primeBoard} from './prime-board.js?v=20261118-prime-shared-r3';
+import { moduleGroup, groupModuleRows } from './module-groups.js?v=20261118-prime-shared-r3';
+import {setSoftwareDisposition} from './software-selection.js?v=20261118-prime-shared-r3';
 import {bindKanban,boardHtml,boardRibbon,cardTools,defaultColumns,quoteStage,saveNumber} from './kanban.js?v=20261113-card-tools-r1';
 import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-coherence-r1';
 import { portalUsers, suggestedPortalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
 import { bindCommunePicker } from './commune-picker.js?v=20261112-coherence-r1';
 import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261112-coherence-r1';
-import {extraOptionId,extraOptionCandidates,offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261118-options-r4';
-import {offerOptionPriceSummary,offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261118-options-r4';
+import {extraOptionId,extraOptionCandidates,offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261118-prime-shared-r3';
+import {offerOptionPriceSummary,offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261118-prime-shared-r3';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
 import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261112-coherence-r1';
 import { includedForParent, optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
 import { bindOfferScope } from '../offer/interactions.js';
-import { customerModuleScope } from './module-scope.js?v=20261118-options-r4';
-import { catalogEditor, readCatalogRecord } from './catalog-editor.js';
+import { customerModuleScope } from './module-scope.js?v=20261118-prime-shared-r3';
+import { catalogEditor, readCatalogRecord } from './catalog-editor.js?v=20261118-prime-shared-r3';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
 import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261118-options-r4';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
@@ -26,7 +27,7 @@ import { completionItems, displayedServiceDays } from './completion.js?v=2026111
 import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-coherence-r1';
 import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-coherence-r1';
 
-import { previewModule, moduleRollup } from './business-presentation.js?v=20261116-software-target-r4';
+import { optionPreview, previewModule, moduleRollup } from './business-presentation.js?v=20261116-software-target-r4';
 
 const root = document.getElementById('chiffrageRoot');
 bindOfferScope(root);
@@ -227,7 +228,8 @@ function listFigures(snapshot) {
 }
 function renderCatalogManager(editing = null) {
   state.mode='catalog';
-  root.innerHTML=header()+catalogEditor(state.moduleCatalog,localLabel,editing);
+  root.innerHTML=header()+`<button type="button" class="chiffrage-button" data-action="primeBoard">${localLabel('Organiser le catalogue Prime commun','Gemeinsamen Prime-Katalog ordnen')}</button>`+catalogEditor(state.moduleCatalog,localLabel,editing);
+  window.scrollTo({top:0,behavior:'instant'});
 }
 function catalogButton() {
   return `<button type="button" class="chiffrage-button" data-action="manageCatalog">${localLabel('Gérer le catalogue','Katalog verwalten')}</button>`;
@@ -613,12 +615,13 @@ function extraSection(scope = 'modules') {
         ${state.internal?field(`${id}.annual_pa`,line.annual_pa,priceLabel('chiffrage.annualPa')):''}
         ${state.internal?field(`${id}.investment_pa`,line.investment_pa,priceLabel('chiffrage.investmentPa')):''}
         ${textField(`${id}.note`,line.note,t('chiffrage.note'))}
+        ${kind==='primeLines'?`<button type="button" class="chiffrage-button quiet" data-action="promotePrime" data-index="${line.index}">${localLabel('Conserver dans le catalogue Prime','Im Prime-Katalog behalten')}</button>`:''}
         <button type="button" class="chiffrage-button" data-action="removeLine" data-kind="${kind}" data-index="${line.index}">${t('chiffrage.removeLine')}</button></div></details>`;
     };
     const grouped=(items,titleFor,render)=>groupModuleRows(items,titleFor).map(group=>`<section class="chiffrage-domain">${group.title?`<h4>${escape(group.title)}</h4>`:''}${group.items.map(render).join('')}</section>`).join('');
-    const groupFor=line=>moduleGroup(state.draft,line.choice_key||candidateFor(line)?.key);
+    const groupFor=line=>moduleGroup(state.draft,line.choice_key||candidateFor(line)?.key,state.catalog);
     const rows=grouped(chosen,groupFor,renderChosen);
-    const classification=kind==='primeLines'?`<details class="chiffrage-module-classification" data-disclosure-key="prime-classification"><summary>${localLabel('Classer les modules Prime','Prime-Module gruppieren')}</summary><p class="chiffrage-helper">${localLabel('Définis un sous-titre par module. Il sera repris dans les modules inclus et les options client de ce dossier.','Untertitel pro Modul festlegen. Diese werden für enthaltene Module und Kundenoptionen dieses Dossiers verwendet.')}</p><datalist id="prime-module-groups">${[...new Set(['Options interfaces','Options ProConcept',...Object.values(state.draft.module_groups??{})])].map(title=>`<option value="${escape(title)}"></option>`).join('')}</datalist>${extraOptionCandidates(state.draft,state.catalog,{includeSelected:true}).filter(row=>row.software==='prime').map(row=>`<label><span>${escape(localLabel(row.label_fr,row.label_de))}</span><input type="text" maxlength="100" list="prime-module-groups" data-software-group="${escape(row.key)}" value="${escape(moduleGroup(state.draft,row.key))}" placeholder="${localLabel('Sous-titre (facultatif)','Untertitel (optional)')}"></label>`).join('')}</details>`:'';
+    const classification=kind==='primeLines'?`<button type="button" class="chiffrage-button quiet" data-action="primeBoard">${localLabel('Organiser le catalogue Prime commun','Gemeinsamen Prime-Katalog ordnen')}</button>`:'';
     return `<details class="chiffrage-module-set chiffrage-extra-group" data-disclosure-key="extras-${kind}-${scope}"><summary><span>${label}</span><small>${number(chosen.length)} ${localLabel('retenues','gewählt')}${(state.draft.client_options??[]).some(row=>row.key.startsWith((kind==='partners'?'partners':'prime')+'/'))?` · ${(state.draft.client_options??[]).filter(row=>row.key.startsWith((kind==='partners'?'partners':'prime')+'/')).length} ${localLabel('proposées','vorgeschlagen')}`:''}</small>${`<span data-rollup-kind="${kind}">${rollupMarkup(totals)}</span>`}</summary>${classification}${rows}
       <details class="chiffrage-extra-available" data-disclosure-key="available-${kind}-${scope}"><summary>${localLabel('Autres modules','Weitere Module')} · ${number(options.length)}</summary>
       ${grouped(options,groupFor,(line,index)=>{
@@ -1300,6 +1303,7 @@ root.addEventListener('submit', async event => {
       state.moduleCatalog=updated;
       state.activeVersions={...state.activeVersions,commercial:updated.version};
       state.activePrimeOptions=updated.prime_options;
+      if(state.catalog){state.catalog.parameters.prime_options=updated.prime_options;state.catalog.parameters.prime_layout=updated.catalog.parameters.prime_layout;}
       if(!state.draft){state.catalog=updated.catalog;state.versions={...state.activeVersions};}
       renderCatalogManager();
       notice(()=>localLabel('Catalogue enregistré. Les offres existantes sont conservées.','Katalog gespeichert. Bestehende Angebote bleiben erhalten.'));
@@ -1643,6 +1647,22 @@ root.addEventListener('click', async event => {
     else if(state.ruleReturn?.mode==='new')renderNew();else renderList();
     window.scrollTo({top:state.ruleReturn?.scroll ?? 0,behavior:'instant'});return;
   }
+  if(action==='primeBoard'){
+    button.disabled=true;try{
+      const data=await api('moduleCatalog');
+      if(!data.catalog.parameters.prime_layout&&state.draft?.module_groups){const titles=[...new Set(Object.values(state.draft.module_groups).filter(Boolean))];data.catalog.parameters.prime_layout={groups:titles.map((title,i)=>({id:'group-import-'+i,title,modules:Object.entries(state.draft.module_groups).filter(([key,value])=>key.startsWith('prime/')&&value===title).map(([key])=>key)}))};}
+      state.catalogReturn=state.mode;state.mode='primeBoard';
+      state.primeBoardController=primeBoard(root,data,{label:localLabel,onBack:()=>state.draft?renderEditor():renderList(),onAdd:()=>{state.moduleCatalog=data;renderCatalogManager({kind:'option',index:null});},onSave:async payload=>{const updated=await api('savePrimeLayout',payload);state.moduleCatalog=updated;if(state.catalog)state.catalog.parameters.prime_layout=updated.catalog.parameters.prime_layout;return updated;}});
+    }catch(error){notice(()=>errorMessage(error),true);button.disabled=false;}return;
+  }
+  if(action==='promotePrime'){
+    const line=state.draft.primeLines[Number(button.dataset.index)];if(!line||line.category==='hosting')return;
+    try{state.moduleCatalog=await api('moduleCatalog');state.catalogReturn='editor';
+      const index=state.moduleCatalog.prime_options.findIndex(row=>row.item_code===line.item_code||row.label_fr===line.label);
+      const preview=optionPreview(state.draft,state.catalog,line);
+      renderCatalogManager({kind:'option',index:index<0?null:index,record:index<0?{...line,label_fr:line.label,label_de:line.label_de||line.label,annual_pv:line.annual_override??line.annual_pv??preview?.annual_pv,annual_rule:line.annual_override!=null?null:line.annual_rule,investment_fixed_pv:line.investment_fixed_pv??(line.days==null?line.investment_pv:0)}:null});
+    }catch(error){notice(()=>errorMessage(error),true);}return;
+  }
   if(action==='manageCatalog') {
     state.catalogReturn=state.mode;button.disabled=true;
     try {state.moduleCatalog=await api('moduleCatalog');renderCatalogManager();}
@@ -1926,6 +1946,7 @@ window.addEventListener('popstate', () => {
 subscribePreferences(name => {
   if (name === 'language') state.priceFeedback='';
   if (state.message && state.messageResolver) state.message=state.messageResolver();
+  if(state.mode==='primeBoard'&&state.primeBoardController){state.primeBoardController.refresh();return;}
   if (state.authenticated) state.mode === 'editor' ? renderEditor() : state.mode==='catalog' ? renderCatalogManager() : state.mode==='reference' ? renderReference() : renderList();
   else if (state.loaded) renderLogin();
 });

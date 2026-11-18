@@ -1,5 +1,20 @@
 # État de reprise — Prime Communes 2.0
 
+> **Catalogue Prime commun · 18.11.2026.** Le classement par dossier est
+> remplacé par un tableau commun : groupes nommés et ordonnés, modules déplacés
+> entre groupes et dans un groupe, menus natifs et flèches en complément du
+> glisser-déposer. La même organisation alimente les modules inclus, les options
+> client et le PDF. Un module ponctuel peut être conservé dans le catalogue
+> après revue du formulaire existant ; les doublons ouvrent la définition déjà
+> présente. Métadonnées dans prime_layout des paramètres existants, révision
+> indépendante du tarif commercial et refus 409 des sauvegardes concurrentes.
+> Aucun changement de schéma ni de tarif, aucun dossier réel modifié ou supprimé.
+> Tous les dossiers actuels sont des tests Bêta ; aucune nouvelle mécanique de
+> conservation historique ajoutée. Recette synthétique : déplacement réel des
+> groupes et modules, sauvegarde, promotion, client et six largeurs 360–2560 px.
+> 279 tests et build réussis. Fonction Chiffrage v39 déployée et sources distantes vérifiées.
+> Compteur attendu #706 après fusion ; le total GitHub reste la référence.
+
 > **Compteur d'évolution retrouvé · 18.11.2026.** Le compteur historique
 > compte les commits de main touchant cities/ : vérification API de #450 au
 > commit 7163ddf (21.09.2026 21:23:59 Europe/Zurich). #460 a été inscrit le

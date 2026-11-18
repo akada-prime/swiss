@@ -1,4 +1,4 @@
-import { validateModuleGroups } from '../../../app/chiffrage/module-groups.js';
+import { validateModuleGroups,validatePrimeLayout } from '../../../app/chiffrage/module-groups.js';
 import {exportClientPdf,pdfFilename} from './client-pdf.mjs';
 import {validateOfferOptions,offerOptionReview} from '../../../app/chiffrage/offer-options.js';
 import { moduleParents, validateModuleCatalog } from '../../../app/chiffrage/module-catalog.js';
@@ -117,6 +117,12 @@ async function loadCatalog(versions) {
   }
   if (parameterRows[0].content.lcm?.some(entry => entry.status === 'draft_unapproved'))
     throw new Error('Unapproved LCM reference');
+  const sharedLayout=await sharedPrimeLayout();
+  if(sharedLayout)parameterRows[0].content.prime_layout=sharedLayout.content.prime_layout;
+  if(versionsRows.some(row=>row.vendor==='commercial'&&!row.active)){
+    const [active]=await db('chiffrage_catalog_versions',{query:{select:'id',vendor:'eq.commercial',active:'eq.true'}});
+    if(active){const [shared]=await db('chiffrage_parameters',{query:{select:'content',catalog_version_id:`eq.${active.id}`}});parameterRows[0].content.prime_options=shared?.content.prime_options??parameterRows[0].content.prime_options;}
+  }
   return { items: items.map(row => row.content), parameters: parameterRows[0].content,
     versions: versionsRows };
 }
@@ -264,6 +270,22 @@ async function saveManagedCatalog(payload) {
   return json(await managedCatalog());
 }
 
+// Layout metadata has a shared revision independent of commercial price versions.
+// Reading the latest stamped layout also preserves a concurrent catalog publication.
+async function sharedPrimeLayout(){
+ const [row]=await db('chiffrage_parameters',{query:{select:'catalog_version_id,content','content->prime_layout->>revision':'not.is.null',order:'content->prime_layout->>updated_at.desc.nullslast',limit:'1'}});
+ return row?.content?.prime_layout?row:null;
+}
+async function savePrimeLayout(payload){
+ const current=await managedCatalog(),shared=await sharedPrimeLayout(),prior=shared?.content.prime_layout.revision??'';
+ if(payload.expected_version!==current.version||payload.expected_revision!==prior)return fail('Revision conflict',409);
+ const layout={...validatePrimeLayout(payload.layout),revision:randomUUID(),updated_at:new Date().toISOString()};
+ const target=shared??{catalog_version_id:current.version,content:current.catalog.parameters};
+ const rows=await db('chiffrage_parameters',{method:'PATCH',returning:true,query:{catalog_version_id:`eq.${target.catalog_version_id}`,'content->prime_layout->>revision':prior?`eq.${prior}`:'is.null'},payload:{content:{...target.content,prime_layout:layout}}});
+ if(rows.length!==1)return fail('Revision conflict',409);
+ return json(await managedCatalog());
+}
+
 export default async function handler(request) {
   if (!configured()) return fail('Chiffrage server is not configured', 503);
   const url = new URL(request.url);
@@ -294,6 +316,7 @@ export default async function handler(request) {
       return json({ versions, active: chosen,
         catalog: Object.keys(selected).length ? await loadCatalog(selected) : null });
     }
+    if(action==='savePrimeLayout'&&request.method==='POST')return await savePrimeLayout(await body(request));
     if (action === 'moduleCatalog' && request.method === 'GET') return json(await managedCatalog());
     if (action === 'saveModuleCatalog' && request.method === 'POST') return await saveManagedCatalog(await body(request));
     if (action === 'list' && request.method === 'GET')
