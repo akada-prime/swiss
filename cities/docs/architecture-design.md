@@ -14,7 +14,7 @@ lu avant toute modification structurelle.
 - Les données métier de `public/data/`, le schéma Supabase et les migrations ne
   sont pas une zone d'extension visuelle ou frontend.
 - Desktop et Natel sont deux dispositions du même produit, pas deux thèmes.
-- Le pied de page `Prime Communes · version 2.0.5 · #460`, la navigation des six
+- Le pied de page produit et son compteur d’évolution, la navigation des six
   vues et le retour en haut global font partie du contrat.
 - Radar!, Histoires et le portrait communal/Wikipédia sont trois domaines
   différents, même lorsqu'ils partagent des primitives visuelles.
@@ -526,3 +526,14 @@ JavaScript ni position absolue n'est nécessaire. Les composants des proposition
 interne et client utilisent des lignes de prix, et les sous-titres sont repris
 au PDF. Le numéro #461 est un numéro explicite de livraison, pas un compteur
 calculé depuis les commits.
+
+### 2026-11-18 — Compteur d'évolution depuis l'origine
+
+Le # du pied de page correspond aux commits de main touchant cities/, comme
+le #450 historique vérifié contre l'API et git rev-list. core/evolution.js lit
+le total de pages de l'API commits avec per_page=1, sans authentification ; le
+cache local expire après 15 minutes. Seul data-evolution-count est actualisé.
+Le texte de version et les traductions ne sont pas réécrits. Le fallback de
+livraison reste affiché en cas de panne, limitation API ou stockage désactivé.
+Le compteur ne compte ni appels d'outils ni manipulations dans les chiffrages.
+Cette règle remplace le passage manuel à #461 décrit dans le lot précédent.

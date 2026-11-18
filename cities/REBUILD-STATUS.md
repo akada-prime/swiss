@@ -1,5 +1,17 @@
 # État de reprise — Prime Communes 2.0
 
+> **Compteur d'évolution retrouvé · 18.11.2026.** Le compteur historique
+> compte les commits de main touchant cities/ : vérification API de #450 au
+> commit 7163ddf (21.09.2026 21:23:59 Europe/Zurich). #460 a été inscrit le
+> 22.09.2026 à 00:03:35 par 591d006 ; la consigne de conservation date du même
+> matin à 08:37:07 (42e5213). La progression manuelle avait déjà omis quelques
+> changements. #461 était donc un incrément arbitraire, pas une récupération.
+> L'API GitHub compte 704 commits à a8f16b1 ; #705 inclut cette correction.
+> core/evolution.js lit le total de pagination, cache 15 minutes, conserve un
+> fallback de livraison et ne bloque jamais le site si l'API est indisponible.
+> Aucun appel authentifié ni donnée métier transmise. Tests de parsing, cache,
+> échec réseau et non-régression ; aucune modification de calcul ou catalogue.
+
 > **Options, groupes Prime et présentation · 18.11.2026.** Les suppléments
 > annuels innosolv utilisent le loyer du module, sans repricing des licences
 > ProConcept déjà incluses. Diagnostic Ballaigues en lecture seule : 189 / 108 /

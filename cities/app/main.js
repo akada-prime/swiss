@@ -1,4 +1,5 @@
 // Prime Communes 2.0 — deterministic module graph.
+import './core/evolution.js?v=20261118-evolution-r2';
 import './core/preferences.js?v=20261107-jura-r1';
 import './core/navigation.js?v=20261112-coherence-r1';
 import './core/settings.js?v=20261107-jura-r1';
