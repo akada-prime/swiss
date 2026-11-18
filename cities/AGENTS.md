@@ -12,4 +12,4 @@
 - JavaScript : responsabilités explicites, modules directs, aucun nouveau patch global ni `MutationObserver` réparateur ; ne pas agrandir le pont de compatibilité sans nécessité démontrée.
 - Avant chaque jalon : mettre à jour `REBUILD-STATUS.md`, exécuter les contrôles pertinents et créer un commit propre.
 - Validation finale obligatoire : `npm run check`, `npm run build`, six largeurs réelles, états fonctionnels desktop et Natel.
-- Ne pas modifier le pied de page produit `Prime Communes · version 2.0.5 · #460` sans exigence explicite.
+- Préserver le pied de page produit et son compteur d'évolution : commits de main touchant cities/, actualisés par app/core/evolution.js. Ne pas figer son numéro ; mettre à jour le fallback à la valeur attendue de la livraison. La version produit reste indépendante du compteur.

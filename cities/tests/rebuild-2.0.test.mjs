@@ -55,7 +55,7 @@ test('deep-link flash guard, footer counter and global back-to-top remain explic
   const html = await read('index.html');
   assert.match(html, /document\.documentElement\.dataset\.initialView = initialView/);
   assert.match(html, /data-initial-view="news"\] #newsView/);
-  assert.match(html, /Prime Communes · version 2\.5 · #461/);
+  assert.match(html, /Prime Communes · version 2\.5 · <span data-evolution-count="\d+"[^>]*>#\d+<\/span>/);
   assert.match(html, /id="backToTop"/);
 });
 

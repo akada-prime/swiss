@@ -73,7 +73,7 @@ URL CDN immuable contenant le SHA exact du commit inspecté.
 - les six onglets, l'onglet actif et l'absence de collision ;
 - l'absence de débordement horizontal global ;
 - le plancher typographique et la hauteur des contrôles ;
-- le pied de page `#460` et le retour en haut ;
+- le pied de page, son compteur d’évolution et le retour en haut ;
 - le chargement des 2 110 communes et les 175 résultats initiaux.
 
 Sur Natel et desktop, parcourir réellement les six vues. Pour Communes et Carte,
