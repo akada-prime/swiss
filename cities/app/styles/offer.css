@@ -214,6 +214,7 @@ align-items:start;}
  .prime-offer-table-units{display:block;font-size:14px;color:var(--offer-muted);line-height:1.4}
  .prime-offer-table-row,.prime-offer-price-table.has-annual .prime-offer-table-row{grid-template-columns:repeat(2,minmax(0,1fr));padding:16px;gap:12px;}
  .prime-offer-table-row>h4{grid-column:1/-1;}
+ .prime-offer-price-table:not(.has-annual) .prime-offer-amount{grid-column:2;}
  .prime-offer-table-row:not(.is-subtotal):not(.is-total) h4{padding-left:0;}
  .prime-offer-amount{font-size:14px;text-align:left;}
  .prime-offer-amount::before{content:attr(data-caption);display:block;font-weight:400;color:var(--offer-muted);white-space:normal;margin-bottom:4px;font-size:14px;}

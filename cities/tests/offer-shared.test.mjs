@@ -164,11 +164,13 @@ test('public client signature remains compact, accessible and translated',()=>{
 
 test('uniform price frames put their title and units in one shared column header',()=>{
  const html=offerBreakdown([{key:'hosting',label:'Hébergement',investment:1760,annual:12000}],{label,money});
- assert.match(html,/<div class="prime-offer-table-columns"><h3>Hébergement<\/h3><span>Investissement · CHF HT<\/span><span>Annuel · CHF HT \/ an<\/span>/);
+ assert.match(html,/<div class="prime-offer-table-columns"><h3>Hébergement<\/h3><span>Annuel · CHF HT \/ an<\/span><span>Investissement · CHF HT<\/span>/);
  assert.equal((html.match(/<h3>/g)||[]).length,1);
+ assert.match(html,/data-caption="Annuel">12&#39;000<\/span><span class="prime-offer-amount" data-caption="Investissement">1&#39;760<\/span>/);
  assert.match(html,/1&#39;760/);assert.match(html,/12&#39;000/);
  const investmentOnly=offerBreakdown([{key:'database',label:'SQL',investment:3000,annual:0}],{label,money});
- assert.match(investmentOnly,/<h3>Technique<\/h3>/);assert.doesNotMatch(investmentOnly,/Annuel · CHF HT/);
+ assert.match(investmentOnly,/<h3>Technique<\/h3>/);assert.match(investmentOnly,/Annuel · CHF HT/);
+ assert.match(investmentOnly,/data-caption="Annuel">0<\/span><span class="prime-offer-amount" data-caption="Investissement">3&#39;000<\/span>/);
 });
 
 test('software stays in two editorial columns with hosting left and ERP, partners and LCM right',()=>{

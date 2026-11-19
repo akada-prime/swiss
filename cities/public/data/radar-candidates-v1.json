@@ -1,118 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-11-18T13:58:42.475Z",
+    "generatedAt": "2026-11-19T14:26:10.011Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "f2711c36953992fa5256f190f9e07e7bb621cf726d9d6dd2618d5812a9c3b8d6",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Projet informatique de gestion des identités",
-      "url": "https://www.simap.ch/fr/?search=6b3c8614-8647-4f7b-b4bd-5d7e2cf135c8",
-      "detectedAt": "2026-10-01T11:37:40.007Z",
-      "publicationDate": "2026-10-01",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : informatique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "already-awarded",
-        "reason": "Adjudication publiée : SIMAP 21790-03 du 2026-10-01. Projet déjà attribué, exclu conformément au périmètre prospectif.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=6b3c8614-8647-4f7b-b4bd-5d7e2cf135c8",
-          "https://www.simap.ch/api/publications/v2/project/6b3c8614-8647-4f7b-b4bd-5d7e2cf135c8/project-header",
-          "https://www.simap.ch/api/publications/v1/project/6b3c8614-8647-4f7b-b4bd-5d7e2cf135c8/publication-details/b7060d03-599f-4a9e-ba36-1fafd2ef05cc"
-        ]
-      }
-    },
-    {
-      "id": "c9d6e56c42b4a2a3f6e0c6affaaa6d3c9485998a4ef15847000fadf34c541b68",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Attribution de 34 postes externes pour l’OCSIN (LSE 2026-01)",
-      "url": "https://www.simap.ch/fr/?search=10b23ca4-f4d4-40f9-9013-3434537f2019",
-      "detectedAt": "2026-10-01T11:37:40.007Z",
-      "publicationDate": "2026-10-01",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : numérique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=10b23ca4-f4d4-40f9-9013-3434537f2019"
-        ]
-      }
-    },
-    {
-      "id": "4f1d2e8aaabf1c4eaa04d8fcc96aee28a9ce8faf07ad8b6b475a551676ff2c82",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "RFI Cachet électronique",
-      "url": "https://www.simap.ch/fr/?search=c217154b-b431-433b-a506-5a06d810dba2",
-      "detectedAt": "2026-10-01T11:37:40.007Z",
-      "publicationDate": "2026-10-01",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : numérique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-municipal-scope",
-        "reason": "OCSIN : RFI cantonal pour cachetage électronique et horodatage, réponses au 27.11.2026. Ce n’est pas un appel d’offres ni un besoin communal établi ; pas de rattachement à la Ville de Genève.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=c217154b-b431-433b-a506-5a06d810dba2",
-          "https://www.simap.ch/api/publications/v2/project/c217154b-b431-433b-a506-5a06d810dba2/project-header",
-          "https://www.simap.ch/api/publications/v1/project/c217154b-b431-433b-a506-5a06d810dba2/publication-details/a82d5571-8983-4aa9-a2a3-ed8010c369d8"
-        ]
-      }
-    },
-    {
-      "id": "d7332b4de4b4ca635fd1c472800014993e3110c4c3d34bc3a67630e29000f64a",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Staat Wallis – Wartungsvertrag – BKP 334 Sicherheitsausrüstung – Oberwallis",
-      "url": "https://www.simap.ch/fr/?search=b93ffe8c-5f1e-416c-9938-a6ba9d28474c",
-      "detectedAt": "2026-10-01T11:37:40.007Z",
-      "publicationDate": "2026-10-01",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : rh",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=b93ffe8c-5f1e-416c-9938-a6ba9d28474c"
-        ]
-      }
-    },
     {
       "id": "15b239743b75c3b7ce5c6380ddeb30ad46cc4cd195cc228518eee7d0846a1640",
       "sourceId": "simap-romandie",
@@ -3740,6 +3632,66 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "26b978b1d2bfc36fed97fd7672279bb6db5ff71907c47a2c87259c95766ed64e",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Renouvellement du contrat EA (Enterprise Agreement) de Microsoft",
+      "url": "https://www.simap.ch/fr/?search=ae5fe8d4-6350-46a6-af37-da055bb63f9d",
+      "detectedAt": "2026-11-19T14:26:10.007Z",
+      "publicationDate": "2026-11-19",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "8273b5ff49169937018de27963cef77fcffbd92c7b6bc2a5c7d266c8267c7136",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Modernisation de portes automatiques aux HUG",
+      "url": "https://www.simap.ch/fr/?search=27aaca5d-cfae-4a9b-9268-f3d063970db8",
+      "detectedAt": "2026-11-19T14:26:10.008Z",
+      "publicationDate": "2026-11-19",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : modernisation",
+      "status": "pending"
+    },
+    {
+      "id": "32cd219d913ddc55a48d65470a7c953f34fcb9c62e91efb7b24e34f6a9196242",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Georges-Favon 7 – Lot CVC",
+      "url": "https://www.simap.ch/fr/?search=3dae841b-e60f-451b-850f-a2b87a697e70",
+      "detectedAt": "2026-11-19T14:26:10.008Z",
+      "publicationDate": "2026-11-19",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : digital",
+      "status": "pending"
+    },
+    {
+      "id": "535b9c20849880de6d5fd16a5fecb13cf2998c7fac69efe5c59a9935db8eb3c3",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Rahmenvertrag, Beratungsdienstleistungen für Digital Stadt Bern, 6 Lose ",
+      "url": "https://www.simap.ch/fr/?search=e387a1f2-4213-46c8-abcb-cbf08813c60a",
+      "detectedAt": "2026-11-19T14:26:10.008Z",
+      "publicationDate": "2026-11-18",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : digital",
       "status": "pending"
     }
   ]

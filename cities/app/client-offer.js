@@ -1,10 +1,10 @@
-import {documentDate,formattedOfferDate} from './offer/document-data.js?v=20261119-price-polish-r3';
+import {documentDate,formattedOfferDate} from './offer/document-data.js?v=20261119-annual-left-r2';
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 import { bindOfferScope } from './offer/interactions.js';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling, offerContacts } from './offer/presentation.js?v=20261119-price-polish-r3';
-import { communeCoat } from './chiffrage/coats.js?v=20261119-price-polish-r3';
-import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261119-price-polish-r3';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling, offerContacts } from './offer/presentation.js?v=20261119-annual-left-r2';
+import { communeCoat } from './chiffrage/coats.js?v=20261119-annual-left-r2';
+import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261119-annual-left-r2';
 
 const root = document.getElementById('offerClientRoot');
 bindOfferScope(root);
@@ -41,7 +41,7 @@ root.addEventListener('click',async event=>{
   const buttons=[...root.querySelectorAll('[data-client-pdf]')];buttons.forEach(b=>b.disabled=true);
   const status=root.querySelector('[data-pdf-status]');status.textContent=label('Préparation du PDF…','PDF wird erstellt…');
   try {
-    const {downloadOfferPdf}=await import('./offer/pdf.js?v=20261119-price-polish-r3');
+    const {downloadOfferPdf}=await import('./offer/pdf.js?v=20261119-annual-left-r2');
     await downloadOfferPdf(root.querySelector('.client-offer'),currentOffer,{theme:button.dataset.clientPdf,label,onProgress:(page,total)=>status.textContent=label(`Préparation du PDF · page ${page}/${total}…`,`PDF wird erstellt · Seite ${page}/${total}…`)});
     status.textContent=label('PDF prêt.','PDF bereit.');
   }catch(error){console.error('Client PDF failed',error);status.textContent=label('Téléchargement impossible. Réessayez.','Download fehlgeschlagen. Bitte erneut versuchen.');}

@@ -42,3 +42,20 @@ test('database publication is idempotent, service-only and has no automatic expi
  assert.match(sql,/pg_advisory_xact_lock/);assert.match(sql,/chiffrage_named_revision_unique/);assert.match(sql,/expires_at is null or expires_at>now/);
  assert.match(sql,/from public,anon,authenticated/);assert.doesNotMatch(sql,/set payload=/i);
 });
+
+test('legacy public classification reads only the authorized frozen revision and never writes quote data',async()=>{
+ const original=globalThis.fetch,calls=[],id='00000000-0000-4000-8000-000000000001';
+ const frozen={version:2,revision:5,amounts:{investment:100,annual:50},cost_details:[{key:'licenses',label_fr:'Prime',investment:100,annual:50}]};
+ globalThis.fetch=async(url,options)=>{
+  calls.push({url:String(url),method:options.method??'GET'});
+  const payload=String(url).includes('/rpc/')?frozen:String(url).includes('/chiffrage_client_links')?[{chiffrage_id:id,revision:5}]:[{input:{primeLines:[{item_code:'ged',days:1,investment_fixed_pv:0}],internal_notes:'PRIVATE'},result:{lines:[{family:'prime',category:'license',item_code:'ged',selected_days:1,quantity:1,investment_pv:100,annual_pv:50,investment_pa:10}]}}];
+  return new Response(JSON.stringify(payload),{headers:{'Content-Type':'application/json'}});
+ };
+ try{
+  const response=await handler(new Request('https://example.supabase.co/functions/v1/chiffrage?action=clientOffer',{headers:{Authorization:'Bearer demo-vd/v1.0r5'}}));
+  assert.equal(response.status,200);const body=await response.json();assert.equal(body.cost_details_version,2);
+  assert.deepEqual(body.amounts,frozen.amounts);assert.equal(body.cost_details.find(x=>x.key==='implementation').investment,100);assert.equal(body.cost_details.find(x=>x.key==='licenses').investment,0);
+  assert.doesNotMatch(JSON.stringify(body),/PRIVATE|investment_pa|selected_days|chiffrage_id/);
+  assert.equal(calls.length,3);assert.equal(calls[1].method,'GET');assert.equal(calls[2].method,'GET');assert.match(calls[1].url,/public_slug=eq.demo-vd/);assert.match(calls[2].url,/revision=eq.5/);assert.match(calls[2].url,/chiffrage_id=eq.00000000/);
+ }finally{globalThis.fetch=original;}
+});

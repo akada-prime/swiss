@@ -599,3 +599,18 @@ accordéon par nom. Sans fournisseur ancien, la marque du groupe sert de titre.
 innosolv à la lecture du catalogue et des contenus inclus ; le renderer nettoie
 aussi les publications anciennes. Codes, prix et traits d'union internes restent
 intacts. Aucun catalogue stocké ni dossier client n'est réécrit pour ce nettoyage.
+
+### 2026-11-19 — Prestations initiales et abonnements séparés
+
+`publicCostDetails(lines,input)` sépare les prestations initiales Prime et
+partenaires des abonnements : les jours deviennent Mise en œuvre, les récurrents
+Logiciels et maintenance. Seul investment_fixed_pv explicite représente un achat
+de licence dans une ligne avec des jours ; plafonnement au montant initial
+réellement facturé en présence de dérogation. Les anciens achats sans jours sont
+conservés. Oracle/SQL restent techniques. Cette projection ne change pas les
+montants calculés. Le total de chaque ligne est conservé, quantité comprise.
+`public-cost-details.mjs` applique le même classement aux anciennes publications
+via leur révision sauvegardée, après vérification des deux totaux gelés. Le serveur
+résout le lien autorisé avant cette lecture ; aucun input, jour, PA ou note privée
+n'est retourné. Le champ cost_details_version=2 évite cette lecture pour les
+nouvelles publications. Le catalogue courant n'intervient jamais dans ce chemin.

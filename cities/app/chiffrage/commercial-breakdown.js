@@ -47,10 +47,27 @@ export function publicPriceBreakdown(lines) {
 }
 
 // Additional public allowlist: labels and selling totals only, no raw engine rows.
-export function publicCostDetails(lines) {
+export function publicCostDetails(lines,input={}) {
   const names={innosolv:'innosolvcity',abacus:'Abacus',pce:'ProConcept',prime:'Prime',partenaires:'Partenaires'};
   const groups=new Map();
+  const add=(key,fr,de,investment,annual)=>{
+    const id=key+'\0'+fr+'\0'+de;
+    if(!groups.has(id))groups.set(id,{key,label_fr:fr,label_de:de,investment:0,annual:0});
+    const row=groups.get(id);row.investment+=investment??0;row.annual+=annual??0;
+  };
   for (const line of lines) {
+    if(['prime','partenaires'].includes(line.family)&&line.category!=='hosting'){
+      const source=(input[line.family==='prime'?'primeLines':'partners']??[]).find(row=>line.item_code?row.item_code===line.item_code:row.label===line.label&&(row.supplier??null)===(line.supplier??null));
+      const investment=line.investment_pv??0,annual=line.annual_pv??0;
+      const hasDays=line.selected_days!=null||source?.days!=null;
+      // Only an explicit fixed licence purchase remains an initial software cost.
+      // A saved override cannot allocate more to the purchase than was charged.
+      const purchase=hasDays?Math.min(Math.max(investment,0),Math.max(source?.investment_fixed_pv??0,0)*(line.quantity??1)):investment;
+      const service=investment-purchase,brand=partnerBrand(line)||line.supplier||names[line.family];
+      if(service)add('implementation',brand,brand,service,0);
+      if(purchase||annual||!hasDays)add('licenses',brand,brand,purchase,annual);
+      continue;
+    }
     const key=(['prime','partenaires'].includes(line.family)&&line.category==='license')?'licenses':commercialPriceGroup(line);
     const base=offerPriceGroups.find(row=>row[0]===key);
     let fr=base[1],de=base[2];
@@ -65,9 +82,7 @@ export function publicCostDetails(lines) {
       else if(key==='primePartners') fr=de=names[line.family]||fr;
     }
     if(line.family==='prestations' && String(line.item_code).toLowerCase()==='deplacements') {fr='Déplacements (estimés)';de='Reisekosten (geschätzt)';}
-    const id=key+'\0'+fr+'\0'+de;
-    if(!groups.has(id))groups.set(id,{key,label_fr:fr,label_de:de,investment:0,annual:0});
-    const row=groups.get(id);row.investment+=line.investment_pv??0;row.annual+=line.annual_pv??0;
+    add(key,fr,de,line.investment_pv,line.annual_pv);
   }
   return [...groups.values()];
 }
