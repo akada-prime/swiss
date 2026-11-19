@@ -12,7 +12,7 @@ import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,r
 import {extraOptionId,extraOptionCandidates,offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261119-dossier-date-r2';
 import {offerOptionPriceSummary,offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261119-dossier-date-r2';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
-import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261112-coherence-r1';
+import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261119-decomptes-options-r1';
 import { includedForParent, optionApplies } from './module-catalog.js?v=20261119-dossier-date-r2';
 import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js?v=20261119-dossier-date-r2';

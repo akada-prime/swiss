@@ -5,7 +5,7 @@ import {customerModuleScope} from '../app/chiffrage/module-scope.js';
 import {offerScope} from '../app/offer/presentation.js';
 const inno=code=>({vendor:'innosolv',product:Number(code)>=500?'Versorger':'Gemeinde',item_code:String(code)});
 test('the commercial shortlist includes the three additions and does not hide any selected option',()=>{
- for(const code of [207,138,136])assert.equal(availableModuleSection(inno(code)).key,'proposed');
+ for(const code of [207,138,136,501,502,533])assert.equal(availableModuleSection(inno(code)).key,'proposed');
  assert.equal(availableModuleSection(inno(36)).key,'other');
  assert.equal(selectedModuleSection(inno(36)).key,'chosen');
  assert.equal(selectedModuleSection(inno(502)).key,'meters');
