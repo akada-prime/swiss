@@ -2,8 +2,8 @@
 html,body{margin:0;width:960px;background:#14233b}
 .client-offer-shell{width:960px;max-width:none;margin:0;padding:0;min-height:0}
 .client-offer{border:0;border-radius:0;box-shadow:none}
-.client-offer .chiffrage-offer-hero{padding-top:36px}
-.client-offer .chiffrage-offer-map{top:36px}
+.client-offer .chiffrage-offer-hero{padding-top:0}
+.client-offer .chiffrage-offer-map{top:0}
 .client-pdf-button,.client-offer-toolbar,.prime-offer-scope-toggle{display:none}
 html[data-pdf-theme=light],html[data-pdf-theme=light] body{background:#fff}
 html[data-pdf-theme=light] .prime-offer-banner{--skin-text:#14263f;background:#fff;color:#14263f}
@@ -23,3 +23,6 @@ html{overflow:hidden}
 html[data-pdf-theme=light] .brand-innosolv{padding:8px 12px;background:#1a2d48;border-radius:8px;width:max-content;max-width:100%}
 
 html[data-pdf-theme=light] .prime-offer-recurring-budget dd{color:#14263f;-webkit-text-fill-color:#14263f}
+
+/* The page renderer owns one full-bleed background, including blank page space. */
+html[data-pdf-theme=dark] :is(.client-offer,.prime-offer-banner,.prime-offer-commercial,.client-offer-footer){background:transparent}

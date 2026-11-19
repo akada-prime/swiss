@@ -137,3 +137,14 @@ test('completion identifies the missing annual price rather than blaming valid z
  const hint=optionReadinessMessage(candidate,record,null,l);assert.match(hint,/Prix annuel Prime/);assert.doesNotMatch(hint,/titre client|bénéfice client|Jours à préciser/);
  assert.equal(optionReadinessMessage(candidate,{...record,annual_override:0},{investment:0,annual:0},l),'Prête pour la vitrine client.');
 });
+
+test('option captions stay inline and only editorial details create a disclosure',()=>{
+ const row={label_fr:'innoconnect',label_de:'Inno DE',benefit_fr:'eDéménagement',benefit_de:'Umzug',description_fr:'',description_de:'',investment:1760,annual:162};
+ const html=offerOptions([row],{label:l,money});assert.match(html,/innoconnect \(eDéménagement\)/);
+ assert.doesNotMatch(html,/<details class="prime-offer-option">|prime-offer-option-detail/);
+ const detailed=offerOptions([{...row,description_fr:'À découvrir'}],{label:l,money});assert.match(detailed,/<details class="prime-offer-option">/);assert.match(detailed,/<p>À découvrir<\/p>/);
+ assert.doesNotMatch(offerOptions([{...row,description_fr:'  '}],{label:l,money}),/<details class="prime-offer-option">/);
+ const de=offerOptions([row],{label:(fr,de)=>de,money});assert.match(de,/Inno DE \(Umzug\)/);
+ const editor=offerOptionsEditor({...input,client_options:[{...selected,label_fr:'innoconnect',benefit_fr:'eDéménagement'}]},catalog,l,money);
+ assert.match(editor,/<input[^>]*data-showcase-field="label_fr"/);assert.match(editor,/<input[^>]*data-showcase-field="benefit_fr"/);assert.match(editor,/data-showcase-live-title="0">innoconnect \(eDéménagement\)/);
+});

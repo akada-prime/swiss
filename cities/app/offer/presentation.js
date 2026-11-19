@@ -152,6 +152,11 @@ export function offerBreakdown(rows, { label, money, legacy = false, publisherRo
   return implementation+section(label('Logiciels et maintenance','Software und Wartung'),['licenses'])+section(label('Technique','Technik'),['database','primePartners'])+section(label('Accompagnement LCM','LCM-Begleitung'),['lcm'])+section(label('Hébergement','Hosting'),['hosting'])+offerInvestmentAdjustment(entries,{label,money});
 }
 
+export function offerOptionTitle(title,benefit=''){
+ const text=value=>String(value??'').trim().replace(/\s+/g,' '),name=text(title),detail=text(benefit);
+ return name+(detail?` (${detail})`:'');
+}
+
 // Optional ideas are independent from included-module disclosures.
 export function offerOptions(options,{label,money}) {
   const safe=(options??[]).filter(row=>row&&typeof row.label_fr==='string'&&typeof row.benefit_fr==='string'&&Number.isFinite(row.investment)&&Number.isFinite(row.annual)&&row.investment>=0&&row.annual>=0).slice(0,1000);
@@ -159,8 +164,8 @@ export function offerOptions(options,{label,money}) {
   const digits=value=>e(money(value).replace(/\s*CHF(?:\s*HT)?$/,''));
   const row=option=>{
     const benefit=label(option.benefit_fr,option.benefit_de||option.benefit_fr),description=label(option.description_fr||'',option.description_de||option.description_fr||'');
-    const heading=`<span class="prime-offer-option-name">${e(label(option.label_fr,option.label_de||option.label_fr))}</span><span class="prime-offer-option-amount">${digits(option.investment)}</span><span class="prime-offer-option-amount">${digits(option.annual)}</span>`;
-    return benefit||description?`<details class="prime-offer-option"><summary class="prime-offer-option-heading">${heading}</summary><div class="prime-offer-option-detail">${benefit?`<p>${e(benefit)}</p>`:''}${description?`<p>${e(description)}</p>`:''}</div></details>`:`<div class="prime-offer-option"><div class="prime-offer-option-heading">${heading}</div></div>`;
+    const heading=`<span class="prime-offer-option-name">${e(offerOptionTitle(label(option.label_fr,option.label_de||option.label_fr),benefit))}</span><span class="prime-offer-option-amount">${digits(option.investment)}</span><span class="prime-offer-option-amount">${digits(option.annual)}</span>`;
+    return description.trim()?`<details class="prime-offer-option"><summary class="prime-offer-option-heading">${heading}</summary><div class="prime-offer-option-detail"><p>${e(description)}</p></div></details>`:`<div class="prime-offer-option"><div class="prime-offer-option-heading">${heading}</div></div>`;
   };
   return `<section class="prime-offer-options"><details class="prime-offer-options-disclosure"><summary><strong>${label('Pour aller plus loin','Weitere Möglichkeiten')}</strong><span class="prime-offer-options-count">${safe.length} ${label(safe.length===1?'possibilité':'possibilités',safe.length===1?'Möglichkeit':'Möglichkeiten')}</span></summary><div class="prime-offer-options-body"><div class="prime-offer-option-columns"><span>${label('Options non comprises dans les totaux','Optionen nicht in den Gesamtsummen enthalten')}</span><span>${label('Investissement · CHF HT','Investition · CHF exkl. MWST')}</span><span>${label('Annuel · CHF HT/an','Jährlich · CHF exkl. MWST/Jahr')}</span></div><div class="prime-offer-option-list">${[...new Set(safe.map(option=>label(option.group_fr||'',option.group_de||option.group_fr||'')))].map(group=>`${group?`<h4 class="prime-offer-option-group">${e(group)}</h4>`:''}${safe.filter(option=>label(option.group_fr||'',option.group_de||option.group_fr||'')===group).map(row).join('')}`).join('')}</div></div></details></section>`;
 }

@@ -562,3 +562,15 @@ Cette règle remplace le passage manuel à #461 décrit dans le lot précédent.
   stocker l'image dans `communal_coat_cache` (accès service uniquement).
   Les échecs sont temporisés ; les images vérifiées sont réutilisées entre
   visiteurs. La vérification d'existence ne lit que `Gemeinde.bfs_id`.
+
+### 2026-11-19 — Papier A4 et titres des propositions
+
+`offer/pdf.js` possède la réserve de 12 mm en haut/bas et le fond de chaque
+feuille, indépendamment des blocs HTML. Les calques sélectionnables et les
+liens emploient le même décalage ; confidentialité et pagination appartiennent
+au pied de page papier. Les fonds de section sont transparents uniquement dans
+le rendu PDF foncé ; la page internet garde sa composition existante.
+
+`offerOptionTitle` possède la composition Titre (bénéfice), réutilisée par le
+renderer public et l'aperçu de saisie. Le bénéfice reste un champ indépendant
+dans le dossier et la projection ; seul le détail non vide crée un dérouleur.
