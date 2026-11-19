@@ -36,6 +36,17 @@ test('map tolerates missing geometry and escapes supplied paths',()=>{
  assert.match(result,/cx="20" cy="30"/);
 });
 
+test('hosting exclusion is explicit and never inferred from another provider or a missing flag',()=>{
+ const groups=[{product:'innosolvcity',items:['Habitants']}];
+ const render=services=>offerScope(groups,{asset,label,services});
+ const excluded=render({hosting:false,lcm:'Gold'});
+ assert.equal((excluded.match(/Hébergement non inclus/g)||[]).length,1);
+ assert.match(excluded,/Accompagnement LCM/);
+ for(const services of [{hosting:true},{az:true,hosting:true},{}])assert.doesNotMatch(render(services),/Hébergement non inclus/);
+ assert.match(render({az:true,hosting:true}),/AZ Informatique/);
+ assert.match(offerScope([],{asset,label:(fr,de)=>de,services:{hosting:false}}),/Hosting nicht enthalten/);
+});
+
 test('annual budget separates hosting from the software headline and keeps the total visible',()=>{
  const amounts={investment:1000,annual:900,tco5y:4600};
  const html=offerFigures(amounts,{label,money,municipal:true,annualBreakdown:{solutions:500,lcm:100,hosting:300},annualBudget:{softwareAndSupport:500,lcm:100,hosting:300,publisher:50,total:900}});

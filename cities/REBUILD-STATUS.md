@@ -1038,3 +1038,21 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   iPhone physique ou ancien Safari. Recette depuis la projection client figée,
   sans écriture métier ni incrément du compteur de consultations.
 - Points 6 et 7 : analyse de la page client et du PDF après livraison de ce lot.
+
+## 2026-11-19 — Rythme des cadres et libellés financiers
+
+- Cadres sans total : marge finale de carte distincte de l'espacement des
+  lignes, 24 px sur PC, 16 px en affichage compact. Total existant conservé.
+- Lignes financières PC : pas vertical réduit de 48 à 40 px, sans réduire
+  le texte. Les variantes Natel conservent leurs montants légendés lisibles.
+- Titres des trois indicateurs, détail annuel et libellés de répartition
+  utilisent le même rôle de lecture que les modules : 16 px PC, 14 px compact.
+- Budget annuel total : libellé gris identique à Logiciels/LCM/Hébergement ;
+  montant blanc. Carte Hébergement non inclus dans le style des cartes LCM,
+  uniquement lorsque l'exclusion est explicite, aperçu et publication client.
+  L'ancien paragraphe Hébergement : Non de l'aperçu est supprimé.
+- 16 tests ciblés réussis ; nouveau contrat couvrant absence d'hébergement,
+  autre prestataire, AZ et état inconnu. Recette Chrome : six largeurs FR/DE,
+  groupes dépliés/repliés, aucun débordement ; égalité des tailles et gris
+  vérifiée. Tests et build complets confiés à la CI avant intégration.
+- Les analyses initiales 6 et 7 restent en attente de retour utilisateur.

@@ -15,14 +15,14 @@ import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js?v=20261118-prime-shared-r3';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js?v=20261118-prime-shared-r3';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261119-boecourt-r1';
+import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261119-offer-density-r2';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
 import { calculateQuote, calculateLcm, calculateOracle, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261116-software-target-r4';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261112-coherence-r1';
 import { calculationError } from './errors.js?v=20261116-software-target-r4';
-import bundledCoats from './coats.js?v=20261119-boecourt-r1';
+import bundledCoats from './coats.js?v=20261119-offer-density-r2';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261112-workspace-review-r1';
 import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-coherence-r1';
 import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-coherence-r1';
@@ -918,10 +918,10 @@ function offerSection() {
     hostingLines.some(line=>line.item_code==='hosting-reference') ||
     /\bAZ(?: Informatique)?\b/i.test([state.draft.context?.hosting,...hostingLines.map(line=>line.label)].join(' ')));
   const lcm = ({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection;
-  const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),reference:entry.reference,section:localLabel(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel,services:{az:azHosting,lcm,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}}});
+  const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),reference:entry.reference,section:localLabel(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel,services:{az:azHosting,hosting:hostingIncluded(state.draft),lcm,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}}});
   const optionalShowcase=offerOptions(offerOptionReview(state.draft,state.catalog).options,{label:localLabel,money});
   return `<article class="chiffrage-offer"><div class="chiffrage-offer-body${optionalShowcase?' has-offer-options':''}"><section>${scope}
-    ${azHosting ? '' : `<p>${t('chiffrage.hosting')} : ${t(hostingIncluded(state.draft)?'chiffrage.yes':'chiffrage.no')}</p>`}</section>${optionalShowcase}
+    ${!azHosting && hostingIncluded(state.draft) ? `<p>${t('chiffrage.hosting')} : ${t('chiffrage.yes')}</p>` : ''}</section>${optionalShowcase}
     <section><h3>${localLabel('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>${priceDetail}<p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
 }
 
