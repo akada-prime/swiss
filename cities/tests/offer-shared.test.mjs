@@ -170,3 +170,12 @@ test('uniform price frames put their title and units in one shared column header
  const investmentOnly=offerBreakdown([{key:'database',label:'SQL',investment:3000,annual:0}],{label,money});
  assert.match(investmentOnly,/<h3>Technique<\/h3>/);assert.doesNotMatch(investmentOnly,/Annuel · CHF HT/);
 });
+
+test('software stays in two editorial columns with hosting left and ERP, partners and LCM right',()=>{
+ const groups=[{product:'Doc.Series',items:['Partner module']},{product:'Abacus',items:['Abacus module']},{product:'Prime',items:['Prime module']},{product:'innosolvcity',items:['Inno module']},{product:'ProConcept',items:['PCE module']}];
+ const html=offerScope(groups,{asset,label,services:{hosting:false,lcm:'Gold'}}),columns=html.split('<div class="prime-offer-module-column">').slice(1);
+ assert.equal(columns.length,2);const [left,right]=columns;
+ assert.ok(left.indexOf('Inno module')<left.indexOf('Prime module'));assert.match(left,/Hébergement non inclus/);assert.doesNotMatch(left,/PCE module|Abacus module|Partner module|Accompagnement LCM/);
+ assert.ok(right.indexOf('PCE module')<right.indexOf('Abacus module'));assert.ok(right.indexOf('Abacus module')<right.indexOf('Partner module'));assert.ok(right.indexOf('Partner module')<right.indexOf('Accompagnement LCM'));
+ assert.equal(offerScope([{product:'ProConcept',items:['PCE module']}],{asset,label}).split('<div class="prime-offer-module-column">').length-1,1);
+});
