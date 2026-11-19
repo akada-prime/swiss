@@ -1238,3 +1238,12 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   changement des publications, des prix ni des actions de gestion.
 - Cache du module 20261119-share-layout-r1 ; compteur dynamique, fallback 720.
 - Contrôles ciblés du partage et des liens, syntaxe, recette desktop/Natel.
+
+### 19 novembre 2026 · Décomptes accessible parmi les options à proposer
+
+- Le module Innosolv 501 rejoint 502 et 533 dans la sélection courte
+  « Options à proposer », rubrique « Fournisseur intégré », même sans énergie.
+- Présentation seulement : aucune sélection automatique, quantité, prestation
+  ou tarification modifiée ; les offres enregistrées restent intactes.
+- Contrôles ciblés classification et configuration énergie ; cache du module
+  20261119-decomptes-options-r1, compteur dynamique et fallback 721.
