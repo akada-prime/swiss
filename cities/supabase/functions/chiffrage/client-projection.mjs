@@ -65,7 +65,7 @@ export function publicOfferFromSaved(quote, catalog) {
     lcm,...(snapshot.input?.hosting?.synergy===true?{hosting_synergy:true}:{}),hosting:breakdown.some(x=>x.key==='hosting'),hosting_provider:hostingProvider,
     amounts:{investment:s.investment,...(s.investment_discount>0?{investment_gross:s.investment_gross??s.investment,investment_discount:s.investment_discount}:{}),annual:s.annual,tco5y:s.investment+4*s.annual},
     breakdown,buckets,
-    cost_details:publicCostDetails(snapshot.result.lines),
+    cost_details_version:2,cost_details:publicCostDetails(snapshot.result.lines,snapshot.input),
     ...(publisherBillingRows(snapshot.result.lines).length ? {publisher_billing:publisherBillingRows(snapshot.result.lines)} : {}),
     annual_breakdown:annualComponents(breakdown)
   };

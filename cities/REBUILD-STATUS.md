@@ -1184,3 +1184,31 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
 - 20 tests ciblés réussis. Recette sur six largeurs : date compacte, titres
   financiers non coupés sur PC, pas de débordement ; contrôle des deux PDF.
 - Cache 20261119-price-polish-r3, compteur dynamique conservé, fallback 716.
+
+## 2026-11-19 — Annuel à gauche, investissement à droite
+
+- Les tableaux de prix client présentent l'annuel avant l'investissement, en
+  gardant les valeurs nulles visibles dans les deux colonnes. Mise en œuvre :
+  les montants uniques restent à droite ; Natel conserve aussi cet emplacement.
+- Même renderer pour aperçu interne, lien client et PDF foncé/clair. Les idées
+  supplémentaires restent dans leur tableau indépendant. Aucun montant recalculé,
+  aucun dossier, catalogue ou lien métier réécrit pendant la vérification.
+- Comparaison du classeur fourni avec la révision enregistrée réalisée en lecture
+  seule et communiquée séparément ; données de cette comparaison hors dépôt.
+- Tests d'ordre des en-têtes et valeurs, y compris zéro annuel explicite ;
+  recette six largeurs et deux PDF. Cache 20261119-annual-left-r2 ; compteur
+  dynamique conservé, fallback 718 après actualisation Radar indépendante.
+
+- Correction du classement commercial : journées Prime/partenaires dans Mise en
+  œuvre, abonnements dans Logiciels et maintenance, achats fixes explicites dans
+  l'investissement logiciel, Oracle/SQL dans Technique. Décomposition issue des
+  montants enregistrés, sans recalcul des tarifs ni modification des totaux.
+- Les publications anciennes sont reclassées en lecture depuis leur révision
+  d'origine uniquement, avec garde d'égalité des deux totaux. En cas de révision
+  indisponible ou de désaccord, leur projection reste inchangée. Aucune migration
+  ni réécriture des snapshots ou liens. Les nouvelles publications portent la
+  version de classement et n'ont pas besoin de cette lecture complémentaire.
+- Fonction Chiffrage v44 active, dépendances serveur sans paramètres de cache
+  frontend. Contrôle d'un ancien lien : classement corrigé et totaux identiques.
+  305 tests et build réussis ; six largeurs sans débordement, investissements
+  alignés à droite y compris sur Natel ; deux exports en quatre pages relus.

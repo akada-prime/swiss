@@ -1,3 +1,4 @@
+import {classifiedPublicCosts} from './public-cost-details.mjs';
 import {cleanInnosolvCatalog} from '../../../app/chiffrage/module-labels.js';
 import {safeContact,validateContact,validateDossier} from '../../../app/chiffrage/dossier-data.js';
 import { validateModuleGroups,validatePrimeLayout } from '../../../app/chiffrage/module-groups.js';
@@ -214,12 +215,21 @@ async function saveTeamContact(payload){
   const rows=await db('chiffrage_team_contacts',{method:'PATCH',returning:true,query:{select:'id,name,position,email,phone,updated_at',id:`eq.${payload.id}`,updated_at:`eq.${payload.expected_updated_at}`},payload:{...contact,updated_at:new Date().toISOString()}});
   return rows.length?json(rows[0]):fail('Revision conflict',409);
 }
+async function publicCostsForLink(request,offer){
+  return classifiedPublicCosts(offer,async()=>{
+    const token=sessionToken(request),selector=namedSlug(token)?{public_slug:`eq.${token}`}:{token_hash:`eq.${createHash('sha256').update(token).digest('hex')}`};
+    const [link]=await db('chiffrage_client_links',{query:{select:'chiffrage_id,revision',...selector,revoked_at:'is.null'}});
+    if(!link||Number(link.revision)!==Number(offer.revision))return null;
+    const [saved]=await db('chiffrage_revisions',{query:{select:'input,result',chiffrage_id:`eq.${link.chiffrage_id}`,revision:`eq.${link.revision}`}});
+    return saved;
+  });
+}
 async function clientOffer(request) {
-  const payload=await withPublicContacts(await readPublicOffer(request));
+  const payload=await withPublicContacts(await publicCostsForLink(request,await readPublicOffer(request)));
   return payload?json(payload,200,{'Referrer-Policy':'no-referrer','Content-Security-Policy':"default-src 'none'"}):fail('Offer link unavailable',404);
 }
 async function clientOfferPdf(request) {
-  const offer=await withPublicContacts(await readPublicOffer(request,false));
+  const offer=await withPublicContacts(await publicCostsForLink(request,await readPublicOffer(request,false)));
   if(!offer)return fail('Offer link unavailable',404);
   const bytes=await exportClientPdf(offer);
   return new Response(bytes,{headers:{'Content-Type':'application/pdf','Content-Disposition':`attachment; filename="${pdfFilename(offer)}"`,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});

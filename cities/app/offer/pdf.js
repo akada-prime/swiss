@@ -1,4 +1,4 @@
-import {offerFooter} from './document-data.js?v=20261119-price-polish-r3';
+import {offerFooter} from './document-data.js?v=20261119-annual-left-r2';
 // Render the customer-only HTML with the browser's own layout, not a second template.
 import {PDFDocument,StandardFonts,PDFString,rgb} from '../../public/vendor/pdf-lib-1.17.1.esm.min.js';
 export const pdfWidth=960;
@@ -88,7 +88,7 @@ async function rasterPage(html,{start,end},background){
 }
 export async function downloadOfferPdf(article,offer,{theme='dark',label=fr=>fr,onProgress=()=>{}}={}){
   const frame=document.createElement('iframe');frame.className='client-pdf-render-frame';frame.title=label('Préparation du PDF','PDF-Vorbereitung');frame.setAttribute('aria-hidden','true');
-  frame.src=new URL('../../offre-pdf.html?v=20261119-price-polish-r3',import.meta.url).href;
+  frame.src=new URL('../../offre-pdf.html?v=20261119-annual-left-r2',import.meta.url).href;
   const loaded=new Promise((resolve,reject)=>{frame.onload=resolve;frame.onerror=reject;});document.body.append(frame);
   try{
     await loaded;const doc=frame.contentDocument;doc.documentElement.dataset.pdfTheme=theme;doc.documentElement.lang=document.documentElement.lang;

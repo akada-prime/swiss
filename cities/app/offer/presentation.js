@@ -1,5 +1,5 @@
 import {cleanModuleLabel} from '../chiffrage/module-labels.js?v=20261119-dossier-date-r2';
-import {partnerBrand} from '../chiffrage/commercial-breakdown.js?v=20261119-dossier-date-r2';
+import {partnerBrand} from '../chiffrage/commercial-breakdown.js?v=20261119-annual-left-r2';
 // Pure presentation: no session, transport, catalog, editor or calculation imports.
 // Callers supply display values only. HTML slots are reserved for trusted renderers.
 export const escapeOffer = value => String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -143,13 +143,13 @@ export function offerBreakdown(rows, { label, money, legacy = false, publisherRo
   }
   const investLabel=label('Investissement','Investition'),annualLabel=label('Annuel','Jährlich');
   const digits=value=>money(value).replace(/\s*CHF(?:\s*HT)?$/,'');
-  const values=(row,annual)=>`<span class="prime-offer-amount" data-caption="${e(investLabel)}">${e(digits(row.investment??0))}</span>${annual?`<span class="prime-offer-amount" data-caption="${e(annualLabel)}">${e(digits(row.annual??0))}</span>`:''}`;
-  const table=(body,{annual=false,heading=''}={})=>`<div class="prime-offer-price-table${annual?' has-annual':''}"><div class="prime-offer-table-columns"><h3>${e(heading)}</h3><span>${investLabel} · CHF HT</span>${annual?`<span>${annualLabel} · CHF HT / ${label('an','Jahr')}</span>`:''}<small class="prime-offer-table-units">${label('Montants en CHF HT','Beträge in CHF exkl. MWST')}</small></div>${body}</div>`;
+  const values=(row,annual)=>`${annual?`<span class="prime-offer-amount" data-caption="${e(annualLabel)}">${e(digits(row.annual??0))}</span>`:''}<span class="prime-offer-amount" data-caption="${e(investLabel)}">${e(digits(row.investment??0))}</span>`;
+  const table=(body,{annual=false,heading=''}={})=>`<div class="prime-offer-price-table${annual?' has-annual':''}"><div class="prime-offer-table-columns"><h3>${e(heading)}</h3>${annual?`<span>${annualLabel} · CHF HT / ${label('an','Jahr')}</span>`:''}<span>${investLabel} · CHF HT</span><small class="prime-offer-table-units">${label('Montants en CHF HT','Beträge in CHF exkl. MWST')}</small></div>${body}</div>`;
   const row=(entry,annual)=>{
     const portal=entry.key==='licenses'&&/portail|portal/i.test(entry.label||'');
     return `<div class="prime-offer-table-row${(entry.investment??0)<0||(entry.annual??0)<0?' is-rebate':''}"><h4>${e(entry.label)}${portal?`<small>${label('Facturé directement par l’éditeur','Direkt vom Hersteller verrechnet')}</small>`:''}</h4>${values(entry,annual)}</div>`;
   };
-  const section=(heading,keys)=>{const chosen=entries.filter(row=>keys.includes(row.key));if(!chosen.length)return '';const annual=chosen.some(row=>Math.abs(row.annual??0)>.005);return `<section class="prime-offer-price-section">${table(chosen.map(entry=>row(entry,annual)).join(''),{annual,heading})}</section>`;};
+  const section=(heading,keys)=>{const chosen=entries.filter(row=>keys.includes(row.key));if(!chosen.length)return '';const annual=true;return `<section class="prime-offer-price-section">${table(chosen.map(entry=>row(entry,annual)).join(''),{annual,heading})}</section>`;};
   if(legacy)return section(label('Répartition du prix','Preisaufteilung'),['solutions','partners','hosting'])+offerInvestmentAdjustment(entries,{label,money});
   const services=entries.filter(row=>['implementation','migration','management','training','otherServices'].includes(row.key)&&(Math.abs(row.investment??0)>.005||Math.abs(row.annual??0)>.005));
   const total=selected=>({investment:selected.reduce((sum,row)=>sum+(row.investment??0),0),annual:selected.reduce((sum,row)=>sum+(row.annual??0),0)});
