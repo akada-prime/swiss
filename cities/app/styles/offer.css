@@ -19,6 +19,8 @@
   --offer-section-gap: var(--offer-space-6);
   --offer-accent: #f39449;
   --offer-large-size: 44px;
+  --offer-body-size: 14px;
+  --offer-rebate: #8c2543;
   --offer-mark-opacity: .13;
 }
 .chiffrage-offer-body {
@@ -189,7 +191,8 @@ align-items:start;}
 .prime-offer-table-columns>span:not(:first-child),.prime-offer-amount{text-align:right;font-variant-numeric:tabular-nums;}
 .prime-offer-table-columns>span{min-width:0;white-space:normal;line-height:1.4}
 .prime-offer-amount{white-space:nowrap;}
-.prime-offer-table-row h4{margin:0;font-size:14px;line-height:1.5;font-weight:400;color:var(--offer-text);min-width:0;}
+.prime-offer-table-row{font-size:var(--offer-body-size);line-height:1.5;}
+.prime-offer-table-row h4{margin:0;font-size:inherit;line-height:inherit;font-weight:400;color:var(--offer-text);min-width:0;}
 .prime-offer-table-row h4 small{display:block;margin-top:4px;font-size:14px;color:var(--offer-muted);}
 .prime-offer-table-row.is-subtotal h4,.prime-offer-table-row.is-total h4{font-weight:700;font-size:16px;}
 .prime-offer-table-row.is-subtotal,.prime-offer-table-row.is-total{font-weight:700;}
@@ -362,6 +365,22 @@ align-items:start;}
   width: calc(50% - var(--offer-editorial-gap) / 2);
 }
 .client-offer .prime-offer-signature-content p:last-child { margin-bottom:0; }
+/* The native disclosure keeps its closed behaviour. Its open content joins
+   the grid, so either column can determine the height without fixed offsets.
+   Older engines retain the readable float layout above. */
+@media (min-width:601px) {
+@supports selector(details::details-content) {
+  .client-offer .prime-offer-signature-disclosure[open] {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:var(--offer-editorial-gap);
+    align-items:center;
+  }
+  .client-offer .prime-offer-signature-disclosure[open]::details-content { display:contents; }
+  .client-offer .prime-offer-signature-disclosure[open] summary { float:none;width:auto; }
+  .client-offer .prime-offer-signature-content { margin-left:0; }
+}
+}
 .client-offer .prime-offer-signature-question {
   font: inherit;
   font-weight: 400;
@@ -519,6 +538,7 @@ align-items:start;}
   --skin-text: #f8fbff;
   --offer-text: #f8fbff;
   --offer-muted: #cad9ee;
+  --offer-rebate: #e59bb0;
   --offer-panel: #1a2d48;
   --offer-border: #c0d6ee50;
   display: grid;
@@ -731,7 +751,8 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .p
 
 /* Responsive variants: only layout and semantic density change. */
 @media (min-width:851px) {
-.chiffrage-offer :is(.prime-offer-module-group li,.prime-offer-price-section>p,.prime-offer-service-line,.prime-offer-annual-disclosure summary,.prime-offer-annual-breakdown) {font-size:16px;line-height:1.5;}
+.chiffrage-offer {--offer-body-size:16px;}
+.chiffrage-offer :is(.prime-offer-module-group li,.prime-offer-price-section>p,.prime-offer-service-line,.prime-offer-annual-disclosure summary,.prime-offer-annual-breakdown) {font-size:var(--offer-body-size);line-height:1.5;}
   .chiffrage-offer .prime-offer-service {--offer-service-size:16px;}
   .client-offer .prime-offer-service h4 {font-size:18px;}
   .client-offer .prime-offer-service-heading,.client-offer .prime-offer-service-total {font-size:18px;}
@@ -880,9 +901,10 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .p
 .prime-investment-equation{--rebate-ink:#b95776;--investment-gradient-end:#2994ec;-webkit-text-fill-color:currentColor;display:inline-grid;grid-template-columns:max-content;max-width:100%;min-width:0;justify-content:end;align-items:baseline;gap:2px 8px;font:inherit;letter-spacing:inherit;line-height:inherit;font-variant-numeric:tabular-nums;color:var(--skin-text);text-align:right}
 .prime-investment-gross{grid-column:1;grid-row:1}
 .prime-investment-rebate{grid-column:1;grid-row:2;color:var(--rebate-ink);white-space:nowrap;background:none;padding:0}
-.prime-investment-equation>strong{grid-column:1;grid-row:3;font:inherit;letter-spacing:inherit;line-height:inherit;white-space:nowrap;color:var(--skin-text);background:linear-gradient(105deg,var(--investment-gradient-start,#b9dcff) 12%,var(--investment-gradient-end) 92%);background-clip:text;-webkit-text-fill-color:transparent}
+.prime-investment-equation>strong{grid-column:1;grid-row:3;align-self:baseline;font:inherit;letter-spacing:inherit;line-height:inherit;white-space:nowrap;color:var(--skin-text);background:linear-gradient(105deg,var(--investment-gradient-start,#b9dcff) 12%,var(--investment-gradient-end) 92%);background-clip:text;-webkit-text-fill-color:transparent}
 .prime-investment-equation .prime-investment-unit{grid-column:2;grid-row:3;font-size:14px;letter-spacing:0;white-space:nowrap}
 .prime-offer-communal-figures>div>.prime-investment-equation{--investment-gradient-start:#b9dcff;display:inline-grid;justify-self:center;align-self:start;color:#fff;font-size:clamp(24px,13cqi,var(--offer-large-size));font-weight:700;letter-spacing:-.035em;line-height:1.16}
+.prime-offer-investment-adjustment .is-rebate{color:var(--offer-rebate);}
 html[data-skin="helvetia"] .chiffrage-editor .prime-investment-equation{--rebate-ink:#8c2543;--investment-gradient-start:#225c91;--investment-gradient-end:#1765ad}
 
 

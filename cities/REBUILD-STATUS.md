@@ -1017,3 +1017,24 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   skins sans débordement ; marqueurs fermé/ouvert mesurés. Pas d'iPhone physique.
 - Dark Jura reste une proposition de troisième thème, sans changement de
   préférence, mode automatique, thème par défaut ou présentation publique.
+
+## 2026-11-19 — Offre Boécourt : corrections 1 à 5
+
+- Reprise après interruption : aucun commit du 19 novembre pour ce lot au
+  démarrage. Offre concernée : Boécourt JU, OFS 6702, v1.0 révision 4.
+- Détails financiers et listes de modules partagent le même rôle de lecture :
+  16 px sur PC, 14 px en affichage compact, aperçu interne et page publique.
+- Signature native dépliable : colonnes centrées verticalement dès 601 px avec
+  `::details-content`; empilement sur Natel. Fallback lisible pour les anciens
+  moteurs qui ne prennent pas en charge ce pseudo-élément.
+- Unité du montant net alignée sur la baseline de sa ligne ; remise du détail
+  d'investissement en rouge doux contrasté, sans changement des montants.
+- Blason de Boécourt embarqué localement : Wikidata Q69942, P771=6702,
+  P94=CHE Boécourt COA.svg, Commons, domaine public. Même registre dans les
+  deux points d'entrée ; caches des dépendances et entrées renouvelés.
+- 279 tests passent, build Vite réussi. Chrome : six largeurs 360/430/768/
+  1366/1920/2560, FR et DE, groupes et signature ouverts/repliés. Aucun
+  débordement ; centrage mesuré à 0 px dès 768 px. Pas de validation sur
+  iPhone physique ou ancien Safari. Recette depuis la projection client figée,
+  sans écriture métier ni incrément du compteur de consultations.
+- Points 6 et 7 : analyse de la page client et du PDF après livraison de ce lot.
