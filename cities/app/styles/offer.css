@@ -191,7 +191,8 @@ align-items:start;}
 .prime-offer-table-columns>span:not(:first-child),.prime-offer-amount{text-align:right;font-variant-numeric:tabular-nums;}
 .prime-offer-table-columns>span{min-width:0;white-space:normal;line-height:1.4}
 .prime-offer-amount{white-space:nowrap;}
-.prime-offer-table-row{font-size:var(--offer-body-size);line-height:1.5;}
+.prime-offer-table-row{font-size:var(--offer-body-size);line-height:1.5;padding-block:var(--offer-space-2);}
+.prime-offer-price-table>.prime-offer-table-row:last-child:not(.is-total){padding-bottom:var(--offer-card-padding);}
 .prime-offer-table-row h4{margin:0;font-size:inherit;line-height:inherit;font-weight:400;color:var(--offer-text);min-width:0;}
 .prime-offer-table-row h4 small{display:block;margin-top:4px;font-size:14px;color:var(--offer-muted);}
 .prime-offer-table-row.is-subtotal h4,.prime-offer-table-row.is-total h4{font-weight:700;font-size:16px;}
@@ -231,12 +232,13 @@ align-items:start;}
 .prime-offer-scope-section .prime-offer-scope-modules {margin:0;padding-left:0;list-style-type:disc;}
 .prime-offer-recurring-budget{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:min(100%,820px);margin:24px auto 0;align-items:stretch}
 .prime-offer-annual-detail,.prime-offer-recurring-budget>p{min-width:0;margin:0;padding:16px 24px;border:1px solid #ffffff40;border-radius:8px;background:#ffffff0a}
-.prime-offer-annual-detail h3{margin:0 0 12px;font-size:14px;font-weight:650;color:#c3d1e8;line-height:1.4}
+.prime-offer-annual-detail h3{margin:0 0 12px;font-size:var(--offer-body-size);font-weight:650;color:#c3d1e8;line-height:1.4}
 .prime-offer-recurring-budget dl{display:grid;gap:8px;margin:0}
 .prime-offer-recurring-budget dl>div{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
-.prime-offer-recurring-budget dt{min-width:0;font-size:14px;color:#c3d1e8;line-height:1.5}
+.prime-offer-recurring-budget dt{min-width:0;font-size:var(--offer-body-size);color:#c3d1e8;line-height:1.5}
 .prime-offer-recurring-budget dd{margin:0;font-size:18px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums}
-.prime-offer-recurring-budget>p{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:16px;text-align:center}
+.prime-offer-recurring-budget>p{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:var(--offer-body-size);text-align:center}
+.prime-offer-recurring-budget>p>span{color:#c3d1e8;}
 .prime-offer-recurring-budget>p strong{font-size:22px;font-variant-numeric:tabular-nums}
 .prime-offer-synergy-note{display:inline;font-size:14px;white-space:normal}
 .prime-offer-reference-code{font-size:14px;font-variant-numeric:tabular-nums;color:var(--offer-muted);margin-inline-end:6px}
@@ -249,13 +251,14 @@ align-items:start;}
 /* Municipal client summary and related services. */
 .prime-offer-communal-figures { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-template-rows:auto auto; gap:var(--offer-inline-gap) var(--offer-card-gap); }
 .prime-offer-communal-figures>div { display:grid;grid-template-rows:subgrid;grid-row:span 2;row-gap:var(--offer-inline-gap);container-type:inline-size;min-width:0;text-align:center; border-top:1px solid #ffffff52; padding-top:var(--offer-space-4); }
-.prime-offer-communal-figures>div>span,.prime-offer-communal-figures small { display:block; color:#c3d1e8; font-size:14px; line-height:1.5; }
+.prime-offer-communal-figures>div>span,.prime-offer-communal-figures small { display:block; color:#c3d1e8; font-size:var(--offer-body-size); line-height:1.5; }
 .prime-offer-communal-figures strong { display:block; color:#fff; font-size:clamp(24px,13cqi,var(--offer-large-size)); font-variant-numeric:tabular-nums; line-height:1.16; letter-spacing:-.035em; margin:0;align-self:start;overflow-wrap:anywhere; }
 .prime-offer-communal-figures .prime-offer-currency { display:inline-block; font-size:14px; letter-spacing:0; white-space:nowrap; }
 
 .prime-offer-service-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--offer-card-gap); margin-top:var(--offer-card-gap); align-items:start; }
 .prime-offer-service { --offer-service-size:14px; font-size:var(--offer-service-size); line-height:1.55; min-width:0; padding:var(--offer-card-padding); border:1px solid var(--offer-border); border-radius:var(--offer-radius); background:var(--offer-panel); }
 .prime-offer-service h4 { margin:0 0 var(--offer-title-gap); font-size:inherit; font-weight:700; color:var(--offer-text); }
+.prime-offer-hosting-excluded>h4 { margin:0; }
 .prime-offer-service .prime-offer-hosting-brand { margin:0; padding:0; border:0; background:none; display:flex; flex-direction:column; align-items:flex-start; gap:var(--offer-title-gap); }
 .prime-offer-service .prime-offer-lcm { display:block; margin:0; padding:0; border:0; background:none; }
 .prime-offer-service .prime-offer-lcm-alternative { max-width:none; border:0; border-top:1px solid var(--offer-border); border-radius:0; background:none; }
