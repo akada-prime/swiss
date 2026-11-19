@@ -147,7 +147,8 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 .chiffrage-showcase-card-body>.chiffrage-actions { margin:12px 0;justify-content:flex-end; }
 .chiffrage-showcase-card-body>.chiffrage-actions button { min-height:44px;font-size:14px;padding:8px 12px; }
 .chiffrage-showcase-editor textarea { width:100%;min-height:96px;padding:12px;border:1px solid var(--pc-field-border);border-radius:var(--pc-field-radius);color:var(--skin-text);background:var(--pc-field-bg);font:inherit;font-size:16px;resize:vertical; }
-.chiffrage-option-copy textarea { min-height:76px; }
+.chiffrage-option-preview{margin:12px 0 0;font-size:14px;line-height:1.5;color:var(--skin-secondary)}
+.chiffrage-option-preview strong{display:block;margin-top:4px;color:var(--skin-text);font-size:16px;overflow-wrap:anywhere}
 .chiffrage-showcase-card-body>label,.chiffrage-showcase-card-body>details { margin-top:16px; }
 .chiffrage-showcase-card-body>details>label { margin-top:12px; }
 .chiffrage-showcase-card-body>p { font-size:14px;line-height:1.5; }

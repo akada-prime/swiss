@@ -1106,3 +1106,27 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   Aucun dossier, profil ou lien client réel modifié pendant cette recette.
 - Dépendances et entrées invalidées avec 20261119-refinements-r1 ; compteur
   dynamique conservé, fallback de la prochaine livraison : 712.
+
+## 2026-11-19 — Marges PDF et options compactes
+
+- PDF A4 : réserve de 12 mm en haut et en bas de chaque page, coordonnées du
+  texte sélectionnable et des liens décalées avec le contenu. Confidentialité
+  et pagination dans la marge basse, sans page finale dédiée au pied de page.
+- Fond foncé peint une seule fois sur toute la feuille avec le dégradé Prime,
+  sans bandes aux limites des sections ou dans les espaces de pagination.
+  Version claire blanche ; logo Prime positif visible aussi dans les logiciels.
+- Titres, unités des options et première proposition restent ensemble ; cadres
+  et propositions restent entiers lorsqu'ils tiennent sur une page.
+- Options : titre et bénéfice réunis en Titre (bénéfice), parenthèses ajoutées
+  par le renderer. Le dérouleur individuel dépend uniquement du détail rempli,
+  jamais du bénéfice. Le détail ne répète plus le bénéfice.
+- Deux champs de saisie sur une ligne chacun, aperçu explicite Résultat côté
+  client actualisé à chaque frappe, dans Offre et le dialogue de proposition.
+- 293 tests réussis, dont contrats de marge A4 et options FR/DE avec/sans détail.
+  Contrôle Chrome de l'aperçu en direct et de la bascule DIV/DETAILS sans changer
+  les prix. Les deux PDF de l'offre Boécourt révision 9 ont été téléchargés et
+  relus : quatre pages, fond continu, options compactes, quatre liens actifs,
+  aucune note privée. Options ouvertes vérifiées sur six largeurs FR/DE sans
+  débordement. Données de recette isolées ; aucun dossier réel réécrit.
+- Entrées et dépendances invalidées avec 20261119-pdf-options-r3. Compteur
+  dynamique conservé ; fallback attendu : 713. Build complet avant intégration.

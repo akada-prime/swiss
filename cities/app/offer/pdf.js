@@ -1,11 +1,13 @@
 // Render the customer-only HTML with the browser's own layout, not a second template.
 import {PDFDocument,StandardFonts,PDFString,rgb} from '../../public/vendor/pdf-lib-1.17.1.esm.min.js';
 export const pdfWidth=960;
-const pageHeight=pdfWidth*297/210;
+export const pageHeight=pdfWidth*297/210;
+export const pageMargin=pdfWidth*12/210;
+export const pageContentHeight=pageHeight-2*pageMargin;
 const styleProperties=`display position box-sizing width height min-width min-height max-width max-height top right bottom left inset float clear overflow overflow-x overflow-y visibility opacity z-index isolation padding-top padding-right padding-bottom padding-left margin-top margin-right margin-bottom margin-left color background-color background-image background-position background-size background-repeat background-clip border-top-width border-right-width border-bottom-width border-left-width border-top-style border-right-style border-bottom-style border-left-style border-top-color border-right-color border-bottom-color border-left-color border-top-left-radius border-top-right-radius border-bottom-right-radius border-bottom-left-radius box-shadow font-family font-size font-weight font-style line-height letter-spacing text-align text-decoration text-transform text-indent white-space word-break overflow-wrap vertical-align list-style-type list-style-position grid-template-columns grid-template-rows grid-column grid-row grid-auto-flow gap row-gap column-gap justify-content justify-items justify-self align-content align-items align-self flex-direction flex-wrap flex-grow flex-shrink flex-basis order transform transform-origin object-fit object-position fill stroke stroke-width paint-order clip-path -webkit-text-fill-color`.split(' ');
 const toDataUrl=blob=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);});
 const safeText=value=>String(value).replace(/[\u2018\u2019]/g,"'").replace(/[\u2010-\u2015\u2212]/g,'-').replace(/[\u00a0\u202f]/g,' ').replace(/[^\x20-\x7e\xa0-\xffŒœŸ€•]/g,' ');
-export function pageSlices(height,intervals,limit=pageHeight-34){
+export function pageSlices(height,intervals,limit=pageContentHeight){
   const pages=[];let start=0;
   while(start<height){
     let end=Math.min(height,start+limit);
@@ -68,7 +70,7 @@ async function frozenHtml(root){
   return new XMLSerializer().serializeToString(copy);
 }
 async function rasterPage(html,{start,end},background){
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${pdfWidth}" height="${pageHeight}" viewBox="0 0 ${pdfWidth} ${pageHeight}"><rect width="100%" height="100%" fill="${background}"/><foreignObject x="0" y="0" width="${pdfWidth}" height="${end-start}"><style xmlns="http://www.w3.org/1999/xhtml">details::details-content{display:contents}summary::-webkit-details-marker{display:none}summary::marker{content:""}</style><div xmlns="http://www.w3.org/1999/xhtml" style="width:${pdfWidth}px;height:${end-start}px;overflow:hidden"><div style="transform:translateY(-${start}px)">${html}</div></div></foreignObject></svg>`;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${pdfWidth}" height="${pageHeight}" viewBox="0 0 ${pdfWidth} ${pageHeight}"><foreignObject x="0" y="0" width="${pdfWidth}" height="${pageHeight}"><style xmlns="http://www.w3.org/1999/xhtml">details::details-content{display:contents}summary::-webkit-details-marker{display:none}summary::marker{content:""}</style><div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;width:${pdfWidth}px;height:${pageHeight}px;background:${background}"><div style="position:absolute;top:${pageMargin}px;left:0;width:${pdfWidth}px;height:${end-start}px;overflow:hidden"><div style="transform:translateY(-${start}px)">${html}</div></div></div></foreignObject></svg>`;
   const image=new Image();image.src=`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;await image.decode();
   const canvas=document.createElement('canvas');canvas.width=pdfWidth*2;canvas.height=Math.ceil(pageHeight*2);
   const context=canvas.getContext('2d');context.scale(2,2);context.drawImage(image,0,0);
@@ -77,17 +79,17 @@ async function rasterPage(html,{start,end},background){
 }
 export async function downloadOfferPdf(article,offer,{theme='dark',label=fr=>fr,onProgress=()=>{}}={}){
   const frame=document.createElement('iframe');frame.className='client-pdf-render-frame';frame.title=label('Préparation du PDF','PDF-Vorbereitung');frame.setAttribute('aria-hidden','true');
-  frame.src=new URL('../../offre-pdf.html',import.meta.url).href;
+  frame.src=new URL('../../offre-pdf.html?v=20261119-pdf-options-r3',import.meta.url).href;
   const loaded=new Promise((resolve,reject)=>{frame.onload=resolve;frame.onerror=reject;});document.body.append(frame);
   try{
     await loaded;const doc=frame.contentDocument;doc.documentElement.dataset.pdfTheme=theme;doc.documentElement.lang=document.documentElement.lang;
-    const clone=article.cloneNode(true);clone.querySelectorAll('button,[role=status]').forEach(node=>node.remove());clone.querySelectorAll('details').forEach(node=>node.open=true);
-    if(theme==='light')clone.querySelectorAll('img[src*="prime-logo-negative.svg"]').forEach(node=>node.src=new URL('../../public/prime-logo.png',import.meta.url).href);
+    const clone=article.cloneNode(true);clone.querySelectorAll('button,[role=status],.client-offer-footer').forEach(node=>node.remove());clone.querySelectorAll('details').forEach(node=>node.open=true);
+    if(theme==='light')clone.querySelectorAll('img[src*="prime-logo-negative.svg"]').forEach(node=>{node.src=new URL('../../public/prime-logo.png',import.meta.url).href;node.classList.remove('logo-on-dark');});
     doc.querySelector('#pdfRoot').append(clone);
     await Promise.all([...clone.querySelectorAll('img')].map(img=>img.decode().catch(()=>{img.remove();})));
     await doc.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     const height=Math.ceil(clone.getBoundingClientRect().height),lines=visibleTextLines(clone);
-    const intervals=[...lines.map(({top,bottom})=>({top,bottom})),...[...clone.querySelectorAll('.prime-offer-table-row,.prime-offer-contact-card,.prime-offer-contacts,.prime-offer-investment-adjustment,.prime-offer-price-section,.prime-offer-module-group,.prime-offer-service,.prime-offer-recurring-budget,li')].map(node=>{const r=node.getBoundingClientRect();return{top:r.top,bottom:r.bottom};})];
+    const intervals=[...lines.map(({top,bottom})=>({top,bottom})),...[...clone.querySelectorAll('.prime-offer-options,.prime-offer-option,.prime-offer-table-row,.prime-offer-contact-card,.prime-offer-contacts,.prime-offer-investment-adjustment,.prime-offer-price-section,.prime-offer-module-group,.prime-offer-service,.prime-offer-recurring-budget,li')].map(node=>{const r=node.getBoundingClientRect();return{top:r.top,bottom:r.bottom};})];
     for(const heading of clone.querySelectorAll('h3,h4')){
       const r=heading.getBoundingClientRect();intervals.push({top:r.top,bottom:r.bottom+40});
       const section=heading.closest('.prime-offer-price-section');
@@ -96,21 +98,32 @@ export async function downloadOfferPdf(article,offer,{theme='dark',label=fr=>fr,
       if(group){const first=group.querySelector('li');if(first)intervals.push({top:group.getBoundingClientRect().top,bottom:Math.min(first.getBoundingClientRect().top+44,group.getBoundingClientRect().bottom)});}
       if(heading.closest('.prime-offer-scope-header')){const first=clone.querySelector('.prime-offer-module-group li');if(first)intervals.push({top:r.top,bottom:first.getBoundingClientRect().top+44});}
     }
+    // Keep the options title, column units and the first proposal together.
+    for(const options of clone.querySelectorAll('.prime-offer-options')){
+      const first=options.querySelector('.prime-offer-option');
+      if(first){const heading=first.querySelector('.prime-offer-option-heading'),paragraph=first.querySelector('.prime-offer-option-detail p');intervals.push({top:options.getBoundingClientRect().top,bottom:(paragraph??heading??first).getBoundingClientRect().bottom});}
+    }
+    for(const option of clone.querySelectorAll('.prime-offer-option')){
+      const heading=option.querySelector('.prime-offer-option-heading'),paragraph=option.querySelector('.prime-offer-option-detail p');
+      if(heading&&paragraph)intervals.push({top:option.getBoundingClientRect().top,bottom:paragraph.getBoundingClientRect().bottom});
+    }
     const links=[...clone.querySelectorAll('a[href^="mailto:"],a[href^="tel:"]')].flatMap(node=>[...node.getClientRects()].map(rect=>({url:node.href,x:rect.left,top:rect.top,bottom:rect.bottom,width:rect.width})));
     const pages=pageSlices(height,intervals),html=await frozenHtml(clone),pdf=await PDFDocument.create(),font=await pdf.embedFont(StandardFonts.Helvetica),bold=await pdf.embedFont(StandardFonts.HelveticaBold);
-    const W=595.28,H=841.89,scale=W/pdfWidth,background=theme==='light'?'#ffffff':'#14233b';
+    const W=595.28,H=841.89,scale=W/pdfWidth,background=theme==='light'?'#ffffff':doc.defaultView.getComputedStyle(clone).getPropertyValue('--offer-gradient')||'#14233b';
     for(let i=0;i<pages.length;i++){
       onProgress(i+1,pages.length);const section=pages[i],page=pdf.addPage([W,H]);
       page.drawImage(await pdf.embedPng(await rasterPage(html,section,background)),{x:0,y:0,width:W,height:H});
       // Invisible selectable text follows the exact browser line positions.
       for(const line of lines.filter(line=>line.top>=section.start-.5&&line.bottom<=section.end+.5)){
-        const text=safeText(line.text);if(text.trim())page.drawText(text,{x:line.x*scale,y:H-(line.top-section.start+line.size)*scale,size:line.size*scale,font:line.bold?bold:font,opacity:0});
+        const text=safeText(line.text);if(text.trim())page.drawText(text,{x:line.x*scale,y:H-(pageMargin+line.top-section.start+line.size)*scale,size:line.size*scale,font:line.bold?bold:font,opacity:0});
       }
       for(const link of links.filter(link=>link.top>=section.start&&link.bottom<=section.end)){
-        const annotation=pdf.context.obj({Type:'Annot',Subtype:'Link',Rect:[link.x*scale,H-(link.bottom-section.start)*scale,(link.x+link.width)*scale,H-(link.top-section.start)*scale],Border:[0,0,0],A:{Type:'Action',S:'URI',URI:PDFString.of(link.url)}});
+        const annotation=pdf.context.obj({Type:'Annot',Subtype:'Link',Rect:[link.x*scale,H-(pageMargin+link.bottom-section.start)*scale,(link.x+link.width)*scale,H-(pageMargin+link.top-section.start)*scale],Border:[0,0,0],A:{Type:'Action',S:'URI',URI:PDFString.of(link.url)}});
         page.node.addAnnot(pdf.context.register(annotation));
       }
-      page.drawText(`${i+1} / ${pages.length}`,{x:W-42,y:10,size:8,font,color:theme==='light'?rgb(.28,.34,.42):rgb(.76,.82,.9)});
+      page.drawText(label('© Prime Technologies SA · Proposition confidentielle','© Prime Technologies SA · Vertrauliches Angebot'),{x:pageMargin*scale,y:pageMargin*scale/2-4,size:8,font,color:theme==='light'?rgb(.28,.34,.42):rgb(.76,.82,.9)});
+      const pageLabel=`${i+1} / ${pages.length}`;
+      page.drawText(pageLabel,{x:W-pageMargin*scale-font.widthOfTextAtSize(pageLabel,8),y:pageMargin*scale/2-4,size:8,font,color:theme==='light'?rgb(.28,.34,.42):rgb(.76,.82,.9)});
     }
     pdf.setTitle(`${offer.commune} ${offer.canton} · ${offer.public_version??'v1.0'} R${offer.revision}`);pdf.setAuthor('Prime Technologies SA');
     const bytes=await pdf.save(),url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'})),link=document.createElement('a');
