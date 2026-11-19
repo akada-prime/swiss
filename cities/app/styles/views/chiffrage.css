@@ -550,7 +550,8 @@
 .chiffrage-list-share-actions{grid-template-columns:1fr 1fr;padding:0 16px 14px}
 .chiffrage-list-share-actions>.chiffrage-button{padding:9px 10px;min-height:40px;font-size:13px}
 #chiffrageShareResult>.chiffrage-share-panel{margin:0;padding:0;border:0;background:transparent}
-.chiffrage-share-link-heading{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px}
+.chiffrage-share-link-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.chiffrage-share-link-heading .chiffrage-share-actions{margin-left:auto;justify-content:flex-end}
 .chiffrage-share-link-heading .chiffrage-link-switch{width:auto;min-height:36px;padding:6px 12px;font-size:12px;text-align:center}
 .chiffrage-link-switch[aria-checked="true"]{color:var(--skin-accent-text);border-color:var(--skin-accent)}
 .chiffrage-share-link input{width:100%;font-size:16px;min-height:44px;padding:8px 10px}

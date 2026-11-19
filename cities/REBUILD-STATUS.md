@@ -1247,3 +1247,19 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   ou tarification modifiée ; les offres enregistrées restent intactes.
 - Contrôles ciblés classification et configuration énergie ; cache du module
   20261119-decomptes-options-r1, compteur dynamique et fallback 721.
+
+### 19 novembre 2026 · Parcours du chiffrage et partage compact
+
+- Roadmap 3.0 : un dérouleur natif fermé par défaut retrace sept évolutions
+  livrées, des grilles fournisseurs aux offres et PDF. Texte FR/DE anonyme,
+  sans notes privées, chiffres client ni attribution personnelle. Les prochains
+  travaux ne présentent plus les options client comme non livrées.
+- Liens client : version à gauche et Copier/Ouvrir/Actif/Supprimer à droite
+  sur une seule ligne sur ordinateur ; URL puis statistiques en dessous.
+  Repli naturel des commandes sur Natel, sans changement de leurs actions.
+- Cache des traductions, de leurs consommateurs et des deux vues actualisé
+  avec 20261119-roadmap-share-r1 ; compteur dynamique et fallback 722.
+- Vérification : 305 tests et build réussis ; dérouleur ouvert/replié, sept
+  étapes anonymes et traduction DE contrôlés. Partage/copier vérifié avec
+  données fictives. Six largeurs sans débordement ; quatre commandes sur une
+  ligne dès 430 px, repli sur le Natel le plus étroit.
