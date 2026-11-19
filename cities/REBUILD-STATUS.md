@@ -1229,3 +1229,12 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
 - Cache CSS 20261119-oracle-color-r2 ; compteur dynamique, fallback 719.
 - Vérification : check (305 tests), build, six largeurs de 360 à 2560 px ;
   contrôle direct du moteur et du tableau Règles avec la référence corrigée.
+
+### 19 novembre 2026 · Dernier ajustement du partage client
+
+- Le lien et ses actions Copier/Ouvrir remontent avant la gestion du lien.
+  Actif/Supprimer rejoignent la dernière ligne, avec les statistiques.
+- Réorganisation du rendu commun aux dossiers et à leur historique ; aucun
+  changement des publications, des prix ni des actions de gestion.
+- Cache du module 20261119-share-layout-r1 ; compteur dynamique, fallback 720.
+- Contrôles ciblés du partage et des liens, syntaxe, recette desktop/Natel.
