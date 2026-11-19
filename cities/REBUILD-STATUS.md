@@ -1171,3 +1171,16 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   bloc complet replié puis ouvert, date préremplie et conservée après sauvegarde.
   Deux PDF de recette en quatre pages relus, références sur chaque feuille,
   liens actifs et aucune note privée. Notes et contacts de recette fictifs.
+
+## 2026-11-19 — Déplacements offerts et champs compacts
+
+- Toute ligne financière négative porte la même couleur de remise sur son libellé
+  et ses montants, notamment Déplacements offerts, dans l'aperçu, le client et
+  les deux PDF. Aucun calcul, tarif ou snapshot modifié.
+- Date de l'offre : largeur maximale de 18 rem, identique à Habitants retenus ;
+  la règle du formulaire ne peut plus l'étendre sur toute la ligne.
+- Colonnes financières de 160 px, en-têtes sur une seule ligne. Même alignement
+  pour toutes les lignes et les deux PDF ; la présentation Natel est conservée.
+- 20 tests ciblés réussis. Recette sur six largeurs : date compacte, titres
+  financiers non coupés sur PC, pas de débordement ; contrôle des deux PDF.
+- Cache 20261119-price-polish-r3, compteur dynamique conservé, fallback 716.
