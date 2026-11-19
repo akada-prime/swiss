@@ -1,12 +1,18 @@
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 import { bindOfferScope } from './offer/interactions.js';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from './offer/presentation.js?v=20261119-offer-density-r2';
-import verifiedCoats from './chiffrage/coats.js?v=20261119-offer-density-r2';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling, offerContacts } from './offer/presentation.js?v=20261119-dossier-r6';
+import { communeCoat } from './chiffrage/coats.js?v=20261119-dossier-r6';
 import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261112-coherence-r1';
 
 const root = document.getElementById('offerClientRoot');
 bindOfferScope(root);
+root.addEventListener('error',event=>{
+  if(event.target.matches?.('[data-communal-coat]')){
+    const fallback=document.createElement('span');fallback.className='chiffrage-coat-fallback';
+    fallback.textContent=label('Blason indisponible','Wappen nicht verfügbar');event.target.replaceWith(fallback);
+  }
+},true);
 const endpoint = 'https://ozdvmllgxduzquiujcbg.supabase.co/functions/v1/chiffrage?action=clientOffer';
 const enc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({
   '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch]);
@@ -27,21 +33,17 @@ const errorView = (temporary=false) => { root.innerHTML = `<div class="client-of
   <h1>${temporary?label('Chargement momentanément indisponible.','Vorübergehend nicht verfügbar.'):label('Cette proposition n’est pas accessible.','Dieses Angebot ist nicht verfügbar.')}</h1>
   <p>${temporary?label('Réessayez dans un instant.','Bitte versuchen Sie es gleich erneut.'):label('Le lien est incorrect ou désactivé. Contactez Prime Technologies.','Der Link ist ungültig oder deaktiviert. Bitte wenden Sie sich an Prime Technologies.')}</p>
   ${temporary?`<button class="client-pdf-button" data-retry>${label('Réessayer','Erneut versuchen')}</button>`:''}</div>`; };
-const pdfButton=()=>`<button class="client-pdf-button" data-client-pdf>${label('Télécharger le PDF','PDF herunterladen')} ↓</button>`;
+const pdfButton=()=>`<button class="client-pdf-button" data-client-pdf="dark">${label('Télécharger le PDF ↓ (pour voir)','PDF herunterladen ↓ (ansehen)')}</button><button class="client-pdf-button client-pdf-print" data-client-pdf="light">${label('Télécharger le PDF ↑ (pour imprimer)','PDF herunterladen ↑ (drucken)')}</button>`;
 root.addEventListener('click',async event=>{
   if(event.target.closest('[data-retry]')){void load();return;}
   const button=event.target.closest('[data-client-pdf]');if(!button)return;
   const buttons=[...root.querySelectorAll('[data-client-pdf]')];buttons.forEach(b=>b.disabled=true);
   const status=root.querySelector('[data-pdf-status]');status.textContent=label('Préparation du PDF…','PDF wird erstellt…');
   try {
-    const response=await fetch(endpoint.replace('action=clientOffer','action=clientOfferPdf'),{headers:{Authorization:`Bearer ${location.hash.slice(1)}`},cache:'no-store',referrerPolicy:'no-referrer'});
-    if(!response.ok)throw Error('pdf');
-    const blob=await response.blob();if(blob.type!=='application/pdf')throw Error('pdf');
-    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;
-    a.download=response.headers.get('Content-Disposition')?.match(/filename="([^"]+)"/)?.[1]||`Prime_${currentOffer.commune}_${currentOffer.canton}_R${currentOffer.revision}.pdf`;
-    document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+    const {downloadOfferPdf}=await import('./offer/pdf.js?v=20261119-dossier-r6');
+    await downloadOfferPdf(root.querySelector('.client-offer'),currentOffer,{theme:button.dataset.clientPdf,label,onProgress:(page,total)=>status.textContent=label(`Préparation du PDF · page ${page}/${total}…`,`PDF wird erstellt · Seite ${page}/${total}…`)});
     status.textContent=label('PDF prêt.','PDF bereit.');
-  }catch{status.textContent=label('Téléchargement impossible. Réessayez.','Download fehlgeschlagen. Bitte erneut versuchen.');}
+  }catch(error){console.error('Client PDF failed',error);status.textContent=label('Téléchargement impossible. Réessayez.','Download fehlgeschlagen. Bitte erneut versuchen.');}
   finally{buttons.forEach(b=>b.disabled=false);}
 });
 
@@ -58,8 +60,8 @@ function commercialSignature() {
   </div>`;
 }
 function renderOffer(o, map) {
-  const id=safeId(o.bfs_id), canton=safeCanton(o.canton), coat=verifiedCoats[id];
-  const coatSrc=coat?.asset ? (/^https:\/\//.test(coat.asset) ? coat.asset : `public/${coat.asset}`) : '';
+  const id=safeId(o.bfs_id), canton=safeCanton(o.canton), coat=communeCoat(id,asset);
+  const coatSrc=coat?.url ?? '';
   const names = new Map(offerPriceGroups.map(([key,fr,de])=>[key,label(fr,de)]));
   const current = o.version >= 2 && Array.isArray(o.breakdown);
   const rows = current ? o.breakdown : ['solutions','partners','hosting'].map(key=>({
@@ -80,7 +82,7 @@ function renderOffer(o, map) {
   const hero = offerHero({ asset, name:communeName, bfsId:o.bfs_id, population:fmt(o.population), reference,
     inhabitants:label('habitants','Einwohner'), heading:label('Votre projet, en chiffres.','Ihr Projekt in Zahlen.'),
     map:offerMap(map,o.bfs_id,label('Situation de la commune','Lage der Gemeinde')),
-    identity:offerIdentity({asset,canton,cantonLabel:cantonNames[canton],coatHtml:coatSrc ? `<img src="${enc(coatSrc)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}),
+    identity:offerIdentity({asset,canton,cantonLabel:cantonNames[canton],coatHtml:coatSrc ? `<img data-communal-coat="${id}" src="${enc(coatSrc)}" width="44" height="52" alt="${enc(label('Armoiries communales','Gemeindewappen'))}">` : ''}),
     details:`${commercialSignature()}` });
   currentOffer=o;
   root.innerHTML = `<div class="client-offer-toolbar">${pdfButton()}<span data-pdf-status role="status"></span></div><article class="chiffrage-offer client-offer">
@@ -91,7 +93,7 @@ function renderOffer(o, map) {
       </section>
       ${offerOptions(o.optional_options,{label,money})}
       <section class="client-offer-breakdown"><h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
-        ${priceDetail}
+        ${priceDetail}${offerContacts({client:o.client_contact,prime:o.prime_contact},label)}
       </section>
     </div>
     <footer class="client-offer-footer">${pdfButton()}<p>© Prime Technologies SA · ${label('Proposition confidentielle','Vertrauliches Angebot')}</p></footer>

@@ -1,0 +1,25 @@
+/* A4 uses the same public HTML and component styles in a fixed desktop layout. */
+html,body{margin:0;width:960px;background:#14233b}
+.client-offer-shell{width:960px;max-width:none;margin:0;padding:0;min-height:0}
+.client-offer{border:0;border-radius:0;box-shadow:none}
+.client-offer .chiffrage-offer-hero{padding-top:36px}
+.client-offer .chiffrage-offer-map{top:36px}
+.client-pdf-button,.client-offer-toolbar,.prime-offer-scope-toggle{display:none}
+html[data-pdf-theme=light],html[data-pdf-theme=light] body{background:#fff}
+html[data-pdf-theme=light] .prime-offer-banner{--skin-text:#14263f;background:#fff;color:#14263f}
+html[data-pdf-theme=light] .prime-offer-commercial{--skin-text:#14263f;--offer-text:#14263f;--offer-muted:#46566b;--offer-panel:#f6f8fb;--offer-border:#bac7d5;--offer-rebate:#8c2543;background:#fff;color:#14263f}
+html[data-pdf-theme=light] .chiffrage-offer-hero::before{opacity:.025}
+html[data-pdf-theme=light] .prime-offer-banner :is(h2,.chiffrage-offer-name,.chiffrage-offer-metadata,.prime-offer-signature-kicker,.prime-offer-signature-disclosure summary,.prime-offer-signature-content .prime-offer-signature-conclusion,.prime-offer-communal-figures strong,.prime-offer-recurring-budget>p strong){color:#14263f}
+html[data-pdf-theme=light] .prime-offer-banner :is(.chiffrage-offer-reference,.prime-offer-signature-content p,.prime-offer-communal-figures>div>span,.prime-offer-communal-figures small,.prime-offer-annual-detail h3,.prime-offer-recurring-budget dt,.prime-offer-recurring-budget>p>span){color:#46566b}
+html[data-pdf-theme=light] .prime-offer-banner :is(.prime-offer-signature-question span,.prime-offer-signature-content .prime-offer-signature-vision){color:#a84a00}
+html[data-pdf-theme=light] .prime-offer-communal-figures>div{border-color:#bac7d5}
+html[data-pdf-theme=light] :is(.prime-offer-annual-detail,.prime-offer-recurring-budget>p){border-color:#bac7d5;background:#f6f8fb}
+html[data-pdf-theme=light] .prime-offer-banner .prime-investment-equation{--investment-gross-ink:#225c91;--rebate-ink:#8c2543;color:#14263f}
+html[data-pdf-theme=light] .prime-offer-commercial h3{color:#14263f}
+html[data-pdf-theme=light] .client-offer-footer{background:#f6f8fb;color:#46566b;border-color:#bac7d5}
+html[data-pdf-theme=light] .prime-offer-commercial .logo-on-dark{display:none}
+html[data-pdf-theme=light] .prime-offer-commercial .logo-on-light{display:block}
+html{overflow:hidden}
+html[data-pdf-theme=light] .brand-innosolv{padding:8px 12px;background:#1a2d48;border-radius:8px;width:max-content;max-width:100%}
+
+html[data-pdf-theme=light] .prime-offer-recurring-budget dd{color:#14263f;-webkit-text-fill-color:#14263f}

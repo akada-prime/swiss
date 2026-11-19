@@ -28,3 +28,7 @@
  .client-offer{border:0;border-radius:0}
  .client-offer-toolbar{padding:var(--offer-space-3) var(--offer-gutter)}
 }
+.client-pdf-print{background:#fff;color:#14263f;border-color:#8d9caf}
+.client-offer-footer{display:flex;justify-content:center;flex-wrap:wrap}
+.client-offer-footer>p{flex-basis:100%}
+.client-pdf-render-frame{position:fixed;left:-10000px;top:0;width:960px;height:1400px;border:0;pointer-events:none;z-index:-1}

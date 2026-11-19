@@ -1,3 +1,4 @@
+import {dossierEditor,bindDossier} from './dossier-editor.js?v=20261119-dossier-r6';
 import {primeBoard} from './prime-board.js?v=20261118-prime-shared-r3';
 import { moduleGroup, groupModuleRows, primeModuleOrder } from './module-groups.js?v=20261118-prime-shared-r3';
 import {setSoftwareDisposition} from './software-selection.js?v=20261118-prime-shared-r3';
@@ -15,16 +16,16 @@ import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js?v=20261118-prime-shared-r3';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js?v=20261118-prime-shared-r3';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from '../offer/presentation.js?v=20261119-offer-density-r2';
+import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling, offerContacts } from '../offer/presentation.js?v=20261119-dossier-r6';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
 import { calculateQuote, calculateLcm, calculateOracle, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261116-software-target-r4';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261112-coherence-r1';
 import { calculationError } from './errors.js?v=20261116-software-target-r4';
-import bundledCoats from './coats.js?v=20261119-offer-density-r2';
+import { communeCoat } from './coats.js?v=20261119-dossier-r6';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261112-workspace-review-r1';
-import { comparisonRows, verifiedCoat, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-coherence-r1';
+import { comparisonRows, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-coherence-r1';
 import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-coherence-r1';
 
 import { optionPreview, previewModule, moduleRollup } from './business-presentation.js?v=20261116-software-target-r4';
@@ -37,7 +38,7 @@ const escape = runtime.escapeHtml;
 const endpoint = `${window.SUPABASE_URL}/functions/v1/chiffrage`;
 const sessionKey = 'prime-chiffrage-session';
 const state = { authenticated: false, loaded: false, catalog: null, versions: {},
-  activeVersions: {}, activePrimeOptions: [],
+  activeVersions: {}, activePrimeOptions: [], teamContacts:[],
   quotes: [], quote: null, draft: null, revision: null, title:'',
   board:{version:1,column_titles:defaultColumns},quoteStage:0,saveNumber:0,mode:'list', message: '', error: false, loading: null,
   pendingCommune: null, internal: false, dirty: false,
@@ -67,6 +68,7 @@ const cantonName = code => ({ JU: 'Jura', VD: 'Vaud', GE: 'Genève', FR: 'Fribou
 // GitHub Pages serves the source tree; Vite copies public assets to the build root.
 const assetPrefix = document.querySelector('script[type="module"][src*="/assets/"]') ? '' : 'public/';
 const assetUrl = path => new URL(assetPrefix + path, new URL(document.documentElement.dataset.chiffrageAssets || './', document.baseURI)).href;
+bindDossier(root,{getDraft:()=>state.draft,getTeam:()=>state.teamContacts,setTeam:team=>state.teamContacts=team,label:localLabel,isLocked:()=>state.quoteStage===2,dirty:()=>{state.dirty=true;notice(()=>t('chiffrage.completion.unsaved'));},saveProfile:value=>api('saveTeamContact',value),createProfile:value=>api('createTeamContact',value)});
 const tariffLabel = catalog => [...new Set((catalog?.items??[]).map(item=>item.catalog_version).filter(Boolean))].slice(0,3).join(' · ') || '—';
 const errorMessage = error => {
   if(error.code==='investmentTargetInvalid'||error.message==='Invalid investment target'||error.message==='Investment target exceeds gross')return localLabel('La cible doit être comprise entre 0 et l’investissement brut.','Der Zielpreis muss zwischen 0 und der Bruttoinvestition liegen.');
@@ -708,25 +710,9 @@ async function loadTerritory() {
   updateTerritory();
 }
 async function loadCoat(commune) {
-  const id = Number(commune.bfs_id);
-  if (coats.has(id)) return;
-  if (bundledCoats[id]) { coats.set(id, { ...bundledCoats[id], url: /^https:\/\//.test(bundledCoats[id].asset) ? bundledCoats[id].asset : assetUrl(bundledCoats[id].asset) }); updateTerritory(); return; }
-  coats.set(id, undefined);
-  const json = async params => {
-    const url = new URL('https://www.wikidata.org/w/api.php');
-    for (const [key, value] of Object.entries({ origin: '*', format: 'json', ...params })) url.searchParams.set(key, value);
-    const response = await fetch(url, { signal: AbortSignal.timeout(20000) });
-    if (!response.ok) throw new Error('Coat source unavailable');
-    return response.json();
-  };
-  try {
-    const search = await json({ action: 'wbsearchentities', search: commune.name, language: 'fr', type: 'item', limit: 8 });
-    const ids = (search.search ?? []).map(row => row.id).filter(id => /^Q\d+$/.test(id));
-    if (!ids.length) throw new Error('No verified municipality');
-    const data = await json({ action: 'wbgetentities', ids: ids.join('|'), props: 'claims' });
-    const coat = verifiedCoat(data.entities, id);
-    coats.set(id, coat ? { ...coat, url: `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(coat.filename)}?width=100` } : null);
-  } catch { coats.set(id, null); }
+  const id=Number(commune.bfs_id);
+  if(coats.has(id))return;
+  coats.set(id,communeCoat(id,assetUrl));
   updateTerritory();
 }
 root.addEventListener('error', event => {
@@ -761,7 +747,7 @@ function composerSection() {
   const erp = products.includes('pce') && products.includes('abacus') ? 'both' : products.includes('pce') ? 'pce' : products.includes('abacus') ? 'abacus' : 'none';
   const choices = (name, values, selected, attr, disabled=false) => `<div class="chiffrage-choice-group">${values.map(([value,label]) => `<label class="chiffrage-choice"><input type="radio" name="chiffrage-${name}" ${attr}="${value}" ${String(selected) === String(value) ? 'checked' : ''} ${disabled ? 'disabled' : ''}><span>${label}</span></label>`).join('')}</div>`;
   const profiles = referenceProfiles(state.catalog);
-  return `<div class="chiffrage-composer"><section class="chiffrage-section chiffrage-commune"><h2>${t('chiffrage.ui.projectDimensions')}</h2>
+  return `<div class="chiffrage-composer">${dossierEditor(state.draft,state.teamContacts,{label:localLabel,locked:state.quoteStage===2})}<section class="chiffrage-section chiffrage-commune"><h2>${t('chiffrage.ui.projectDimensions')}</h2>
     <div class="chiffrage-grid chiffrage-volumes">${field('dimensions.population', state.draft.dimensions.population, t('chiffrage.population'))}${field('dimensions.meters', state.draft.dimensions.meters, t('chiffrage.meters'))}${field('dimensions.taxes', state.draft.dimensions.taxes, t('chiffrage.taxes'))}${field('dimensions.licensedPopulation', state.draft.dimensions.licensedPopulation ?? state.draft.dimensions.population, t('chiffrage.licensedPopulation'))}${field('sql.users', state.draft.sql.users ?? sqlUsers,t('chiffrage.sqlUsers'))}${field('dimensions.employees',state.draft.dimensions.employees,t('chiffrage.employees'))}${products.includes('abacus')?field('dimensions.portalUsers',portalUsers(state.draft.dimensions),localLabel('Utilisateurs du portail Abacus','Benutzer Abacus-Portal')):''}${products.includes('pce')?field('oracle.full',state.draft.oracle.full,t('chiffrage.oracleFull'))+field('oracle.light',state.draft.oracle.light,t('chiffrage.oracleLight')):''}</div>
 
     ${products.includes('abacus')?`<p class="chiffrage-helper">${localLabel('Portail : moitié des collaborateurs proposée, arrondie au supérieur ; volume modifiable.','Portal: vorgeschlagen ist die halbe Mitarbeiterzahl, aufgerundet; Anzahl anpassbar.')}</p>`:''}
@@ -922,7 +908,7 @@ function offerSection() {
   const optionalShowcase=offerOptions(offerOptionReview(state.draft,state.catalog).options,{label:localLabel,money});
   return `<article class="chiffrage-offer"><div class="chiffrage-offer-body${optionalShowcase?' has-offer-options':''}"><section>${scope}
     ${!azHosting && hostingIncluded(state.draft) ? `<p>${t('chiffrage.hosting')} : ${t('chiffrage.yes')}</p>` : ''}</section>${optionalShowcase}
-    <section><h3>${localLabel('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>${priceDetail}<p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
+    <section><h3>${localLabel('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>${priceDetail}${offerContacts({client:state.draft.client_contact,prime:state.teamContacts.find(person=>person.id===state.draft.prime_contact_id)},localLabel)}<p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
 }
 
 function variantName(row) {
@@ -1253,7 +1239,8 @@ async function load() {
     try {
     await api('status');
     state.authenticated = true;
-    const [catalog,board]=await Promise.all([api('catalog'),api('board')]);
+    const [catalog,board,team]=await Promise.all([api('catalog'),api('board'),api('teamContacts')]);
+    state.teamContacts=team;
     const quotes=board.quotes;state.board=board;
     state.versions = catalog.active;
     state.activeVersions = catalog.active;
