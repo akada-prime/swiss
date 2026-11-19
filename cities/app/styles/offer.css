@@ -20,7 +20,7 @@
   --offer-accent: #f39449;
   --offer-large-size: 44px;
   --offer-body-size: 14px;
-  --offer-rebate: #8c2543;
+  --offer-rebate: #e59bb0;
   --offer-mark-opacity: .13;
 }
 .chiffrage-offer-body {
@@ -709,7 +709,7 @@ align-items:start;}
   display: none;
 }
 /* Negative wordmarks share the same dark presentation surface in a light preview. */
-html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) { --offer-accent:#a84a00; }
+html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) { --offer-accent:#a84a00; --offer-rebate:#8c2543; }
 html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .prime-offer-module-group>h4:has(img) {
   width:max-content;max-width:100%;padding:8px 12px;border-radius:8px;background:var(--skin-logo-surface,#26313a);
 }
