@@ -1144,3 +1144,30 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   nouvelles marges et les options compactes. Prix et publications inchangés.
 - Entrées/dépendances : 20261119-two-columns-r1. Compteur dynamique conservé,
   fallback attendu 714 ; contrôles complets et build en CI avant intégration.
+
+## 2026-11-19 — Suivi du dossier, références PDF et fournisseurs
+
+- Un seul accordéon Suivi du dossier fermé par défaut contient notes privées,
+  date et interlocuteurs. Date suisse proposée à la création, éditable et fixée
+  dans le snapshot à la sauvegarde. Les anciens liens gardent leur date de
+  publication ; télécharger plus tard ne change pas la date du document.
+- Contacts : Côté [commune] et Côté Prime Technologies SA dans le formulaire,
+  l'aperçu, la page client et les deux PDF. Notes toujours exclues de la projection.
+- Pied de chaque feuille PDF sur deux lignes remontées : commune/canton,
+  date, version publique et révision ; confidentialité puis pagination à droite.
+  Réserve haute 12 mm/basse 18 mm. Les contraintes des colonnes parallèles ne
+  doivent plus produire une feuille contenant seulement un titre ou une bordure.
+  Espacement papier des logiciels adapté sans réduire la taille des caractères.
+- Tirets de liste initiaux innosolv supprimés à la lecture du catalogue et des
+  fonctions incluses ; correction compatible avec les anciennes publications et
+  les propositions. Les traits d'union internes, codes et tarifs sont préservés.
+- Logiciels partenaires : un accordéon par fournisseur nommé, ses lignes restent
+  ensemble ; fournisseurs distincts séparés. Marque existante comme repli pour
+  les anciennes publications sans fournisseur. Champ fournisseur public explicite.
+- Fonction Chiffrage v43 déployée : date, normalisation des libellés et projection
+  fournisseur. Sans migration SQL, sans modifier les dossiers réels de recette.
+- Cache 20261119-dossier-date-r2 ; compteur dynamique conservé, fallback 715.
+- Validation : 301 tests et build réussis. Six largeurs réelles 360–2560 px,
+  bloc complet replié puis ouvert, date préremplie et conservée après sauvegarde.
+  Deux PDF de recette en quatre pages relus, références sur chaque feuille,
+  liens actifs et aucune note privée. Notes et contacts de recette fictifs.

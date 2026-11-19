@@ -1,5 +1,5 @@
 import {moduleId,serviceDays,retainRemoved} from './standards.js?v=20261112-coherence-r1';
-import {extraOptionId,extraOptionCandidates,cleanOptionLine} from './offer-options.js?v=20261118-prime-shared-r3';
+import {extraOptionId,extraOptionCandidates,cleanOptionLine} from './offer-options.js?v=20261119-dossier-date-r2';
 // A software has one disposition: included, proposed separately, or absent.
 export function setSoftwareDisposition(input,catalog,key,disposition){
  const next=structuredClone(input),[vendor,product,code]=key.split('/');

@@ -1,3 +1,4 @@
+import {validOfferDate} from '../offer/document-data.js';
 const limits={name:160,position:160,email:254,phone:60};
 export function safeContact(value={}){
   return Object.fromEntries(Object.entries(limits).map(([key,max])=>[key,String(value?.[key]??'').trim().slice(0,max)]));
@@ -10,6 +11,7 @@ export function validateContact(value){
   return contact;
 }
 export function validateDossier(input){
+  if(input.offer_date!==undefined&&!validOfferDate(input.offer_date))throw Error('Invalid offer date');
   if(input.internal_notes!==undefined&&(typeof input.internal_notes!=='string'||input.internal_notes.length>20000||input.internal_notes.includes('\0')))throw Error('Invalid internal notes');
   if(input.client_contact!==undefined)input.client_contact=validateContact(input.client_contact);
   if(input.prime_contact_id!=null&&!/^[a-z][a-z0-9-]{0,39}$/.test(input.prime_contact_id))throw Error('Invalid Prime contact');

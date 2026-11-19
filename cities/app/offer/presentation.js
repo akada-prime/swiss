@@ -1,4 +1,5 @@
-import {partnerBrand} from '../chiffrage/commercial-breakdown.js?v=20261112-coherence-r1';
+import {cleanModuleLabel} from '../chiffrage/module-labels.js?v=20261119-dossier-date-r2';
+import {partnerBrand} from '../chiffrage/commercial-breakdown.js?v=20261119-dossier-date-r2';
 // Pure presentation: no session, transport, catalog, editor or calculation imports.
 // Callers supply display values only. HTML slots are reserved for trusted renderers.
 export const escapeOffer = value => String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -58,18 +59,26 @@ export function offerMap(map, bfsId, label, fallback = '') {
 }
 const logos = { innosolvcity:'innosolvcity.png', ProConcept:'proconcept-wordmark.png', Abacus:'abacus-red-negative.svg', Prime:'prime-logo-negative.svg', 'Doc.Series':'doc-series-negative.png',eAdmin:'eadmin-negative.png' };
 export function offerScope(groups, { asset, label = fr => fr, services = null }) {
-  const branded=new Map();
-  for(const group of groups)for(const item of group.items){
-    const product=['Prime','Partenaires'].includes(group.product)?partnerBrand(typeof item==='string'?item:item.label)||group.product:group.product;
+  const branded=new Map(),productNames=new Map();
+  for(const group of groups)for(let item of group.items){
+    const clean=value=>typeof value==='string'?cleanModuleLabel(value):{...value,label:cleanModuleLabel(value.label),included:(value.included??[]).map(clean)};
+    item=clean(item);
+    let product=['Prime','Partenaires'].includes(group.product)?partnerBrand(typeof item==='string'?item:item.label)||group.product:group.product;
+    const productKey=String(product).trim().replace(/\s+/g,' ').toLocaleLowerCase();
+    if(!productNames.has(productKey))productNames.set(productKey,String(product).trim());
+    product=productNames.get(productKey);
     if(!branded.has(product))branded.set(product,[]);branded.get(product).push(item);
   }
   groups=[...branded].map(([product,items])=>({product,items}));
   groups=groups.map(group=>{
     const sections=new Map(), items=[];
     for(const item of group.items) {
-      if(typeof item==='string' || !item.section){items.push(item);continue;}
-      if(!sections.has(item.section)){const section={label:item.section,items:[]};sections.set(item.section,section);items.push(section);}
-      sections.get(item.section).items.push(item);
+      const partner=!['innosolvcity','Prime','ProConcept','Abacus','Portail Abacus'].includes(group.product);
+      const title=partner?(typeof item==='object'&&item.supplier||group.product):typeof item==='object'&&item.section;
+      if(!title){items.push(item);continue;}
+      const key=String(title).trim().replace(/\s+/g,' ').toLocaleLowerCase();
+      if(!sections.has(key)){const section={label:String(title).trim(),items:[]};sections.set(key,section);items.push(section);}
+      sections.get(key).items.push(item);
     }
     return {...group,items};
   });
@@ -153,7 +162,7 @@ export function offerBreakdown(rows, { label, money, legacy = false, publisherRo
 }
 
 export function offerOptionTitle(title,benefit=''){
- const text=value=>String(value??'').trim().replace(/\s+/g,' '),name=text(title),detail=text(benefit);
+ const text=value=>String(value??'').trim().replace(/\s+/g,' '),name=cleanModuleLabel(text(title)),detail=text(benefit);
  return name+(detail?` (${detail})`:'');
 }
 
@@ -175,14 +184,14 @@ export function offerPublisherBilling(rows, { label, money }) {
   return `<section class="prime-offer-price-section"><h3>${label('Facturation directe par l’éditeur','Direkte Rechnungsstellung durch den Hersteller')}</h3><p>${label('Ces abonnements sont compris dans le budget annuel présenté. Ils sont facturés directement par l’éditeur, séparément de Prime.','Diese Abonnemente sind im ausgewiesenen Jahresbudget enthalten. Sie werden direkt vom Hersteller und getrennt von Prime verrechnet.')}</p><div class="prime-offer-price-list">${rows.map(row => `<div class="prime-offer-price-row"><h4>${e(row.label)}${Number.isInteger(row.users) ? ` · ${row.users} ${label('utilisateurs','Benutzer')}` : ''}</h4><strong>${e(money(row.annual))} / ${label('an','Jahr')}</strong></div>`).join('')}</div></section>`;
 }
 
-export function offerContacts({client,prime}={},label=fr=>fr){
+export function offerContacts({client,prime,commune}={},label=fr=>fr){
   const card=(contact,title)=>{
     if(!contact||!['name','position','email','phone'].some(key=>contact[key]))return '';
     const email=String(contact.email??''),phone=String(contact.phone??'');
     const mail=/^[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+$/.test(email)?`<a href="mailto:${e(email)}">${e(email)}</a>`:e(email);
     const telephone=phone.replace(/[^\d+]/g,'');
-    return `<section class="prime-offer-contact-card"><h4>${title}</h4>${contact.name?`<strong>${e(contact.name)}</strong>`:''}${contact.position?`<span>${e(contact.position)}</span>`:''}${email?`<span>${mail}</span>`:''}${phone?`<a href="tel:${e(telephone)}">${e(phone)}</a>`:''}</section>`;
+    return `<section class="prime-offer-contact-card"><h4>${e(title)}</h4>${contact.name?`<strong>${e(contact.name)}</strong>`:''}${contact.position?`<span>${e(contact.position)}</span>`:''}${email?`<span>${mail}</span>`:''}${phone?`<a href="tel:${e(telephone)}">${e(phone)}</a>`:''}</section>`;
   };
-  const cards=card(client,label('Côté client','Beim Kunden'))+card(prime,'Prime Technologies');
+  const cards=card(client,label(commune?`Côté ${commune}`:'Côté client',commune?`Seitens ${commune}`:'Beim Kunden'))+card(prime,label('Côté Prime Technologies SA','Seitens Prime Technologies SA'));
   return cards?`<section class="prime-offer-contacts"><h3>${label('Vos interlocuteurs','Ihre Ansprechpersonen')}</h3><div>${cards}</div></section>`:'';
 }

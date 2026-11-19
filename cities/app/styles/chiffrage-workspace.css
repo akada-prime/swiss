@@ -276,10 +276,14 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 .chiffrage-option-dialog .chiffrage-showcase-card-body{padding-inline:0}
 
 /* Private conversation notes and shared contact assignment, first in Projet. */
-.chiffrage-dossier{display:grid;gap:16px;grid-column:1/-1}
-.chiffrage-dossier>h2{margin:8px 0 0}
-.chiffrage-dossier-notes-fold>summary{font-size:18px;font-weight:650;line-height:1.4}
-.chiffrage-dossier-notes-body{display:grid;gap:12px;margin-top:16px}
+.chiffrage-dossier{grid-column:1/-1}
+.chiffrage-dossier-body{display:grid;gap:16px;margin-top:20px}
+.chiffrage-dossier-body>h2{margin:8px 0 0}
+.chiffrage-dossier-notes-body{display:grid;gap:12px}
+.chiffrage-dossier-notes-body h3{margin:0}
+.chiffrage-dossier-date{display:grid;gap:8px;font-size:14px}
+.chiffrage-dossier-date input{width:min(100%,240px)}
+.chiffrage-dossier-date small{font-size:14px;color:var(--skin-secondary);line-height:1.5}
 .chiffrage-dossier-notes{display:grid;gap:8px;font-size:14px}
 .chiffrage-dossier-notes textarea{width:100%;min-height:150px;padding:14px 16px;resize:vertical;border:1px solid var(--pc-field-border);border-radius:var(--pc-field-radius);background:var(--pc-field-bg);color:var(--skin-text);font:inherit;font-size:16px;line-height:1.5}
 .chiffrage-dossier-contacts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
