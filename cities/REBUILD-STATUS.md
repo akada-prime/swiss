@@ -1212,3 +1212,20 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   frontend. Contrôle d'un ancien lien : classement corrigé et totaux identiques.
   305 tests et build réussis ; six largeurs sans débordement, investissements
   alignés à droite y compris sur Natel ; deux exports en quatre pages relus.
+
+## 2026-11-19 — Lisibilité des remises internes et référence Oracle Light
+
+- L'onglet Offre utilise le même rouge clair de remise que la page client,
+  depuis le jeton commun de présentation ; la version papier blanche garde
+  son rouge adapté à l'impression, comme le thème clair interne.
+- Correction autorisée du tarif d'acquisition Oracle Light dans les onze
+  références privées de paramètres, actives ou encore liées à des dossiers.
+  Seul ce champ a changé ; Full et les deux maintenances sont conservés.
+  Le moteur et le tableau Règles lisent cette référence, sans valeur parallèle.
+  Les snapshots enregistrés et les publications ne sont pas réécrits : une
+  sauvegarde recalcule le dossier, une publication actualise son lien client.
+- Rapprochement du nouveau classeur en lecture seule, communiqué hors dépôt.
+  Les montants et données du client restent hors des sources publiques.
+- Cache CSS 20261119-oracle-color-r2 ; compteur dynamique, fallback 719.
+- Vérification : check (305 tests), build, six largeurs de 360 à 2560 px ;
+  contrôle direct du moteur et du tableau Règles avec la référence corrigée.
