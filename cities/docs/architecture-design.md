@@ -565,7 +565,7 @@ Cette règle remplace le passage manuel à #461 décrit dans le lot précédent.
 
 ### 2026-11-19 — Papier A4 et titres des propositions
 
-`offer/pdf.js` possède la réserve de 12 mm en haut/bas et le fond de chaque
+`offer/pdf.js` possède la réserve de 12 mm en haut et 18 mm en bas et le fond de chaque
 feuille, indépendamment des blocs HTML. Les calques sélectionnables et les
 liens emploient le même décalage ; confidentialité et pagination appartiennent
 au pied de page papier. Les fonds de section sont transparents uniquement dans
@@ -574,3 +574,28 @@ le rendu PDF foncé ; la page internet garde sa composition existante.
 `offerOptionTitle` possède la composition Titre (bénéfice), réutilisée par le
 renderer public et l'aperçu de saisie. Le bénéfice reste un champ indépendant
 dans le dossier et la projection ; seul le détail non vide crée un dérouleur.
+
+### 2026-11-19 — Suivi du dossier et identité des documents
+
+`dossier-editor.js` regroupe notes privées, date et interlocuteurs dans le seul
+accordéon Suivi du dossier, fermé par défaut. `offer_date` est une date civile
+YYYY-MM-DD du snapshot, proposée à la création en heure suisse et modifiable.
+Les anciens dossiers proposent leur date de création ; une sauvegarde la fixe.
+La projection publique inclut cette date sans les notes. `offer/document-data.js`
+valide la date et compose les références communes au client et au PDF. Les
+anciennes publications utilisent leur `issued_at`, jamais l'heure du téléchargement.
+Le pied de chaque feuille PDF réserve deux lignes : commune/canton, date,
+version publique et révision à 35 pt du bas ; confidentialité/pagination à 22 pt.
+Les intitulés Côté [commune] et Côté Prime Technologies SA sont partagés avec
+l'aperçu. Fonction Chiffrage v43 : validation et projection uniquement, sans
+migration de schéma ni réécriture des dossiers ou publications existants.
+
+Le fournisseur de chaque logiciel partenaire devient un libellé public explicite.
+`module-scope.js` conserve uniquement son nom et les modules sûrs ; aucun prix
+interne, note ou référence technique n'est ajouté. `offerScope` regroupe les
+lignes par fournisseur, ignore les différences de casse/espaces, et crée un
+accordéon par nom. Sans fournisseur ancien, la marque du groupe sert de titre.
+`module-labels.js` retire uniquement les tirets de liste initiaux des libellés
+innosolv à la lecture du catalogue et des contenus inclus ; le renderer nettoie
+aussi les publications anciennes. Codes, prix et traits d'union internes restent
+intacts. Aucun catalogue stocké ni dossier client n'est réécrit pour ce nettoyage.

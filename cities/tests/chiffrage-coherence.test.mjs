@@ -33,11 +33,11 @@ test('editable project management percentage affects only its calculated charge 
  assert.equal(before.lines.find(x=>x.item_code==='projet').investment_pv,200);assert.equal(after.lines.find(x=>x.item_code==='projet').investment_pv,300);assert.equal(after.summary.annual,before.summary.annual);
  const source=readFileSync(new URL('../app/chiffrage/view.js',import.meta.url),'utf8');assert.equal((source.match(/field\('projectManagement.percent'/g)||[]).length,1);assert.equal((source.match(/field\('sql.override'/g)||[]).length,1);
 });
-test('Doc.Series and eAdmin use the supplied light/dark brands without exposing supplier fields',async()=>{
+test('Doc.Series and eAdmin use the supplied light/dark brands with the named supplier disclosure',async()=>{
  const {customerModuleScope}=await import('../app/chiffrage/module-scope.js');
  const input={products:[],modules:[],partners:[{label:'GED',supplier:'Doc.Series',category:'license'},{label:'Guichet virtuel',supplier:'eAdmin Solutions SA',category:'license'}]};
- const scope=customerModuleScope(input,{items:[],parameters:{}});assert.deepEqual(scope.map(x=>x.product),['Doc.Series','eAdmin']);assert.doesNotMatch(JSON.stringify(scope),/supplier|Solutions SA/);
- const html=offerScope(scope.map(g=>({product:g.product,items:g.items.map(x=>({label:x.fr}))})),{label,asset:p=>p});
+ const scope=customerModuleScope(input,{items:[],parameters:{}});assert.deepEqual(scope.map(x=>x.product),['Doc.Series','eAdmin']);assert.equal(scope[1].items[0].supplier,'eAdmin Solutions SA');assert.doesNotMatch(JSON.stringify(scope),/annual_pa|investment_pa|unit_day_rate|note/);
+ const html=offerScope(scope.map(g=>({product:g.product,items:g.items.map(x=>({label:x.fr,supplier:x.supplier}))})),{label,asset:p=>p});
  for(const name of ['doc-series-negative.png','doc-series-positive.png','eadmin-negative.png','eadmin-positive.png'])assert.ok(html.includes(name));
  assert.match(offerScope([{product:'Partenaires',items:['Doc.Series GED']}],{label,asset:p=>p}),/doc-series-negative.png/);
 });

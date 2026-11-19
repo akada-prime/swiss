@@ -1,5 +1,5 @@
 import { portalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
-import { optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
+import { optionApplies } from './module-catalog.js?v=20261119-dossier-date-r2';
 // Pure calculation domain. Real catalogs and commercial parameters are loaded
 // from the protected server store, never from this public source file.
 import { hostingIncluded } from './configuration.js';

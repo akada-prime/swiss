@@ -1,20 +1,29 @@
+import {offerFooter} from './document-data.js?v=20261119-dossier-date-r2';
 // Render the customer-only HTML with the browser's own layout, not a second template.
 import {PDFDocument,StandardFonts,PDFString,rgb} from '../../public/vendor/pdf-lib-1.17.1.esm.min.js';
 export const pdfWidth=960;
 export const pageHeight=pdfWidth*297/210;
 export const pageMargin=pdfWidth*12/210;
-export const pageContentHeight=pageHeight-2*pageMargin;
+export const pageBottomMargin=pdfWidth*18/210;
+export const pageContentHeight=pageHeight-pageMargin-pageBottomMargin;
 const styleProperties=`display position box-sizing width height min-width min-height max-width max-height top right bottom left inset float clear overflow overflow-x overflow-y visibility opacity z-index isolation padding-top padding-right padding-bottom padding-left margin-top margin-right margin-bottom margin-left color background-color background-image background-position background-size background-repeat background-clip border-top-width border-right-width border-bottom-width border-left-width border-top-style border-right-style border-bottom-style border-left-style border-top-color border-right-color border-bottom-color border-left-color border-top-left-radius border-top-right-radius border-bottom-right-radius border-bottom-left-radius box-shadow font-family font-size font-weight font-style line-height letter-spacing text-align text-decoration text-transform text-indent white-space word-break overflow-wrap vertical-align list-style-type list-style-position grid-template-columns grid-template-rows grid-column grid-row grid-auto-flow gap row-gap column-gap justify-content justify-items justify-self align-content align-items align-self flex-direction flex-wrap flex-grow flex-shrink flex-basis order transform transform-origin object-fit object-position fill stroke stroke-width paint-order clip-path -webkit-text-fill-color`.split(' ');
 const toDataUrl=blob=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(blob);});
 const safeText=value=>String(value).replace(/[\u2018\u2019]/g,"'").replace(/[\u2010-\u2015\u2212]/g,'-').replace(/[\u00a0\u202f]/g,' ').replace(/[^\x20-\x7e\xa0-\xffŒœŸ€•]/g,' ');
 export function pageSlices(height,intervals,limit=pageContentHeight){
   const pages=[];let start=0;
   while(start<height){
-    let end=Math.min(height,start+limit);
-    for(let pass=0;pass<20;pass++){
-      const crossing=intervals.filter(row=>row.top>start+4&&row.top<end&&row.bottom>end&&row.bottom-row.top<limit).sort((a,b)=>a.top-b.top)[0];
-      if(!crossing)break;end=crossing.top;
-    }
+    const boundary=rows=>{
+      let end=Math.min(height,start+limit);
+      for(let pass=0;pass<rows.length+1;pass++){
+        const crossing=rows.filter(row=>row.top>start+4&&row.top<end&&row.bottom>end&&row.bottom-row.top<limit).sort((a,b)=>a.top-b.top)[0];
+        if(!crossing)break;end=crossing.top;
+      }
+      return end;
+    };
+    let end=boundary(intervals);
+    // Parallel columns can form an overlapping chain taller than one sheet.
+    // Relax whole-card protection rather than emit pages with only a title/border.
+    if(end-start<limit*.25&&height-start>limit)end=boundary(intervals.filter(row=>!row.soft));
     if(end<=start+4)end=Math.min(height,start+limit);
     pages.push({start,end});start=end;
   }
@@ -79,7 +88,7 @@ async function rasterPage(html,{start,end},background){
 }
 export async function downloadOfferPdf(article,offer,{theme='dark',label=fr=>fr,onProgress=()=>{}}={}){
   const frame=document.createElement('iframe');frame.className='client-pdf-render-frame';frame.title=label('Préparation du PDF','PDF-Vorbereitung');frame.setAttribute('aria-hidden','true');
-  frame.src=new URL('../../offre-pdf.html?v=20261119-two-columns-r1',import.meta.url).href;
+  frame.src=new URL('../../offre-pdf.html?v=20261119-dossier-date-r2',import.meta.url).href;
   const loaded=new Promise((resolve,reject)=>{frame.onload=resolve;frame.onerror=reject;});document.body.append(frame);
   try{
     await loaded;const doc=frame.contentDocument;doc.documentElement.dataset.pdfTheme=theme;doc.documentElement.lang=document.documentElement.lang;
@@ -89,7 +98,7 @@ export async function downloadOfferPdf(article,offer,{theme='dark',label=fr=>fr,
     await Promise.all([...clone.querySelectorAll('img')].map(img=>img.decode().catch(()=>{img.remove();})));
     await doc.fonts.ready;await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
     const height=Math.ceil(clone.getBoundingClientRect().height),lines=visibleTextLines(clone);
-    const intervals=[...lines.map(({top,bottom})=>({top,bottom})),...[...clone.querySelectorAll('.prime-offer-options,.prime-offer-option,.prime-offer-table-row,.prime-offer-contact-card,.prime-offer-contacts,.prime-offer-investment-adjustment,.prime-offer-price-section,.prime-offer-module-group,.prime-offer-service,.prime-offer-recurring-budget,li')].map(node=>{const r=node.getBoundingClientRect();return{top:r.top,bottom:r.bottom};})];
+    const intervals=[...lines.map(({top,bottom})=>({top,bottom})),...[...clone.querySelectorAll('.prime-offer-options,.prime-offer-option,.prime-offer-table-row,.prime-offer-contact-card,.prime-offer-contacts,.prime-offer-investment-adjustment,.prime-offer-price-section,.prime-offer-module-group,.prime-offer-service,.prime-offer-recurring-budget,li')].map(node=>{const r=node.getBoundingClientRect();return{top:r.top,bottom:r.bottom,soft:node.matches('.prime-offer-module-group,.prime-offer-service,li')};})];
     for(const heading of clone.querySelectorAll('h3,h4')){
       const r=heading.getBoundingClientRect();intervals.push({top:r.top,bottom:r.bottom+40});
       const section=heading.closest('.prime-offer-price-section');
@@ -110,6 +119,7 @@ export async function downloadOfferPdf(article,offer,{theme='dark',label=fr=>fr,
     const links=[...clone.querySelectorAll('a[href^="mailto:"],a[href^="tel:"]')].flatMap(node=>[...node.getClientRects()].map(rect=>({url:node.href,x:rect.left,top:rect.top,bottom:rect.bottom,width:rect.width})));
     const pages=pageSlices(height,intervals),html=await frozenHtml(clone),pdf=await PDFDocument.create(),font=await pdf.embedFont(StandardFonts.Helvetica),bold=await pdf.embedFont(StandardFonts.HelveticaBold);
     const W=595.28,H=841.89,scale=W/pdfWidth,background=theme==='light'?'#ffffff':doc.defaultView.getComputedStyle(clone).getPropertyValue('--offer-gradient')||'#14233b';
+    const footer=offerFooter(offer,label);
     for(let i=0;i<pages.length;i++){
       onProgress(i+1,pages.length);const section=pages[i],page=pdf.addPage([W,H]);
       page.drawImage(await pdf.embedPng(await rasterPage(html,section,background)),{x:0,y:0,width:W,height:H});
@@ -121,9 +131,11 @@ export async function downloadOfferPdf(article,offer,{theme='dark',label=fr=>fr,
         const annotation=pdf.context.obj({Type:'Annot',Subtype:'Link',Rect:[link.x*scale,H-(pageMargin+link.bottom-section.start)*scale,(link.x+link.width)*scale,H-(pageMargin+link.top-section.start)*scale],Border:[0,0,0],A:{Type:'Action',S:'URI',URI:PDFString.of(link.url)}});
         page.node.addAnnot(pdf.context.register(annotation));
       }
-      page.drawText(label('© Prime Technologies SA · Proposition confidentielle','© Prime Technologies SA · Vertrauliches Angebot'),{x:pageMargin*scale,y:pageMargin*scale/2-4,size:8,font,color:theme==='light'?rgb(.28,.34,.42):rgb(.76,.82,.9)});
+      const footerInk=theme==='light'?rgb(.28,.34,.42):rgb(.76,.82,.9),identity=safeText(footer.identity),identitySize=Math.min(9,(W-2*pageMargin*scale)/font.widthOfTextAtSize(identity,1));
+      page.drawText(identity,{x:pageMargin*scale,y:35,size:identitySize,font,color:footerInk});
+      page.drawText(footer.legal,{x:pageMargin*scale,y:22,size:8,font,color:footerInk});
       const pageLabel=`${i+1} / ${pages.length}`;
-      page.drawText(pageLabel,{x:W-pageMargin*scale-font.widthOfTextAtSize(pageLabel,8),y:pageMargin*scale/2-4,size:8,font,color:theme==='light'?rgb(.28,.34,.42):rgb(.76,.82,.9)});
+      page.drawText(pageLabel,{x:W-pageMargin*scale-font.widthOfTextAtSize(pageLabel,8),y:22,size:8,font,color:theme==='light'?rgb(.28,.34,.42):rgb(.76,.82,.9)});
     }
     pdf.setTitle(`${offer.commune} ${offer.canton} · ${offer.public_version??'v1.0'} R${offer.revision}`);pdf.setAuthor('Prime Technologies SA');
     const bytes=await pdf.save(),url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'})),link=document.createElement('a');

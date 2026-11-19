@@ -1,4 +1,4 @@
-import {extraOptionCandidates} from './offer-options.js?v=20261118-prime-shared-r3';
+import {extraOptionCandidates} from './offer-options.js?v=20261119-dossier-date-r2';
 import {validatePrimeLayout} from './module-groups.js?v=20261118-prime-shared-r3';
 import {bindKanban} from './kanban.js';
 import {workspaceEscape as e} from './workspace-ui.js';

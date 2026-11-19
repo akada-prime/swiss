@@ -1,4 +1,6 @@
-import {dossierEditor,bindDossier} from './dossier-editor.js?v=20261119-two-columns-r1';
+import {cleanInnosolvCatalog} from './module-labels.js?v=20261119-dossier-date-r2';
+import {swissDate,validOfferDate} from '../offer/document-data.js?v=20261119-dossier-date-r2';
+import {dossierEditor,bindDossier} from './dossier-editor.js?v=20261119-dossier-date-r2';
 import {primeBoard} from './prime-board.js?v=20261118-prime-shared-r3';
 import { moduleGroup, groupModuleRows, primeModuleOrder } from './module-groups.js?v=20261118-prime-shared-r3';
 import {setSoftwareDisposition} from './software-selection.js?v=20261118-prime-shared-r3';
@@ -7,26 +9,26 @@ import { openWorkspaceDialog } from './workspace-dialog.js?v=20261112-coherence-
 import { portalUsers, suggestedPortalUsers } from './subscriptions.js?v=20261112-workspace-review-r1';
 import { bindCommunePicker } from './commune-picker.js?v=20261112-coherence-r1';
 import {workspaceIdentity,workspaceTabs,bindWorkspaceMenus,focusWorkspacePanel,restoreWorkspaceScroll} from './workspace-ui.js?v=20261112-coherence-r1';
-import {extraOptionId,extraOptionCandidates,offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261118-prime-shared-r3';
-import {offerOptionPriceSummary,offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261119-two-columns-r1';
+import {extraOptionId,extraOptionCandidates,offerOptionCandidates,priceOfferOption,offerOptionReview,maxOfferOptions} from './offer-options.js?v=20261119-dossier-date-r2';
+import {offerOptionPriceSummary,offerOptionsEditor,optionReadinessMessage} from './offer-options-editor.js?v=20261119-dossier-date-r2';
 import { referenceShell, bindReference } from './rules-reference-view.js?v=20261111-subscriptions-r1';
 import { gemeindeOrder, classifiedModules, availableModuleSection, proposedOptions, otherOptions } from './module-classification.js?v=20261112-coherence-r1';
-import { includedForParent, optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
+import { includedForParent, optionApplies } from './module-catalog.js?v=20261119-dossier-date-r2';
 import { bindOfferScope } from '../offer/interactions.js';
-import { customerModuleScope } from './module-scope.js?v=20261118-prime-shared-r3';
-import { catalogEditor, readCatalogRecord } from './catalog-editor.js?v=20261118-prime-shared-r3';
+import { customerModuleScope } from './module-scope.js?v=20261119-dossier-date-r2';
+import { catalogEditor, readCatalogRecord } from './catalog-editor.js?v=20261119-dossier-date-r2';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerOptionTitle, offerPublisherBilling, offerContacts } from '../offer/presentation.js?v=20261119-two-columns-r1';
+import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerOptionTitle, offerPublisherBilling, offerContacts } from '../offer/presentation.js?v=20261119-dossier-date-r2';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
 import { calculateQuote, calculateLcm, calculateOracle, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261116-software-target-r4';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261112-coherence-r1';
 import { calculationError } from './errors.js?v=20261116-software-target-r4';
-import { communeCoat } from './coats.js?v=20261119-two-columns-r1';
+import { communeCoat } from './coats.js?v=20261119-dossier-date-r2';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261112-workspace-review-r1';
 import { comparisonRows, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-coherence-r1';
-import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-coherence-r1';
+import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261119-dossier-date-r2';
 
 import { optionPreview, previewModule, moduleRollup } from './business-presentation.js?v=20261116-software-target-r4';
 
@@ -98,6 +100,7 @@ async function api(action, payload, params = {}) {
     error.item = result.item;
     throw error;
   }
+  if(result.catalog)result.catalog=cleanInnosolvCatalog(result.catalog);
   return result;
 }
 
@@ -317,7 +320,7 @@ async function firstDraft(row) {
   // A tab may have stayed open while a tariff version was activated.
   const active=await api('catalog');
   state.catalog=active.catalog;state.versions=active.active;state.activeVersions=active.active;state.activePrimeOptions=active.catalog?.parameters?.prime_options??[];
-  state.draft = { bfs_id: Number(row.id), name: row.name, canton: row.canton,
+  state.draft = { offer_date:swissDate(), bfs_id: Number(row.id), name: row.name, canton: row.canton,
     context: { integrator: row.integrator, software: row.software, erp: row.erp,
       hosting: row.hosting, notes: row.notes },
     dimensions: { population: Number(row.expectedPopulation ?? 0),
@@ -904,11 +907,11 @@ function offerSection() {
     hostingLines.some(line=>line.item_code==='hosting-reference') ||
     /\bAZ(?: Informatique)?\b/i.test([state.draft.context?.hosting,...hostingLines.map(line=>line.label)].join(' ')));
   const lcm = ({none:t('chiffrage.lcmNone'),gold:'Gold',platinium:'Platinum'})[state.draft.lcm.selection??'none']??state.draft.lcm.selection;
-  const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),reference:entry.reference,section:localLabel(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel,services:{az:azHosting,hosting:hostingIncluded(state.draft),lcm,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}}});
+  const scope = offerScope(themes.map(group=>({product:group.product,items:group.items.map(entry=>({label:localLabel(entry.fr,entry.de),supplier:entry.supplier,reference:entry.reference,section:localLabel(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:localLabel(child.fr,child.de),theme:localLabel(child.theme_fr,child.theme_de)}))}))})),{asset:assetUrl,label:localLabel,services:{az:azHosting,hosting:hostingIncluded(state.draft),lcm,money,prices:{gold:result.summary.lcm?.gold?.effective_value,platinum:result.summary.lcm?.platinium?.effective_value}}});
   const optionalShowcase=offerOptions(offerOptionReview(state.draft,state.catalog).options,{label:localLabel,money});
   return `<article class="chiffrage-offer"><div class="chiffrage-offer-body${optionalShowcase?' has-offer-options':''}"><section>${scope}
     ${!azHosting && hostingIncluded(state.draft) ? `<p>${t('chiffrage.hosting')} : ${t('chiffrage.yes')}</p>` : ''}</section>${optionalShowcase}
-    <section><h3>${localLabel('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>${priceDetail}${offerContacts({client:state.draft.client_contact,prime:state.teamContacts.find(person=>person.id===state.draft.prime_contact_id)},localLabel)}<p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
+    <section><h3>${localLabel('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>${priceDetail}${offerContacts({commune:state.draft.name,client:state.draft.client_contact,prime:state.teamContacts.find(person=>person.id===state.draft.prime_contact_id)},localLabel)}<p class="chiffrage-helper">${localLabel('Investissement initial · annuel dès la 2e année. Le total 5 ans comprend quatre annuités.','Anfangsinvestition · jährlich ab dem 2. Jahr. Fünf Jahre umfassen vier Jahresraten.')}</p></section></div></article>`;
 }
 
 function variantName(row) {
@@ -1264,7 +1267,7 @@ async function open(id) {
   const row = await api('quote', undefined, { id });
   state.quote = row.id; state.revision = row.current_revision;
   state.title=row.title;state.quoteStage=quoteStage(row);state.saveNumber=saveNumber(row);
-  state.draft = row.snapshot.input; state.versions = row.snapshot.catalog_versions;
+  state.draft = row.snapshot.input;state.draft.offer_date??=swissDate(row.created_at)||swissDate(); state.versions = row.snapshot.catalog_versions;
   const stored = await api('catalog', undefined, { versions: JSON.stringify(state.versions) });
   state.catalog = stored.catalog;
   history.replaceState(history.state,'',quoteAddress(id));
@@ -1830,6 +1833,7 @@ root.addEventListener('click', async event => {
       return;
     }
     if (action === 'save' || action === 'duplicate') {
+      if(!validOfferDate(state.draft.offer_date)){const dossier=root.querySelector('[data-dossier]');if(dossier)dossier.open=true;root.querySelector('[data-dossier-date]')?.reportValidity();notice(()=>localLabel("Précise la date de l'offre avant d'enregistrer.",'Angebotsdatum vor dem Speichern ergänzen.'),true);return;}
       if(currentCompletion().some(item=>item.kind==='discount')){focusCompletion();notice(()=>localLabel('Corrige la remise avant d’enregistrer.','Rabatt vor dem Speichern korrigieren.'),true);return;}
       if(['save','duplicate'].includes(action) && currentCompletion().some(item=>item.kind==='module'||item.kind==='portal')){focusCompletion();notice(()=>localLabel('Précise les jours des modules retenus (0 est accepté) et les utilisateurs du portail avant d’enregistrer.','Tage der gewählten Module (0 ist erlaubt) und Portalbenutzer vor dem Speichern ergänzen.'),true);return;}
       // Other incomplete prices can remain a draft; unknown selected-module days cannot.
@@ -1867,7 +1871,7 @@ root.addEventListener('click', async event => {
         expected_revision: state.revision, title: state.title,
         catalog_versions: old.snapshot.catalog_versions,
         input: old.snapshot.input, allow_incomplete: true });
-      state.draft = old.snapshot.input; state.versions = old.snapshot.catalog_versions;
+      state.draft = old.snapshot.input;state.draft.offer_date??=swissDate(old.created_at)||swissDate(); state.versions = old.snapshot.catalog_versions;
       state.revision=saved.revision;state.quoteStage=saved.workflow_stage??0;state.saveNumber=saved.save_number??state.saveNumber;
       const catalog = await api('catalog', undefined,
         { versions: JSON.stringify(state.versions) });

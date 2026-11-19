@@ -7,18 +7,18 @@ import {publicOfferFromSaved} from '../supabase/functions/chiffrage/client-proje
 import handler,{signSession} from '../supabase/functions/chiffrage/server.mjs';
 const client={name:'Client <test>',position:'Secrétariat',email:'contact@example.test',phone:'032 000 00 00'};
 test('notes remain private while only the declared contact fields enter a publication',()=>{
- const input={products:[],modules:[],primeLines:[],partners:[],internal_notes:'PRIVATE_NOTES_NEVER_PUBLISH',client_contact:{...client,private:'PRIVATE_NESTED'},prime_contact_id:'alex'};
+ const input={offer_date:'2026-11-19',products:[],modules:[],primeLines:[],partners:[],internal_notes:'PRIVATE_NOTES_NEVER_PUBLISH',client_contact:{...client,private:'PRIVATE_NESTED'},prime_contact_id:'alex'};
  const projection=publicOfferFromSaved({bfs_id:9999,commune_name:'Synthetic',canton:'JU',population:100,snapshot:{revision:1,input,result:{lines:[],summary:{investment:0,annual:0}}}},{items:[],parameters:{}});
- assert.deepEqual(projection.client_contact,client);assert.equal(projection.prime_contact_id,'alex');assert.doesNotMatch(JSON.stringify(projection),/PRIVATE|internal_notes/);
- assert.throws(()=>validateDossier({internal_notes:'x'.repeat(20001)}));assert.throws(()=>validateDossier({client_contact:{email:'invalid'}}));
+ assert.equal(projection.offer_date,'2026-11-19');assert.deepEqual(projection.client_contact,client);assert.equal(projection.prime_contact_id,'alex');assert.doesNotMatch(JSON.stringify(projection),/PRIVATE|internal_notes/);
+ assert.throws(()=>validateDossier({internal_notes:'x'.repeat(20001)}));assert.throws(()=>validateDossier({client_contact:{email:'invalid'}}));assert.throws(()=>validateDossier({offer_date:'2026-02-29'}));
  assert.deepEqual(safeContact({...client,private:'hidden'}),client);
 });
 test('the first-tab editor exposes private notes and click-accessible draggable contact choices',()=>{
- const html=dossierEditor({internal_notes:'A\nB',client_contact:client,prime_contact_id:'alex'},[{id:'alex',name:'Alex Test',position:'Marchés',email:'prime@example.test',phone:'079 000 00 00'}],{label:fr=>fr});
- assert.match(html,/Notes internes/);assert.match(html,/<details class="chiffrage-dossier-notes-fold" data-disclosure-key="dossier-notes">/);assert.match(html,/>A\nB<\/textarea>/);assert.match(html,/jamais affichées au client/);assert.match(html,/draggable="true"/);assert.match(html,/data-prime-person="alex"/);assert.match(html,/aria-pressed="true"/);assert.match(html,/dossier-client="position"/);assert.match(html,/tous ses chiffrages/);
+ const html=dossierEditor({name:'Boécourt',offer_date:'2026-11-19',internal_notes:'A\nB',client_contact:client,prime_contact_id:'alex'},[{id:'alex',name:'Alex Test',position:'Marchés',email:'prime@example.test',phone:'079 000 00 00'}],{label:fr=>fr});
+ assert.match(html,/Suivi du dossier/);assert.match(html,/Côté Boécourt/);assert.match(html,/Côté Prime Technologies SA/);assert.match(html,/type="date" data-dossier-date value="2026-11-19"/);assert.match(html,/Notes internes/);assert.match(html,/<details class="chiffrage-section chiffrage-dossier" data-dossier data-disclosure-key="dossier">/);assert.match(html,/>A\nB<\/textarea>/);assert.match(html,/jamais affichées au client/);assert.match(html,/draggable="true"/);assert.match(html,/data-prime-person="alex"/);assert.match(html,/aria-pressed="true"/);assert.match(html,/dossier-client="position"/);assert.match(html,/tous ses chiffrages/);
 });
 test('public contact rendering escapes names, links only declared addresses and omits absent cards',()=>{
- const html=offerContacts({client,prime:{name:'Prime',phone:'079 000 00 00'}},fr=>fr);assert.match(html,/Client &lt;test&gt;/);assert.match(html,/mailto:contact@example.test/);assert.match(html,/tel:0790000000/);assert.equal(offerContacts({}), '');assert.doesNotMatch(html,/<input|textarea|data-prime-edit/);
+ const html=offerContacts({commune:'Boécourt',client,prime:{name:'Prime',phone:'079 000 00 00'}},fr=>fr);assert.match(html,/Côté Boécourt/);assert.match(html,/Côté Prime Technologies SA/);assert.match(html,/Client &lt;test&gt;/);assert.match(html,/mailto:contact@example.test/);assert.match(html,/tel:0790000000/);assert.equal(offerContacts({}), '');assert.doesNotMatch(html,/<input|textarea|data-prime-edit/);
  const equation=investmentEquation({investment:1000,investment_gross:1500,investment_discount:500},{label:fr=>fr,money:n=>`${n} CHF HT`,currency:true});assert.match(equation,/gross-label">brut/);assert.match(equation,/rebate-label">remise/);assert.match(equation,/prime-offer-currency">CHF HT/);
 });
 test('shared profiles require an editor session and public reads resolve current details for the selected profile only',async()=>{

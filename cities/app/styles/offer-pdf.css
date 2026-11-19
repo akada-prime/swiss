@@ -26,3 +26,10 @@ html[data-pdf-theme=light] .prime-offer-recurring-budget dd{color:#14263f;-webki
 
 /* The page renderer owns one full-bleed background, including blank page space. */
 html[data-pdf-theme=dark] :is(.client-offer,.prime-offer-banner,.prime-offer-commercial,.client-offer-footer){background:transparent}
+
+/* The paper margin owns the whitespace below the last section. */
+.client-offer .prime-offer-commercial{padding-bottom:0}
+
+/* Fit the two software columns on A4 without reducing their type size. */
+.client-offer .prime-offer-scope{--offer-card-padding:16px;--offer-card-gap:12px;--offer-row-gap:6px}
+.client-offer .prime-offer-scope-header{margin-bottom:12px}

@@ -1,3 +1,4 @@
+import {cleanInnosolvCatalog} from '../../../app/chiffrage/module-labels.js';
 import {safeContact,validateContact,validateDossier} from '../../../app/chiffrage/dossier-data.js';
 import { validateModuleGroups,validatePrimeLayout } from '../../../app/chiffrage/module-groups.js';
 import {exportClientPdf,pdfFilename} from './client-pdf.mjs';
@@ -124,8 +125,8 @@ async function loadCatalog(versions) {
     const [active]=await db('chiffrage_catalog_versions',{query:{select:'id',vendor:'eq.commercial',active:'eq.true'}});
     if(active){const [shared]=await db('chiffrage_parameters',{query:{select:'content',catalog_version_id:`eq.${active.id}`}});parameterRows[0].content.prime_options=shared?.content.prime_options??parameterRows[0].content.prime_options;}
   }
-  return { items: items.map(row => row.content), parameters: parameterRows[0].content,
-    versions: versionsRows };
+  return cleanInnosolvCatalog({ items: items.map(row => row.content), parameters: parameterRows[0].content,
+    versions: versionsRows });
 }
 
 async function savedQuote(id, revision) {

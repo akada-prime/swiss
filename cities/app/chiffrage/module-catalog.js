@@ -1,3 +1,4 @@
+import {cleanModuleLabel} from './module-labels.js?v=20261119-dossier-date-r2';
 import { abacusComponents } from './abacus-components.js?v=20261112-workspace-review-r1';
 // Catalog content is independent of price calculation. Versioned with commercial parameters.
 const clean = (value, limit = 160) => String(value ?? '').trim().slice(0, limit);
@@ -5,8 +6,8 @@ const vendors = new Set(['innosolv','abacus','pce']);
 export function moduleParents(catalog) {
   const parents = (catalog?.items ?? []).filter(row=>vendors.has(row.vendor) && (row.vendor!=='abacus' || !String(row.item_code).includes('.') || String(row.item_code).endsWith('.1'))).map(row=>({
     key:`${row.vendor}/${row.product}/${row.item_code}`, vendor:row.vendor,
-    label_fr:row.label_fr || row.label_de || row.item_code,
-    label_de:row.label_de || row.label_fr || row.item_code
+    label_fr:row.vendor==='innosolv'?cleanModuleLabel(row.label_fr || row.label_de || row.item_code):row.label_fr || row.label_de || row.item_code,
+    label_de:row.vendor==='innosolv'?cleanModuleLabel(row.label_de || row.label_fr || row.item_code):row.label_de || row.label_fr || row.item_code
   }));
   parents.push({key:'pce/ERP/finances',vendor:'pce',label_fr:'Finances',label_de:'Finanzen'},
     {key:'pce/ERP/salaires',vendor:'pce',label_fr:'Salaires',label_de:'Löhne'});
@@ -20,7 +21,7 @@ export function includedForParent(input, catalog, parent) {
   const authored=source.filter(row=>row.parent===parent);
   if(authored.length)return authored.filter(row=>row.enabled !== false)
     .sort((a,b)=>(a.order ?? 0)-(b.order ?? 0))
-    .map(row=>({fr:clean(row.label_fr,120),de:clean(row.label_de || row.label_fr,120),
+    .map(row=>({fr:clean(parent.startsWith('innosolv/')?cleanModuleLabel(row.label_fr):row.label_fr,120),de:clean(parent.startsWith('innosolv/')?cleanModuleLabel(row.label_de || row.label_fr):row.label_de || row.label_fr,120),
       theme_fr:clean(row.theme_fr,80),theme_de:clean(row.theme_de || row.theme_fr,80)})).filter(row=>row.fr);
   const item=catalog?.items?.find(row=>`${row.vendor}/${row.product}/${row.item_code}`===parent);
   if(item?.vendor!=='abacus')return [];

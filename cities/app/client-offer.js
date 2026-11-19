@@ -1,9 +1,10 @@
+import {documentDate,formattedOfferDate} from './offer/document-data.js?v=20261119-dossier-date-r2';
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 import { bindOfferScope } from './offer/interactions.js';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling, offerContacts } from './offer/presentation.js?v=20261119-two-columns-r1';
-import { communeCoat } from './chiffrage/coats.js?v=20261119-two-columns-r1';
-import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261112-coherence-r1';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling, offerContacts } from './offer/presentation.js?v=20261119-dossier-date-r2';
+import { communeCoat } from './chiffrage/coats.js?v=20261119-dossier-date-r2';
+import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261119-dossier-date-r2';
 
 const root = document.getElementById('offerClientRoot');
 bindOfferScope(root);
@@ -40,7 +41,7 @@ root.addEventListener('click',async event=>{
   const buttons=[...root.querySelectorAll('[data-client-pdf]')];buttons.forEach(b=>b.disabled=true);
   const status=root.querySelector('[data-pdf-status]');status.textContent=label('Préparation du PDF…','PDF wird erstellt…');
   try {
-    const {downloadOfferPdf}=await import('./offer/pdf.js?v=20261119-two-columns-r1');
+    const {downloadOfferPdf}=await import('./offer/pdf.js?v=20261119-dossier-date-r2');
     await downloadOfferPdf(root.querySelector('.client-offer'),currentOffer,{theme:button.dataset.clientPdf,label,onProgress:(page,total)=>status.textContent=label(`Préparation du PDF · page ${page}/${total}…`,`PDF wird erstellt · Seite ${page}/${total}…`)});
     status.textContent=label('PDF prêt.','PDF bereit.');
   }catch(error){console.error('Client PDF failed',error);status.textContent=label('Téléchargement impossible. Réessayez.','Download fehlgeschlagen. Bitte erneut versuchen.');}
@@ -72,13 +73,13 @@ function renderOffer(o, map) {
   const detailed=Array.isArray(o.cost_details)?o.cost_details.map(row=>({...row,label:label(row.label_fr,row.label_de)})):null;
   const priceDetail = offerBreakdown(detailed ?? rows.map(row=>({...row,label:names.get(row.key)||legacyNames[row.key]||row.key})),{label,money,legacy:!current,publisherRows:o.publisher_billing??[]});
   const scope = current && Array.isArray(o.scope) ? offerScope(o.scope.map(group=>({
-    product:group.product, items:group.items.map(entry=>({label:label(entry.fr,entry.de),section:label(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:label(child.fr,child.de),theme:label(child.theme_fr??'',child.theme_de??child.theme_fr??'')}))}))
+    product:group.product, items:group.items.map(entry=>({label:label(entry.fr,entry.de),supplier:entry.supplier,section:label(entry.section_fr??'',entry.section_de??entry.section_fr??''),included:(entry.included??[]).map(child=>({label:label(child.fr,child.de),theme:label(child.theme_fr??'',child.theme_de??child.theme_fr??'')}))}))
   })), { asset, label, services:{az:o.hosting_provider==='az',hosting:o.hosting,lcm:o.lcm,prices:o.lcm_prices,money} }) : `<div class="client-offer-products">${(o.products||[]).map(name=>`<span>${enc(name)}</span>`).join('') || '—'}</div>`;
   const communeName = [o.commune,canton].filter(Boolean).join(' ');
   const quoteTitle = String(o.quote_title ?? '').trim();
   const titlePrefix = [communeName,o.commune].find(name => name && quoteTitle.startsWith(`${name} `));
   const referenceTitle = titlePrefix ? quoteTitle.slice(titlePrefix.length).trim() : quoteTitle;
-  const reference = [o.public_version||referenceTitle,`${label('Révision','Version')} ${o.revision}`].filter(Boolean).join(' · ');
+  const reference = [o.public_version||referenceTitle,`${label('Révision','Version')} ${o.revision}`,formattedOfferDate(documentDate(o))].filter(Boolean).join(' · ');
   const hero = offerHero({ asset, name:communeName, bfsId:o.bfs_id, population:fmt(o.population), reference,
     inhabitants:label('habitants','Einwohner'), heading:label('Votre projet, en chiffres.','Ihr Projekt in Zahlen.'),
     map:offerMap(map,o.bfs_id,label('Situation de la commune','Lage der Gemeinde')),
@@ -93,7 +94,7 @@ function renderOffer(o, map) {
       </section>
       ${offerOptions(o.optional_options,{label,money})}
       <section class="client-offer-breakdown"><h3>${label('Ce que comprend votre offre','Was Ihr Angebot umfasst')}</h3>
-        ${priceDetail}${offerContacts({client:o.client_contact,prime:o.prime_contact},label)}
+        ${priceDetail}${offerContacts({commune:o.commune,client:o.client_contact,prime:o.prime_contact},label)}
       </section>
     </div>
     <footer class="client-offer-footer">${pdfButton()}<p>© Prime Technologies SA · ${label('Proposition confidentielle','Vertrauliches Angebot')}</p></footer>

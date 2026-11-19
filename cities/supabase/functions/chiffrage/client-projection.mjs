@@ -1,3 +1,4 @@
+import {validOfferDate} from '../../../app/offer/document-data.js';
 import {safeContact} from '../../../app/chiffrage/dossier-data.js';
 import {offerOptionReview} from '../../../app/chiffrage/offer-options.js';
 import { customerModuleScope } from '../../../app/chiffrage/module-scope.js';
@@ -53,6 +54,7 @@ export function publicOfferFromSaved(quote, catalog) {
     ...(lcmPrices ? {lcm_prices:lcmPrices} : {}),
     ...(snapshot.input?.prime_contact_id?{prime_contact_id:short(snapshot.input.prime_contact_id,40)}:{}),
     ...(snapshot.input?.client_contact&&Object.values(safeContact(snapshot.input.client_contact)).some(Boolean)?{client_contact:safeContact(snapshot.input.client_contact)}:{}),
+    ...(validOfferDate(snapshot.input?.offer_date)?{offer_date:snapshot.input.offer_date}:{}),
     version:2,quote_title:short(quote.title),commune:short(quote.commune_name),
     bfs_id:Number(quote.bfs_id),canton:short(quote.canton,2).toUpperCase(),
     population:Number(quote.population),revision:Number(snapshot.revision),

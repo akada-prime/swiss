@@ -1,8 +1,9 @@
+import {cleanModuleLabel} from './module-labels.js?v=20261119-dossier-date-r2';
 import { moduleGroup, primeModuleOrder } from './module-groups.js?v=20261118-prime-shared-r3';
 // Optional editor-curated ideas, priced separately on a copy. No real tariffs in this module.
 import { calculateQuote } from './calculate.js?v=20261116-software-target-r3';
 import { moduleId,serviceDays,referenceProfiles } from './standards.js?v=20261112-coherence-r1';
-import { optionApplies } from './module-catalog.js?v=20261112-workspace-review-r1';
+import { optionApplies } from './module-catalog.js?v=20261119-dossier-date-r2';
 export const maxOfferOptions=1000;
 function shortOfferText(value,max){return String(value??'').trim().slice(0,max);}
 function offerNumber(value){return value==null||value===''?null:Number(value);}
@@ -14,7 +15,7 @@ export function validateOfferOptions(value) {
     if(!/^(innosolv|abacus|prime|pce|partners)\/[\w.-]+\/[\w.-]+$/.test(key)||seen.has(key)||days!==null&&(!Number.isFinite(days)||days<0||days>1000))throw new Error('Invalid offer option');
     if(annual!==null&&(!/^prime\/|^partners\//.test(key)||!Number.isFinite(annual)||annual<0||annual>100000000))throw new Error('Invalid Prime option annual price');
     seen.add(key);
-    return {key,label_fr:shortOfferText(row.label_fr,100),label_de:shortOfferText(row.label_de,100),benefit_fr:shortOfferText(row.benefit_fr,180),benefit_de:shortOfferText(row.benefit_de,180),description_fr:shortOfferText(row.description_fr,700),description_de:shortOfferText(row.description_de,700),days,...(annual!==null?{annual_override:annual}:{}),...(row.source_line?{source_line:cleanOptionLine(row.source_line)}:{})};
+    return {key,label_fr:shortOfferText(key.startsWith('innosolv/')?cleanModuleLabel(row.label_fr):row.label_fr,100),label_de:shortOfferText(key.startsWith('innosolv/')?cleanModuleLabel(row.label_de):row.label_de,100),benefit_fr:shortOfferText(row.benefit_fr,180),benefit_de:shortOfferText(row.benefit_de,180),description_fr:shortOfferText(row.description_fr,700),description_de:shortOfferText(row.description_de,700),days,...(annual!==null?{annual_override:annual}:{}),...(row.source_line?{source_line:cleanOptionLine(row.source_line)}:{})};
   });
 }
 const extraFields=['item_code','label','label_fr','label_de','supplier','quantity','days','suggested_days','unit_day_rate','investment_pv','investment_override','investment_fixed_pv','annual_pv','annual_override','annual_rule','annual_pricing','annual_pa','investment_pa','gp_included','note'];
