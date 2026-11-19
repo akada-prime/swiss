@@ -116,7 +116,7 @@
 .chiffrage-cost-lines>div>span:last-child{text-align:right;color:var(--skin-text);white-space:nowrap}
 .chiffrage-cost-lines small{display:block;font-size:12px;color:var(--skin-muted);margin-top:3px}
 .chiffrage-five-year{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding-top:18px;border-top:1px solid var(--skin-border);font-size:13px;color:var(--skin-secondary)}
-.chiffrage-five-year strong{font-size:16px;color:var(--skin-text);white-space:nowrap}
+.chiffrage-five-year strong{font-size:32px;line-height:1.2;font-weight:600;letter-spacing:-.045em;color:var(--skin-text);white-space:nowrap}
 .chiffrage-summary>.chiffrage-helper{margin:0;font-size:12px}
 .chiffrage-summary-foot{border-top:1px solid var(--skin-border-soft);padding-top:14px;color:var(--skin-muted);font-size:12px;line-height:1.8}
 .chiffrage-summary h2{font-size:22px;margin:0;letter-spacing:-.025em}

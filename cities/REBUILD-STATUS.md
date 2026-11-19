@@ -1085,3 +1085,24 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
 - Contrôles complets : 291 tests réussis et build Vite réussi avant intégration ;
   dépendances et entrées invalidées avec 20261119-dossier-r6. Compteur main :
   fallback attendu 711, résolution dynamique conservée.
+
+## 2026-11-19 — Finitions du dossier et du Kanban
+
+- Survol du Kanban porté par la tuile complète, pied de carte compris ;
+  rotation et transparence du déplacement conservées.
+- Avatars Prime : initiale du prénom puis deux premières lettres du nom,
+  sans accents et en capitales. Codes fournis AKO/OFI/NHI utilisés pour les
+  trois fiches historiques qui ne contiennent encore qu'un prénom.
+- Notes privées conservées dans Projet, dans un dérouleur fermé au départ.
+  Ouverture et texte préservés lors du changement d'interlocuteur et des
+  rafraîchissements ; les contacts restent directement accessibles.
+- Montant TCO du résumé interne à 32 px, comme l'investissement. Rappel dans
+  Partage : enregistrer, publier la nouvelle version et utiliser son nouveau
+  lien pour un ajout/changement d'interlocuteurs. Les anciennes publications
+  restent figées ; les coordonnées du profil Prime référencé restent courantes.
+- 16 tests ciblés réussis. Recette Chrome six largeurs sans débordement ;
+  repliage/sauvegarde des notes, initiales, égalité investissement/TCO et fond
+  de la tuile entière vérifiés. Contrat et build complets exécutés en CI.
+  Aucun dossier, profil ou lien client réel modifié pendant cette recette.
+- Dépendances et entrées invalidées avec 20261119-refinements-r1 ; compteur
+  dynamique conservé, fallback de la prochaine livraison : 712.

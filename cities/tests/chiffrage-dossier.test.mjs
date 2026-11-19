@@ -15,7 +15,7 @@ test('notes remain private while only the declared contact fields enter a public
 });
 test('the first-tab editor exposes private notes and click-accessible draggable contact choices',()=>{
  const html=dossierEditor({internal_notes:'A\nB',client_contact:client,prime_contact_id:'alex'},[{id:'alex',name:'Alex Test',position:'Marchés',email:'prime@example.test',phone:'079 000 00 00'}],{label:fr=>fr});
- assert.match(html,/Notes internes/);assert.match(html,/jamais affichées au client/);assert.match(html,/draggable="true"/);assert.match(html,/data-prime-person="alex"/);assert.match(html,/aria-pressed="true"/);assert.match(html,/dossier-client="position"/);assert.match(html,/tous ses chiffrages/);
+ assert.match(html,/Notes internes/);assert.match(html,/<details class="chiffrage-dossier-notes-fold" data-disclosure-key="dossier-notes">/);assert.match(html,/>A\nB<\/textarea>/);assert.match(html,/jamais affichées au client/);assert.match(html,/draggable="true"/);assert.match(html,/data-prime-person="alex"/);assert.match(html,/aria-pressed="true"/);assert.match(html,/dossier-client="position"/);assert.match(html,/tous ses chiffrages/);
 });
 test('public contact rendering escapes names, links only declared addresses and omits absent cards',()=>{
  const html=offerContacts({client,prime:{name:'Prime',phone:'079 000 00 00'}},fr=>fr);assert.match(html,/Client &lt;test&gt;/);assert.match(html,/mailto:contact@example.test/);assert.match(html,/tel:0790000000/);assert.equal(offerContacts({}), '');assert.doesNotMatch(html,/<input|textarea|data-prime-edit/);

@@ -1,4 +1,4 @@
-import {dossierEditor,bindDossier} from './dossier-editor.js?v=20261119-dossier-r6';
+import {dossierEditor,bindDossier} from './dossier-editor.js?v=20261119-refinements-r1';
 import {primeBoard} from './prime-board.js?v=20261118-prime-shared-r3';
 import { moduleGroup, groupModuleRows, primeModuleOrder } from './module-groups.js?v=20261118-prime-shared-r3';
 import {setSoftwareDisposition} from './software-selection.js?v=20261118-prime-shared-r3';
@@ -16,14 +16,14 @@ import { bindOfferScope } from '../offer/interactions.js';
 import { customerModuleScope } from './module-scope.js?v=20261118-prime-shared-r3';
 import { catalogEditor, readCatalogRecord } from './catalog-editor.js?v=20261118-prime-shared-r3';
 import { frenchTypography } from '../core/french-typography.js?v=20261028-offer-polish-r1';
-import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling, offerContacts } from '../offer/presentation.js?v=20261119-dossier-r6';
+import { investmentEquation, offerIdentity, offerMap, offerScope, offerServices, offerBreakdown, offerOptions, offerPublisherBilling, offerContacts } from '../offer/presentation.js?v=20261119-refinements-r1';
 import { t, number } from '../core/i18n.js?v=20261107-jura-r1';
 import { subscribePreferences } from '../core/preferences.js?v=20261107-jura-r1';
 import { calculateQuote, calculateLcm, calculateOracle, calculateSql, licensedPopulation, suggestedSqlUsers } from './calculate.js?v=20261116-software-target-r4';
 import { energyCodes, isEnergyModule, suggestedVolume, suggestedEmployees, updatePopulation, hostingIncluded, setEnergy } from './configuration.js';
 import { referenceProfiles, serviceDays, applyReference, applyHosting, retainRemoved, moduleId, serviceApplies, defaultModule } from './standards.js?v=20261112-coherence-r1';
 import { calculationError } from './errors.js?v=20261116-software-target-r4';
-import { communeCoat } from './coats.js?v=20261119-dossier-r6';
+import { communeCoat } from './coats.js?v=20261119-refinements-r1';
 import { completionItems, displayedServiceDays } from './completion.js?v=20261112-workspace-review-r1';
 import { comparisonRows, stableValue, productNames, offerThemes, savedQuoteFigures, referenceLabel, implementationSummary, softwareMargins } from './presentation.js?v=20261112-coherence-r1';
 import { commercialPriceGroup, offerPriceGroups, publisherBillingRows,publicCostDetails } from './commercial-breakdown.js?v=20261112-coherence-r1';
@@ -1498,7 +1498,7 @@ function renderSharedLinks(rows,id,currentRevision=null,ready=true) {
   ${!needsPublication&&ready&&state.mode==='editor'&&id===state.quote&&state.quoteStage!==2?`<button type="button" class="chiffrage-button" data-action="publishNewRevision" data-id="${escape(id)}">${localLabel('Créer une nouvelle publication','Neue Veröffentlichung erstellen')}</button>`:''}
   ${needsPublication?`<button type="button" class="chiffrage-button" data-action="shareOffer" data-id="${escape(id)}" ${ready?'':'disabled'}>${ready?localLabel('Publier la version enregistrée','Gespeicherte Version veröffentlichen'):localLabel('Finaliser avant publication','Vor Veröffentlichung fertigstellen')}</button>`:''}
   ${links.length>1?`<details class="chiffrage-share-history"><summary>${localLabel('Historique','Verlauf')} (${links.length-1})</summary>${links.slice(1).map(render).join('')}</details>`:''}
-  <div class="chiffrage-share-notes"><p>${localLabel('Sans expiration · ouvertures non uniques, aperçus compris.','Ohne Ablaufdatum · Aufrufe einschließlich eigener Vorschauen, nicht eindeutig.')}</p></div></section>`;
+  <div class="chiffrage-share-notes"><p>${localLabel('Pour ajouter ou changer les interlocuteurs visibles : enregistrez le dossier, publiez une nouvelle version, puis partagez son nouveau lien. Les coordonnées de la fiche Prime choisie restent synchronisées.','Um sichtbare Ansprechpersonen hinzuzufügen oder zu wechseln: Dossier speichern, eine neue Version veröffentlichen und den neuen Link teilen. Die Kontaktdaten der gewählten Prime-Person bleiben synchronisiert.')}</p><p>${localLabel('Sans expiration · ouvertures non uniques, aperçus compris.','Ohne Ablaufdatum · Aufrufe einschließlich eigener Vorschauen, nicht eindeutig.')}</p></div></section>`;
 }
 async function loadSharedLinks(id,container) {
   const card=container.closest('.chiffrage-list-item')??[...root.querySelectorAll('[data-quote-card]')].find(node=>node.dataset.quoteCard===id);

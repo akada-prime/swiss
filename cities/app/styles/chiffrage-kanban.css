@@ -15,7 +15,7 @@
 .chiffrage-column-empty{margin:auto;padding:24px 12px;text-align:center;font-size:14px;color:var(--skin-muted)}
 .chiffrage-kanban .chiffrage-list-item{position:relative;isolation:isolate}
 .chiffrage-card-open{display:block;width:100%;min-width:0;text-align:left;color:var(--skin-text);background:transparent;border:0;padding:18px 16px 16px;cursor:pointer}
-.chiffrage-card-open:hover{background:var(--skin-hover)}
+.chiffrage-kanban .chiffrage-list-item:hover{background:var(--skin-hover)}
 .chiffrage-card-open .chiffrage-saved-heading{padding-right:12px;align-items:flex-start}
 .chiffrage-card-open .chiffrage-saved-heading strong{font-size:17px;line-height:1.4;font-weight:600}
 .chiffrage-card-open>small{display:block;margin-top:12px;color:var(--skin-muted);font-size:14px;line-height:1.5}
