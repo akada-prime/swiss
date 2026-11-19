@@ -1130,3 +1130,17 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   débordement. Données de recette isolées ; aucun dossier réel réécrit.
 - Entrées et dépendances invalidées avec 20261119-pdf-options-r4. Compteur
   dynamique conservé ; fallback attendu : 713. Build complet avant intégration.
+
+## 2026-11-19 — Logiciels en deux colonnes
+
+- Deux colonnes éditoriales partagées par l'aperçu, la page client et les PDF :
+  innosolvcity, Prime et hébergement à gauche ; ProConcept/Abacus puis autres
+  logiciels/partenaires et LCM à droite. Ordre stable, indépendant de la largeur.
+- Maximum deux colonnes sur PC, empilement sous 661 px. Une seule colonne de
+  contenu utilise toute la largeur, sans colonne vide artificielle.
+- 34 tests ciblés réussis, dont le regroupement explicite des logiciels/services.
+  Six largeurs Chrome : deux colonnes PC, une colonne Natel, aucun débordement.
+  Les deux PDF de recette Boécourt r9 ont été relus en quatre pages, avec les
+  nouvelles marges et les options compactes. Prix et publications inchangés.
+- Entrées/dépendances : 20261119-two-columns-r1. Compteur dynamique conservé,
+  fallback attendu 714 ; contrôles complets et build en CI avant intégration.

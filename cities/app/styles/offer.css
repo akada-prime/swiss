@@ -201,6 +201,7 @@ align-items:start;}
 .prime-offer-table-group+.prime-offer-table-group,.prime-offer-table-row.is-total{border-top:1px solid var(--offer-border);}
 .prime-offer-table-row.is-total{padding-block:20px;}
 .prime-offer-table-row:not(.is-subtotal):not(.is-total) h4{padding-left:12px;}
+.prime-offer-module-column:only-child{grid-column:1/-1}
 .prime-offer-module-column{display:flex;flex-direction:column;gap:var(--offer-card-gap);min-width:0;}
 .chiffrage-offer-body>section{display:grid;gap:var(--offer-space-6);align-content:start;min-width:0;}
 .chiffrage-offer-body>section>h3{margin:0;}
@@ -559,7 +560,7 @@ align-items:start;}
 }
 .prime-offer-module-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(min(100%,275px),1fr));
+  grid-template-columns: repeat(2,minmax(0,1fr));
   align-items: start;
   gap: var(--offer-card-gap)
 }

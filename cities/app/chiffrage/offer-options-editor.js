@@ -1,4 +1,4 @@
-import {offerOptionTitle} from '../offer/presentation.js?v=20261119-pdf-options-r4';
+import {offerOptionTitle} from '../offer/presentation.js?v=20261119-two-columns-r1';
 import {offerOptionCandidates,priceOfferOption,maxOfferOptions} from './offer-options.js?v=20261118-prime-shared-r3';
 function escapeOptionEditor(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 export function optionPriceMessage(candidate,row,l) {
