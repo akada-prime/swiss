@@ -1128,5 +1128,5 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   relus : quatre pages, fond continu, options compactes, quatre liens actifs,
   aucune note privée. Options ouvertes vérifiées sur six largeurs FR/DE sans
   débordement. Données de recette isolées ; aucun dossier réel réécrit.
-- Entrées et dépendances invalidées avec 20261119-pdf-options-r3. Compteur
+- Entrées et dépendances invalidées avec 20261119-pdf-options-r4. Compteur
   dynamique conservé ; fallback attendu : 713. Build complet avant intégration.

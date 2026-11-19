@@ -79,7 +79,7 @@ async function rasterPage(html,{start,end},background){
 }
 export async function downloadOfferPdf(article,offer,{theme='dark',label=fr=>fr,onProgress=()=>{}}={}){
   const frame=document.createElement('iframe');frame.className='client-pdf-render-frame';frame.title=label('Préparation du PDF','PDF-Vorbereitung');frame.setAttribute('aria-hidden','true');
-  frame.src=new URL('../../offre-pdf.html?v=20261119-pdf-options-r3',import.meta.url).href;
+  frame.src=new URL('../../offre-pdf.html?v=20261119-pdf-options-r4',import.meta.url).href;
   const loaded=new Promise((resolve,reject)=>{frame.onload=resolve;frame.onerror=reject;});document.body.append(frame);
   try{
     await loaded;const doc=frame.contentDocument;doc.documentElement.dataset.pdfTheme=theme;doc.documentElement.lang=document.documentElement.lang;
