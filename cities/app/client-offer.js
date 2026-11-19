@@ -1,8 +1,8 @@
 import { frenchTypography } from './core/french-typography.js?v=20261028-offer-polish-r1';
 import { bindOfferScope } from './offer/interactions.js';
 // Standalone, read-only presentation. No editor session, catalog, internal app or margins.
-import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from './offer/presentation.js?v=20261118-options-r4';
-import verifiedCoats from './chiffrage/coats.js?v=20261028-business-r11';
+import { offerHero, offerBanner, offerFigures, offerIdentity, offerMap, offerScope, offerLcm, offerHosting, offerServices, offerBreakdown, offerOptions, offerPublisherBilling } from './offer/presentation.js?v=20261119-boecourt-r1';
+import verifiedCoats from './chiffrage/coats.js?v=20261119-boecourt-r1';
 import { offerPriceGroups, annualOfferBudget } from './chiffrage/commercial-breakdown.js?v=20261112-coherence-r1';
 
 const root = document.getElementById('offerClientRoot');

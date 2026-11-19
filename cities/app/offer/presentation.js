@@ -120,7 +120,7 @@ export function offerInvestmentAdjustment(rows,{label,money}) {
   const discount=-(rows??[]).filter(row=>row.key==='discount').reduce((sum,row)=>sum+(row.investment??0),0);
   if(discount<=0)return '';
   const gross=rows.filter(row=>row.key!=='discount').reduce((sum,row)=>sum+(row.investment??0),0);
-  return `<section class="prime-offer-investment-adjustment"><h3>${label('Votre investissement','Ihre Investition')}</h3><dl><div><dt>${label('Investissement avant remise','Investition vor Rabatt')}</dt><dd>${e(money(gross))}</dd></div><div><dt>${label('Remise commerciale sur l’investissement','Investitionsrabatt')}</dt><dd>− ${e(money(discount))}</dd></div><div><dt>${label('Investissement net HT','Nettoinvestition exkl. MWST')}</dt><dd>${e(money(Math.round((gross-discount)*100)/100))}</dd></div></dl></section>`;
+  return `<section class="prime-offer-investment-adjustment"><h3>${label('Votre investissement','Ihre Investition')}</h3><dl><div><dt>${label('Investissement avant remise','Investition vor Rabatt')}</dt><dd>${e(money(gross))}</dd></div><div class="is-rebate"><dt>${label('Remise commerciale sur l’investissement','Investitionsrabatt')}</dt><dd>− ${e(money(discount))}</dd></div><div><dt>${label('Investissement net HT','Nettoinvestition exkl. MWST')}</dt><dd>${e(money(Math.round((gross-discount)*100)/100))}</dd></div></dl></section>`;
 }
 
 export function offerBreakdown(rows, { label, money, legacy = false, publisherRows = [] }) {

@@ -1,38 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-11-17T14:24:31.234Z",
+    "generatedAt": "2026-11-18T13:58:42.475Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "35b337708bba4a9178b93f6cdc17650caa353aef1f4b4fa4592970724f64fe16",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Gestion électronique de documents qualité (eQMS) pour le CHUV",
-      "url": "https://www.simap.ch/fr/?search=e164268c-5c1d-4538-ad75-ef48b7964f48",
-      "detectedAt": "2026-10-01T11:37:40.007Z",
-      "publicationDate": "2026-10-01",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "already-awarded",
-        "reason": "Adjudication publiée : SIMAP 21214-03 du 2026-10-01. Projet déjà attribué, exclu conformément au périmètre prospectif.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=e164268c-5c1d-4538-ad75-ef48b7964f48",
-          "https://www.simap.ch/api/publications/v2/project/e164268c-5c1d-4538-ad75-ef48b7964f48/project-header",
-          "https://www.simap.ch/api/publications/v1/project/e164268c-5c1d-4538-ad75-ef48b7964f48/publication-details/739fcbf5-eddc-405b-a462-746a0f4e394a"
-        ]
-      }
-    },
     {
       "id": "f2711c36953992fa5256f190f9e07e7bb621cf726d9d6dd2618d5812a9c3b8d6",
       "sourceId": "simap-romandie",
@@ -3753,6 +3725,21 @@
       "publicationDate": "2026-11-17",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : logiciel",
+      "status": "pending"
+    },
+    {
+      "id": "e9d4ce0ab952902c807865ad736fb9b2627fdd8d82402f6525f4ea1566891bb9",
+      "sourceId": "yverdon-preavis",
+      "sourceLabel": "Yverdon-les-Bains · préavis, rapports et interventions",
+      "municipality": "Yverdon-les-Bains",
+      "bfsId": 5938,
+      "scopeLabel": "",
+      "title": "Rapport COGE sur gestion 2012",
+      "url": "https://www.yverdon-les-bains.ch/fileadmin/documents/ylb/Conseil_communal/Rapports/2013_rapports/COGE_rapport_2013_sur_gestion_2012.pdf",
+      "detectedAt": "2026-11-18T13:58:40.715Z",
+      "publicationDate": null,
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
       "status": "pending"
     }
   ]
