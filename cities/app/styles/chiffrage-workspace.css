@@ -282,7 +282,7 @@ body:has(#chiffrageView:not([hidden]) .chiffrage-editor) { overflow-x:clip;overf
 .chiffrage-dossier-notes-body{display:grid;gap:12px}
 .chiffrage-dossier-notes-body h3{margin:0}
 .chiffrage-dossier-date{display:grid;gap:8px;font-size:14px}
-.chiffrage-dossier-date input{width:min(100%,240px)}
+.chiffrage-editor .chiffrage-dossier-date input{width:100%;max-width:18rem}
 .chiffrage-dossier-date small{font-size:14px;color:var(--skin-secondary);line-height:1.5}
 .chiffrage-dossier-notes{display:grid;gap:8px;font-size:14px}
 .chiffrage-dossier-notes textarea{width:100%;min-height:150px;padding:14px 16px;resize:vertical;border:1px solid var(--pc-field-border);border-radius:var(--pc-field-radius);background:var(--pc-field-bg);color:var(--skin-text);font:inherit;font-size:16px;line-height:1.5}

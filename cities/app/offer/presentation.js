@@ -147,7 +147,7 @@ export function offerBreakdown(rows, { label, money, legacy = false, publisherRo
   const table=(body,{annual=false,heading=''}={})=>`<div class="prime-offer-price-table${annual?' has-annual':''}"><div class="prime-offer-table-columns"><h3>${e(heading)}</h3><span>${investLabel} · CHF HT</span>${annual?`<span>${annualLabel} · CHF HT / ${label('an','Jahr')}</span>`:''}<small class="prime-offer-table-units">${label('Montants en CHF HT','Beträge in CHF exkl. MWST')}</small></div>${body}</div>`;
   const row=(entry,annual)=>{
     const portal=entry.key==='licenses'&&/portail|portal/i.test(entry.label||'');
-    return `<div class="prime-offer-table-row"><h4>${e(entry.label)}${portal?`<small>${label('Facturé directement par l’éditeur','Direkt vom Hersteller verrechnet')}</small>`:''}</h4>${values(entry,annual)}</div>`;
+    return `<div class="prime-offer-table-row${(entry.investment??0)<0||(entry.annual??0)<0?' is-rebate':''}"><h4>${e(entry.label)}${portal?`<small>${label('Facturé directement par l’éditeur','Direkt vom Hersteller verrechnet')}</small>`:''}</h4>${values(entry,annual)}</div>`;
   };
   const section=(heading,keys)=>{const chosen=entries.filter(row=>keys.includes(row.key));if(!chosen.length)return '';const annual=chosen.some(row=>Math.abs(row.annual??0)>.005);return `<section class="prime-offer-price-section">${table(chosen.map(entry=>row(entry,annual)).join(''),{annual,heading})}</section>`;};
   if(legacy)return section(label('Répartition du prix','Preisaufteilung'),['solutions','partners','hosting'])+offerInvestmentAdjustment(entries,{label,money});

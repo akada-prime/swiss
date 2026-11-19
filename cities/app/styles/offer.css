@@ -183,13 +183,13 @@ align-items:start;}
 .chiffrage-offer-tariffs>summary::before { top:calc(.75em + 10px - 5px); }
 
 /* Shared compact implementation and included-module presentation. */
-.prime-offer-price-table{--offer-price-column:clamp(120px,12vw,160px);border:1px solid var(--offer-border);border-radius:var(--offer-radius);background:var(--offer-panel);overflow:hidden;}
+.prime-offer-price-table{--offer-price-column:160px;border:1px solid var(--offer-border);border-radius:var(--offer-radius);background:var(--offer-panel);overflow:hidden;}
 .prime-offer-table-columns,.prime-offer-table-row{display:grid;grid-template-columns:minmax(0,1fr) var(--offer-price-column);gap:12px 24px;align-items:baseline;padding:12px var(--offer-card-padding);}
 .prime-offer-price-table.has-annual :is(.prime-offer-table-columns,.prime-offer-table-row){grid-template-columns:minmax(0,1fr) repeat(2,var(--offer-price-column));}
 .prime-offer-table-columns{font-size:14px;color:var(--offer-muted);padding-block:16px 12px;}
 .prime-offer-table-columns>h3{min-width:0;margin:0;font-size:24px;line-height:1.3;color:var(--offer-text);overflow-wrap:anywhere}
 .prime-offer-table-columns>span:not(:first-child),.prime-offer-amount{text-align:right;font-variant-numeric:tabular-nums;}
-.prime-offer-table-columns>span{min-width:0;white-space:normal;line-height:1.4}
+.prime-offer-table-columns>span{min-width:0;white-space:nowrap;line-height:1.4}
 .prime-offer-amount{white-space:nowrap;}
 .prime-offer-table-row{font-size:var(--offer-body-size);line-height:1.5;padding-block:var(--offer-space-2);}
 .prime-offer-price-table>.prime-offer-table-row:last-child:not(.is-total){padding-bottom:var(--offer-card-padding);}
@@ -909,6 +909,7 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .p
 .prime-investment-equation .prime-investment-unit{grid-column:2;grid-row:3;font-size:14px;letter-spacing:0;white-space:nowrap}
 .prime-offer-communal-figures>div>.prime-investment-equation{display:inline-grid;justify-self:center;align-self:start;color:#fff;font-size:clamp(24px,13cqi,var(--offer-large-size));font-weight:700;letter-spacing:-.035em;line-height:1.16}
 .prime-offer-investment-adjustment .is-rebate{color:var(--offer-rebate);}
+.prime-offer-table-row.is-rebate{--skin-text:var(--offer-rebate);--offer-text:var(--offer-rebate);color:var(--offer-rebate);}
 html[data-skin="helvetia"] .chiffrage-editor .prime-investment-equation{--rebate-ink:#8c2543;--investment-gross-ink:#225c91}
 
 
