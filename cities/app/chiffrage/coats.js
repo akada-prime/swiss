@@ -1,5 +1,5 @@
 // Verified public arms: Wikidata P771 (OFS) and P94, with Commons source metadata.
-export default {
+const verifiedCoats = {
   "6702": {
     "name": "Boécourt",
     "filename": "CHE Boécourt COA.svg",
@@ -12,7 +12,7 @@ export default {
   "5484": {
     "name": "Gollion",
     "filename": "CHE Gollion COA.svg",
-    "asset": "https://upload.wikimedia.org/wikipedia/commons/2/24/CHE_Gollion_COA.svg",
+    "asset": "communes/5484.svg",
     "source": "https://www.wikidata.org/wiki/Q70594",
     "filePage": "https://commons.wikimedia.org/wiki/File:CHE_Gollion_COA.svg",
     "license": "Public domain",
@@ -82,3 +82,14 @@ export default {
     "retrieved": "2026-10-23"
   }
 };
+
+export default verifiedCoats;
+// Both public and editor views use the same persistent server cache on a miss.
+export function communeCoat(bfsId, asset = path => `public/${path}`) {
+  const id=String(bfsId ?? '');
+  if (!/^[1-9]\d{0,4}$/.test(id)) return null;
+  const bundled=verifiedCoats[id];
+  if(bundled)return {...bundled,url:/^https:\/\//.test(bundled.asset)?bundled.asset:asset(bundled.asset)};
+  const url=`https://ozdvmllgxduzquiujcbg.supabase.co/functions/v1/communal-coat?bfs=${id}`;
+  return {filename:`OFS-${id}`,url,source:`${url}&source=1`};
+}

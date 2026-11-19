@@ -537,3 +537,28 @@ Le texte de version et les traductions ne sont pas réécrits. Le fallback de
 livraison reste affiché en cas de panne, limitation API ou stockage désactivé.
 Le compteur ne compte ni appels d'outils ni manipulations dans les chiffrages.
 Cette règle remplace le passage manuel à #461 décrit dans le lot précédent.
+
+### Notes, contacts et documents client (19 novembre 2026)
+
+- `chiffrage/dossier-editor.js` possède les notes privées du premier onglet et
+  l'affectation des interlocuteurs (glisser-déposer et choix par clic).
+  `dossier-data.js` valide les seuls champs de contact autorisés.
+- Notes et contact client appartiennent au snapshot du dossier. La fiche Prime
+  appartient au répertoire central privé `chiffrage_team_contacts` ; le dossier
+  et sa publication conservent sa référence. Le serveur résout cette référence
+  à chaque lecture publique. Les modifications concurrentes d'une fiche sont
+  protégées par `updated_at`. Ajout et édition exigent la session vendeur.
+- `client-projection.mjs` exclut les notes internes. `offer/presentation.js`
+  rend les coordonnées publiques après le détail d'investissement, sans
+  dépendre du formulaire interne. Les anciens liens sans contact restent lisibles.
+- `offer/pdf.js` compose les deux PDF depuis le même article client, dans
+  `offre-pdf.html` : mise en page native du navigateur, images embarquées,
+  rasterisation haute définition A4, couche de texte sélectionnable et liens
+  mail/téléphone. `offer-pdf.css` porte uniquement l'adaptation papier claire.
+  Le moteur est chargé à la demande ; `pdf-lib` est embarqué et licencié dans
+  `public/vendor/`. L'ancien endpoint PDF est conservé pour compatibilité.
+- `chiffrage/coats.js` résout d'abord les blasons locaux, puis l'Edge Function
+  publique `communal-coat`. Celle-ci vérifie l'identité P771 et P94 avant de
+  stocker l'image dans `communal_coat_cache` (accès service uniquement).
+  Les échecs sont temporisés ; les images vérifiées sont réutilisées entre
+  visiteurs. La vérification d'existence ne lit que `Gemeinde.bfs_id`.

@@ -34,6 +34,9 @@ window.fetch=async(url,options={})=>{
  if(u.hostname==='synthetic.invalid'){
   const action=u.searchParams.get('action');let data;
   if(action==='status')data={authenticated:true};
+  else if(action==='teamContacts')data=[{id:'alex',name:'Alex Démonstration',position:'Marchés',email:'alex@example.test',phone:'079 000 00 00',updated_at:'2026-11-19T00:00:00Z'},{id:'nicolas',name:'Nicolas',position:'',email:'',phone:'',updated_at:'2026-11-19T00:00:00Z'},{id:'oceane',name:'Océane',position:'',email:'',phone:'',updated_at:'2026-11-19T00:00:00Z'}];
+  else if(action==='createTeamContact')data={...JSON.parse(options.body),id:'p-synthetic',updated_at:new Date().toISOString()};
+  else if(action==='saveTeamContact')data={...JSON.parse(options.body),updated_at:new Date().toISOString()};
   else if(action==='catalog')data={catalog,active:{commercial:'synthetic'}};
   else if(action==='moduleCatalog')data={version:'synthetic',catalog,parents:[],module_contents:[],prime_options:catalog.parameters.prime_options};
   else if(action==='saveModuleCatalog'){const body=JSON.parse(options.body);catalog.parameters.prime_options=body.prime_options;catalog.parameters.module_contents=body.module_contents;data={version:'synthetic-2',catalog,parents:[],module_contents:body.module_contents,prime_options:body.prime_options};}

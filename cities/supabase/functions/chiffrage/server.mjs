@@ -1,3 +1,4 @@
+import {safeContact,validateContact,validateDossier} from '../../../app/chiffrage/dossier-data.js';
 import { validateModuleGroups,validatePrimeLayout } from '../../../app/chiffrage/module-groups.js';
 import {exportClientPdf,pdfFilename} from './client-pdf.mjs';
 import {validateOfferOptions,offerOptionReview} from '../../../app/chiffrage/offer-options.js';
@@ -147,6 +148,8 @@ async function writeQuote(payload) {
     throw new Error('Invalid product selection');
   if(input.client_options!==undefined)input.client_options=validateOfferOptions(input.client_options);
   if(input.module_groups!==undefined)input.module_groups=validateModuleGroups(input.module_groups);
+  validateDossier(input);
+  if(input.prime_contact_id){const [person]=await db('chiffrage_team_contacts',{query:{select:'id',id:`eq.${input.prime_contact_id}`}});if(!person)throw Error('Invalid Prime contact');}
   const catalog = await loadCatalog(payload.catalog_versions);
   if(input.module_contents == null && catalog.parameters.module_contents?.length)
     input.module_contents = catalog.parameters.module_contents;
@@ -195,12 +198,27 @@ async function readPublicOffer(request,count=true) {
   const [row]=await db('chiffrage_client_links',{query:{select:'payload,expires_at',token_hash:`eq.${hash}`,revoked_at:'is.null'}});
   return row && (!row.expires_at || new Date(row.expires_at).getTime()>Date.now())?row.payload:null;
 }
+async function withPublicContacts(payload){
+  if(!payload)return null;
+  const {prime_contact_id,...offer}=payload;
+  if(typeof prime_contact_id==='string'&&/^[a-z][a-z0-9-]{0,39}$/.test(prime_contact_id)){
+    const [person]=await db('chiffrage_team_contacts',{query:{select:'name,position,email,phone',id:`eq.${prime_contact_id}`}});
+    if(person)offer.prime_contact=safeContact(person);
+  }
+  return offer;
+}
+async function saveTeamContact(payload){
+  if(!/^[a-z][a-z0-9-]{0,39}$/.test(payload?.id??'')||typeof payload.expected_updated_at!=='string'||!Number.isFinite(Date.parse(payload.expected_updated_at)))return fail('Invalid contact reference',400);
+  const contact=validateContact(payload);if(!contact.name)return fail('Contact name required',400);
+  const rows=await db('chiffrage_team_contacts',{method:'PATCH',returning:true,query:{select:'id,name,position,email,phone,updated_at',id:`eq.${payload.id}`,updated_at:`eq.${payload.expected_updated_at}`},payload:{...contact,updated_at:new Date().toISOString()}});
+  return rows.length?json(rows[0]):fail('Revision conflict',409);
+}
 async function clientOffer(request) {
-  const payload=await readPublicOffer(request);
+  const payload=await withPublicContacts(await readPublicOffer(request));
   return payload?json(payload,200,{'Referrer-Policy':'no-referrer','Content-Security-Policy':"default-src 'none'"}):fail('Offer link unavailable',404);
 }
 async function clientOfferPdf(request) {
-  const offer=await readPublicOffer(request,false);
+  const offer=await withPublicContacts(await readPublicOffer(request,false));
   if(!offer)return fail('Offer link unavailable',404);
   const bytes=await exportClientPdf(offer);
   return new Response(bytes,{headers:{'Content-Type':'application/pdf','Content-Disposition':`attachment; filename="${pdfFilename(offer)}"`,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
@@ -317,6 +335,9 @@ export default async function handler(request) {
         catalog: Object.keys(selected).length ? await loadCatalog(selected) : null });
     }
     if(action==='savePrimeLayout'&&request.method==='POST')return await savePrimeLayout(await body(request));
+    if(action==='teamContacts'&&request.method==='GET')return json(await db('chiffrage_team_contacts',{query:{select:'id,name,position,email,phone,updated_at',order:'id'}}));
+    if(action==='createTeamContact'&&request.method==='POST'){const contact=validateContact(await body(request));if(!contact.name)return fail('Contact name required',400);const [person]=await db('chiffrage_team_contacts',{method:'POST',returning:true,payload:{id:`p-${randomUUID()}`,...contact}});return json(person,201);}
+    if(action==='saveTeamContact'&&request.method==='POST')return await saveTeamContact(await body(request));
     if (action === 'moduleCatalog' && request.method === 'GET') return json(await managedCatalog());
     if (action === 'saveModuleCatalog' && request.method === 'POST') return await saveManagedCatalog(await body(request));
     if (action === 'list' && request.method === 'GET')

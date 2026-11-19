@@ -24,7 +24,7 @@ export function investmentEquation(amounts,{label,money,currency=false}){
  const discount=amounts.investment_discount??0;
  if(!(discount>0))return '';
  const number=value=>e(money(value).replace(/\s*CHF(?:\s*HT)?$/,''));
- return `<span class="prime-investment-equation" aria-label="${e(label('Investissement brut, remise, investissement net','Bruttoinvestition, Rabatt, Nettoinvestition'))}"><span class="prime-investment-gross" title="${e(label('Brut','Brutto'))}">${number(amounts.investment_gross??amounts.investment+discount)}</span><span class="prime-investment-rebate" title="${e(label('Remise','Rabatt'))}">− ${number(discount)}</span><strong title="${e(label('Net','Netto'))}">${number(amounts.investment)}</strong>${currency?`<span class="prime-investment-unit prime-offer-currency">${label('CHF HT','CHF exkl. MWST')}</span>`:''}</span>`;
+ return `<span class="prime-investment-equation" aria-label="${e(label('Investissement brut, remise, investissement net','Bruttoinvestition, Rabatt, Nettoinvestition'))}"><span class="prime-investment-gross" title="${e(label('Brut','Brutto'))}">${number(amounts.investment_gross??amounts.investment+discount)}</span>${currency?`<span class="prime-investment-unit prime-investment-gross-label">${label('brut','brutto')}</span>`:''}<span class="prime-investment-rebate" title="${e(label('Remise','Rabatt'))}">− ${number(discount)}</span>${currency?`<span class="prime-investment-unit prime-investment-rebate-label">${label('remise','Rabatt')}</span>`:''}<strong title="${e(label('Net','Netto'))}">${number(amounts.investment)}</strong>${currency?`<span class="prime-investment-unit prime-offer-currency">${label('CHF HT','CHF exkl. MWST')}</span>`:''}</span>`;
 }
 export function offerFigures(amounts, { label, money, incomplete = false, caveat = '', municipal = false, annualBreakdown = null, annualBudget = null, synergy = false, costDetails = [] }) {
   amounts=investmentDisplayAmounts(amounts,costDetails);
@@ -168,4 +168,16 @@ export function offerOptions(options,{label,money}) {
 export function offerPublisherBilling(rows, { label, money }) {
   if (!Array.isArray(rows) || !rows.length) return '';
   return `<section class="prime-offer-price-section"><h3>${label('Facturation directe par l’éditeur','Direkte Rechnungsstellung durch den Hersteller')}</h3><p>${label('Ces abonnements sont compris dans le budget annuel présenté. Ils sont facturés directement par l’éditeur, séparément de Prime.','Diese Abonnemente sind im ausgewiesenen Jahresbudget enthalten. Sie werden direkt vom Hersteller und getrennt von Prime verrechnet.')}</p><div class="prime-offer-price-list">${rows.map(row => `<div class="prime-offer-price-row"><h4>${e(row.label)}${Number.isInteger(row.users) ? ` · ${row.users} ${label('utilisateurs','Benutzer')}` : ''}</h4><strong>${e(money(row.annual))} / ${label('an','Jahr')}</strong></div>`).join('')}</div></section>`;
+}
+
+export function offerContacts({client,prime}={},label=fr=>fr){
+  const card=(contact,title)=>{
+    if(!contact||!['name','position','email','phone'].some(key=>contact[key]))return '';
+    const email=String(contact.email??''),phone=String(contact.phone??'');
+    const mail=/^[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+$/.test(email)?`<a href="mailto:${e(email)}">${e(email)}</a>`:e(email);
+    const telephone=phone.replace(/[^\d+]/g,'');
+    return `<section class="prime-offer-contact-card"><h4>${title}</h4>${contact.name?`<strong>${e(contact.name)}</strong>`:''}${contact.position?`<span>${e(contact.position)}</span>`:''}${email?`<span>${mail}</span>`:''}${phone?`<a href="tel:${e(telephone)}">${e(phone)}</a>`:''}</section>`;
+  };
+  const cards=card(client,label('Côté client','Beim Kunden'))+card(prime,'Prime Technologies');
+  return cards?`<section class="prime-offer-contacts"><h3>${label('Vos interlocuteurs','Ihre Ansprechpersonen')}</h3><div>${cards}</div></section>`:'';
 }

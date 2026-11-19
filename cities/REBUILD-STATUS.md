@@ -1056,3 +1056,32 @@ Recette technique : 175 tests et build. Pas de validation Safari réelle.
   groupes dépliés/repliés, aucun débordement ; égalité des tailles et gris
   vérifiée. Tests et build complets confiés à la CI avant intégration.
 - Les analyses initiales 6 et 7 restent en attente de retour utilisateur.
+
+## 2026-11-19 — Dossier, interlocuteurs, PDF et réserve de blasons
+
+- Premier onglet : notes internes multilignes explicites, contact client et
+  répertoire partagé Prime. Affectation par glisser-déposer ou clic, ajout de
+  personnes, édition partagée et protection contre les écrasements concurrents.
+  Les profils initiaux sans coordonnées restent à compléter dans l'application.
+- Projection publique limitée aux coordonnées choisies ; aucune note privée
+  dans la vue client ou les PDF. Contacts placés après Votre investissement.
+  Une fiche Prime modifiée est résolue à nouveau lors des lectures publiques.
+- Brut bleu avec libellé brut, remise rouge avec libellé remise, net blanc ;
+  annotations sur la même baseline et à la taille des unités CHF HT.
+- Deux téléchargements locaux : consultation foncée et impression claire,
+  même HTML que l'offre, groupes dépliés, cadres conservés ensemble quand ils
+  tiennent dans une page, texte sélectionnable et liens mail/téléphone actifs.
+- Blasons : registre local prioritaire ; recherche distante par OFS vérifié,
+  image persistée dans une réserve commune. Delémont testé réellement : premier
+  appel miss, suivant hit. Gollion désormais embarqué comme les huit autres.
+- Backend déployé : chiffrage v40, communal-coat v4 ; migrations contacts/cache,
+  création de contacts et lecture OFS étroite appliquées. Aucun snapshot ou lien
+  de chiffrage existant modifié lors de la recette.
+- Recette Chrome : six largeurs 360/430/768/1366/1920/2560 sans débordement,
+  offre FR/DE et formulaire privé. Choix par clic et glisser-déposer, ajout,
+  édition, sauvegarde et changement d'onglet vérifiés sur dossier synthétique.
+  Deux PDF A4 de quatre pages relus visuellement ; notes sentinelles absentes,
+  montants cohérents, quatre liens mail/téléphone actifs. Pas d'iPhone physique.
+- Contrôles complets : 291 tests réussis et build Vite réussi avant intégration ;
+  dépendances et entrées invalidées avec 20261119-dossier-r6. Compteur main :
+  fallback attendu 711, résolution dynamique conservée.

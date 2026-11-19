@@ -901,14 +901,14 @@ html[data-skin="helvetia"] .chiffrage-offer-body:not(.prime-offer-commercial) .p
 @media(max-width:430px){.prime-offer-investment-adjustment dl>div{flex-wrap:wrap;gap:4px}.prime-offer-investment-adjustment dd{margin-left:auto}}
 
 /* Three amounts, three lines. The original number typography stays inherited. */
-.prime-investment-equation{--rebate-ink:#b95776;--investment-gradient-end:#2994ec;-webkit-text-fill-color:currentColor;display:inline-grid;grid-template-columns:max-content;max-width:100%;min-width:0;justify-content:end;align-items:baseline;gap:2px 8px;font:inherit;letter-spacing:inherit;line-height:inherit;font-variant-numeric:tabular-nums;color:var(--skin-text);text-align:right}
-.prime-investment-gross{grid-column:1;grid-row:1}
+.prime-investment-equation{--rebate-ink:#ec91ad;--investment-gross-ink:#7cbff6;-webkit-text-fill-color:currentColor;display:inline-grid;grid-template-columns:max-content;max-width:100%;min-width:0;justify-content:end;align-items:baseline;gap:2px 8px;font:inherit;letter-spacing:inherit;line-height:inherit;font-variant-numeric:tabular-nums;color:var(--skin-text);text-align:right}
+.prime-investment-gross{grid-column:1;grid-row:1;color:var(--investment-gross-ink)}
 .prime-investment-rebate{grid-column:1;grid-row:2;color:var(--rebate-ink);white-space:nowrap;background:none;padding:0}
-.prime-investment-equation>strong{grid-column:1;grid-row:3;align-self:baseline;font:inherit;letter-spacing:inherit;line-height:inherit;white-space:nowrap;color:var(--skin-text);background:linear-gradient(105deg,var(--investment-gradient-start,#b9dcff) 12%,var(--investment-gradient-end) 92%);background-clip:text;-webkit-text-fill-color:transparent}
+.prime-investment-equation>strong{grid-column:1;grid-row:3;align-self:baseline;font:inherit;letter-spacing:inherit;line-height:inherit;white-space:nowrap;color:inherit;background:none;-webkit-text-fill-color:currentColor}
 .prime-investment-equation .prime-investment-unit{grid-column:2;grid-row:3;font-size:14px;letter-spacing:0;white-space:nowrap}
-.prime-offer-communal-figures>div>.prime-investment-equation{--investment-gradient-start:#b9dcff;display:inline-grid;justify-self:center;align-self:start;color:#fff;font-size:clamp(24px,13cqi,var(--offer-large-size));font-weight:700;letter-spacing:-.035em;line-height:1.16}
+.prime-offer-communal-figures>div>.prime-investment-equation{display:inline-grid;justify-self:center;align-self:start;color:#fff;font-size:clamp(24px,13cqi,var(--offer-large-size));font-weight:700;letter-spacing:-.035em;line-height:1.16}
 .prime-offer-investment-adjustment .is-rebate{color:var(--offer-rebate);}
-html[data-skin="helvetia"] .chiffrage-editor .prime-investment-equation{--rebate-ink:#8c2543;--investment-gradient-start:#225c91;--investment-gradient-end:#1765ad}
+html[data-skin="helvetia"] .chiffrage-editor .prime-investment-equation{--rebate-ink:#8c2543;--investment-gross-ink:#225c91}
 
 
 @media(max-width:850px){
@@ -919,3 +919,14 @@ html[data-skin="helvetia"] .chiffrage-editor .prime-investment-equation{--rebate
 }
 
 @media(max-width:600px){.prime-offer-recurring-budget{grid-template-columns:minmax(0,1fr);gap:12px}.prime-offer-annual-detail,.prime-offer-recurring-budget>p{padding:16px}.prime-offer-recurring-budget>p{min-height:96px}}
+
+.prime-investment-equation .prime-investment-gross-label{grid-row:1;color:var(--investment-gross-ink)}
+.prime-investment-equation .prime-investment-rebate-label{grid-row:2;color:var(--rebate-ink)}
+
+.prime-offer-contacts{display:grid;gap:var(--offer-card-gap);margin-top:var(--offer-space-6)}
+.prime-offer-contacts>h3{margin:0}
+.prime-offer-contacts>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--offer-card-gap)}
+.prime-offer-contact-card{display:grid;align-content:start;gap:8px;min-width:0;padding:var(--offer-card-padding);border:1px solid var(--offer-border);border-radius:var(--offer-radius);background:var(--offer-panel);font-size:var(--offer-body-size);line-height:1.5;overflow-wrap:anywhere}
+.prime-offer-contact-card h4{margin:0 0 4px;font-size:18px;color:var(--offer-text)}
+.prime-offer-contact-card a{color:var(--offer-text);text-decoration:underline;text-underline-offset:3px}
+@media(max-width:600px){.prime-offer-contacts>div{grid-template-columns:minmax(0,1fr)}}
