@@ -40,7 +40,7 @@
 .roadmap-stage header p{margin:0 0 4px;color:var(--skin-secondary);font-size:10px;font-weight:750;letter-spacing:.14em;text-transform:uppercase}
 .roadmap-stage h2{margin:0;font-size:28px;letter-spacing:-.035em}
 .roadmap-items{display:grid;gap:9px;margin-top:22px}
-.roadmap-items>div{padding:14px 15px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(3,7,13,.28)}
+.roadmap-items>div,.roadmap-items>.roadmap-evolution{padding:14px 15px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(3,7,13,.28)}
 .roadmap-items strong,.roadmap-items span,.roadmap-items small{display:block}
 .roadmap-items strong{color:var(--skin-text);font-size:13px}
 .roadmap-items span{margin-top:5px;color:var(--skin-secondary);font-size:12px;line-height:1.48}
@@ -112,3 +112,13 @@
   .roadmap-grid>.completed-11 .roadmap-items{grid-template-columns:1fr}
 }
 
+
+/* Delivered quote evolution: a native disclosure, closed by default. */
+.roadmap-evolution>summary{display:flex;align-items:center;gap:10px;min-height:44px;list-style:none;cursor:pointer}
+.roadmap-evolution>summary::-webkit-details-marker{display:none}
+.roadmap-evolution>summary::before{content:"▶";flex:none;color:var(--orange,#f58233);font-size:11px}
+.roadmap-evolution[open]>summary::before{transform:rotate(90deg)}
+.roadmap-evolution>summary:focus-visible{outline:2px solid var(--skin-accent);outline-offset:4px;border-radius:4px}
+.roadmap-evolution-body{display:grid;gap:16px;padding-top:16px}
+.roadmap-evolution strong,.roadmap-evolution span{font-size:14px}
+.roadmap-evolution p{margin:0;color:var(--skin-secondary);font-size:14px;line-height:1.55}

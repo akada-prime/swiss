@@ -28,7 +28,7 @@
       document.documentElement.lang = preference('prime-communes-language', ['fr', 'de'], 'fr');
     })();
   </script>
-  <link rel="stylesheet" href="app/styles/main.css?v=20261119-oracle-color-r2">
+  <link rel="stylesheet" href="app/styles/main.css?v=20261119-roadmap-share-r1">
 <style>
 html[data-initial-view]:not([data-initial-view="communes"]) #communesView{display:none!important}
 html[data-initial-view="map"] #mapView,
@@ -312,8 +312,21 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
         <article class="roadmap-stage map-stage">
           <header><span class="roadmap-version">3.0</span><div><p><!--i18n:page.216-->Disponible · en évolution</p><h2><!--i18n:page.232-->Chiffrage</h2></div></header>
           <div class="roadmap-items">
-            <div><strong><!--i18n:page.233-->Déjà disponible · chiffrage et offre client</strong><span><!--i18n:page.234-->Choix des logiciels, modules et prestations, calcul de l'investissement et des coûts annuels, révisions et lien client en lecture seule. Le classement des modules est livré ; les désignations restent à finaliser.</span><small><!--i18n:page.235-->Le calcul reste déterministe, vérifiable et ajustable par Prime.</small></div>
-<div><strong><!--i18n:roadmap.quote.next.title-->Prochaine étape · catalogue, règles et dossier commercial</strong><span><!--i18n:roadmap.quote.next.body-->Finaliser les désignations des modules, documenter toutes les règles de calcul et produire un Excel clair pour les commandes fournisseurs et la préparation de l'offre Word. Après le catalogue, présenter une sélection d'options au client.</span></div>
+            <div><strong><!--i18n:page.233-->Déjà disponible · chiffrage et offre client</strong><span><!--i18n:page.234-->Configuration des logiciels, modules, prestations et options, calculs détaillés, suivi des dossiers, offre client versionnée et deux PDF assortis à la page.</span><small><!--i18n:page.235-->Le calcul reste déterministe, vérifiable et ajustable par Prime.</small></div>
+            <details class="roadmap-evolution">
+              <summary><strong><!--i18n:roadmap.quote.evolution.title-->Du tableur à l'offre client : le chemin parcouru</strong></summary>
+              <div class="roadmap-evolution-body">
+                <p><!--i18n:roadmap.quote.evolution.intro-->Des grilles fournisseurs à une proposition prête à partager, le chiffrage couvre désormais toute la préparation d'une offre.</p>
+                <p><strong><!--i18n:roadmap.quote.evolution.rules.title-->Un socle métier commun</strong><span><!--i18n:roadmap.quote.evolution.rules.body-->Innosolv, ProConcept, Abacus, Oracle, SQL, LCM et hébergement alimentent un calcul déterministe, avec un référentiel de règles consultable et des ajustements explicites.</span></p>
+                <p><strong><!--i18n:roadmap.quote.evolution.scope.title-->Un projet configuré dans le bon ordre</strong><span><!--i18n:roadmap.quote.evolution.scope.body-->Commune, volumes, logiciels, modules et prestations sont préremplis puis ajustables. Les regroupements métier rendent visibles le périmètre retenu et les options à proposer.</span></p>
+                <p><strong><!--i18n:roadmap.quote.evolution.figures.title-->Des chiffres expliqués</strong><span><!--i18n:roadmap.quote.evolution.figures.body-->Mise en œuvre, achats de licences, technique et récurrence sont distingués. Brut, remise, net, budget annuel complet et coût sur cinq ans se réconcilient. Les calculs sont rapprochés des classeurs de référence.</span></p>
+                <p><strong><!--i18n:roadmap.quote.evolution.dossier.title-->Un dossier qui suit le projet</strong><span><!--i18n:roadmap.quote.evolution.dossier.body-->Variantes, révisions et tableau de suivi par glisser-déposer structurent les dossiers. Notes privées, date de l'offre et interlocuteurs des deux côtés sont réunis ; les coordonnées Prime sont réutilisables et centralisées.</span></p>
+                <p><strong><!--i18n:roadmap.quote.evolution.client.title-->Une proposition à partager</strong><span><!--i18n:roadmap.quote.evolution.client.body-->Identité communale, blason, logiciels, prestations et options composent une offre lisible. Les détails se déplient à la demande. Chaque publication dispose d'un lien en lecture seule, d'une version, d'une activation et d'un compteur d'ouvertures.</span></p>
+                <p><strong><!--i18n:roadmap.quote.evolution.pdf.title-->Deux PDF, une même identité</strong><span><!--i18n:roadmap.quote.evolution.pdf.body-->Une version foncée pour consulter et une version claire pour imprimer reprennent la page client. Le format A4 intègre les marges, la pagination, la commune, la date et la version sur chaque page, sans les notes privées.</span></p>
+                <p><strong><!--i18n:roadmap.quote.evolution.ux.title-->Une interface affinée jusque dans les détails</strong><span><!--i18n:roadmap.quote.evolution.ux.body-->Parcours ordinateur et Natel, français et allemand, thèmes clair et foncé : tailles de texte, alignements, espacements, couleurs des remises et options compactes ont été harmonisés. Les informations détaillées restent accessibles sans alourdir la lecture.</span></p>
+              </div>
+            </details>
+<div><strong><!--i18n:roadmap.quote.next.title-->Prochaine étape · documentation et dossier commercial</strong><span><!--i18n:roadmap.quote.next.body-->Compléter la documentation des règles et produire un Excel clair pour les commandes fournisseurs et la préparation de l'offre Word.</span></div>
 <div><strong><!--i18n:roadmap.quote.compare.title-->Étape suivante · comparaison et rentabilité</strong><span><!--i18n:roadmap.quote.compare.body-->Comparer les prix de vente des licences et prestations avec les offres précédentes, en expliquant les écarts de périmètre. LCM, hébergement et prix d'achat restent hors de cette comparaison. Suivre séparément les marges par offre et par client, notamment sur cinq ans.</span></div>
 <div><strong><!--i18n:roadmap.quote.days.title-->Ensuite · calibrer les prestations</strong><span><!--i18n:roadmap.quote.days.body-->Établir des jours de référence par module pour 1'000 habitants, puis une progression adaptée à la taille et au projet. Exploiter les dossiers historiques et conserver les ajustements commerciaux de Prime.</span></div>
 <div><strong><!--i18n:roadmap.quote.client.title-->Évolution à confirmer · configuration par le client</strong><span><!--i18n:roadmap.quote.client.body-->Permettre au client de sélectionner des options autorisées et d'en comprendre le prix. Définir ensuite la réception des changements, les statuts et la validation Prime avant une nouvelle proposition.</span></div>
@@ -345,7 +358,7 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
   </section>
   <footer class="site-footer" aria-label="Informations légales et techniques">
     <div class="footer-meta">
-      <span class="footer-version">Prime Communes · version 2.5 · <span data-evolution-count="721" title="Évolutions de Prime Communes">#721</span></span>
+      <span class="footer-version">Prime Communes · version 2.5 · <span data-evolution-count="722" title="Évolutions de Prime Communes">#722</span></span>
       <span class="footer-confidential"><!--i18n:page.243-->Données confidentielles</span>
     </div>
     <div class="footer-legal">
@@ -358,6 +371,6 @@ th.sortable:hover{color:#b8c7da;background:rgba(255,255,255,.045)}
 <div id="drawerRoot"></div>
 <div id="portraitRoot"></div>
 <button class="back-to-top" id="backToTop" type="button" aria-label="Retour en haut" title="Retour en haut"><span aria-hidden="true">↑</span></button>
-<script type="module" src="app/main.js?v=20261119-decomptes-options-r1"></script>
+<script type="module" src="app/main.js?v=20261119-roadmap-share-r1"></script>
 </body>
 </html>
