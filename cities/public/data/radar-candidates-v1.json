@@ -1,198 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-11-20T14:01:22.881Z",
+    "generatedAt": "2026-11-23T15:58:55.779Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "0326412613bbefe5f99e4fb9bbfd99a31d7421cebdb021b8414fc0a178558492",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Révision du cadastre des sites pollués par l’intégration des substances per- et polyfluoroalkylées (PFAS) et gestion des sites pollués / Location de services",
-      "url": "https://www.simap.ch/fr/?search=5f1a6d17-450a-427e-8696-6cdba3fd8411",
-      "detectedAt": "2026-10-16T09:50:19.568Z",
-      "publicationDate": "2026-10-16",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=5f1a6d17-450a-427e-8696-6cdba3fd8411"
-        ]
-      }
-    },
-    {
-      "id": "dd11b7b7e5c1f21099744791cf1f817f97baf60c7c21674b2e7262ea01757145",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Serveur pour DeepSPIM",
-      "url": "https://www.simap.ch/fr/?search=5dab8a6b-d43b-4e1a-88b7-44850b23603b",
-      "detectedAt": "2026-10-19T10:47:05.362Z",
-      "publicationDate": "2026-10-19",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : informatique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=5dab8a6b-d43b-4e1a-88b7-44850b23603b"
-        ]
-      }
-    },
-    {
-      "id": "2af497318343642d7be34b99431f45b1bf7718088edc65a30a8f04e1aefb6568",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "AffDyn_A1 /Fourniture d'une solution d'affichage dynamique en mode SaaS et ses prestations associées",
-      "url": "https://www.simap.ch/fr/?search=301d6b9d-3c5f-4402-95fb-590c161dcdb4",
-      "detectedAt": "2026-10-19T10:47:05.362Z",
-      "publicationDate": "2026-10-19",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : saas",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "already-awarded",
-        "reason": "Adjudication publiée : SIMAP 41806-02 du 2026-10-19. Projet déjà attribué, exclu conformément au périmètre prospectif.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=301d6b9d-3c5f-4402-95fb-590c161dcdb4",
-          "https://www.simap.ch/api/publications/v2/project/301d6b9d-3c5f-4402-95fb-590c161dcdb4/project-header",
-          "https://www.simap.ch/api/publications/v1/project/301d6b9d-3c5f-4402-95fb-590c161dcdb4/publication-details/a759e5ef-38e3-469c-b4cd-e8ff79f87114"
-        ]
-      }
-    },
-    {
-      "id": "6b265820f993a6b70c20c0f05124d18e942dfaaf0b8c321e370c679b1e5e2727",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "AO - TPG - Organisation, animation et évaluation d’un exercice de crise cyber sur table pour des systèmes critiques",
-      "url": "https://www.simap.ch/fr/?search=6694cc70-9e7d-4af5-8f98-13e0271a797d",
-      "detectedAt": "2026-10-19T10:47:05.362Z",
-      "publicationDate": "2026-10-19",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : cyber",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "TPG : exercice de gestion de crise cyber sur table, hors besoin communal ERP/GED établi ; ne pas inférer une acquisition logicielle.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=6694cc70-9e7d-4af5-8f98-13e0271a797d",
-          "https://www.simap.ch/api/publications/v2/project/6694cc70-9e7d-4af5-8f98-13e0271a797d/project-header",
-          "https://www.simap.ch/api/publications/v1/project/6694cc70-9e7d-4af5-8f98-13e0271a797d/publication-details/c934501a-735d-4df8-b51b-96bdbfecc3f7"
-        ]
-      }
-    },
-    {
-      "id": "ac8dcbe0ae5d064401f68a8920c12257290d4c9d2550388ee2c694ec89b41de1",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Lot 18 : Gestion des eaux claires et des eaux usées",
-      "url": "https://www.simap.ch/fr/?search=8e22b4ce-c785-4d69-8dee-f8b663c87f72",
-      "detectedAt": "2026-10-19T10:47:05.362Z",
-      "publicationDate": "2026-10-19",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=8e22b4ce-c785-4d69-8dee-f8b663c87f72"
-        ]
-      }
-    },
-    {
-      "id": "2e862a9efa98bb8512f7821006cd883d9585608b2799e79c54ab1aa0840c7260",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Rénovation / Transformation du CID de Malley / Ascenseur, monte-charge et travelators",
-      "url": "https://www.simap.ch/fr/?search=58dcfc3b-1519-4164-84f0-4ff1498c144c",
-      "detectedAt": "2026-10-19T10:47:05.362Z",
-      "publicationDate": "2026-10-19",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : finance",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=58dcfc3b-1519-4164-84f0-4ff1498c144c"
-        ]
-      }
-    },
-    {
-      "id": "a4c9deb1e7a80868f25d85c05f4f23debaa254f254b1f3b739e002f04b0ddcf7",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Marché de licences informatiques Microsoft",
-      "url": "https://www.simap.ch/fr/?search=fb8679e7-360d-40c3-b7dd-e4e58eb75b32",
-      "detectedAt": "2026-10-19T10:47:05.362Z",
-      "publicationDate": "2026-10-19",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : informatique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "EPI : fourniture et gestion de licences Microsoft, hors marché communal de solutions métier établi.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=fb8679e7-360d-40c3-b7dd-e4e58eb75b32",
-          "https://www.simap.ch/api/publications/v2/project/fb8679e7-360d-40c3-b7dd-e4e58eb75b32/project-header",
-          "https://www.simap.ch/api/publications/v1/project/fb8679e7-360d-40c3-b7dd-e4e58eb75b32/publication-details/2a0435a4-356f-4e5d-838d-cf0f7680cef8"
-        ]
-      }
-    },
     {
       "id": "f32e9d1fdb257d85596fed40867c217224f52b066c92c339cbafb20385590bcf",
       "sourceId": "simap-romandie",
@@ -3342,6 +3154,111 @@
       "publicationDate": null,
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : digital",
+      "status": "pending"
+    },
+    {
+      "id": "0b503f1331a06e1fcef3048f0f6c719404bb94eced0a1ce9a7cf68f820198ebf",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Warnanlagen",
+      "url": "https://www.simap.ch/fr/?search=e4b4a8bd-2e35-4abb-aa4d-49499fd4ae35",
+      "detectedAt": "2026-11-23T15:58:49.381Z",
+      "publicationDate": "2026-11-23",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "8544828c5abaa0664271c54a199a52f91cba73b0869b911bd598a1fb4086b77a",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Verlängerung der Lizenzen für die Plattform «Tungsten Kofax Capture»",
+      "url": "https://www.simap.ch/fr/?search=46a0be4f-7007-44f6-95d0-ed69813d3205",
+      "detectedAt": "2026-11-23T15:58:49.381Z",
+      "publicationDate": "2026-11-21",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "423ad6659b7f7f66b52f9c0222210d6cb99207de356ec20355fdea536b73c3b3",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Sportzentrum Verbier – CFC 235.83 Videoüberwachung und Notrufanlage",
+      "url": "https://www.simap.ch/fr/?search=20a3760d-9630-404f-9df2-98fc63986c5b",
+      "detectedAt": "2026-11-23T15:58:49.381Z",
+      "publicationDate": "2026-11-21",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : erp",
+      "status": "pending"
+    },
+    {
+      "id": "25f2c34051cab830da749e8f57b6923e13cfbc0ad1f4277fc024abff018c95a9",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Modernisation et extension des infrastructures du centre médico-éducatifs de La Castalie. - CFC 283 Faux-plafonds",
+      "url": "https://www.simap.ch/fr/?search=c8d7e0a7-e0ec-4add-ab53-4457b1559860",
+      "detectedAt": "2026-11-23T15:58:49.381Z",
+      "publicationDate": "2026-11-20",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : modernisation",
+      "status": "pending"
+    },
+    {
+      "id": "870e91d671b920fec91a5d1a0b99fb567994159c282a7b2415616cae9de51d06",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Sanierung Motorfahrzeugkontrolle Visp - Bkp 272 Metallbauarbeiten",
+      "url": "https://www.simap.ch/fr/?search=4000f28b-888a-42e6-98f5-5328809ea076",
+      "detectedAt": "2026-11-23T15:58:49.381Z",
+      "publicationDate": "2026-11-20",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "9d31656cf34478e34180363d16d3a5f1cba2a12d9805be13edbbcf20ce0ba62e",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Bkp 421 Umgebungsarbeiten",
+      "url": "https://www.simap.ch/fr/?search=d91e161f-204b-46a3-8eca-2e077c3e30cb",
+      "detectedAt": "2026-11-23T15:58:49.381Z",
+      "publicationDate": "2026-11-20",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "6ed4d23f993e416e5fa0045c327a1b2c25891ea5f0428f547359889b5aedd8f1",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Zone de développement industriel et artisanal ECOPARC INDUSTRIEL DES CHERPINES Communes de Confignon et Plan-les-Ouates",
+      "url": "https://www.simap.ch/fr/?search=fdcee435-57bd-473e-a235-a14337af735d",
+      "detectedAt": "2026-11-23T15:58:49.381Z",
+      "publicationDate": "2026-11-20",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : erp",
       "status": "pending"
     }
   ]
