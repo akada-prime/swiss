@@ -1,200 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-11-23T15:58:55.779Z",
+    "generatedAt": "2026-11-25T15:36:46.615Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "f32e9d1fdb257d85596fed40867c217224f52b066c92c339cbafb20385590bcf",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Renouvellement Licences Nexthink",
-      "url": "https://www.simap.ch/fr/?search=89972c08-279b-4e8e-abef-73d745771807",
-      "detectedAt": "2026-10-19T10:47:05.362Z",
-      "publicationDate": "2026-10-17",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : numérique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "already-awarded",
-        "reason": "Adjudication publiée : SIMAP 41243-02 du 2026-10-17. Projet déjà attribué, exclu conformément au périmètre prospectif.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=89972c08-279b-4e8e-abef-73d745771807",
-          "https://www.simap.ch/api/publications/v2/project/89972c08-279b-4e8e-abef-73d745771807/project-header",
-          "https://www.simap.ch/api/publications/v1/project/89972c08-279b-4e8e-abef-73d745771807/publication-details/bf28c3ca-b7df-4b4d-ad6b-1bc10f2f889c"
-        ]
-      }
-    },
-    {
-      "id": "ef6484ee99539808d6f59e273ae6b242c36c10b8ec96ed9f602e5479cf65f493",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Serveurs SAP HANA et HCI",
-      "url": "https://www.simap.ch/fr/?search=a030f9a1-0852-4bef-a85a-523622a1acea",
-      "detectedAt": "2026-10-19T10:47:05.362Z",
-      "publicationDate": "2026-10-17",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : informatique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "UNIL : achat de neuf serveurs pour la virtualisation, hors périmètre métier et communal.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=a030f9a1-0852-4bef-a85a-523622a1acea",
-          "https://www.simap.ch/api/publications/v2/project/a030f9a1-0852-4bef-a85a-523622a1acea/project-header",
-          "https://www.simap.ch/api/publications/v1/project/a030f9a1-0852-4bef-a85a-523622a1acea/publication-details/5ae3468e-0f9f-4f9b-a931-d0de774bc5f3"
-        ]
-      }
-    },
-    {
-      "id": "34aa4cf158606a1ebedf61403b638fcd64e714031aef84ff621632cffa2a0740",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "AFC Gestion des activités",
-      "url": "https://www.simap.ch/fr/?search=4b8a42ef-8151-4b64-8f27-71cc877f8908",
-      "detectedAt": "2026-10-21T10:08:51.089Z",
-      "publicationDate": "2026-10-21",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : numérique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "already-awarded",
-        "reason": "Adjudication publiée : SIMAP 33266-04 du 2026-10-22. Projet déjà attribué, exclu conformément au périmètre prospectif.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=4b8a42ef-8151-4b64-8f27-71cc877f8908",
-          "https://www.simap.ch/api/publications/v2/project/4b8a42ef-8151-4b64-8f27-71cc877f8908/project-header",
-          "https://www.simap.ch/api/publications/v1/project/4b8a42ef-8151-4b64-8f27-71cc877f8908/publication-details/541a2800-ca31-4925-8a34-cc6b8ef71796"
-        ]
-      }
-    },
-    {
-      "id": "72210074856be46a2d79c1128259eb6151cb6c4e99230f6fba77d1e3c2e366fc",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Kaskade Barberine, Erhebliche Erneuerung - Ausschreibung Los 401 Generator G3 & Los 402 Peltonturbine mit Kugelschiebern und Verteilleitung",
-      "url": "https://www.simap.ch/fr/?search=02f7fdab-b8f4-4d98-a343-183f259bb17b",
-      "detectedAt": "2026-10-21T10:08:51.089Z",
-      "publicationDate": "2026-10-21",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : rh",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=02f7fdab-b8f4-4d98-a343-183f259bb17b"
-        ]
-      }
-    },
-    {
-      "id": "d7020a5b54ad58217c5262d5d34979e8ebd2f0b8065193c29eefff51de82faad",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "E-Hubarbeitsbühne 26m",
-      "url": "https://www.simap.ch/fr/?search=9c00cb01-0fc5-4175-91cd-bdfd3890bd32",
-      "detectedAt": "2026-10-21T10:08:51.089Z",
-      "publicationDate": "2026-10-21",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : rh",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=9c00cb01-0fc5-4175-91cd-bdfd3890bd32"
-        ]
-      }
-    },
-    {
-      "id": "d503dda4d73e924a4f67b5650388e173a9c81390c34f5c849072d4366ae14e93",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Tierpark Bern Dählhölzli, Neu- und Ersatzbauten, 291 Architekturleistungen, Studienauftrag mit 2 Lose",
-      "url": "https://www.simap.ch/fr/?search=bd39055a-3ec8-4191-8de5-092bdc5dd74d",
-      "detectedAt": "2026-10-21T10:08:51.089Z",
-      "publicationDate": "2026-10-21",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : erp",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=bd39055a-3ec8-4191-8de5-092bdc5dd74d"
-        ]
-      }
-    },
-    {
-      "id": "dec7b257672c65cd5c5e433238a0094df3a1b6bd8b853831c5ab48d15e582908",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "​​Einführung von 5 Zusatzleistungen über den Virtuellen Schalter des Kantons Freiburg​",
-      "url": "https://www.simap.ch/fr/?search=e4b706c5-c329-4cde-9934-ab389afea31c",
-      "detectedAt": "2026-10-21T10:08:51.089Z",
-      "publicationDate": "2026-10-21",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : informatique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-municipal-scope",
-        "reason": "SITel de l’État de Fribourg : cinq prestations de guichet virtuel avec support/maintenance, offres au 19.11.2026 à 11 h. Marché cantonal, aucun besoin de la Ville de Fribourg établi ; ne pas lui attribuer un OFS communal.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=e4b706c5-c329-4cde-9934-ab389afea31c",
-          "https://www.simap.ch/api/publications/v2/project/e4b706c5-c329-4cde-9934-ab389afea31c/project-header",
-          "https://www.simap.ch/api/publications/v1/project/e4b706c5-c329-4cde-9934-ab389afea31c/publication-details/5e4a2e25-65cd-4231-86a5-fcd265416bbb"
-        ]
-      }
-    },
     {
       "id": "86783f17da6fa84611f47f0b935e9ede2913ab8964714a94df8952c6f59ce436",
       "sourceId": "simap-romandie",
@@ -3259,6 +3069,111 @@
       "publicationDate": "2026-11-20",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : erp",
+      "status": "pending"
+    },
+    {
+      "id": "6fd341ef4b959c9c92543512478d886d55526db30229d48bc9c88f01aef821ec",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Ausschreibung Digitales Netz - GIS, Netzberechnung, Niederspannungsleitsystem",
+      "url": "https://www.simap.ch/fr/?search=39207650-f58e-48ee-84d9-08c7b9c75f0a",
+      "detectedAt": "2026-11-25T15:36:46.611Z",
+      "publicationDate": "2026-11-25",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : digital",
+      "status": "pending"
+    },
+    {
+      "id": "340a393eade42e033d1971ef0300e65378fa4c0fce70df21036b531a0f60d228",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Prestations de transport de patients hors ambulance et centrale de coordination des transports",
+      "url": "https://www.simap.ch/fr/?search=2e28b426-6ce8-4960-b226-7bf4e959381f",
+      "detectedAt": "2026-11-25T15:36:46.611Z",
+      "publicationDate": "2026-11-25",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "7194231d774e41b7679d8da086f520a709104231a8e9b1db22811c79c23d0cf0",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Sanierung Uettligen Innerorts Planerleistungen inkl. Gesamtleitung SIA-Teilphasen 31 – 53; Anwendung BIM-Methode",
+      "url": "https://www.simap.ch/fr/?search=20524995-eec4-41d2-a43e-46bbfdb6a64d",
+      "detectedAt": "2026-11-25T15:36:46.611Z",
+      "publicationDate": "2026-11-25",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "1220ccf6c1757a7733bcf093fad9c2fc5df063171b1aff5d19dd9f8ac2bbdccb",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Projet GVA Core - Intégration solution ERP - SAP S4/HANA",
+      "url": "https://www.simap.ch/fr/?search=90b09a41-675d-454c-aee5-fc39b751cfa0",
+      "detectedAt": "2026-11-25T15:36:46.611Z",
+      "publicationDate": "2026-11-25",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : erp",
+      "status": "pending"
+    },
+    {
+      "id": "0aeffe9c7632b267a7c9d023af7489c0c8c56b1bf19091ea71568297d1e0d1b2",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Mesures de remise en état liées aux intempéries de juin/juillet 2024 et d’avril 2025 - Digues du Rhône à Chamoson-Riddes - Travaux remise en état rive gauche amont Genetti",
+      "url": "https://www.simap.ch/fr/?search=197f52f1-4714-4e01-9c65-c8f9546c15a5",
+      "detectedAt": "2026-11-25T15:36:46.611Z",
+      "publicationDate": "2026-11-24",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : rh",
+      "status": "pending"
+    },
+    {
+      "id": "3816aad3e64635dbb7b707a33eea69480dfd70a5a4e9afc84e2bdd2477df54de",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Prestations spécialisées SAP Basis et bases de données (Oracle, SQL Server, PostgreSQL) avec service de piquet",
+      "url": "https://www.simap.ch/fr/?search=c08a6aa3-ca24-4dd4-88a4-ca6fa39d67b6",
+      "detectedAt": "2026-11-25T15:36:46.611Z",
+      "publicationDate": "2026-11-24",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : données",
+      "status": "pending"
+    },
+    {
+      "id": "8978c2c99a0372f20bf8b9b73b48fe86396d5323582f7c2d8c4eaf9e9bf0c975",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Dématérialisation du courrier entrant",
+      "url": "https://www.simap.ch/fr/?search=f55e59c7-42bb-4728-8f73-21e262d95f18",
+      "detectedAt": "2026-11-25T15:36:46.611Z",
+      "publicationDate": "2026-11-24",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : dématérialisation",
       "status": "pending"
     }
   ]
