@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "radar-state-v1",
-    "generatedAt": "2026-11-25T15:36:46.612Z",
+    "generatedAt": "2026-11-26T15:17:29.244Z",
     "mode": "deterministic-watch",
     "bootstrapDays": null,
     "notice": "Mesures issues du dernier passage mécanique. Une erreur de source n’est jamais comptée comme un silence."
@@ -20,21 +20,21 @@
     "unchanged": 0
   },
   "detection": {
-    "changes": 1,
-    "newDocuments": 54,
+    "changes": 2,
+    "newDocuments": 1,
     "pendingCandidates": 185,
     "bootstrapDays": null,
-    "bootstrapCandidates": 7
+    "bootstrapCandidates": 0
   },
   "analysis": {
     "analyzed": 8,
     "published": 8
   },
   "economy": {
-    "requests": 6,
+    "requests": 4,
     "notModified": 0,
     "unchanged": 0,
-    "downloaded": 6,
+    "downloaded": 2,
     "aiCalls": 0
   },
   "sourceState": {
@@ -3043,11 +3043,11 @@
     },
     "gland-preavis": {
       "status": "healthy",
-      "lastCheckAt": "2026-11-23T15:58:53.926Z",
-      "lastSuccessAt": "2026-11-23T15:58:53.926Z",
+      "lastCheckAt": "2026-11-26T15:17:27.373Z",
+      "lastSuccessAt": "2026-11-26T15:17:27.373Z",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "5b3aef0987c2c580343db07a407f5a0ed38d5957521c548fef169468cd72b179",
+      "fingerprint": "a75e4043ad8d0d7e99b1063c8a16d4365f35df11a2fc54d4305451436550b7b3",
       "seenIds": [
         "c3f94949352d8115b83c14d6bd01e721257fe3c3f1192c564ece4d1bb57d7815",
         "bb4a977ebf6106dffdf712a71e92b7706e969955aaf67ac97e7ab2d3a55dbfbf",
@@ -3320,21 +3320,22 @@
         "761ff9501e0a788510d4a910c82fc3668067bf7a3c70760fbb39a041416e1b42",
         "8d65ee9224ab3fd945e53fe0679e7d843361dde3b85a2ee64928d6136cd19a28",
         "9606c09e868c40eb4babd2203e3d66a83a5de77ae4a54d564f0153dd5d2bda5f",
-        "0b4491fd25a60f4d5de5b776ffaae71cd84e1b077a846760d53c390a623a84c0"
+        "0b4491fd25a60f4d5de5b776ffaae71cd84e1b077a846760d53c390a623a84c0",
+        "ce49d8b8bd1594ecfb36e50c2f96d30b95aeb816996ef0d46bf27715f6c0aaa0"
       ],
-      "itemCount": 262,
+      "itemCount": 263,
       "error": null,
       "baselined": true,
       "intervalHours": 48,
-      "nextCheckAt": "2026-11-25T15:58:53.926Z"
+      "nextCheckAt": "2026-11-28T15:17:27.373Z"
     },
     "monthey-conseil": {
       "status": "healthy",
-      "lastCheckAt": "2026-11-23T15:58:55.777Z",
-      "lastSuccessAt": "2026-11-23T15:58:55.777Z",
+      "lastCheckAt": "2026-11-26T15:17:29.244Z",
+      "lastSuccessAt": "2026-11-26T15:17:29.244Z",
       "etag": null,
       "lastModified": null,
-      "fingerprint": "04cfe48a3a1a87072f5dca90d8783898d009e78d07a4c73891ee8f8f26eaa72f",
+      "fingerprint": "b82b006add7b368c6ccb6b277b670646f8590b01076e664e8e5d066936b45f6a",
       "seenIds": [
         "a4607d8dd66b8a097d9a9a9fda24ed173899e124f9104e9b7240dcb5a5ed75b4",
         "e789a69b04be1d93054c34ce6eb5f25683fc7f849f3bc7e885f3438001f98e7a",
@@ -3616,7 +3617,7 @@
       "error": null,
       "baselined": true,
       "intervalHours": 48,
-      "nextCheckAt": "2026-11-25T15:58:55.777Z"
+      "nextCheckAt": "2026-11-28T15:17:29.244Z"
     }
   }
 }
