@@ -1,198 +1,10 @@
 {
   "meta": {
     "version": "radar-candidates-v1",
-    "generatedAt": "2026-11-26T15:17:29.246Z",
+    "generatedAt": "2026-11-27T15:05:37.611Z",
     "notice": "La file ne contient que des nouveautés détectées mécaniquement. L'IA n'est jamais lancée automatiquement."
   },
   "items": [
-    {
-      "id": "86783f17da6fa84611f47f0b935e9ede2913ab8964714a94df8952c6f59ce436",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Gestion des eaux de chaussée et réfection du revêtement entre Pramagnon et Grône, sur la RC no 44 Sion - Bramois - Chippis - Sierre, sur le territoire de la commune de Grône",
-      "url": "https://www.simap.ch/fr/?search=e34580c4-1f8a-4137-b567-7bf028b9b069",
-      "detectedAt": "2026-10-21T10:08:51.089Z",
-      "publicationDate": "2026-10-20",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=e34580c4-1f8a-4137-b567-7bf028b9b069"
-        ]
-      }
-    },
-    {
-      "id": "6432644f79bffc8fae0fc473ebfa371ecc96ffc581a23035c2af8302dcdaa769",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Revente et gestion de licences logicielles Citrix pour les HUG",
-      "url": "https://www.simap.ch/fr/?search=9bd1bf4c-1106-4d2e-a730-2dc92620fd51",
-      "detectedAt": "2026-10-22T10:11:32.677Z",
-      "publicationDate": "2026-10-22",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : logiciel",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "already-awarded",
-        "reason": "Adjudication publiée : SIMAP 41019-02 du 2026-10-22. Projet déjà attribué, exclu conformément au périmètre prospectif.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=9bd1bf4c-1106-4d2e-a730-2dc92620fd51",
-          "https://www.simap.ch/api/publications/v2/project/9bd1bf4c-1106-4d2e-a730-2dc92620fd51/project-header",
-          "https://www.simap.ch/api/publications/v1/project/9bd1bf4c-1106-4d2e-a730-2dc92620fd51/publication-details/08844919-d285-4c5e-b938-d9587d6dfada"
-        ]
-      }
-    },
-    {
-      "id": "68ff243456e100d598593bb13c77a307afedccf96242a6190f4909ab139a9225",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "M-Files - Renouvellement des licences et des prestations de développement de la plateforme",
-      "url": "https://www.simap.ch/fr/?search=471af242-a160-4343-a7b5-45d8edc1e58e",
-      "detectedAt": "2026-10-22T10:11:32.677Z",
-      "publicationDate": "2026-10-22",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : informatique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-municipal-scope",
-        "reason": "RCJU : M-Files, deux lots (licences/maintenance et développement des coffres), contrat du 01.04.2027 au 31.03.2032, offres au 04.12.2026 à 12 h. Intérêt GED possible pour Prime/partenaire, mais marché cantonal sans besoin communal démontré ; ne pas l’attribuer à Delémont.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=471af242-a160-4343-a7b5-45d8edc1e58e",
-          "https://www.simap.ch/api/publications/v2/project/471af242-a160-4343-a7b5-45d8edc1e58e/project-header",
-          "https://www.simap.ch/api/publications/v1/project/471af242-a160-4343-a7b5-45d8edc1e58e/publication-details/b5191183-1ad5-4d54-b0c5-233e9d19ab05"
-        ]
-      }
-    },
-    {
-      "id": "a0099c55c264f317b71d0990c3f28f2a22e47cb68f9b47e6bfd3e9893b4656c8",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Climatiseurs mobiles",
-      "url": "https://www.simap.ch/fr/?search=6e943311-1654-4f58-a7d3-2e08bb6a9181",
-      "detectedAt": "2026-10-22T10:11:32.677Z",
-      "publicationDate": "2026-10-22",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : rh",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=6e943311-1654-4f58-a7d3-2e08bb6a9181"
-        ]
-      }
-    },
-    {
-      "id": "c2ea3ebf6505dafcd104dd8a9dd1027016ee33b755ab0fe0f0b42632987b23cb",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Rahmenvertrag Verkehrsdienstleistungen",
-      "url": "https://www.simap.ch/fr/?search=cf954371-f45d-42dc-bcd3-8d0209e5ed4c",
-      "detectedAt": "2026-10-22T10:11:32.677Z",
-      "publicationDate": "2026-10-22",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : rh",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=cf954371-f45d-42dc-bcd3-8d0209e5ed4c"
-        ]
-      }
-    },
-    {
-      "id": "bfecb42b0c5e1563ff72037368f7a07a92e4dbb8917fa5b7b5a2d2755d54ecc3",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Appel d'offres assurances de personnes 2027",
-      "url": "https://www.simap.ch/fr/?search=05396ecc-83ee-4d05-9e20-069060559cc0",
-      "detectedAt": "2026-10-26T11:07:47.344Z",
-      "publicationDate": "2026-10-26",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : gestion",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-business-scope",
-        "reason": "Le titre décrit des travaux, équipements ou prestations sectorielles sans besoin ERP, GED, hébergement ou administration numérique Prime établi. La détection d’un mot-clé ne suffit pas à créer un signal.",
-        "sourceVerification": "candidate-title-and-url-only",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=05396ecc-83ee-4d05-9e20-069060559cc0"
-        ]
-      }
-    },
-    {
-      "id": "9ef373bd3b5b86b67f0848e4a4659da688140d5a777679ae94acc2cd5a4add6c",
-      "sourceId": "simap-romandie",
-      "sourceLabel": "simap.ch · marchés publics romands",
-      "municipality": "",
-      "bfsId": null,
-      "scopeLabel": "Marchés publics romands",
-      "title": "Erwerb von Microsoft-Lizenzen",
-      "url": "https://www.simap.ch/fr/?search=112e1a0c-55fc-4754-bc53-f9c1b2ddea6a",
-      "detectedAt": "2026-10-26T11:07:47.344Z",
-      "publicationDate": "2026-10-23",
-      "bootstrapDays": null,
-      "reason": "mot-clé déterministe : informatique",
-      "status": "discarded",
-      "analyzedAt": "2026-10-29T08:15:07Z",
-      "analysis": {
-        "decision": "discard",
-        "category": "outside-municipal-scope",
-        "reason": "Service cantonal de l’informatique du Valais : licences Microsoft, hors besoin communal métier établi.",
-        "sourceVerification": "primary-simap-header-and-publication-read",
-        "reviewedAt": "2026-10-29T08:15:07Z",
-        "sourceUrls": [
-          "https://www.simap.ch/fr/?search=112e1a0c-55fc-4754-bc53-f9c1b2ddea6a",
-          "https://www.simap.ch/api/publications/v2/project/112e1a0c-55fc-4754-bc53-f9c1b2ddea6a/project-header",
-          "https://www.simap.ch/api/publications/v1/project/112e1a0c-55fc-4754-bc53-f9c1b2ddea6a/publication-details/ab0ec33a-32a5-4e40-8bfa-554553606726"
-        ]
-      }
-    },
     {
       "id": "60f3181c1e093f2e185e89328dad94b3c9ea3c8bb1b75c44e73208003eea7be0",
       "sourceId": "yverdon-preavis",
@@ -3174,6 +2986,111 @@
       "publicationDate": "2026-11-24",
       "bootstrapDays": null,
       "reason": "mot-clé déterministe : dématérialisation",
+      "status": "pending"
+    },
+    {
+      "id": "a42cc4f151535b3b2231608f768635dce83cb6c95b1bfb1e77936e359bbebdb1",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Kollegium Brig - Sanierung Internat / BKP 281.2 Bodenbeläge aus Kunststoffen, Textilien und dgl. (Südtrakt)",
+      "url": "https://www.simap.ch/fr/?search=a067e59d-5161-4f0e-b80e-45850ca7761d",
+      "detectedAt": "2026-11-27T15:05:36.047Z",
+      "publicationDate": "2026-11-27",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "ed25c8dd83e788112e34c4a390b57476d7bdd7af8e987793c491d907b928083b",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Kollegium Brig - Sanierung Internat / BKP 281.6 + 282.4 Boden- und Wandbeläge aus Platten (Südtrakt)",
+      "url": "https://www.simap.ch/fr/?search=549c551e-7bef-4b67-bd25-6baaa7b96bf2",
+      "detectedAt": "2026-11-27T15:05:36.047Z",
+      "publicationDate": "2026-11-27",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
+      "status": "pending"
+    },
+    {
+      "id": "9611ad51c2b7d3d4965dffb3b3abbf57b456eaae1a836af7455445a1082ed097",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Beratungs- und Supportleistungen für das bestehende Cisco-System für einheitliche Kommunikation und Zusammenarbeit des Kantons Wallis",
+      "url": "https://www.simap.ch/fr/?search=a1d4d568-81dd-4cfe-8634-e642a85bc3ee",
+      "detectedAt": "2026-11-27T15:05:36.047Z",
+      "publicationDate": "2026-11-27",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "0cce6c81085e4a1c46300c0f1103dcc395b7a9849c69e7439622a933f920aee9",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Bereitstellung eines Telekommunikationsingenieurs bzw. einer Telekommunikationsingenieurin mit Spezialisierung auf Zabbix (60 %)",
+      "url": "https://www.simap.ch/fr/?search=fb1a5ce5-7e31-4293-b6ed-3381fbd75a12",
+      "detectedAt": "2026-11-27T15:05:36.047Z",
+      "publicationDate": "2026-11-27",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : informatique",
+      "status": "pending"
+    },
+    {
+      "id": "46f26604295c660c5f16dfa9d7b7aace7718bced2e1374f2bbf717f48a23e13d",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "AO – tpg – Solution Evertrust Horizon – Gestion du cycle des certificats – Inventaire des certificats – Gestion centralisée des demandes, renouvellements et révocations – Automatisation du déploiement et du renouvellement des certificats – Intégratio",
+      "url": "https://www.simap.ch/fr/?search=04362e67-dc7b-4813-bc12-5f13236f57a4",
+      "detectedAt": "2026-11-27T15:05:36.047Z",
+      "publicationDate": "2026-11-27",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "b6329ae5f618cbd8e1f586d1e69a75ee300b704f73b58e25237ceb0731505fac",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "AO – tpg – Fourniture et intégration d’une solution de gestion des accès privilégiés (PAM)",
+      "url": "https://www.simap.ch/fr/?search=94cdd650-6968-4a0e-a80b-46cd6308ebac",
+      "detectedAt": "2026-11-27T15:05:36.047Z",
+      "publicationDate": "2026-11-26",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : gestion",
+      "status": "pending"
+    },
+    {
+      "id": "d61f4650318220e8c9aa590c21ae356bcc5da766ded208d615c481e3ddaf6e75",
+      "sourceId": "simap-romandie",
+      "sourceLabel": "simap.ch · marchés publics romands",
+      "municipality": "",
+      "bfsId": null,
+      "scopeLabel": "Marchés publics romands",
+      "title": "Mobilgeräte und Webshopanbindung",
+      "url": "https://www.simap.ch/fr/?search=cdacc14f-445f-4f10-b7bc-d6c142a0a114",
+      "detectedAt": "2026-11-27T15:05:36.047Z",
+      "publicationDate": "2026-11-26",
+      "bootstrapDays": null,
+      "reason": "mot-clé déterministe : finance",
       "status": "pending"
     }
   ]
